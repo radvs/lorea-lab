@@ -2,7 +2,7 @@
     .lorea {
         --lorea-head-h: 3.5rem;
         --lorea-rail-w: 13.75rem;
-        --lorea-aside-w: 14rem;
+        --lorea-aside-w: 12.5rem;
         --lorea-gutter: clamp(1.5rem, 3vw, 2.75rem);
         --lorea-pad: clamp(1rem, 3vw, 1.5rem);
         display: flex;
