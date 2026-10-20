@@ -96,7 +96,8 @@ Results:
 
 - `975d39a` — Rebuild the documentation UI around one page structure
 - `f7b0671` — Fix language consistency, contrast and small screen details
-- The report file was added after those two; its hash is the last commit on `main` (`git log`).
+- `4ab4796` — Line the 404 marker up with the page head
+- The report file was added after those; its hash is the commit that carries this file (`git log`).
 
 ## Not done, uncertain, or not verified
 
