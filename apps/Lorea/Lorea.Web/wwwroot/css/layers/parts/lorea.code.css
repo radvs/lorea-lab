@@ -6,6 +6,7 @@
         --os-code-bg: var(--lorea-chrome);
         --os-code-border: var(--lorea-rule);
         --os-code-accent: var(--lorea-accent);
+        --os-code-size: 0.82rem;
     }
 
     .os-code-box pre :is(span, code),
@@ -17,8 +18,34 @@
         color: var(--lorea-ink);
     }
 
+    .os-code-box {
+        border-radius: 0;
+    }
+
+    .lorea code {
+        color: var(--lorea-heading);
+    }
+
+    .lorea a code {
+        color: inherit;
+    }
+
+    /* Inline code is a quiet chip: the accent stays for links and marks. */
+    .os-inline-code {
+        padding: 0.08em 0.3em;
+        border: 1px solid var(--lorea-rule);
+        color: var(--lorea-heading);
+        background: var(--lorea-chrome);
+        font-size: 0.85em;
+    }
+
     .os-code-output samp {
         color: var(--lorea-heading);
         font-family: var(--lorea-font-en) !important;
+    }
+
+    .lorea :is(.os-code-lang, .os-code-output-label) {
+        color: var(--lorea-muted);
+        opacity: 1;
     }
 }

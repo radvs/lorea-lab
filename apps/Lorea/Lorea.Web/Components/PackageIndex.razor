@@ -1,0 +1,43 @@
+@*
+    Every package, in one list, grouped the same way everywhere. The current package is marked.
+*@
+
+<nav class="index" aria-label="@Text["nav.packages"]">
+    <OSSearchField Class="index-filter"
+                   Value="@_query"
+                   ValueChanged="Filter"
+                   Placeholder="@Text["nav.filter"]"
+                   ClearLabel="@Text["nav.filterClear"]"
+                   aria-label="@Text["nav.filter"]" />
+
+    @if (Groups.Count == 0)
+    {
+        <p class="index-none">@Text["nav.noMatch"]</p>
+    }
+    else
+    {
+        @foreach (var group in Groups)
+        {
+            <div class="index-group">
+                <p class="index-group-title">
+                    <span>@Text.GroupName(group.Id)</span>
+                    <span class="index-group-count">@Profile.ToNativeDigits(group.Entries.Count.ToString(CultureInfo.InvariantCulture))</span>
+                </p>
+                <ul class="index-list" aria-label="@Text.GroupName(group.Id)">
+                    @foreach (var entry in group.Entries)
+                    {
+                        var current = entry.Slug == Current?.Slug;
+                        <li>
+                            <a class="index-link@(current ? " is-current" : null)"
+                               href="@($"{Navigation.BaseUri}packages/{entry.Slug}")"
+                               aria-current="@(current ? "page" : null)">
+                                <span class="index-name">@entry.Name</span>
+                                <span class="index-title">@Text[entry.TextKey("title")]</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+</nav>

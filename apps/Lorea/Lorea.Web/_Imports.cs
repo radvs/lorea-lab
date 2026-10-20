@@ -1,7 +1,9 @@
-﻿global using Lorea.Web;
+global using Lorea.Web;
+global using Lorea.Web.Components;
 global using Lorea.Web.Data;
 
 global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Rendering;
 global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 global using Microsoft.Extensions.Localization;

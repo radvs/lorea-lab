@@ -1,340 +1,210 @@
 @layer lorea.parts {
-    .package-page {
-        max-inline-size: 52rem;
-        padding-block-end: clamp(2rem, 4vw, 3rem);
-    }
-
-    .package-page:has(.package-layout) {
-        max-inline-size: 78rem;
-        margin-inline: auto;
-    }
-
-    .package-layout {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .package-main,
-    .package-aside {
-        display: contents;
-    }
-
-    @media (min-width: 64rem) {
-        .package-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
-            align-items: start;
-            gap: clamp(2rem, 3vw, 3rem);
-        }
-
-        .package-main,
-        .package-aside {
-            display: block;
-            min-inline-size: 0;
-        }
-
-        .package-aside {
-            position: sticky;
-            inset-block-start: 4.5rem;
-        }
-
-        .topic-layout {
-            grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
-        }
-
-        .topic-layout .topic-aside {
-            order: -1;
-            display: flex;
-            flex-direction: column;
-            max-block-size: calc(100dvh - 5.5rem);
-        }
-
-        .topic-aside .topic-nav {
-            min-block-size: 0;
-            overflow-y: auto;
-        }
-
-        .topic-aside .topic-links {
-            flex: none;
-            padding-block-start: 1rem;
-        }
-    }
-
-    .topic-toc {
-        display: none;
-    }
-
-    @media (min-width: 80rem) {
-        .topic-layout {
-            grid-template-columns: 14rem minmax(0, 1fr) 13rem;
-        }
-
-        .topic-toc {
-            display: block;
-            position: sticky;
-            inset-block-start: 4.5rem;
-            padding-block-start: 1.75rem;
-        }
-
-        .topic-toc h2 {
-            margin: 0 0 0.6rem;
-            color: var(--lorea-muted);
-            font-size: 0.8rem;
-            font-weight: 650;
-        }
-    }
-
-    .package-page h2[id] {
-        scroll-margin-block-start: 4.5rem;
-    }
-
-    .package-crumbs {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--lorea-ink);
-        font-size: 0.88rem;
-    }
-
-    .package-crumbs a {
-        color: var(--lorea-link);
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .package-crumbs a:hover {
-        text-decoration: underline;
-    }
-
-    .package-head {
-        --os-head-gap: 0.9rem;
-        --os-head-space: 0;
-        --os-head-size: clamp(1.75rem, 3vw, 2.25rem);
-        --os-head-subtitle-measure: 44rem;
-        --os-head-subtitle-size: 1.02rem;
-        --os-head-note-size: 0.85rem;
-        --lorea-field-size: 2.9rem;
-        padding-block: 0.75rem 1.25rem;
-        border-block-end: 1px solid var(--lorea-rule);
-    }
-
-    .package-head .os-head-titles {
-        gap: 0.5rem;
-    }
-
-    .package-head .os-head-title {
+    .doc-h3 {
+        margin: 1.5rem 0 0.6rem;
         color: var(--lorea-heading);
-        line-height: 1.25;
-    }
-
-    .package-head :is(.os-head-subtitle, .os-head-label, .os-head-note) {
-        color: var(--lorea-muted);
-        opacity: 1;
-    }
-
-    .package-head .os-head-subtitle {
-        color: var(--lorea-ink);
-        line-height: 1.85;
-        text-wrap: pretty;
-    }
-
-    .package-head .os-head-value,
-    .package-head code {
-        color: var(--lorea-heading);
-    }
-
-    .package-head .os-head-details {
-        align-items: flex-start;
-        gap: 0.75rem 2.5rem;
-    }
-
-    .package-head .os-head-value {
-        display: block;
-        min-block-size: 0;
-    }
-
-    .package-head .os-head-label {
-        display: block;
-        margin-block-end: 0.2rem;
-    }
-
-    .package-section {
-        padding-block: clamp(1.25rem, 2.5vw, 1.75rem) 0;
-    }
-
-    .package-section h2 {
-        margin: 0 0 0.85rem;
-        color: var(--lorea-heading);
-        font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+        font-size: 0.95rem;
         font-weight: 650;
-        line-height: 1.4;
+        line-height: 1.5;
     }
 
-    .package-note {
-        margin: 0.6rem 0 0;
-        color: var(--lorea-muted);
-        font-size: 0.85rem;
-        line-height: 1.8;
+    .doc-section > :is(.sample, .doc-h3):first-child,
+    .sample:first-of-type > .doc-h3 {
+        margin-block-start: 0;
     }
 
-    .install-box {
+    /* --- What the package gives you --------------------------------------- */
+
+    .gives {
+        display: grid;
+        gap: 0.7rem;
+        max-inline-size: 46rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .gives li {
+        position: relative;
+        padding-inline-start: 1.15rem;
+        line-height: 1.85;
+    }
+
+    .gives li::before {
+        position: absolute;
+        inset-block-start: 0.72em;
+        inset-inline-start: 0;
+        inline-size: 0.38rem;
+        block-size: 0.38rem;
+        background: var(--lorea-accent);
+        content: "";
+    }
+
+    /* --- Install command -------------------------------------------------- */
+
+    .command {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        padding: 0.2rem 0.2rem 0.2rem 0.85rem;
-        border: 1px solid var(--lorea-rule);
+        max-inline-size: 46rem;
+        padding: 0.15rem;
+        padding-inline-start: 0.85rem;
+        border: 1px solid var(--lorea-rule-dark);
         background: var(--lorea-chrome);
     }
 
-    .install-box code {
+    .command code {
         overflow-x: auto;
         color: var(--lorea-heading);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         white-space: nowrap;
     }
 
-    .package-gives {
+    /* --- Samples ---------------------------------------------------------- */
+
+    .sample {
+        margin-block-start: 1.4rem;
+    }
+
+    .sample .os-code-fig {
+        margin-block-start: 0.5rem;
+    }
+
+    /* --- Guides ----------------------------------------------------------- */
+
+    .guide-list {
         display: grid;
-        gap: 0.5rem;
         margin: 0;
-        padding-inline-start: 1.25rem;
-        line-height: 1.8;
+        padding: 0;
+        list-style: none;
     }
 
-    .package-gives li::marker {
-        color: var(--lorea-accent);
+    .guide-row {
+        display: grid;
+        gap: 0.1rem;
+        margin-inline: -0.85rem;
+        padding: 0.8rem 0.85rem;
+        border-block-start: 1px solid var(--lorea-rule);
+        color: inherit;
+        text-decoration: none;
     }
 
-    .sample-title {
-        margin: 1.25rem 0 0.6rem;
-        color: var(--lorea-ink);
+    .guide-list li:last-child .guide-row {
+        border-block-end: 1px solid var(--lorea-rule);
+    }
+
+    .guide-row:hover {
+        background: var(--lorea-hover);
+    }
+
+    .guide-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.7rem;
+    }
+
+    .guide-no {
+        color: var(--lorea-muted);
+        font-family: var(--lorea-code-font);
+        font-size: 0.7rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .guide-title {
+        color: var(--lorea-heading);
         font-size: 0.95rem;
         font-weight: 600;
     }
 
-    .package-used {
-        display: grid;
-        gap: 0.5rem;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .package-used li {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.6rem;
-    }
-
-    .package-used a {
+    .guide-row:hover .guide-title {
         color: var(--lorea-link);
     }
 
-    .package-used a code {
-        color: inherit;
-    }
-
-    .package-used span {
+    .guide-summary {
         color: var(--lorea-muted);
-        font-size: 0.88rem;
+        font-size: 0.86rem;
+        line-height: 1.7;
     }
 
-    .package-section > p {
-        max-inline-size: 44rem;
-        margin: 0 0 1rem;
-        color: var(--lorea-muted);
-        line-height: 1.85;
-    }
+    /* --- API list --------------------------------------------------------- */
 
-    .package-section[id] {
-        scroll-margin-block-start: 4.5rem;
-    }
-
-    .package-toc {
+    .type-groups {
         display: grid;
-        gap: 0.15rem;
+        gap: 1.4rem;
+    }
+
+    .type-group h3 {
+        margin: 0 0 0.4rem;
+        color: var(--lorea-muted);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+    }
+
+    .type-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
         margin: 0;
         padding: 0;
         list-style: none;
     }
 
-    .package-toc a {
-        display: block;
-        padding: 0.3rem 0.6rem;
-        border-inline-start: 2px solid var(--lorea-rule);
-        color: var(--lorea-ink);
-        font-size: 0.95rem;
-        text-decoration: none;
-    }
-
-    .package-toc a:hover {
-        border-color: var(--lorea-accent);
-        background: var(--lorea-hover);
-        color: var(--lorea-heading);
-    }
-
-    .api-types {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-    }
-
-    .api-types a {
+    .type-list a {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 1.9rem;
         padding: 0.1rem 0.45rem;
         border: 1px solid var(--lorea-rule);
         color: var(--lorea-link);
-        font-size: 0.82rem;
         text-decoration: none;
+        transition: border-color 120ms linear, background-color 120ms linear;
     }
 
-    .api-types a:hover {
-        border-color: var(--lorea-accent);
-    }
-
-    .api-types code {
-        direction: ltr;
-        unicode-bidi: isolate;
-    }
-
-    .topic-steps {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-        margin-block-start: 2rem;
-        padding-block-start: 1.25rem;
-        border-block-start: 1px solid var(--lorea-rule);
-    }
-
-    .topic-step {
-        display: grid;
-        gap: 0.2rem;
-        padding: 0.7rem 0.9rem;
-        border: 1px solid var(--lorea-rule);
-        color: var(--lorea-link);
-        text-decoration: none;
-    }
-
-    .topic-step:hover {
+    .type-list a:hover {
         border-color: var(--lorea-accent);
         background: var(--lorea-hover);
     }
 
-    .topic-step span {
-        color: var(--lorea-muted);
+    .type-list code {
+        color: inherit;
         font-size: 0.78rem;
+        unicode-bidi: isolate;
     }
 
-    .topic-step-next {
-        grid-column: 2;
-        text-align: end;
+    /* --- Ends and asides -------------------------------------------------- */
+
+    .doc-end {
+        margin-block-start: 1.5rem;
+        padding-block-start: 1rem;
     }
 
-    .topic-links {
-        display: grid;
-        justify-items: start;
-        gap: 0.6rem;
+    .aside-link {
+        display: flex;
+        align-items: center;
+        inline-size: 100%;
+        min-block-size: 2.5rem;
+        margin-block-start: 0.9rem;
+        padding-inline: 0.55rem;
+        border-block-start: 1px solid var(--lorea-rule);
+        color: var(--lorea-link);
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .aside-link:hover {
+        color: var(--lorea-heading);
+    }
+
+    @media (max-width: 47.99rem) {
+        .guide-no {
+            display: none;
+        }
+
+        .type-list a {
+            min-block-size: 2.5rem;
+        }
     }
 }

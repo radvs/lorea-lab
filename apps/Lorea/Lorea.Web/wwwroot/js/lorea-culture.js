@@ -23,6 +23,11 @@ window.lorea = (() => {
         document.documentElement.dir = direction;
     }
 
+    // The dependency map is readable at its own size on a phone and fitted on a desk.
+    function wideScreen() {
+        return window.matchMedia("(min-width: 64rem)").matches;
+    }
+
     function preloadFont(file) {
         const link = document.createElement("link");
         link.rel = "preload";
@@ -43,5 +48,5 @@ window.lorea = (() => {
         preloadFont("irs-fn-bold.woff2");
     }
 
-    return { getPreferredCulture, setPreferredCulture, setDocumentCulture };
+    return { getPreferredCulture, setPreferredCulture, setDocumentCulture, wideScreen };
 })();

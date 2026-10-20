@@ -1,22 +1,5 @@
 @layer lorea.parts {
-    @keyframes lorea-draw {
-        to {
-            stroke-dashoffset: 0;
-        }
-    }
-
-    @keyframes lorea-rise {
-        from {
-            opacity: 0;
-            transform: translateY(4px);
-        }
-
-        to {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
+    /* Only two motions earn their place: the flow of an indirect dependency on the map, and the loading mark. */
     @keyframes lorea-flow {
         to {
             stroke-dashoffset: -10;

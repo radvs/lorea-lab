@@ -9,6 +9,7 @@ public partial class MainLayout
 
     private ICultureProfile _culture = default!;
     private string? _appliedDocumentCulture;
+    private IJSObjectReference? _pages;
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,6 +23,13 @@ public partial class MainLayout
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            // Long code lines scroll sideways; the browser must still reach them with the keyboard.
+            _pages = await JS.InvokeAsync<IJSObjectReference>("import", $"{Navigation.BaseUri}js/lorea-pages.js");
+            await _pages.InvokeVoidAsync("watchScrollers");
+        }
+
         if (_appliedDocumentCulture == _culture.Name)
             return;
 

@@ -1,86 +1,110 @@
 @layer lorea.parts {
     .stack-map {
-        padding-block-start: clamp(1.75rem, 4vw, 2.75rem);
-        border-block-start: 1px solid var(--lorea-rule);
-        scroll-margin-block-start: 4rem;
+        margin-block-start: clamp(2.5rem, 5vw, 4rem);
+        padding-block-start: clamp(1.5rem, 3vw, 2rem);
+        border-block-start: 1px solid var(--lorea-rule-dark);
     }
 
-    .map-heading h2 {
+    .map-head h2 {
         margin: 0;
         color: var(--lorea-heading);
-        font-size: clamp(1.4rem, 2.6vw, 1.9rem);
-        font-weight: 650;
-        line-height: 1.35;
+        font-size: clamp(1.45rem, 2.6vw, 1.9rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
     }
 
-    .map-heading p {
-        max-inline-size: 42rem;
+    .map-head p {
+        max-inline-size: 46rem;
         margin: 0.5rem 0 1.25rem;
         color: var(--lorea-muted);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         line-height: 1.8;
     }
 
     .map-frame {
-        border: 1px solid var(--lorea-rule);
-        background: var(--lorea-chrome);
+        border: 1px solid var(--lorea-rule-dark);
+        background: var(--lorea-bg);
+    }
+
+    .map-swipe {
+        display: none;
+        margin: 0;
+        padding: 0.45rem 0.75rem;
+        border-block-start: 1px solid var(--lorea-rule);
+        color: var(--lorea-muted);
+        font-size: 0.75rem;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 63.99rem) {
+        .map-swipe {
+            display: block;
+        }
+
+        .map-frame:has(.map-canvas[data-fit="true"]) .map-swipe {
+            display: none;
+        }
     }
 
     .map-bar {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.75rem 1rem;
+        gap: 0.5rem 1rem;
         padding: 0.5rem 0.75rem;
         border-block-end: 1px solid var(--lorea-rule);
-        background: var(--lorea-bg);
+        background: var(--lorea-chrome);
     }
 
     .map-search {
         flex: 1 1 14rem;
-        max-inline-size: 22rem;
-    }
-
-    .map-search input::-webkit-search-cancel-button {
-        display: none;
+        max-inline-size: 20rem;
     }
 
     .map-tools {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.25rem;
         margin-inline-start: auto;
     }
 
     .map-canvas {
-        overflow: auto;
+        overflow-x: auto;
         overscroll-behavior-x: contain;
     }
 
     .map-svg {
         display: block;
-        inline-size: 100%;
-        min-inline-size: calc(var(--map-w) * 0.78px);
-        max-inline-size: calc(var(--map-w) * 1px);
-        margin-inline: auto;
+        margin-inline: 0;
         block-size: auto;
         direction: ltr;
     }
 
-    .map-dot {
-        fill: var(--lorea-rule-dark);
-        opacity: 0.55;
+    .map-canvas[data-fit="true"] .map-svg {
+        inline-size: 100%;
+    }
+
+    .map-canvas[data-fit="false"] .map-svg {
+        inline-size: calc(var(--map-w) * 1px);
+    }
+
+    .map-rule {
+        stroke: var(--lorea-rule);
+        stroke-width: 1;
     }
 
     .map-level {
         fill: var(--lorea-muted);
-        font-size: 11px;
-        opacity: 0.8;
+        font: 600 10px var(--lorea-code-font);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
 
     .map-wire {
         fill: none;
         stroke: var(--lorea-rule-dark);
-        stroke-width: 1.5;
+        stroke-width: 1.25;
         transition: stroke 150ms ease-out, opacity 150ms ease-out;
     }
 
@@ -91,12 +115,12 @@
     }
 
     .map-wire.is-indirect {
-        stroke-dasharray: 5 5;
-        animation: lorea-flow 1.2s linear infinite;
+        stroke-dasharray: 5 4;
+        animation: lorea-flow 1.4s linear infinite;
     }
 
     .map-wire.is-off {
-        opacity: 0.12;
+        opacity: 0.15;
     }
 
     .map-node {
@@ -114,7 +138,7 @@
 
     .map-name {
         fill: var(--lorea-heading);
-        font: 600 13px var(--lorea-code-font);
+        font: 600 12.5px var(--lorea-code-font);
     }
 
     .map-sub {
@@ -127,13 +151,9 @@
     .map-node:focus-visible .map-box {
         fill: var(--lorea-hover);
         stroke: var(--lorea-accent);
-    }
-
-    .map-node:focus-visible .map-box {
         stroke-width: 2;
     }
 
-    .map-node.is-on .map-box,
     .map-node.is-hit .map-box {
         stroke: var(--lorea-accent);
     }
@@ -145,18 +165,19 @@
     }
 
     .map-node.is-off {
-        opacity: 0.3;
+        opacity: 0.25;
     }
 
     .map-legend {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem 1.25rem;
+        align-items: center;
+        gap: 0.4rem 1.5rem;
         margin: 0;
-        padding: 0.5rem 0.75rem;
+        padding: 0.6rem 0.75rem;
         border-block-start: 1px solid var(--lorea-rule);
         color: var(--lorea-muted);
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         list-style: none;
     }
 
@@ -166,9 +187,13 @@
         gap: 0.4rem;
     }
 
+    .map-legend-note {
+        margin-inline-start: auto;
+    }
+
     .map-key {
         display: inline-block;
-        inline-size: 1.5rem;
+        inline-size: 1.6rem;
         border-block-start: 2px solid var(--lorea-rule-dark);
     }
 
@@ -181,149 +206,39 @@
         border-color: var(--lorea-accent);
     }
 
-    .map-groups {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-        align-items: start;
-        gap: 1rem;
-        padding: 1rem;
-        background: var(--lorea-bg);
-    }
-
-    .map-group {
-        min-inline-size: 0;
-        border: 1px solid var(--lorea-rule);
-        background: var(--lorea-chrome);
-    }
-
-    .map-group > header {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.55rem 0.75rem;
-        border-block-end: 1px solid var(--lorea-rule);
-    }
-
-    .map-group h3 {
-        margin: 0;
-        color: var(--lorea-heading);
-        font-size: 0.9rem;
-        font-weight: 650;
-    }
-
-    .map-group > header span {
-        color: var(--lorea-muted);
-        font-size: 0.75rem;
-    }
-
-    .map-libs {
-        display: grid;
-    }
-
-    .map-lib {
-        display: grid;
-        gap: 0.15rem;
-        padding: 0.55rem 0.75rem;
-        border: 0;
-        border-block-end: 1px solid var(--lorea-rule);
-        background: transparent;
-        color: inherit;
-        font: inherit;
-        text-align: start;
-        cursor: pointer;
-    }
-
-    .map-lib:hover {
-        background: var(--lorea-hover);
-    }
-
-    .map-lib:focus-visible {
-        outline: 2px solid var(--lorea-accent);
-        outline-offset: -2px;
-    }
-
-    .map-lib[aria-expanded="true"] {
-        background: var(--lorea-accent-soft);
-    }
-
-    .map-lib code {
-        color: var(--lorea-heading);
-        font-weight: 600;
-        direction: ltr;
-        text-align: start;
-    }
-
-    .map-lib span {
-        color: var(--lorea-muted);
-        font-size: 0.78rem;
-    }
-
-    .map-types {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-        padding: 0.6rem 0.75rem;
-        border-block-end: 1px solid var(--lorea-rule);
-        background: var(--lorea-bg);
-    }
-
-    .map-types code {
-        padding: 0.1rem 0.4rem;
-        border: 1px solid var(--lorea-rule);
-        color: var(--lorea-ink);
-        font-size: 0.78rem;
-        direction: ltr;
-        unicode-bidi: isolate;
-    }
-
-    .map-types a {
-        text-decoration: none;
-    }
-
-    .map-types a code {
-        color: var(--lorea-link);
-    }
-
-    .map-types a:hover code {
-        border-color: var(--lorea-accent);
-    }
-
-    .map-types p,
-    .map-empty,
-    .map-hint,
-    .map-none {
-        margin: 0;
-        color: var(--lorea-muted);
-        font-size: 0.85rem;
-    }
-
-    .map-empty {
-        padding: 1.5rem;
-        background: var(--lorea-bg);
-        text-align: center;
-    }
-
     .map-panel {
         display: grid;
         justify-items: start;
-        gap: 0.75rem;
-        padding: 0.9rem 1rem;
+        gap: 0.7rem;
+        padding: 0.9rem 1rem 1rem;
         border-block-start: 1px solid var(--lorea-rule);
-        background: var(--lorea-bg);
+        background: var(--lorea-chrome);
     }
 
-    .map-panel h3 {
+    .map-pick {
+        margin: 0;
+        color: var(--lorea-muted);
+        font-size: 0.88rem;
+        line-height: 1.75;
+    }
+
+    .map-panel-title {
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
-        gap: 0.5rem 0.75rem;
+        gap: 0.35rem 0.75rem;
         margin: 0;
         color: var(--lorea-heading);
         font-size: 1rem;
     }
 
-    .map-panel h3 span {
+    .map-panel-title code {
+        color: var(--lorea-heading);
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .map-panel-title span {
         color: var(--lorea-muted);
         font-size: 0.85rem;
         font-weight: 400;
@@ -332,7 +247,6 @@
     .map-summary {
         max-inline-size: 46rem;
         margin: 0;
-        color: var(--lorea-ink);
         font-size: 0.88rem;
         line-height: 1.8;
     }
@@ -341,14 +255,42 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.35rem;
     }
 
     .map-rel b {
-        min-inline-size: 7rem;
+        min-inline-size: 7.5rem;
         color: var(--lorea-muted);
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
+    }
+
+    .map-none {
+        color: var(--lorea-muted);
+        font-size: 0.82rem;
+    }
+
+    .map-empty {
+        margin: 0;
+        padding: 1.75rem 1rem;
+        background: var(--lorea-bg);
+        color: var(--lorea-muted);
+        font-size: 0.88rem;
+        text-align: center;
+    }
+
+    @media (max-width: 47.99rem) {
+        .map-tools {
+            margin-inline-start: 0;
+        }
+
+        .map-tools .os-btn {
+            min-block-size: 2.5rem;
+        }
+
+        .map-legend-note {
+            margin-inline-start: 0;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {

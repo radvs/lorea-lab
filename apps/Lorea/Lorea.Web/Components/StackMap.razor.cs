@@ -4,15 +4,10 @@ namespace Lorea.Web.Components;
 
 public partial class StackMap : IAsyncDisposable
 {
-    private const string WiresView = "wires";
-    private const string GroupsView = "groups";
-    private const string ViewPanel = "map-view";
     private const double MinNodeWidth = 150;
     private const double NameChar = 7.9;
     private const double TitleChar = 6.6;
     private const double NodePad = 36;
-
-    private static readonly IReadOnlyList<string> Views = [WiresView, GroupsView];
 
     [Inject] private IStringLocalizer<StackMap> Text { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
@@ -25,13 +20,13 @@ public partial class StackMap : IAsyncDisposable
     private MapGraph _graph = default!;
     private MapLayout _layout = default!;
     private IReadOnlyList<MapWire> _wires = [];
-    private MapGraph? _flat;
     private string _built = string.Empty;
-    private string _view = WiresView;
     private string? _selected;
     private string? _hover;
     private string _query = string.Empty;
     private bool _reveal;
+    private bool _fit = true;
+    private bool _fitResolved;
     private IJSObjectReference? _module;
 
     private static IReadOnlyList<LibraryEntry> Entries => LibraryCatalog.Entries;
@@ -42,14 +37,9 @@ public partial class StackMap : IAsyncDisposable
 
     private IReadOnlyList<MapWire> Wires => _wires;
 
-    // Every family unfolded: the groups view lists each package on its own.
-    private MapGraph Flat => _flat ??= new MapGraph(Entries, Entries.Select(entry => entry.Family).OfType<string>().ToHashSet());
+    private MapNode? Active => _graph.Find(_selected);
 
-    private MapGraph PanelGraph => _view == WiresView ? _graph : Flat;
-
-    private MapNode? Active => PanelGraph.Find(PanelGraph.NodeOf(_selected ?? string.Empty));
-
-    private bool CanToggleAddOns => _view == WiresView && (_graph.HasFolded || _open.Count > 0);
+    private bool CanToggleAddOns => _graph.HasFolded || _open.Count > 0;
 
     private bool Searching => _query.Length > 0;
 
@@ -57,11 +47,23 @@ public partial class StackMap : IAsyncDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && !_fitResolved)
+        {
+            _fitResolved = true;
+            var wide = await Js.InvokeAsync<bool>("lorea.wideScreen");
+            if (wide != _fit)
+            {
+                _fit = wide;
+                StateHasChanged();
+                return;
+            }
+        }
+
         if (!_reveal)
             return;
 
         _reveal = false;
-        if (_view != WiresView || Active is not { } node)
+        if (Active is not { } node)
             return;
 
         _module ??= await Js.InvokeAsync<IJSObjectReference>("import", $"{Navigation.BaseUri}js/lorea-map.js");
@@ -100,44 +102,14 @@ public partial class StackMap : IAsyncDisposable
 
     private string Digits(int value) => Profile.ToNativeDigits(value.ToString(CultureInfo.InvariantCulture));
 
-    private string ViewText(string view) => Text[$"map.view.{view}"];
-
     private string PackageUrl(LibraryEntry entry) => $"{Navigation.BaseUri}packages/{entry.Slug}";
-
-    private string TopicUrl(LibraryEntry entry, LibraryTopic topic) => Navigation.BaseUri + entry.TopicRoute(topic);
 
     private static string NodeDomId(string id) => $"map-node-{id}";
 
-    private static string TypeName(ApiType type) => type.Key.Replace('{', '<').Replace('}', '>');
-
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
 
-    private static LibraryTopic? TopicOf(LibraryEntry entry, ApiType type) =>
-        entry.Topics.FirstOrDefault(topic => topic.Namespaces.Contains(type.Namespace) && (topic.Types is null || topic.Types.Contains(type.Key)));
-
     private List<MapNode> NodesOf(IEnumerable<string> ids) =>
-        [.. ids.Select(PanelGraph.Find).OfType<MapNode>().OrderBy(node => node.Name, StringComparer.Ordinal)];
-
-    private string GroupTitle(string id)
-    {
-        if (id.Length == 0)
-            return Text["map.groupOther"];
-
-        var text = Text[$"groups.{id}"];
-        return text.ResourceNotFound ? id : text.Value;
-    }
-
-    // Groups in the order of their lowest library (the base first); a library without a group goes last, under "other".
-    private List<MapGroup> GroupsOf(string query) =>
-    [
-        .. Entries
-            .Where(entry => query.Length == 0 || Matches(entry.Name, Text[entry.TextKey("title")], query))
-            .GroupBy(entry => entry.Group ?? string.Empty)
-            .Select(group => new MapGroup(group.Key, [.. group.OrderBy(entry => LibraryCatalog.Depth(entry.Slug)).ThenBy(entry => entry.Name, StringComparer.Ordinal)]))
-            .OrderBy(group => group.Id.Length == 0)
-            .ThenBy(group => group.Entries.Min(entry => LibraryCatalog.Depth(entry.Slug)))
-            .ThenBy(group => group.Id, StringComparer.Ordinal)
-    ];
+        [.. ids.Select(_graph.Find).OfType<MapNode>().OrderBy(node => node.Name, StringComparer.Ordinal)];
 
     private bool Matches(MapNode node) =>
         Searching && (Matches(node.Name, TitleOf(node), _query) || node.Members.Any(member => Matches(member.Name, Text[member.TextKey("title")], _query)));
@@ -171,13 +143,6 @@ public partial class StackMap : IAsyncDisposable
             focus.Id is null ? (Searching ? "is-off" : null) : (on ? null : "is-off"));
     }
 
-    private void ShowView(string view)
-    {
-        _view = view;
-        if (Active is null)
-            _selected = null;
-    }
-
     private void Search(string? value) => _query = value?.Trim() ?? string.Empty;
 
     private void Pick(string id)
@@ -202,6 +167,8 @@ public partial class StackMap : IAsyncDisposable
         _hover = null;
     }
 
+    private void ToggleFit() => _fit = !_fit;
+
     private void ToggleAddOns()
     {
         if (_graph.HasFolded)
@@ -223,6 +190,4 @@ public partial class StackMap : IAsyncDisposable
     private static readonly IReadOnlySet<string> EmptySet = new HashSet<string>();
 
     private readonly record struct MapFocus(string? Id, IReadOnlySet<string> Down, IReadOnlySet<string> Up);
-
-    private sealed record MapGroup(string Id, IReadOnlyList<LibraryEntry> Entries);
 }

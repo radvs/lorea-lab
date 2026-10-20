@@ -1,0 +1,41 @@
+@*
+    On a phone the side panels are gone, so their content moves here, under the page head where it is reachable.
+*@
+
+<nav class="doc-mobile" aria-label="@Text["layout.siteNav"]">
+    <div class="mobile-links">
+        <a href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
+        <a href="@PackageUrl">@Text["nav.packageOverview"]</a>
+        <a href="@($"{Navigation.BaseUri}#map")">@Text["nav.map"]</a>
+    </div>
+
+    @if (Current is not null)
+    {
+        <ul class="topic-strip" aria-label="@Text["topic.list"]">
+            @foreach (var topic in Entry.Topics)
+            {
+                var current = topic.Slug == Current.Slug;
+                <li>
+                    <a href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")"
+                       aria-current="@(current ? "page" : null)"
+                       class="@(current ? "is-current" : null)">@Text[Entry.TopicKey(topic, "title")]</a>
+                </li>
+            }
+        </ul>
+    }
+
+    <details class="mobile-fold">
+        <summary>@Text["package.onPage"]</summary>
+        <ul class="mobile-toc">
+            @foreach (var section in Sections)
+            {
+                <li><a href="@($"{PageUrl}#{section.Id}")">@section.Label</a></li>
+            }
+        </ul>
+    </details>
+
+    <details class="mobile-fold">
+        <summary>@Text["related.title"]</summary>
+        <RelatedPackages Entry="Entry" />
+    </details>
+</nav>

@@ -65,7 +65,11 @@
         --os-icon-btn-hover: var(--lorea-hover);
         --os-icon-btn-press: var(--lorea-selected);
         --os-btn-radius: 2px;
-        --os-btn-pad: 0.7rem 1.1rem;
+        --os-btn-pad: 0.65rem 1rem;
+        --os-field-border: var(--lorea-rule-dark);
+        --os-field-bg: var(--lorea-bg);
+        --os-field-focus: var(--lorea-accent);
+        --os-field-radius: 2px;
         min-block-size: 100vh;
     }
 
@@ -106,7 +110,7 @@
 
     .lorea-skip-link {
         position: absolute;
-        z-index: 20;
+        z-index: 40;
         inset-block-start: 0.5rem;
         inset-inline-start: -100vw;
         padding: 0.65rem 1rem;
@@ -128,17 +132,9 @@
         clip-path: inset(50%);
     }
 
-    .lorea[lang="fa"] :is(
-        .home-intro h1,
-        .map-heading h2,
-        .package-head .os-head-title,
-        .not-found-page h1
-    ) {
-        letter-spacing: normal;
-        line-height: 1.45;
-    }
-
-    code {
-        color: var(--lorea-accent);
+    @media (max-width: 47.99rem) {
+        .lorea {
+            --os-icon-btn-size: 2.5rem;
+        }
     }
 }

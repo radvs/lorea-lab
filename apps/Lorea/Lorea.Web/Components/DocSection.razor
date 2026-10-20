@@ -1,0 +1,14 @@
+@*
+    Every section on a package or topic page is built here: same anchor, same numbered heading, same rhythm.
+*@
+
+<section id="@Id" class="doc-section" aria-labelledby="@($"{Id}-title")">
+    <h2 id="@($"{Id}-title")" class="doc-h2">
+        @if (Index > 0)
+        {
+            <span class="doc-no" aria-hidden="true">@Number</span>
+        }
+        <span class="doc-h2-text">@Title</span>
+    </h2>
+    @ChildContent
+</section>

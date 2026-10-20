@@ -1,15 +1,17 @@
 @if (Items.Count == 0)
 {
-    <p class="package-note">@Empty</p>
+    <p class="related-none">@Empty</p>
 }
 else
 {
-    <ul class="package-used">
+    <ul class="link-list">
         @foreach (var item in Items)
         {
             <li>
-                <a href="@($"{Navigation.BaseUri}packages/{item.Slug}")"><code>@item.Name</code></a>
-                <span>@Text[item.TextKey("title")]</span>
+                <a href="@($"{Navigation.BaseUri}packages/{item.Slug}")">
+                    <code>@item.Name</code>
+                    <span>@Text[item.TextKey("title")]</span>
+                </a>
             </li>
         }
     </ul>

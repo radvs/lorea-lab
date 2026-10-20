@@ -4,130 +4,167 @@
 {
     <PageTitle>@Text["notFound.title"]</PageTitle>
 
-    <section class="not-found-page">
-        <h1>@Text["package.missingTitle"]</h1>
-        <p>@Text["package.missingText"]</p>
-        <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["package.back"]</a>
-        <h2>@Text["notFound.packages"]</h2>
-        <PackageLinks Items="LibraryCatalog.Entries" />
-    </section>
+    <div class="page">
+        <section class="not-found-page">
+            <PageCrumbs Items="MissingCrumbs" />
+            <h1>@Text["package.missingTitle"]</h1>
+            <p>@Text["package.missingText"]</p>
+            <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["package.back"]</a>
+            <h2>@Text["notFound.packages"]</h2>
+            <PackageLinks Items="LibraryCatalog.Entries" />
+        </section>
+    </div>
 }
 else
 {
     <PageTitle>@PageTitle</PageTitle>
 
-    <article class="package-page">
-        <nav class="package-crumbs" aria-label="@Text["package.crumbsLabel"]">
-            <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
-            <span aria-hidden="true">/</span>
-            <a href="@($"{Navigation.BaseUri}#packages")">@Text["package.packages"]</a>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">@Text[Entry.TextKey("title")]</span>
-        </nav>
+    <div class="page">
+        <div class="doc-grid">
+            <div class="doc-rail">
+                <div class="rail-sticky">
+                    <PackageIndex Current="Entry" />
+                </div>
+            </div>
 
-        <OSPageHead Class="package-head" Title="@Text[Entry.TextKey("title")]">
-            <SubtitleContent>
-                <OSInlineText Text="@Text[Entry.TextKey("summary")]" />
-            </SubtitleContent>
-            <Details>
-                <OSHeadItem Label="@Text["package.name"]">
-                    <code>@Entry.Name</code>
-                </OSHeadItem>
-            </Details>
-        </OSPageHead>
+            <article class="doc-main">
+                <PageCrumbs Items="Crumbs" />
 
-        <div class="package-layout">
-            <div class="package-main">
-                <section id="overview" class="package-section" aria-labelledby="overview-title">
-                    <h2 id="overview-title">@Text["package.sections.overview"]</h2>
-                    <ul class="package-gives">
-                        @for (var i = 1; i <= 3; i++)
+                <OSPageHead Class="page-head" Title="@Text[Entry.TextKey("title")]">
+                    <SubtitleContent>
+                        <OSInlineText Text="@Text[Entry.TextKey("summary")]" />
+                    </SubtitleContent>
+                    <Details>
+                        <OSHeadItem Label="@Text["package.name"]">
+                            <code>@Entry.Name</code>
+                        </OSHeadItem>
+                        @if (GroupName is { } group)
                         {
-                            <li><OSInlineText Text="@Text[Entry.TextKey($"gives.{i}")]" /></li>
+                            <OSHeadItem Label="@Text["package.group"]">
+                                <span>@group</span>
+                            </OSHeadItem>
                         }
-                    </ul>
-                </section>
+                        <OSHeadItem Label="@Text["package.guides"]">
+                            <span>@GuidesCount</span>
+                        </OSHeadItem>
+                    </Details>
+                </OSPageHead>
 
-                <section id="install" class="package-section" aria-labelledby="install-title">
-                    <h2 id="install-title">@Text["package.sections.install"]</h2>
-                    <div class="install-box" dir="ltr">
+                <MobileDocNav Entry="Entry" Sections="SectionLinks" />
+
+                <DocSection Id="overview" Index="1" Title="@Text["package.sections.overview"]">
+                    @if (Gives.Count == 0)
+                    {
+                        <p class="doc-note">@Text["package.overviewNone"]</p>
+                    }
+                    else
+                    {
+                        <ul class="gives">
+                            @foreach (var give in Gives)
+                            {
+                                <li><OSInlineText Text="@give" /></li>
+                            }
+                        </ul>
+                    }
+                </DocSection>
+
+                <DocSection Id="install" Index="2" Title="@Text["package.sections.install"]">
+                    <div class="command" dir="ltr">
                         <code>@InstallCommand</code>
                         <OSTooltip Text="@Text["code.copyCommand"]" Side="TooltipSide.Bottom">
                             <OSCopyButton Text="@InstallCommand" Label="@Text["code.copyCommand"]" DoneLabel="@Text["code.copied"]" />
                         </OSTooltip>
                     </div>
-                    <p class="package-note">@Text["package.installNote"]</p>
-                    <h3 class="sample-title">@Text["package.path"]</h3>
+                    <p class="doc-note">@Text["package.installNote"]</p>
+
+                    <h3 class="doc-h3">@Text["package.path"]</h3>
                     <DependencyPath Steps="Chain" />
-                </section>
+                </DocSection>
 
-                <section id="quick-start" class="package-section" aria-labelledby="quick-start-title">
-                    <h2 id="quick-start-title">@Text["package.sections.quickStart"]</h2>
-                    @foreach (var sample in Entry.Samples)
-                    {
-                        <h3 class="sample-title">@Text[Entry.TextKey($"sample.{sample.Key}")]</h3>
-                        <OSCodeBlock Code="@sample.Code" Language="@sample.Language" Output="@sample.Output" CopyLabel="@Text["code.copy"]" CopiedLabel="@Text["code.copied"]" OutputLabel="@Text["code.output"]" />
-                    }
-
+                <DocSection Id="quick-start" Index="3" Title="@Text["package.sections.quickStart"]">
                     @if (!Entry.Samples.Any())
                     {
-                        <p class="package-note">@Text["package.quickStartNone"]</p>
+                        <p class="doc-note">@Text["package.quickStartNone"]</p>
                     }
-                </section>
 
-                <section id="guides" class="package-section" aria-labelledby="guides-title">
-                    <h2 id="guides-title">@Text["package.sections.guides"]</h2>
+                    @foreach (var sample in Entry.Samples)
+                    {
+                        <div class="sample">
+                            <h3 class="doc-h3">@Text[Entry.TextKey($"sample.{sample.Key}")]</h3>
+                            <OSCodeBlock Code="@sample.Code"
+                                         Language="@sample.Language"
+                                         Output="@sample.Output"
+                                         CopyLabel="@Text["code.copy"]"
+                                         CopiedLabel="@Text["code.copied"]"
+                                         OutputLabel="@Text["code.output"]" />
+                        </div>
+                    }
+                </DocSection>
+
+                <DocSection Id="guides" Index="4" Title="@Text["package.sections.guides"]">
                     @if (Entry.Topics.Count == 0)
                     {
-                        <p class="package-note">@Text["package.guidesNone"]</p>
+                        <p class="doc-note">@Text["package.guidesNone"]</p>
                     }
                     else
                     {
-                        <nav class="topic-cards" aria-labelledby="guides-title">
-                            @foreach (var topic in Entry.Topics)
+                        <ul class="guide-list">
+                            @for (var i = 0; i < Entry.Topics.Count; i++)
                             {
-                                <OSAccordionLeaf Title="@Text[Entry.TopicKey(topic, "title")]" Caption="@Text[Entry.TopicKey(topic, "summary")]" Href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")" />
+                                var topic = Entry.Topics[i];
+                                <li>
+                                    <a class="guide-row" href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")">
+                                        <span class="guide-head">
+                                            <span class="guide-no" aria-hidden="true">@Number(i + 1)</span>
+                                            <span class="guide-title">@Text[Entry.TopicKey(topic, "title")]</span>
+                                        </span>
+                                        <span class="guide-summary">@Text[Entry.TopicKey(topic, "summary")]</span>
+                                    </a>
+                                </li>
                             }
-                        </nav>
+                        </ul>
                     }
-                </section>
+                </DocSection>
 
-                <section id="api" class="package-section" aria-labelledby="api-title">
-                    <h2 id="api-title">@Text["package.sections.api"]</h2>
+                <DocSection Id="api" Index="5" Title="@Text["package.sections.api"]">
                     @if (ApiGroups.Count == 0)
                     {
-                        <p class="package-note">@Text["package.apiNone"]</p>
+                        <p class="doc-note">@Text["package.apiNone"]</p>
                     }
                     else
                     {
-                        <p class="package-note">@Text["package.apiNote"]</p>
-                        @foreach (var (topic, types) in ApiGroups)
-                        {
-                            <h3 class="sample-title">@Text[Entry.TopicKey(topic, "title")]</h3>
-                            <div class="api-types">
-                                @foreach (var type in types)
-                                {
-                                    <a href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")"><code>@type.Key.Replace('{', '<').Replace('}', '>')</code></a>
-                                }
-                            </div>
-                        }
+                        <p class="doc-note">@Text["package.apiNote"]</p>
+                        <div class="type-groups">
+                            @foreach (var group in ApiGroups)
+                            {
+                                <section class="type-group" aria-label="@Text[Entry.TopicKey(group.Topic, "title")]">
+                                    <h3>@Text[Entry.TopicKey(group.Topic, "title")]</h3>
+                                    <ul class="type-list">
+                                        @foreach (var type in group.Types)
+                                        {
+                                            <li>
+                                                <a href="@($"{Navigation.BaseUri}{Entry.TopicRoute(group.Topic)}")"><code>@TypeName(type)</code></a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </section>
+                            }
+                        </div>
                     }
-                </section>
-            </div>
+                </DocSection>
 
-            <aside class="package-aside">
-                <nav class="package-section" aria-labelledby="onpage-title">
-                    <h2 id="onpage-title">@Text["package.onPage"]</h2>
-                    <ul class="package-toc">
-                        @foreach (var (id, key) in Sections)
-                        {
-                            <li><a href="@($"{PageUrl}#{id}")">@Text[key]</a></li>
-                        }
-                    </ul>
-                </nav>
+                <div class="doc-related">
+                    <RelatedPackages Entry="Entry" />
+                </div>
 
-                <RelatedPackages Entry="Entry" />
-            </aside>
+                <div class="doc-end">
+                    <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
+                </div>
+            </article>
+
+            <DocAside Sections="SectionLinks">
+                <a class="aside-link" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
+            </DocAside>
         </div>
-    </article>
+    </div>
 }

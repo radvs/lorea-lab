@@ -1,0 +1,28 @@
+@*
+    The guides of one package. It sits where the package index sits on a package page, with the way out at the bottom.
+*@
+
+<nav class="index index-topics" aria-label="@Text["topic.list"]">
+    <a class="index-package" href="@PackageUrl">
+        <span class="index-package-name">@Entry.Name</span>
+        <span class="index-package-title">@Text[Entry.TextKey("title")]</span>
+    </a>
+
+    <p class="index-group-title">@Text["topic.list"]</p>
+    <ul class="index-list">
+        <li>
+            <a class="index-link" href="@PackageUrl">@Text["nav.packageOverview"]</a>
+        </li>
+        @foreach (var topic in Entry.Topics)
+        {
+            var current = topic.Slug == Current?.Slug;
+            <li>
+                <a class="index-link@(current ? " is-current" : null)"
+                   href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")"
+                   aria-current="@(current ? "page" : null)">@Text[Entry.TopicKey(topic, "title")]</a>
+            </li>
+        }
+    </ul>
+
+    <a class="index-all" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
+</nav>

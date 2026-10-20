@@ -1,0 +1,18 @@
+@*
+    The third column. The links follow the reading position through the page.
+*@
+
+<aside class="doc-aside">
+    <div class="aside-sticky">
+        <nav class="page-toc" aria-labelledby="toc-title">
+            <h2 id="toc-title">@Text["package.onPage"]</h2>
+            <ul>
+                @foreach (var section in Sections)
+                {
+                    <li><a href="@($"{PageUrl}#{section.Id}")" data-toc="@section.Id">@section.Label</a></li>
+                }
+            </ul>
+        </nav>
+        @ChildContent
+    </div>
+</aside>

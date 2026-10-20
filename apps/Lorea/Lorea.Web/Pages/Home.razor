@@ -1,18 +1,65 @@
 @page "/"
-@inject IStringLocalizer<Home> Text
 
 <PageTitle>@Text["home.title"]</PageTitle>
 
-<div class="home">
-    <section class="home-intro" aria-labelledby="home-title">
-        <h1 id="home-title">@Text["home.heading"]</h1>
-        <p class="home-description">@Text["home.description"]</p>
-        <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
+<div class="page">
+    <div class="home">
+    <section class="home-intro">
+        <p class="eyebrow">@Text["home.eyebrow"]</p>
+        <h1 class="home-title">@Text["home.heading"]</h1>
+        <p class="home-deck">@Text["home.description"]</p>
+        <div class="home-actions">
+            <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
+            <a class="home-link" href="#map">@Text["home.mapLink"]</a>
+        </div>
+    </section>
+
+    <section id="packages" class="catalog" aria-labelledby="catalog-title">
+        <header class="catalog-head">
+            <div>
+                <h2 id="catalog-title">@Text["home.catalog"]</h2>
+                <p class="catalog-note">@Text["home.catalogNote"]</p>
+            </div>
+            <div class="catalog-find">
+                <OSSearchField Value="@_query"
+                               ValueChanged="Filter"
+                               Placeholder="@Text["home.search"]"
+                               ClearLabel="@Text["home.searchClear"]"
+                               aria-label="@Text["home.search"]" />
+                <p class="catalog-count" aria-live="polite">@Count</p>
+            </div>
+        </header>
+
+        @if (Groups.Count == 0)
+        {
+            <p class="catalog-empty">@Text["home.empty"]</p>
+        }
+        else
+        {
+            @foreach (var group in Groups)
+            {
+                <section class="catalog-group" aria-label="@Text.GroupName(group.Id)">
+                    <h3>@Text.GroupName(group.Id)</h3>
+                    <ul class="catalog-list">
+                        @foreach (var entry in group.Entries)
+                        {
+                            <li>
+                                <a class="catalog-row" href="@PackageUrl(entry)">
+                                    <span class="catalog-row-head">
+                                        <code class="catalog-name">@entry.Name</code>
+                                        <span class="catalog-title">@Text[entry.TextKey("title")]</span>
+                                    </span>
+                                    <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
+                                    <span class="catalog-meta">@Guides(entry)</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </section>
+            }
+        }
     </section>
 
     <StackMap />
+    </div>
 </div>
-
-@code {
-    [CascadingParameter] public ICultureProfile Profile { get; set; } = default!;
-}

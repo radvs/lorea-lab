@@ -4,93 +4,103 @@
 {
     <PageTitle>@Text["notFound.title"]</PageTitle>
 
-    <section class="not-found-page">
-        <h1>@Text["topic.missingTitle"]</h1>
-        <p>@Text["topic.missingText"]</p>
-        @if (Entry is null)
-        {
+    <div class="page">
+        <section class="not-found-page">
+            <PageCrumbs Items="MissingCrumbs" />
+            <h1>@Text["topic.missingTitle"]</h1>
+            <p>@Text["topic.missingText"]</p>
             <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["package.back"]</a>
-        }
-        else
-        {
-            <a class="return-link" href="@PackageUrl">@Text["topic.back"]</a>
-        }
-        <h2>@Text["notFound.packages"]</h2>
-        <PackageLinks Items="LibraryCatalog.Entries" />
-    </section>
+            <h2>@Text["notFound.packages"]</h2>
+            <PackageLinks Items="LibraryCatalog.Entries" />
+        </section>
+    </div>
 }
 else
 {
     <PageTitle>@PageTitle</PageTitle>
 
-    <article class="package-page">
-        <nav class="package-crumbs" aria-label="@Text["package.crumbsLabel"]">
-            <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
-            <span aria-hidden="true">/</span>
-            <a href="@($"{Navigation.BaseUri}#packages")">@Text["package.packages"]</a>
-            <span aria-hidden="true">/</span>
-            <a href="@PackageUrl">@Text[Entry.TextKey("title")]</a>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">@Title</span>
-        </nav>
+    <div class="page">
+        <div class="doc-grid">
+            <div class="doc-rail">
+                <div class="rail-sticky">
+                    <TopicIndex Entry="Entry" Current="Current" />
+                </div>
+            </div>
 
-        <OSPageHead Class="package-head" Title="@Title" Subtitle="@Text[Key("summary")]">
-            <Details>
-                <OSHeadItem Label="@Text["package.name"]">
-                    <code>@Entry.Name</code>
-                </OSHeadItem>
-                @if (ShowNamespaces)
-                {
-                    <OSHeadItem Label="@Text["topic.namespaces"]">
-                        <code dir="ltr">@(string.Join(", ", Current.Namespaces))</code>
-                    </OSHeadItem>
-                }
-            </Details>
-        </OSPageHead>
+            <article class="doc-main">
+                <PageCrumbs Items="Crumbs" />
 
-        <div class="package-layout topic-layout">
-            <div class="package-main">
-                @if (Points.Count > 0)
-                {
-                    <section class="package-section" aria-labelledby="glance-title">
-                        <h2 id="glance-title">@Text["topic.glance"]</h2>
-                        <div class="topic-points">
+                <OSPageHead Class="page-head" Title="@Title" Subtitle="@Text[Key("summary")]">
+                    <Details>
+                        <OSHeadItem Label="@Text["package.name"]">
+                            <a href="@PackageUrl"><code>@Entry.Name</code></a>
+                        </OSHeadItem>
+                        @if (ShowNamespaces)
+                        {
+                            <OSHeadItem Label="@Text["topic.namespaces"]">
+                                <code dir="ltr">@(string.Join(", ", Current.Namespaces))</code>
+                            </OSHeadItem>
+                        }
+                    </Details>
+                </OSPageHead>
+
+                <MobileDocNav Entry="Entry" Current="Current" Sections="SectionLinks" />
+
+                <DocSection Id="glance" Index="1" Title="@Text["topic.glance"]">
+                    @if (Points.Count > 0)
+                    {
+                        <div class="glance">
                             @foreach (var point in Points)
                             {
-                                <div class="topic-point">
+                                <div class="glance-item">
                                     <b>@point.Title</b>
                                     <span><OSInlineText Text="@point.Text" /></span>
                                 </div>
                             }
                         </div>
-                    </section>
-                }
-                else if (Note("about") is { } about)
-                {
-                    <section class="package-section" aria-labelledby="about-title">
-                        <h2 id="about-title">@Text["topic.about"]</h2>
-                        <p><OSInlineText Text="@about" /></p>
-                    </section>
-                }
-
-                <section class="package-section" aria-labelledby="samples-title">
-                    <h2 id="samples-title">@Text["topic.samples"]</h2>
-                    @foreach (var sample in Entry.SamplesOf(Current))
-                    {
-                        <h3 class="sample-title">@Text[Key($"sample.{sample.Key}.title")]</h3>
-                        @if (Note($"sample.{sample.Key}.note") is { } note)
-                        {
-                            <p class="topic-note"><OSInlineText Text="@note" /></p>
-                        }
-                        <OSCodeBlock Code="@sample.Code" Language="@sample.Language" Output="@sample.Output" CopyLabel="@Text["code.copy"]" CopiedLabel="@Text["code.copied"]" OutputLabel="@Text["code.output"]" />
                     }
-                </section>
+                    else if (About is { } about)
+                    {
+                        <p class="doc-lead"><OSInlineText Text="@about" /></p>
+                    }
+                    else
+                    {
+                        <p class="doc-note">@Text["topic.glanceNone"]</p>
+                    }
+                </DocSection>
 
-                @if (Parts.Count > 0)
-                {
-                    <section class="package-section" aria-labelledby="details-title">
-                        <h2 id="details-title">@Text["topic.details"]</h2>
-                        <OSAccordion Class="topic-parts" Multiple="true" OpenId="part-1">
+                <DocSection Id="samples" Index="2" Title="@Text["topic.samples"]">
+                    @if (!Samples.Any())
+                    {
+                        <p class="doc-note">@Text["topic.samplesNone"]</p>
+                    }
+
+                    @foreach (var sample in Samples)
+                    {
+                        <div class="sample">
+                            <h3 class="doc-h3">@Text[Key($"sample.{sample.Key}.title")]</h3>
+                            @if (Note($"sample.{sample.Key}.note") is { } note)
+                            {
+                                <p class="doc-note"><OSInlineText Text="@note" /></p>
+                            }
+                            <OSCodeBlock Code="@sample.Code"
+                                         Language="@sample.Language"
+                                         Output="@sample.Output"
+                                         CopyLabel="@Text["code.copy"]"
+                                         CopiedLabel="@Text["code.copied"]"
+                                         OutputLabel="@Text["code.output"]" />
+                        </div>
+                    }
+                </DocSection>
+
+                <DocSection Id="details" Index="3" Title="@Text["topic.details"]">
+                    @if (Parts.Count == 0)
+                    {
+                        <p class="doc-note">@Text["topic.detailsNone"]</p>
+                    }
+                    else
+                    {
+                        <OSAccordion Class="parts" Multiple="true" OpenId="part-1">
                             @for (var i = 0; i < Parts.Count; i++)
                             {
                                 var part = Parts[i];
@@ -104,13 +114,16 @@ else
                                 </OSAccordionItem>
                             }
                         </OSAccordion>
-                    </section>
-                }
+                    }
+                </DocSection>
 
-                @if (Types.Count > 0)
-                {
-                    <section class="package-section" aria-labelledby="api-title">
-                        <h2 id="api-title">@Text["topic.api"]</h2>
+                <DocSection Id="api" Index="4" Title="@Text["topic.api"]">
+                    @if (Types.Count == 0)
+                    {
+                        <p class="doc-note">@Text["topic.apiNone"]</p>
+                    }
+                    else
+                    {
                         <OSAccordion Class="api-list">
                             @foreach (var type in Types)
                             {
@@ -169,58 +182,23 @@ else
                                 </OSAccordionItem>
                             }
                         </OSAccordion>
-                    </section>
-                }
-
-                <nav class="topic-steps" aria-label="@Text["topic.stepsLabel"]">
-                    @if (Previous is not null)
-                    {
-                        <a class="topic-step" rel="prev" href="@($"{Navigation.BaseUri}{Entry.TopicRoute(Previous)}")">
-                            <span>@Text["topic.previous"]</span>
-                            <b>@Text[Entry.TopicKey(Previous, "title")]</b>
-                        </a>
                     }
-                    @if (Next is not null)
-                    {
-                        <a class="topic-step topic-step-next" rel="next" href="@($"{Navigation.BaseUri}{Entry.TopicRoute(Next)}")">
-                            <span>@Text["topic.next"]</span>
-                            <b>@Text[Entry.TopicKey(Next, "title")]</b>
-                        </a>
-                    }
-                </nav>
+                </DocSection>
 
-                <div class="topic-related">
+                <PageSteps Previous="PreviousStep" Next="NextStep" />
+
+                <div class="doc-related">
                     <RelatedPackages Entry="Entry" />
                 </div>
-            </div>
 
-            <aside class="package-aside topic-aside">
-                <section class="package-section topic-nav" aria-labelledby="topics-title">
-                    <h2 id="topics-title">@Text["topic.list"]</h2>
-                    <nav class="topic-list" aria-labelledby="topics-title">
-                        @foreach (var topic in Entry.Topics)
-                        {
-                            <OSAccordionLeaf Title="@Text[Entry.TopicKey(topic, "title")]" Href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")" Active="@(topic == Current)" />
-                        }
-                    </nav>
-                </section>
-
-                <section class="package-section topic-links">
-                    <a class="return-link" href="@($"{PackageUrl}#api")">@Text["topic.apiLink"]</a>
+                <div class="doc-end">
                     <a class="return-link" href="@PackageUrl">@Text["topic.back"]</a>
-                </section>
-            </aside>
+                </div>
+            </article>
 
-            <nav class="topic-toc" aria-labelledby="onpage-title">
-                <h2 id="onpage-title">@Text["package.onPage"]</h2>
-                <ul class="package-toc">
-                    @if (Points.Count > 0) { <li><a href="@($"{PageUrl}#glance-title")">@Text["topic.glance"]</a></li> }
-                    else if (Note("about") is not null) { <li><a href="@($"{PageUrl}#about-title")">@Text["topic.about"]</a></li> }
-                    <li><a href="@($"{PageUrl}#samples-title")">@Text["topic.samples"]</a></li>
-                    @if (Parts.Count > 0) { <li><a href="@($"{PageUrl}#details-title")">@Text["topic.details"]</a></li> }
-                    @if (Types.Count > 0) { <li><a href="@($"{PageUrl}#api-title")">@Text["topic.api"]</a></li> }
-                </ul>
-            </nav>
+            <DocAside Sections="SectionLinks">
+                <a class="aside-link" href="@PackageUrl">@Text["topic.back"]</a>
+            </DocAside>
         </div>
-    </article>
+    </div>
 }

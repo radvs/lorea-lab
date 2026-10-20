@@ -2,27 +2,48 @@
 
 <div class="lorea" lang="@_culture.Culture.TwoLetterISOLanguageName" dir="@(_culture.IsRightToLeft ? "rtl" : "ltr")">
     <a class="lorea-skip-link" href="#main-content">@Text["layout.skipToMain"]</a>
-    <header class="lorea-header">
-        <a href="@Navigation.BaseUri" class="lorea-brand" aria-label="@Text["layout.brandLabel"]">
-            <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                <path d="M16 11V48H53" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-                <circle cx="16" cy="48" r="9" style="fill:var(--lorea-accent,#0078D4)" />
-            </svg>
-            <span>@Text["layout.brand"]</span>
-        </a>
-        <div class="header-tools">
-            <OSThemeToggle LightLabel="@Text["layout.themeLight"]" DarkLabel="@Text["layout.themeDark"]" TooltipSide="TooltipSide.Bottom" />
-            <LangSwitch Current="_culture" CultureChanged="ChangeCulture" />
+
+    <header class="site-head">
+        <div class="site-head-inner">
+            <a href="@Navigation.BaseUri" class="site-brand" aria-label="@Text["layout.brandLabel"]">
+                <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                    <path d="M16 11V48H53" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="16" cy="48" r="9" style="fill:var(--lorea-accent,#0078D4)" />
+                </svg>
+                <span class="brand-name">@Text["layout.brand"]</span>
+                <span class="brand-note">@Text["layout.tagline"]</span>
+            </a>
+
+            <nav class="site-nav" aria-label="@Text["layout.siteNav"]">
+                <a href="@($"{Navigation.BaseUri}#packages")">@Text["nav.packages"]</a>
+                <a href="@($"{Navigation.BaseUri}#map")">@Text["nav.map"]</a>
+            </nav>
+
+            <div class="header-tools">
+                <OSThemeToggle LightLabel="@Text["layout.themeLight"]" DarkLabel="@Text["layout.themeDark"]" TooltipSide="TooltipSide.Bottom" />
+                <LangSwitch Current="_culture" CultureChanged="ChangeCulture" />
+            </div>
         </div>
     </header>
 
-    <main id="main-content" class="lorea-main" tabindex="-1">
+    <main id="main-content" class="site-main" tabindex="-1">
         <OSBoundary Title="@Text["error.title"]" Text="@Text["error.text"]" RetryLabel="@Text["error.retry"]">
             <CascadingValue Value="_culture">
                 @Body
             </CascadingValue>
         </OSBoundary>
     </main>
+
+    <footer class="site-foot">
+        <div class="site-foot-inner">
+            <p class="site-foot-note">@Text["layout.footNote"]</p>
+            <nav class="site-foot-nav" aria-label="@Text["layout.footNav"]">
+                <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
+                <a href="@($"{Navigation.BaseUri}#packages")">@Text["nav.packages"]</a>
+                <a href="@($"{Navigation.BaseUri}#map")">@Text["nav.map"]</a>
+            </nav>
+        </div>
+    </footer>
 
     <OSToTop Label="@Text["layout.toTop"]" />
     <OSConnectionWatch />

@@ -1,0 +1,21 @@
+@*
+    Previous and next at the end of a page. A missing side leaves the other on its own edge.
+*@
+
+<nav class="steps" aria-label="@Text["topic.stepsLabel"]">
+    @if (Previous is { } previous)
+    {
+        <a class="step step-prev" rel="prev" href="@previous.Href">
+            <span class="step-kicker">@Text["topic.previous"]</span>
+            <span class="step-title">@previous.Title</span>
+        </a>
+    }
+
+    @if (Next is { } next)
+    {
+        <a class="step step-next" rel="next" href="@next.Href">
+            <span class="step-kicker">@Text["topic.next"]</span>
+            <span class="step-title">@next.Title</span>
+        </a>
+    }
+</nav>

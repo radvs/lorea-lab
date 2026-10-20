@@ -1,0 +1,21 @@
+@*
+    The one breadcrumb every page shows, so the way back is always in the same place.
+*@
+
+<nav class="crumbs" aria-label="@Text["package.crumbsLabel"]">
+    <ol>
+        @foreach (var item in Items)
+        {
+            <li>
+                @if (item.Href is null)
+                {
+                    <span aria-current="page">@item.Label</span>
+                }
+                else
+                {
+                    <a href="@item.Href">@item.Label</a>
+                }
+            </li>
+        }
+    </ol>
+</nav>
