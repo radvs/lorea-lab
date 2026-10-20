@@ -11,11 +11,11 @@ public static class LibraryBrowse
             .ThenBy(group => group.Entries.Min(entry => LibraryCatalog.Depth(entry.Slug)))
             .ThenBy(group => group.Id, StringComparer.Ordinal)];
 
-    public static bool Matches(LibraryEntry entry, string query, Func<string, string> text) =>
+    public static bool Matches(LibraryEntry entry, string query, Func<string, string> text, bool summary = true) =>
         query.Length == 0
         || entry.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
         || text(entry.TextKey("title")).Contains(query, StringComparison.OrdinalIgnoreCase)
-        || text(entry.TextKey("summary")).Contains(query, StringComparison.OrdinalIgnoreCase);
+        || (summary && text(entry.TextKey("summary")).Contains(query, StringComparison.OrdinalIgnoreCase));
 }
 
 public sealed record LibraryGroup(string Id, IReadOnlyList<LibraryEntry> Entries);

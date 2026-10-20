@@ -48,4 +48,13 @@
         color: var(--lorea-muted);
         opacity: 1;
     }
+
+    /* The package's light syntax palette is too faint on these backgrounds; the site palette carries it. */
+    .lorea .os-tk-type {
+        color: var(--lorea-link);
+    }
+
+    .lorea .os-tk-number {
+        color: var(--lorea-ink);
+    }
 }

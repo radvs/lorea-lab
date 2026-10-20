@@ -28,7 +28,8 @@
 
     <main id="main-content" class="site-main" tabindex="-1">
         <OSBoundary Title="@Text["error.title"]" Text="@Text["error.text"]" RetryLabel="@Text["error.retry"]">
-            <CascadingValue Value="_culture">
+            @* A new language rebuilds the page, so no component keeps the previous language's text. *@
+            <CascadingValue Value="_culture" @key="_culture.Name">
                 @Body
             </CascadingValue>
         </OSBoundary>

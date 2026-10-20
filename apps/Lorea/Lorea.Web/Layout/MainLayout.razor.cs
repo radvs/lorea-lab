@@ -11,13 +11,23 @@ public partial class MainLayout
     private string? _appliedDocumentCulture;
     private IJSObjectReference? _pages;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
+        // Reading the saved language before the first render keeps the page in one language from the start.
         _culture = Locale.DefaultCulture;
-        ApplyCulture(_culture);
 
-        var savedCulture = await JS.InvokeAsync<string?>("lorea.getPreferredCulture");
-        _culture = Locale.GetCulture(savedCulture);
+        if (JS is IJSInProcessRuntime interop)
+        {
+            try
+            {
+                _culture = Locale.GetCulture(interop.Invoke<string?>("lorea.getPreferredCulture"));
+            }
+            catch (JSException)
+            {
+                // The culture script did not load; the default culture is still a working page.
+            }
+        }
+
         ApplyCulture(_culture);
     }
 

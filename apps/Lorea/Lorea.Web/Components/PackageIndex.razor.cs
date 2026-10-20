@@ -10,8 +10,9 @@ public partial class PackageIndex
 
     private string _query = string.Empty;
 
+    // The rail is for finding a package by its name, not for searching the text of every summary.
     private IReadOnlyList<LibraryGroup> Groups =>
-        LibraryBrowse.Group(LibraryCatalog.Entries.Where(entry => LibraryBrowse.Matches(entry, _query.Trim(), key => Text[key])));
+        LibraryBrowse.Group(LibraryCatalog.Entries.Where(entry => LibraryBrowse.Matches(entry, _query.Trim(), key => Text[key], summary: false)));
 
     private void Filter(string? value) => _query = value ?? string.Empty;
 }
