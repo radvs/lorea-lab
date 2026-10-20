@@ -8,9 +8,9 @@ Tool: DeepSeek Harness (`deepseek-flash`). Worked directly on `main`; `lorea.tok
 
 - A new masthead: brand + wordmark, a small "Documentation" label, the primary `Packages` / `Map` links, theme toggle and language switch. It is sticky and hairline-bordered. A matching footer ends every page with the same links and the site note.
 - One container for every page (`min(100% - 2 × gutter, 80rem)`), so the home, package, topic and not-found pages share the same left and right edges.
-- A documentation frame with three columns: a side index (sticky, with its own `max-height` scroll), the reading column, and an "On this page" column on wide screens. From 64 rem to 78 rem the third column is dropped; below 64 rem all side columns are replaced by phone navigation under the page head.
-- Shared page parts: breadcrumbs, numbered section headings with one anchor scheme, previous/next steps, an "On this page" list whose current item follows the reading position, and a phone navigation block.
-- New components: `PageCrumbs`, `PageSteps`, `DocSection`, `DocAside`, `PackageIndex`, `TopicIndex`, `MobileDocNav`, `SvgText`; shared list/search logic in `Data/LibraryBrowse.cs` and group/count text in `Data/TextLookup.cs`.
+- A documentation frame with two columns: a side index (sticky, with its own `max-height` scroll) and one capped, centred reading column. The page's own index is a compact band of links under the page head, with the link for the section being read underlined; below 64 rem the band gives way to the phone navigation under the head. There is no third column, so no column can stand empty.
+- Shared page parts: breadcrumbs, numbered section headings with one anchor scheme, previous/next steps, the page-index band whose current item follows the reading position, and a phone navigation block.
+- New components: `PageCrumbs`, `PageSteps`, `DocSection`, `PageTocStrip`, `PackageIndex`, `TopicIndex`, `MobileDocNav`, `SvgText`; `PageSection` is the shared section link record. Shared list/search logic is in `Data/LibraryBrowse.cs` and group/count text in `Data/TextLookup.cs`.
 - `wwwroot/js/lorea-pages.js`: the table-of-contents scroll spy, horizontal code blocks made keyboard-reachable, and the phone guide strip scrolled to the current guide. `wwwroot/js/lorea-culture.js` gained a `wideScreen()` helper used for the map default.
 - Persian type rules are applied by language in CSS (no letter-spacing or tight leading on Persian headings/labels); the same structure is used in both languages.
 
@@ -31,7 +31,7 @@ Changed files: `Pages/Home.razor`, `Pages/Home.razor.cs`, `Components/StackMap.r
 - One fixed structure in both languages, always present, same order and names: Overview → Install and setup → Quick start → Guides → API reference. Each section is numbered and has an empty state when the data has nothing.
 - A spec-sheet head: package title, deck, and Package / Group / Guides values on a hairline row.
 - Overview as a short list; the install command with copy; the dependency path; samples; a guides index with numbers; API types grouped by guide and linked to it.
-- The side index lists every package by group with a filter (names and titles), marks the current package, and scrolls inside itself without a sideways scrollbar; long package names fit on one line. The third column is deliberately short: "On this page" and the way back to all packages. Related packages (Relies on / Built on it / Similar packages) close the page. "All packages" is also one click from the page end.
+- The side index lists every package by group with a filter (names and titles), marks the current package, and scrolls inside itself without a sideways scrollbar; long package names fit on one line. The page's own index is the band under the title, and related packages (Relies on / Built on it / Similar packages) close the page. "All packages" is one click from the page end.
 
 Changed files: `Pages/Package.razor`, `Pages/Package.razor.cs`, `Components/PackageIndex.razor(.cs)`, `Components/DocSection.razor(.cs)`, `Components/DocAside.razor(.cs)`, `Components/MobileDocNav.razor(.cs)`, `Components/RelatedPackages.razor`, `Components/PackageLinks.razor`, `wwwroot/css/layers/parts/lorea.package.css`, `wwwroot/css/layers/parts/lorea.path.css`.
 
@@ -39,7 +39,7 @@ Changed files: `Pages/Package.razor`, `Pages/Package.razor.cs`, `Components/Pack
 
 - One fixed structure: At a glance → Examples → Full explanation → API at a glance, then previous/next and related packages.
 - At a glance is a hairline grid of short cards; examples are title + optional note + code/output; details are an accordion; the API list is an accordion of type signatures with member tables, obsolete notes and per-member text.
-- The side index lists the package's guides with the current one marked; the third column carries "On this page" and the back link, and the page closes with previous/next and related packages. On phones the guides become a horizontal strip under the head and "On this page" / "Related packages" become folds there, so navigation and cross-links are above the long content. Targets are at least 40 px.
+- The side index lists the package's guides with the current one marked; the page index is the band under the title, and the page closes with previous/next and related packages. On phones the guides become a horizontal strip under the head and "On this page" / "Related packages" become folds there, so navigation and cross-links are above the long content. Targets are at least 40 px.
 
 Changed files: `Pages/Topic.razor`, `Pages/Topic.razor.cs`, `Components/TopicIndex.razor(.cs)`, `wwwroot/css/layers/parts/lorea.topic.css`.
 
@@ -88,13 +88,13 @@ Results:
 - Home: 24 rows; filter "blazor" → 2 rows and "2 packages"; clearing restores 24. The group index lists all 6 groups; clicking one lands its catalog group 72 px from the top.
 - Map: selecting `OS.Core` fills the selection panel, and the diagram has 29 direct and 22 indirect wire paths; the fit toggle switches `data-fit` both ways; fit is on by default at 1280 and off at 390 with the swipe hint visible.
 - Package rail: filtering "efcore" leaves the 5 EFCore packages; an unmatched query shows the empty message; clearing restores 24. The rail is 800 px tall at 900 px viewport, scrolls inside itself, its last item is fully visible after scrolling it, and `scrollWidth === clientWidth` at 1920 (no sideways scrollbar) with the longest name on one line.
-- Side column: at 1920 and 1280 it holds the TOC (about 250 px of content) and the back/all-packages link, and the related block sits at the page foot; the column is intentionally short rather than filled with duplicated lists. At 1024 the column is hidden and the page is two columns; at 390 the related fold is under the page head.
+- Page index: at 1280 and 1920 the band under the head lists the section links and marks the current one (`aria-current="location"`); a link lands its section 72 px from the top. Below 64 rem the band is hidden and the phone fold takes over.
 - Previous/next and the table of contents: a TOC link lands the section 72 px from the top (clear of the sticky header) and the TOC marks it `aria-current="location"`; the TOC follows scrolling.
 - Language: switching on a topic page changes `html lang`/`dir`, the h1, the guide rail, the TOC labels and the related labels; switching back restores Persian.
 - Theme: the toggle changes `data-theme` without a reload.
 - Phones: `scrollWidth === clientWidth` on home, package, topic, 404 and missing pages; header brand/nav/language/theme buttons, map buttons, phone nav links, guide chips and fold summaries are 40 px or taller; the phone nav sits directly under the page head and the related folds are there.
 - Language separation: no Arabic-script characters outside code/pre and LTR-isolated text on any English page; sampled English UI strings do not appear on Persian pages.
-- GitHub Actions: every push in this work ran the Preview workflow; the runs for `975d39a`, `f7b0671`, `20e7c87`, `9109246`, `90872c7`, `182a542`, `9dcaf02`, `103bbee` and `0b71f4f` completed successfully. The deployed site was loaded afterwards with no failed asset requests: 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the 404 in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
+- GitHub Actions: every push in this work ran the Preview workflow; the runs for `975d39a`, `f7b0671`, `20e7c87`, `9109246`, `90872c7`, `182a542`, `9dcaf02`, `103bbee`, `0b71f4f` and `8e7fb88` completed successfully. The deployed site was loaded afterwards with no failed asset requests: 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the 404 in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
 
 ## Commits
 
@@ -106,12 +106,13 @@ Results:
 - `9dcaf02` — Fill the side column instead of leaving it blank (reverted by `103bbee`: it duplicated the guide list, the head facts and the related block and read as clutter)
 - `103bbee` — Revert the side-column fill
 - `0b71f4f` — Keep the side column short and a little narrower
+- `8e7fb88` — Replace the third column with an index band under the page head
 - The report file was added after those; its hash is the commit that carries this file (`git log`).
 
 ## Not done, uncertain, or not verified
 
 - At the very end of a long page the tall side index slides up with its grid column (about 61 px at a 900 px viewport, because the footer sits below the grid). It keeps its own scrollbar and every item stays reachable; I left the standard sticky behaviour instead of shrinking the panel for that last screen.
-- The third column is intentionally short ("On this page" plus the way out). Filling it with the guide list, the head facts and the related packages made the page feel crowded (the owner's review of `9dcaf02`), so that pass was reverted in `103bbee`; the column is now 12.5 rem wide instead of 14 rem.
+- The third column was removed at the owner's request: filling it made the page crowded, and leaving it short left an empty strip. The page index is now a compact band under the page head and the reading column is capped at 50 rem and centred beside the rail.
 - Changing the language rebuilds the page subtree, so the reading position returns to the top. That was deliberate to guarantee the whole page switches language.
 - The dependency map has no separate phone layout: it stays at readable size and scrolls inside its frame, with a hint and a fit-to-width toggle. When fitted on a phone its labels become small.
 - Two syntax colours (types, numbers) were moved to the site's link/ink tokens to pass AA; the other syntax colours are OS.Blazor's and unchanged.
