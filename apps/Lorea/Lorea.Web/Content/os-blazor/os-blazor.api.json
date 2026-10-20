@@ -1,0 +1,6847 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Blazor",
+      "key": "AccordionCo",
+      "signature": "static class AccordionCo",
+      "members": [
+        {
+          "name": "ToggleIcon",
+          "signatures": [
+            "const string ToggleIcon = \"os:chevron\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        },
+        {
+          "name": "LeadSize",
+          "signatures": [
+            "const int LeadSize = 18"
+          ]
+        },
+        {
+          "name": "KeepDelay",
+          "signatures": [
+            "const int KeepDelay = 300"
+          ]
+        },
+        {
+          "name": "TitleLevel",
+          "signatures": [
+            "const int TitleLevel = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiClient",
+      "signature": "sealed class ApiClient",
+      "members": [
+        {
+          "name": "ApiClient",
+          "signatures": [
+            "ApiClient(HttpClient http, IStringLocalizer locale, BlazorOptions options, TokenStore tokens)"
+          ]
+        },
+        {
+          "name": "Denied",
+          "signatures": [
+            "event Action? Denied"
+          ]
+        },
+        {
+          "name": "Forbidden",
+          "signatures": [
+            "event Action? Forbidden"
+          ]
+        },
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "Task<ApiResult<T?>> GetAsync<T>(string path, CancellationToken token = default)",
+            "Task<ApiResult<T?>> GetAsync<T>(string path, ApiQuery? query, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PostAsync",
+          "signatures": [
+            "Task<ApiResult<T?>> PostAsync<T>(string path, object? body, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PostFileAsync",
+          "signatures": [
+            "Task<ApiResult<T?>> PostFileAsync<T>(string path, Stream content, string? fileName, string? contentType, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "DeleteAsync",
+          "signatures": [
+            "Task<ApiResult<T?>> DeleteAsync<T>(string path, CancellationToken token = default)",
+            "Task<ApiResult<T?>> DeleteAsync<T>(string path, object? body, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiCo",
+      "signature": "static class ApiCo",
+      "members": [
+        {
+          "name": "Success",
+          "signatures": [
+            "const int Success = 1980"
+          ]
+        },
+        {
+          "name": "Existed",
+          "signatures": [
+            "const int Existed = 1992"
+          ]
+        },
+        {
+          "name": "NotExisted",
+          "signatures": [
+            "const int NotExisted = 1993"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "const int Failed = 2014"
+          ]
+        },
+        {
+          "name": "NotValid",
+          "signatures": [
+            "const int NotValid = 2015"
+          ]
+        },
+        {
+          "name": "TechError",
+          "signatures": [
+            "const int TechError = 2055"
+          ]
+        },
+        {
+          "name": "Offline",
+          "signatures": [
+            "const int Offline = 2500"
+          ]
+        },
+        {
+          "name": "Denied",
+          "signatures": [
+            "const int Denied = 401"
+          ]
+        },
+        {
+          "name": "Forbidden",
+          "signatures": [
+            "const int Forbidden = 403"
+          ]
+        },
+        {
+          "name": "OfflineKey",
+          "signatures": [
+            "const string OfflineKey = \"api.offline\""
+          ]
+        },
+        {
+          "name": "BrokenKey",
+          "signatures": [
+            "const string BrokenKey = \"api.broken\""
+          ]
+        },
+        {
+          "name": "DeniedKey",
+          "signatures": [
+            "const string DeniedKey = \"api.denied\""
+          ]
+        },
+        {
+          "name": "ForbiddenKey",
+          "signatures": [
+            "const string ForbiddenKey = \"api.forbidden\""
+          ]
+        },
+        {
+          "name": "FromStatus",
+          "signatures": [
+            "static int FromStatus(string? status)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiError",
+      "signature": "sealed class ApiError",
+      "members": [
+        {
+          "name": "Field",
+          "signatures": [
+            "string Field { get; set; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string Message { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiOptions",
+      "signature": "sealed class ApiOptions",
+      "members": [
+        {
+          "name": "Root",
+          "signatures": [
+            "string? Root { get; set; }"
+          ]
+        },
+        {
+          "name": "Enabled",
+          "signatures": [
+            "bool Enabled { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiPageInfo",
+      "signature": "sealed class ApiPageInfo",
+      "members": [
+        {
+          "name": "Skip",
+          "signatures": [
+            "int Skip { get; set; }"
+          ]
+        },
+        {
+          "name": "Take",
+          "signatures": [
+            "int Take { get; set; }"
+          ]
+        },
+        {
+          "name": "Current",
+          "signatures": [
+            "int Current { get; set; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int Total { get; set; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; set; }"
+          ]
+        },
+        {
+          "name": "First",
+          "signatures": [
+            "int First { get; set; }"
+          ]
+        },
+        {
+          "name": "Last",
+          "signatures": [
+            "int Last { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiPage{T}",
+      "signature": "sealed class ApiPage<T>",
+      "members": [
+        {
+          "name": "Page",
+          "signatures": [
+            "ApiPageInfo Page { get; set; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "List<T?> Items { get; set; }"
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "bool Empty { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiQuery",
+      "signature": "sealed class ApiQuery",
+      "members": [
+        {
+          "name": "Skip",
+          "signatures": [
+            "int Skip { get; set; }"
+          ]
+        },
+        {
+          "name": "Take",
+          "signatures": [
+            "int Take { get; set; }"
+          ]
+        },
+        {
+          "name": "Term",
+          "signatures": [
+            "string Term { get; set; }"
+          ]
+        },
+        {
+          "name": "Criteria",
+          "signatures": [
+            "CriteriaDocument? Criteria { get; set; }"
+          ]
+        },
+        {
+          "name": "SortName",
+          "signatures": [
+            "string SortName { get; set; }"
+          ]
+        },
+        {
+          "name": "SortType",
+          "signatures": [
+            "ApiSortType SortType { get; set; }"
+          ]
+        },
+        {
+          "name": "Copy",
+          "signatures": [
+            "ApiQuery Copy()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiResult",
+      "signature": "class ApiResult",
+      "members": [
+        {
+          "name": "Succeed",
+          "signatures": [
+            "bool Succeed { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "string Status { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorCode",
+          "signatures": [
+            "string? ErrorCode { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "int Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string Message { get; set; }"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "string TraceId { get; set; }"
+          ]
+        },
+        {
+          "name": "Errors",
+          "signatures": [
+            "List<ApiError>? Errors { get; set; }"
+          ]
+        },
+        {
+          "name": "Missing",
+          "signatures": [
+            "bool Missing { get; }"
+          ]
+        },
+        {
+          "name": "Existed",
+          "signatures": [
+            "bool Existed { get; }"
+          ]
+        },
+        {
+          "name": "Invalid",
+          "signatures": [
+            "bool Invalid { get; }"
+          ]
+        },
+        {
+          "name": "ErrorOf",
+          "signatures": [
+            "string? ErrorOf(string field)"
+          ]
+        },
+        {
+          "name": "HasErrorOf",
+          "signatures": [
+            "bool HasErrorOf(string field)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiResult{T}",
+      "signature": "sealed class ApiResult<T> : ApiResult",
+      "members": [
+        {
+          "name": "Data",
+          "signatures": [
+            "T? Data { get; set; }"
+          ]
+        },
+        {
+          "name": "Fail",
+          "signatures": [
+            "static ApiResult<T?> Fail(int code, string? message)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ApiSortType",
+      "signature": "enum ApiSortType",
+      "members": [
+        {
+          "name": "None",
+          "signatures": [
+            "None = 0"
+          ]
+        },
+        {
+          "name": "Ascending",
+          "signatures": [
+            "Ascending = 1"
+          ]
+        },
+        {
+          "name": "Descending",
+          "signatures": [
+            "Descending = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "AppState",
+      "signature": "sealed class AppState",
+      "members": [
+        {
+          "name": "IsBusy",
+          "signatures": [
+            "bool IsBusy { get; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "event Action? Changed"
+          ]
+        },
+        {
+          "name": "SetBusy",
+          "signatures": [
+            "void SetBusy(bool value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "BlazorDI",
+      "signature": "static class BlazorDI",
+      "members": [
+        {
+          "name": "AddOSBlazor",
+          "signatures": [
+            "static IServiceCollection AddOSBlazor(this IServiceCollection services, Action<BlazorOptions>? configure = null)",
+            "static IServiceCollection AddOSBlazor(this IServiceCollection services, BlazorOptions options)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "BlazorOptions",
+      "signature": "sealed class BlazorOptions",
+      "members": [
+        {
+          "name": "Locale",
+          "signatures": [
+            "LocaleOptions Locale { get; }"
+          ]
+        },
+        {
+          "name": "Api",
+          "signatures": [
+            "ApiOptions Api { get; }"
+          ]
+        },
+        {
+          "name": "Token",
+          "signatures": [
+            "TokenOptions Token { get; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "IconOptions Icon { get; }"
+          ]
+        },
+        {
+          "name": "Theme",
+          "signatures": [
+            "ThemeOptions Theme { get; }"
+          ]
+        },
+        {
+          "name": "Shell",
+          "signatures": [
+            "ShellOptions Shell { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "BoardCo",
+      "signature": "static class BoardCo",
+      "members": [
+        {
+          "name": "SkeletonRows",
+          "signatures": [
+            "const int SkeletonRows = 4"
+          ]
+        },
+        {
+          "name": "MessageIconSize",
+          "signatures": [
+            "const int MessageIconSize = 64"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "BoundaryCo",
+      "signature": "static class BoundaryCo",
+      "members": [
+        {
+          "name": "Icon",
+          "signatures": [
+            "const string Icon = \"os:alert\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 24"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ButtonCo",
+      "signature": "static class ButtonCo",
+      "members": [
+        {
+          "name": "Button",
+          "signatures": [
+            "const string Button = \"button\""
+          ]
+        },
+        {
+          "name": "Submit",
+          "signatures": [
+            "const string Submit = \"submit\""
+          ]
+        },
+        {
+          "name": "CopyIcon",
+          "signatures": [
+            "const string CopyIcon = \"os:copy\""
+          ]
+        },
+        {
+          "name": "DoneIcon",
+          "signatures": [
+            "const string DoneIcon = \"os:check\""
+          ]
+        },
+        {
+          "name": "DownloadIcon",
+          "signatures": [
+            "const string DownloadIcon = \"os:download\""
+          ]
+        },
+        {
+          "name": "DoneDelay",
+          "signatures": [
+            "const int DoneDelay = 1500"
+          ]
+        },
+        {
+          "name": "Blank",
+          "signatures": [
+            "const string Blank = \"_blank\""
+          ]
+        },
+        {
+          "name": "SafeRel",
+          "signatures": [
+            "const string SafeRel = \"noopener noreferrer\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ButtonKind",
+      "signature": "enum ButtonKind",
+      "members": [
+        {
+          "name": "Normal",
+          "signatures": [
+            "Normal = 0"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "Key = 1"
+          ]
+        },
+        {
+          "name": "Ghost",
+          "signatures": [
+            "Ghost = 2"
+          ]
+        },
+        {
+          "name": "Danger",
+          "signatures": [
+            "Danger = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ButtonSize",
+      "signature": "enum ButtonSize",
+      "members": [
+        {
+          "name": "Small",
+          "signatures": [
+            "Small = 0"
+          ]
+        },
+        {
+          "name": "Normal",
+          "signatures": [
+            "Normal = 1"
+          ]
+        },
+        {
+          "name": "Large",
+          "signatures": [
+            "Large = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "CSharpHighlighter",
+      "signature": "sealed class CSharpHighlighter : RegexHighlighter",
+      "members": [
+        {
+          "name": "Language",
+          "signatures": [
+            "string Language { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "CardCo",
+      "signature": "static class CardCo",
+      "members": [
+        {
+          "name": "StatIconSize",
+          "signatures": [
+            "const int StatIconSize = 14"
+          ]
+        },
+        {
+          "name": "StatDeltaSize",
+          "signatures": [
+            "const int StatDeltaSize = 12"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ChipCo",
+      "signature": "static class ChipCo",
+      "members": [
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 14"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ChipSize",
+      "signature": "enum ChipSize",
+      "members": [
+        {
+          "name": "Normal",
+          "signatures": [
+            "Normal = 0"
+          ]
+        },
+        {
+          "name": "Small",
+          "signatures": [
+            "Small = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ChipTone",
+      "signature": "enum ChipTone",
+      "members": [
+        {
+          "name": "Neutral",
+          "signatures": [
+            "Neutral = 0"
+          ]
+        },
+        {
+          "name": "Good",
+          "signatures": [
+            "Good = 1"
+          ]
+        },
+        {
+          "name": "Warn",
+          "signatures": [
+            "Warn = 2"
+          ]
+        },
+        {
+          "name": "Bad",
+          "signatures": [
+            "Bad = 3"
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "Info = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ColumnAlign",
+      "signature": "enum ColumnAlign",
+      "members": [
+        {
+          "name": "Auto",
+          "signatures": [
+            "Auto = 0"
+          ]
+        },
+        {
+          "name": "Start",
+          "signatures": [
+            "Start = 1"
+          ]
+        },
+        {
+          "name": "Center",
+          "signatures": [
+            "Center = 2"
+          ]
+        },
+        {
+          "name": "End",
+          "signatures": [
+            "End = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ConnectionCo",
+      "signature": "static class ConnectionCo",
+      "members": [
+        {
+          "name": "SpinnerSize",
+          "signatures": [
+            "const int SpinnerSize = 14"
+          ]
+        },
+        {
+          "name": "SpinnerThickness",
+          "signatures": [
+            "const int SpinnerThickness = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "CsvEx",
+      "signature": "static class CsvEx",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "DataStateKind",
+      "signature": "enum DataStateKind",
+      "members": [
+        {
+          "name": "Ready",
+          "signatures": [
+            "Ready = 0"
+          ]
+        },
+        {
+          "name": "Loading",
+          "signatures": [
+            "Loading = 1"
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "Empty = 2"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "DialogCo",
+      "signature": "static class DialogCo",
+      "members": [
+        {
+          "name": "CloseIcon",
+          "signatures": [
+            "const string CloseIcon = \"os:close\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "DrawerEdge",
+      "signature": "enum DrawerEdge",
+      "members": [
+        {
+          "name": "Start",
+          "signatures": [
+            "Start = 0"
+          ]
+        },
+        {
+          "name": "Bottom",
+          "signatures": [
+            "Bottom = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "DropdownCo",
+      "signature": "static class DropdownCo",
+      "members": [
+        {
+          "name": "ChevronIcon",
+          "signatures": [
+            "const string ChevronIcon = \"os:chevron\""
+          ]
+        },
+        {
+          "name": "CheckIcon",
+          "signatures": [
+            "const string CheckIcon = \"os:check\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "FieldCo",
+      "signature": "static class FieldCo",
+      "members": [
+        {
+          "name": "AutoDir",
+          "signatures": [
+            "const string AutoDir = \"auto\""
+          ]
+        },
+        {
+          "name": "TextType",
+          "signatures": [
+            "const string TextType = \"text\""
+          ]
+        },
+        {
+          "name": "SearchType",
+          "signatures": [
+            "const string SearchType = \"search\""
+          ]
+        },
+        {
+          "name": "PasswordType",
+          "signatures": [
+            "const string PasswordType = \"password\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        },
+        {
+          "name": "NoteIconSize",
+          "signatures": [
+            "const int NoteIconSize = 14"
+          ]
+        },
+        {
+          "name": "SearchIcon",
+          "signatures": [
+            "const string SearchIcon = \"os:search\""
+          ]
+        },
+        {
+          "name": "ClearIcon",
+          "signatures": [
+            "const string ClearIcon = \"os:close\""
+          ]
+        },
+        {
+          "name": "ErrorIcon",
+          "signatures": [
+            "const string ErrorIcon = \"os:alert\""
+          ]
+        },
+        {
+          "name": "SelectIcon",
+          "signatures": [
+            "const string SelectIcon = \"os:chevron\""
+          ]
+        },
+        {
+          "name": "ShowIcon",
+          "signatures": [
+            "const string ShowIcon = \"os:eye\""
+          ]
+        },
+        {
+          "name": "HideIcon",
+          "signatures": [
+            "const string HideIcon = \"os:eye-off\""
+          ]
+        },
+        {
+          "name": "HintOf",
+          "signatures": [
+            "static string HintOf(string id)"
+          ]
+        },
+        {
+          "name": "ErrorOf",
+          "signatures": [
+            "static string ErrorOf(string id)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "GridCo",
+      "signature": "static class GridCo",
+      "members": [
+        {
+          "name": "SortIcon",
+          "signatures": [
+            "const string SortIcon = \"os:chevron\""
+          ]
+        },
+        {
+          "name": "SortIconSize",
+          "signatures": [
+            "const int SortIconSize = 12"
+          ]
+        },
+        {
+          "name": "SearchIcon",
+          "signatures": [
+            "const string SearchIcon = \"os:search\""
+          ]
+        },
+        {
+          "name": "ClearIcon",
+          "signatures": [
+            "const string ClearIcon = \"os:close\""
+          ]
+        },
+        {
+          "name": "ClearLabel",
+          "signatures": [
+            "const string ClearLabel = \"پاک کردن\""
+          ]
+        },
+        {
+          "name": "DownloadIcon",
+          "signatures": [
+            "const string DownloadIcon = \"os:download\""
+          ]
+        },
+        {
+          "name": "PageSize",
+          "signatures": [
+            "const int PageSize = 25"
+          ]
+        },
+        {
+          "name": "PageSizes",
+          "signatures": [
+            "static readonly int[] PageSizes"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "GridComparer",
+      "signature": "sealed class GridComparer : IComparer<object>",
+      "members": [
+        {
+          "name": "Default",
+          "signatures": [
+            "static readonly GridComparer Default"
+          ]
+        },
+        {
+          "name": "Compare",
+          "signatures": [
+            "int Compare(object? x, object? y)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "HttpJobSource",
+      "signature": "sealed class HttpJobSource : IJobSource",
+      "members": [
+        {
+          "name": "HttpJobSource",
+          "signatures": [
+            "HttpJobSource(ApiClient api, string path)"
+          ]
+        },
+        {
+          "name": "Path",
+          "signatures": [
+            "string Path { get; }"
+          ]
+        },
+        {
+          "name": "StatusAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StatusAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PlanAsync",
+          "signatures": [
+            "Task<ApiResult<TPlan?>> PlanAsync<TPlan>(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "StartAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StartAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "StopAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StopAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ICodeHighlighter",
+      "signature": "interface ICodeHighlighter",
+      "members": [
+        {
+          "name": "Language",
+          "signatures": [
+            "string Language { get; }"
+          ]
+        },
+        {
+          "name": "Highlight",
+          "signatures": [
+            "MarkupString Highlight(string? code)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "IJobSource",
+      "signature": "interface IJobSource",
+      "members": [
+        {
+          "name": "StatusAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StatusAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PlanAsync",
+          "signatures": [
+            "Task<ApiResult<TPlan?>> PlanAsync<TPlan>(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "StartAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StartAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "StopAsync",
+          "signatures": [
+            "Task<ApiResult<OSJobStatus>> StopAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "IToastService",
+      "signature": "interface IToastService",
+      "members": [
+        {
+          "name": "Shown",
+          "signatures": [
+            "event Action<Toast>? Shown"
+          ]
+        },
+        {
+          "name": "Show",
+          "signatures": [
+            "void Show(string message, ChipTone tone = ChipTone.Neutral, int duration = 4000)"
+          ]
+        },
+        {
+          "name": "Good",
+          "signatures": [
+            "void Good(string message)"
+          ]
+        },
+        {
+          "name": "Warn",
+          "signatures": [
+            "void Warn(string message)"
+          ]
+        },
+        {
+          "name": "Bad",
+          "signatures": [
+            "void Bad(string message)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "IconCo",
+      "signature": "static class IconCo",
+      "members": [
+        {
+          "name": "Size",
+          "signatures": [
+            "const int Size = 20"
+          ]
+        },
+        {
+          "name": "Prefix",
+          "signatures": [
+            "const string Prefix = \"os-\""
+          ]
+        },
+        {
+          "name": "FillPrefix",
+          "signatures": [
+            "const string FillPrefix = \"os-fill-\""
+          ]
+        },
+        {
+          "name": "FillScheme",
+          "signatures": [
+            "const string FillScheme = \"fill:\""
+          ]
+        },
+        {
+          "name": "AppScheme",
+          "signatures": [
+            "const string AppScheme = \"app:\""
+          ]
+        },
+        {
+          "name": "OsScheme",
+          "signatures": [
+            "const string OsScheme = \"os:\""
+          ]
+        },
+        {
+          "name": "Sprite",
+          "signatures": [
+            "const string Sprite = \"_content/OS.Blazor/icons/os.icons.svg\""
+          ]
+        },
+        {
+          "name": "FillSprite",
+          "signatures": [
+            "const string FillSprite = \"_content/OS.Blazor/icons/os.icons.svg\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "IconNavItem",
+      "signature": "sealed class IconNavItem",
+      "members": [
+        {
+          "name": "Href",
+          "signatures": [
+            "required string Href { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "required string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "required string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Tip",
+          "signatures": [
+            "string? Tip { get; set; }"
+          ]
+        },
+        {
+          "name": "Group",
+          "signatures": [
+            "string? Group { get; set; }"
+          ]
+        },
+        {
+          "name": "Match",
+          "signatures": [
+            "NavLinkMatch Match { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "IconOptions",
+      "signature": "sealed class IconOptions",
+      "members": [
+        {
+          "name": "Sprite",
+          "signatures": [
+            "string Sprite { get; set; }"
+          ]
+        },
+        {
+          "name": "Prefix",
+          "signatures": [
+            "string Prefix { get; set; }"
+          ]
+        },
+        {
+          "name": "FillSprite",
+          "signatures": [
+            "string FillSprite { get; set; }"
+          ]
+        },
+        {
+          "name": "FillPrefix",
+          "signatures": [
+            "string FillPrefix { get; set; }"
+          ]
+        },
+        {
+          "name": "AppSprite",
+          "signatures": [
+            "string AppSprite { get; set; }"
+          ]
+        },
+        {
+          "name": "AppPrefix",
+          "signatures": [
+            "string AppPrefix { get; set; }"
+          ]
+        },
+        {
+          "name": "OsSprite",
+          "signatures": [
+            "string OsSprite { get; set; }"
+          ]
+        },
+        {
+          "name": "OsPrefix",
+          "signatures": [
+            "string OsPrefix { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "JsService",
+      "signature": "sealed class JsService : IAsyncDisposable",
+      "members": [
+        {
+          "name": "JsService",
+          "signatures": [
+            "JsService(IJSRuntime js)"
+          ]
+        },
+        {
+          "name": "ModuleGlobal",
+          "signatures": [
+            "const string ModuleGlobal = \"osWeb\""
+          ]
+        },
+        {
+          "name": "CallAsync",
+          "signatures": [
+            "Task<T?> CallAsync<T>(string name, params object?[] args)",
+            "Task CallAsync(string name, params object?[] args)"
+          ]
+        },
+        {
+          "name": "WireTipsAsync",
+          "signatures": [
+            "Task WireTipsAsync()"
+          ]
+        },
+        {
+          "name": "WireMenusAsync",
+          "signatures": [
+            "Task WireMenusAsync()"
+          ]
+        },
+        {
+          "name": "WireTabsAsync",
+          "signatures": [
+            "Task WireTabsAsync()"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "LabelCo",
+      "signature": "static class LabelCo",
+      "members": [
+        {
+          "name": "Star",
+          "signatures": [
+            "const string Star = \"*\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "MarkCo",
+      "signature": "static class MarkCo",
+      "members": [
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "MenuCo",
+      "signature": "static class MenuCo",
+      "members": [
+        {
+          "name": "Icon",
+          "signatures": [
+            "const string Icon = \"os:dots\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 17"
+          ]
+        },
+        {
+          "name": "DangerTone",
+          "signatures": [
+            "const string DangerTone = \"danger\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSAccordion",
+      "signature": "class OSAccordion : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "OpenId",
+          "signatures": [
+            "string? OpenId { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenIdChanged",
+          "signatures": [
+            "EventCallback<string> OpenIdChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Multiple",
+          "signatures": [
+            "bool Multiple { get; set; }"
+          ]
+        },
+        {
+          "name": "KeepInView",
+          "signatures": [
+            "bool KeepInView { get; set; }"
+          ]
+        },
+        {
+          "name": "KeepDelay",
+          "signatures": [
+            "int KeepDelay { get; set; }"
+          ]
+        },
+        {
+          "name": "ToggleIcon",
+          "signatures": [
+            "string ToggleIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "TitleLevel",
+          "signatures": [
+            "int TitleLevel { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSAccordionItem",
+      "signature": "class OSAccordionItem : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "string Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "TitleContent",
+          "signatures": [
+            "RenderFragment? TitleContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Caption",
+          "signatures": [
+            "string? Caption { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Badge",
+          "signatures": [
+            "RenderFragment? Badge { get; set; }"
+          ]
+        },
+        {
+          "name": "Summary",
+          "signatures": [
+            "RenderFragment? Summary { get; set; }"
+          ]
+        },
+        {
+          "name": "Actions",
+          "signatures": [
+            "RenderFragment? Actions { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Tone",
+          "signatures": [
+            "string? Tone { get; set; }"
+          ]
+        },
+        {
+          "name": "ForceOpen",
+          "signatures": [
+            "bool ForceOpen { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "Padded",
+          "signatures": [
+            "bool Padded { get; set; }"
+          ]
+        },
+        {
+          "name": "ToggleIcon",
+          "signatures": [
+            "string? ToggleIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "TitleLevel",
+          "signatures": [
+            "int? TitleLevel { get; set; }"
+          ]
+        },
+        {
+          "name": "HeadClass",
+          "signatures": [
+            "string? HeadClass { get; set; }"
+          ]
+        },
+        {
+          "name": "BodyClass",
+          "signatures": [
+            "string? BodyClass { get; set; }"
+          ]
+        },
+        {
+          "name": "OnToggle",
+          "signatures": [
+            "EventCallback<bool> OnToggle { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSAccordionLeaf",
+      "signature": "class OSAccordionLeaf : OSComponent",
+      "members": [
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "TitleContent",
+          "signatures": [
+            "RenderFragment? TitleContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Caption",
+          "signatures": [
+            "string? Caption { get; set; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "string? Count { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Trailing",
+          "signatures": [
+            "RenderFragment? Trailing { get; set; }"
+          ]
+        },
+        {
+          "name": "Href",
+          "signatures": [
+            "string? Href { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        },
+        {
+          "name": "OnClick",
+          "signatures": [
+            "EventCallback OnClick { get; set; }"
+          ]
+        },
+        {
+          "name": "Active",
+          "signatures": [
+            "bool? Active { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSApp",
+      "signature": "class OSApp : OSComponent",
+      "members": [
+        {
+          "name": "Assembly",
+          "signatures": [
+            "Assembly Assembly { get; set; }"
+          ]
+        },
+        {
+          "name": "Layout",
+          "signatures": [
+            "Type? Layout { get; set; }"
+          ]
+        },
+        {
+          "name": "NotFoundPage",
+          "signatures": [
+            "Type? NotFoundPage { get; set; }"
+          ]
+        },
+        {
+          "name": "More",
+          "signatures": [
+            "IEnumerable<Assembly>? More { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorContent",
+          "signatures": [
+            "RenderFragment<Exception>? ErrorContent { get; set; }"
+          ]
+        },
+        {
+          "name": "FocusSelector",
+          "signatures": [
+            "string FocusSelector { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSAppLayout",
+      "signature": "class OSAppLayout : LayoutComponentBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSBoardLine{TItem}",
+      "signature": "sealed record OSBoardLine<TItem>",
+      "members": [
+        {
+          "name": "OSBoardLine",
+          "signatures": [
+            "OSBoardLine(string Key, string? Head, TItem? Item)"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Head",
+          "signatures": [
+            "string? Head { get; init; }"
+          ]
+        },
+        {
+          "name": "Item",
+          "signatures": [
+            "TItem? Item { get; init; }"
+          ]
+        },
+        {
+          "name": "IsHead",
+          "signatures": [
+            "bool IsHead { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSBoardScope{TGroup,TItem}",
+      "signature": "sealed record OSBoardScope<TGroup, TItem>",
+      "members": [
+        {
+          "name": "OSBoardScope",
+          "signatures": [
+            "OSBoardScope(TGroup? Group, string? Term, string? View, bool Across, IReadOnlyList<OSBoardLine<TItem?>> Lines)"
+          ]
+        },
+        {
+          "name": "Group",
+          "signatures": [
+            "TGroup? Group { get; init; }"
+          ]
+        },
+        {
+          "name": "Term",
+          "signatures": [
+            "string? Term { get; init; }"
+          ]
+        },
+        {
+          "name": "View",
+          "signatures": [
+            "string? View { get; init; }"
+          ]
+        },
+        {
+          "name": "Across",
+          "signatures": [
+            "bool Across { get; init; }"
+          ]
+        },
+        {
+          "name": "Lines",
+          "signatures": [
+            "IReadOnlyList<OSBoardLine<TItem?>> Lines { get; init; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSBoardView",
+      "signature": "sealed record OSBoardView",
+      "members": [
+        {
+          "name": "OSBoardView",
+          "signatures": [
+            "OSBoardView(string Key, string Text)"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "string Text { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSBody",
+      "signature": "sealed class OSBody : OSRegion",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSBoundary",
+      "signature": "class OSBoundary : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorContent",
+          "signatures": [
+            "RenderFragment<Exception>? ErrorContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "RetryLabel",
+          "signatures": [
+            "string? RetryLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "RecoverOnMove",
+          "signatures": [
+            "bool RecoverOnMove { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSButton",
+      "signature": "class OSButton : OSButtonBase",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "Type",
+          "signatures": [
+            "string Type { get; set; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "ButtonKind Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "ButtonSize Size { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSButtonBase",
+      "signature": "abstract class OSButtonBase : OSComponent",
+      "members": [
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "OnClick",
+          "signatures": [
+            "EventCallback OnClick { get; set; }"
+          ]
+        },
+        {
+          "name": "Href",
+          "signatures": [
+            "string? Href { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSCard",
+      "signature": "class OSCard : OSComponent",
+      "members": [
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Caption",
+          "signatures": [
+            "string? Caption { get; set; }"
+          ]
+        },
+        {
+          "name": "TitleLevel",
+          "signatures": [
+            "int TitleLevel { get; set; }"
+          ]
+        },
+        {
+          "name": "Actions",
+          "signatures": [
+            "RenderFragment? Actions { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Flush",
+          "signatures": [
+            "bool Flush { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSChip",
+      "signature": "class OSChip : OSComponent",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Tone",
+          "signatures": [
+            "ChipTone Tone { get; set; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "ChipSize Size { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Href",
+          "signatures": [
+            "string? Href { get; set; }"
+          ]
+        },
+        {
+          "name": "OnClick",
+          "signatures": [
+            "EventCallback OnClick { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSChoiceField{TValue}",
+      "signature": "class OSChoiceField<TValue> : OSSingleFieldBase<TValue>",
+      "members": [
+        {
+          "name": "IconOf",
+          "signatures": [
+            "Func<TValue?, string>? IconOf { get; set; }"
+          ]
+        },
+        {
+          "name": "NoneText",
+          "signatures": [
+            "string? NoneText { get; set; }"
+          ]
+        },
+        {
+          "name": "NoneIcon",
+          "signatures": [
+            "string? NoneIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "Clearable",
+          "signatures": [
+            "bool Clearable { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSCodeBlock",
+      "signature": "class OSCodeBlock : OSComponent",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        },
+        {
+          "name": "CopyLabel",
+          "signatures": [
+            "string CopyLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "CopiedLabel",
+          "signatures": [
+            "string? CopiedLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Language",
+          "signatures": [
+            "string? Language { get; set; }"
+          ]
+        },
+        {
+          "name": "Output",
+          "signatures": [
+            "string? Output { get; set; }"
+          ]
+        },
+        {
+          "name": "OutputLabel",
+          "signatures": [
+            "string? OutputLabel { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSColumn{T}",
+      "signature": "class OSColumn<T> : ComponentBase",
+      "members": [
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Template",
+          "signatures": [
+            "RenderFragment<T?>? Template { get; set; }"
+          ]
+        },
+        {
+          "name": "Head",
+          "signatures": [
+            "RenderFragment? Head { get; set; }"
+          ]
+        },
+        {
+          "name": "Align",
+          "signatures": [
+            "ColumnAlign Align { get; set; }"
+          ]
+        },
+        {
+          "name": "HeadAlign",
+          "signatures": [
+            "ColumnAlign? HeadAlign { get; set; }"
+          ]
+        },
+        {
+          "name": "CellAlign",
+          "signatures": [
+            "ColumnAlign? CellAlign { get; set; }"
+          ]
+        },
+        {
+          "name": "Footer",
+          "signatures": [
+            "Func<IReadOnlyList<T?>, string>? Footer { get; set; }"
+          ]
+        },
+        {
+          "name": "Numeric",
+          "signatures": [
+            "bool Numeric { get; set; }"
+          ]
+        },
+        {
+          "name": "Width",
+          "signatures": [
+            "string? Width { get; set; }"
+          ]
+        },
+        {
+          "name": "CellClass",
+          "signatures": [
+            "string? CellClass { get; set; }"
+          ]
+        },
+        {
+          "name": "Sticky",
+          "signatures": [
+            "bool Sticky { get; set; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "Func<T?, string>? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "SortBy",
+          "signatures": [
+            "Func<T?, object>? SortBy { get; set; }"
+          ]
+        },
+        {
+          "name": "Export",
+          "signatures": [
+            "Func<T?, string>? Export { get; set; }"
+          ]
+        },
+        {
+          "name": "Searchable",
+          "signatures": [
+            "bool Searchable { get; set; }"
+          ]
+        },
+        {
+          "name": "CellClassOf",
+          "signatures": [
+            "Func<T?, string>? CellClassOf { get; set; }"
+          ]
+        },
+        {
+          "name": "Sortable",
+          "signatures": [
+            "bool Sortable { get; }"
+          ]
+        },
+        {
+          "name": "Sorter",
+          "signatures": [
+            "Func<T?, object>? Sorter { get; }"
+          ]
+        },
+        {
+          "name": "StickName",
+          "signatures": [
+            "string? StickName { get; }"
+          ]
+        },
+        {
+          "name": "AlignName",
+          "signatures": [
+            "string? AlignName { get; }"
+          ]
+        },
+        {
+          "name": "HeadAlignName",
+          "signatures": [
+            "string? HeadAlignName { get; }"
+          ]
+        },
+        {
+          "name": "CellAlignName",
+          "signatures": [
+            "string? CellAlignName { get; }"
+          ]
+        },
+        {
+          "name": "NumericName",
+          "signatures": [
+            "string? NumericName { get; }"
+          ]
+        },
+        {
+          "name": "Style",
+          "signatures": [
+            "string? Style { get; }"
+          ]
+        },
+        {
+          "name": "ValueOf",
+          "signatures": [
+            "string? ValueOf(T? row)"
+          ]
+        },
+        {
+          "name": "Exported",
+          "signatures": [
+            "string? Exported(T? row)"
+          ]
+        },
+        {
+          "name": "ClassOf",
+          "signatures": [
+            "string ClassOf(T? row)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSComponent",
+      "signature": "abstract class OSComponent : ComponentBase",
+      "members": [
+        {
+          "name": "Class",
+          "signatures": [
+            "string? Class { get; set; }"
+          ]
+        },
+        {
+          "name": "Extra",
+          "signatures": [
+            "Dictionary<string, object>? Extra { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSConfirm",
+      "signature": "class OSConfirm : OSComponent",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; set; }"
+          ]
+        },
+        {
+          "name": "NoteTone",
+          "signatures": [
+            "ChipTone NoteTone { get; set; }"
+          ]
+        },
+        {
+          "name": "YesText",
+          "signatures": [
+            "string? YesText { get; set; }"
+          ]
+        },
+        {
+          "name": "YesKind",
+          "signatures": [
+            "ButtonKind YesKind { get; set; }"
+          ]
+        },
+        {
+          "name": "NoText",
+          "signatures": [
+            "string? NoText { get; set; }"
+          ]
+        },
+        {
+          "name": "Busy",
+          "signatures": [
+            "bool Busy { get; set; }"
+          ]
+        },
+        {
+          "name": "OnYes",
+          "signatures": [
+            "EventCallback OnYes { get; set; }"
+          ]
+        },
+        {
+          "name": "CloseLabel",
+          "signatures": [
+            "string? CloseLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "CloseIcon",
+          "signatures": [
+            "string CloseIcon { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSConnectionWatch",
+      "signature": "class OSConnectionWatch : OSComponent, IAsyncDisposable",
+      "members": [
+        {
+          "name": "LostText",
+          "signatures": [
+            "string? LostText { get; set; }"
+          ]
+        },
+        {
+          "name": "BackText",
+          "signatures": [
+            "string? BackText { get; set; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "Task Changed(bool online)"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSCopyButton",
+      "signature": "class OSCopyButton : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "TextFactory",
+          "signatures": [
+            "Func<Task<string>>? TextFactory { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "DoneLabel",
+          "signatures": [
+            "string? DoneLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "DoneIcon",
+          "signatures": [
+            "string DoneIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "OnCopied",
+          "signatures": [
+            "EventCallback<bool> OnCopied { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSDataGrid{T}",
+      "signature": "class OSDataGrid<T> : OSComponent",
+      "members": [
+        {
+          "name": "ExportName",
+          "signatures": [
+            "string? ExportName { get; set; }"
+          ]
+        },
+        {
+          "name": "ExportLabel",
+          "signatures": [
+            "string? ExportLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "ExportIcon",
+          "signatures": [
+            "string ExportIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "PrevLabel",
+          "signatures": [
+            "string? PrevLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "NextLabel",
+          "signatures": [
+            "string? NextLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Paging",
+          "signatures": [
+            "bool Paging { get; set; }"
+          ]
+        },
+        {
+          "name": "PageSizes",
+          "signatures": [
+            "IReadOnlyList<int> PageSizes { get; set; }"
+          ]
+        },
+        {
+          "name": "PageSize",
+          "signatures": [
+            "int PageSize { get; set; }"
+          ]
+        },
+        {
+          "name": "PageSummary",
+          "signatures": [
+            "Func<int, int, int, string>? PageSummary { get; set; }"
+          ]
+        },
+        {
+          "name": "Rows",
+          "signatures": [
+            "IReadOnlyList<T?>? Rows { get; set; }"
+          ]
+        },
+        {
+          "name": "Columns",
+          "signatures": [
+            "RenderFragment? Columns { get; set; }"
+          ]
+        },
+        {
+          "name": "Toolbar",
+          "signatures": [
+            "RenderFragment? Toolbar { get; set; }"
+          ]
+        },
+        {
+          "name": "RowTemplate",
+          "signatures": [
+            "RenderFragment<T?>? RowTemplate { get; set; }"
+          ]
+        },
+        {
+          "name": "RowKey",
+          "signatures": [
+            "Func<T?, object>? RowKey { get; set; }"
+          ]
+        },
+        {
+          "name": "RowClass",
+          "signatures": [
+            "Func<T?, string>? RowClass { get; set; }"
+          ]
+        },
+        {
+          "name": "OnRowClick",
+          "signatures": [
+            "EventCallback<T?> OnRowClick { get; set; }"
+          ]
+        },
+        {
+          "name": "ScrollHeight",
+          "signatures": [
+            "string? ScrollHeight { get; set; }"
+          ]
+        },
+        {
+          "name": "Loading",
+          "signatures": [
+            "bool Loading { get; set; }"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "string? Error { get; set; }"
+          ]
+        },
+        {
+          "name": "Tall",
+          "signatures": [
+            "bool Tall { get; set; }"
+          ]
+        },
+        {
+          "name": "SkeletonRows",
+          "signatures": [
+            "int SkeletonRows { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyIcon",
+          "signatures": [
+            "string? EmptyIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyText",
+          "signatures": [
+            "string? EmptyText { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyTitle",
+          "signatures": [
+            "string? EmptyTitle { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorIcon",
+          "signatures": [
+            "string ErrorIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "MessageIconSize",
+          "signatures": [
+            "int MessageIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyContent",
+          "signatures": [
+            "RenderFragment? EmptyContent { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorContent",
+          "signatures": [
+            "RenderFragment? ErrorContent { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchText",
+          "signatures": [
+            "Func<T?, string>? SearchText { get; set; }"
+          ]
+        },
+        {
+          "name": "Searchable",
+          "signatures": [
+            "bool Searchable { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchPlaceholder",
+          "signatures": [
+            "string? SearchPlaceholder { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchLabel",
+          "signatures": [
+            "string? SearchLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchIcon",
+          "signatures": [
+            "string SearchIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchClearIcon",
+          "signatures": [
+            "string SearchClearIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchClearLabel",
+          "signatures": [
+            "string SearchClearLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Sort",
+          "signatures": [
+            "string? Sort { get; set; }"
+          ]
+        },
+        {
+          "name": "SortType",
+          "signatures": [
+            "ApiSortType SortType { get; set; }"
+          ]
+        },
+        {
+          "name": "OnSort",
+          "signatures": [
+            "EventCallback<string> OnSort { get; set; }"
+          ]
+        },
+        {
+          "name": "SortIcon",
+          "signatures": [
+            "string SortIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "SortIconSize",
+          "signatures": [
+            "int SortIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Csv",
+          "signatures": [
+            "string? Csv()"
+          ]
+        },
+        {
+          "name": "ResetPage",
+          "signatures": [
+            "void ResetPage()"
+          ]
+        },
+        {
+          "name": "Add",
+          "signatures": [
+            "void Add(OSColumn<T?> column)"
+          ]
+        },
+        {
+          "name": "Filter",
+          "signatures": [
+            "IReadOnlyList<T?> Filter(string? search)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSDataSet{T}",
+      "signature": "sealed class OSDataSet<T> : IDisposable",
+      "members": [
+        {
+          "name": "OSDataSet",
+          "signatures": [
+            "OSDataSet(Func<ApiQuery, CancellationToken, Task<ApiResult<ApiPage<T?>>>> fetch)"
+          ]
+        },
+        {
+          "name": "Query",
+          "signatures": [
+            "ApiQuery Query { get; }"
+          ]
+        },
+        {
+          "name": "Rows",
+          "signatures": [
+            "List<T?> Rows { get; }"
+          ]
+        },
+        {
+          "name": "Page",
+          "signatures": [
+            "ApiPageInfo? Page { get; }"
+          ]
+        },
+        {
+          "name": "Busy",
+          "signatures": [
+            "bool Busy { get; }"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "string? Error { get; }"
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "bool Empty { get; }"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "bool Failed { get; }"
+          ]
+        },
+        {
+          "name": "Current",
+          "signatures": [
+            "int Current { get; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int Total { get; }"
+          ]
+        },
+        {
+          "name": "First",
+          "signatures": [
+            "int First { get; }"
+          ]
+        },
+        {
+          "name": "Last",
+          "signatures": [
+            "int Last { get; }"
+          ]
+        },
+        {
+          "name": "HasPrev",
+          "signatures": [
+            "bool HasPrev { get; }"
+          ]
+        },
+        {
+          "name": "HasNext",
+          "signatures": [
+            "bool HasNext { get; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "event Action? Changed"
+          ]
+        },
+        {
+          "name": "LoadAsync",
+          "signatures": [
+            "Task LoadAsync()"
+          ]
+        },
+        {
+          "name": "GoAsync",
+          "signatures": [
+            "Task GoAsync(int page)"
+          ]
+        },
+        {
+          "name": "PrevAsync",
+          "signatures": [
+            "Task PrevAsync()"
+          ]
+        },
+        {
+          "name": "NextAsync",
+          "signatures": [
+            "Task NextAsync()"
+          ]
+        },
+        {
+          "name": "SearchAsync",
+          "signatures": [
+            "Task SearchAsync(string? term)"
+          ]
+        },
+        {
+          "name": "FilterAsync",
+          "signatures": [
+            "Task FilterAsync(CriteriaDocument? criteria)"
+          ]
+        },
+        {
+          "name": "SizeAsync",
+          "signatures": [
+            "Task SizeAsync(int take)"
+          ]
+        },
+        {
+          "name": "SortAsync",
+          "signatures": [
+            "Task SortAsync(string? name)"
+          ]
+        },
+        {
+          "name": "SortOf",
+          "signatures": [
+            "ApiSortType SortOf(string? name)"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSDataState",
+      "signature": "class OSDataState : OSComponent",
+      "members": [
+        {
+          "name": "Loading",
+          "signatures": [
+            "bool Loading { get; set; }"
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "bool Empty { get; set; }"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "string? Error { get; set; }"
+          ]
+        },
+        {
+          "name": "SkeletonRows",
+          "signatures": [
+            "int SkeletonRows { get; set; }"
+          ]
+        },
+        {
+          "name": "Spinner",
+          "signatures": [
+            "bool Spinner { get; set; }"
+          ]
+        },
+        {
+          "name": "SpinnerSize",
+          "signatures": [
+            "int SpinnerSize { get; set; }"
+          ]
+        },
+        {
+          "name": "WaitLabel",
+          "signatures": [
+            "string? WaitLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "WaitText",
+          "signatures": [
+            "string? WaitText { get; set; }"
+          ]
+        },
+        {
+          "name": "Tall",
+          "signatures": [
+            "bool Tall { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyIcon",
+          "signatures": [
+            "string? EmptyIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyText",
+          "signatures": [
+            "string? EmptyText { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorIcon",
+          "signatures": [
+            "string ErrorIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "MessageIconSize",
+          "signatures": [
+            "int MessageIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "WaitContent",
+          "signatures": [
+            "RenderFragment? WaitContent { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyContent",
+          "signatures": [
+            "RenderFragment? EmptyContent { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorContent",
+          "signatures": [
+            "RenderFragment? ErrorContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSDialog",
+      "signature": "class OSDialog : OSComponent, IAsyncDisposable",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "CloseLabel",
+          "signatures": [
+            "string? CloseLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "CloseIcon",
+          "signatures": [
+            "string CloseIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "Dismissible",
+          "signatures": [
+            "bool Dismissible { get; set; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; set; }"
+          ]
+        },
+        {
+          "name": "NoteTone",
+          "signatures": [
+            "ChipTone NoteTone { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Footer",
+          "signatures": [
+            "RenderFragment? Footer { get; set; }"
+          ]
+        },
+        {
+          "name": "DialogClosed",
+          "signatures": [
+            "Task DialogClosed()"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSDropdown{TValue}",
+      "signature": "class OSDropdown<TValue> : OSSingleFieldBase<TValue>, IAsyncDisposable",
+      "members": [
+        {
+          "name": "Placeholder",
+          "signatures": [
+            "string? Placeholder { get; set; }"
+          ]
+        },
+        {
+          "name": "ItemTemplate",
+          "signatures": [
+            "RenderFragment<TValue?>? ItemTemplate { get; set; }"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSEditor{TDraft}",
+      "signature": "sealed class OSEditor<TDraft> where TDraft : class",
+      "members": [
+        {
+          "name": "OSEditor",
+          "signatures": [
+            "OSEditor(Func<TDraft, Task<ApiResult>> save, Func<TDraft> make, params string[]? fields)"
+          ]
+        },
+        {
+          "name": "Draft",
+          "signatures": [
+            "TDraft Draft { get; }"
+          ]
+        },
+        {
+          "name": "Origin",
+          "signatures": [
+            "object? Origin { get; }"
+          ]
+        },
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "Busy",
+          "signatures": [
+            "bool Busy { get; }"
+          ]
+        },
+        {
+          "name": "Attempted",
+          "signatures": [
+            "bool Attempted { get; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; }"
+          ]
+        },
+        {
+          "name": "IsNew",
+          "signatures": [
+            "bool IsNew { get; }"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "bool Failed { get; }"
+          ]
+        },
+        {
+          "name": "ErrorOf",
+          "signatures": [
+            "string? ErrorOf(string field)"
+          ]
+        },
+        {
+          "name": "New",
+          "signatures": [
+            "void New()"
+          ]
+        },
+        {
+          "name": "Edit",
+          "signatures": [
+            "void Edit(object? origin, TDraft draft)"
+          ]
+        },
+        {
+          "name": "Cancel",
+          "signatures": [
+            "void Cancel()"
+          ]
+        },
+        {
+          "name": "Require",
+          "signatures": [
+            "void Require(string field, string? value, string message)",
+            "void Require(string field, bool present, string message)"
+          ]
+        },
+        {
+          "name": "Clear",
+          "signatures": [
+            "void Clear()"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<bool> SaveAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSFieldBase",
+      "signature": "abstract class OSFieldBase : OSComponent",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Hint",
+          "signatures": [
+            "string? Hint { get; set; }"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "string? Error { get; set; }"
+          ]
+        },
+        {
+          "name": "Required",
+          "signatures": [
+            "bool Required { get; set; }"
+          ]
+        },
+        {
+          "name": "MarkRequired",
+          "signatures": [
+            "bool MarkRequired { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSFieldFrame",
+      "signature": "class OSFieldFrame : OSComponent",
+      "members": [
+        {
+          "name": "For",
+          "signatures": [
+            "string For { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Hint",
+          "signatures": [
+            "string? Hint { get; set; }"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "string? Error { get; set; }"
+          ]
+        },
+        {
+          "name": "Required",
+          "signatures": [
+            "bool Required { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorIcon",
+          "signatures": [
+            "string ErrorIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorIconSize",
+          "signatures": [
+            "int ErrorIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Box",
+          "signatures": [
+            "bool Box { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSFileButton",
+      "signature": "class OSFileButton : OSComponent",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string Text { get; set; }"
+          ]
+        },
+        {
+          "name": "FileName",
+          "signatures": [
+            "string FileName { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Mime",
+          "signatures": [
+            "string? Mime { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "OnSaved",
+          "signatures": [
+            "EventCallback OnSaved { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSFilePicker",
+      "signature": "class OSFilePicker : OSComponent",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Accept",
+          "signatures": [
+            "string? Accept { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxBytes",
+          "signatures": [
+            "long MaxBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "Busy",
+          "signatures": [
+            "bool Busy { get; set; }"
+          ]
+        },
+        {
+          "name": "OnPick",
+          "signatures": [
+            "EventCallback<IBrowserFile> OnPick { get; set; }"
+          ]
+        },
+        {
+          "name": "OnTooBig",
+          "signatures": [
+            "EventCallback<IBrowserFile> OnTooBig { get; set; }"
+          ]
+        },
+        {
+          "name": "IconOnly",
+          "signatures": [
+            "bool IconOnly { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSFooter",
+      "signature": "sealed class OSFooter : OSRegion",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSGroupBoard{TGroup,TItem}",
+      "signature": "class OSGroupBoard<TGroup, TItem> : OSComponent",
+      "members": [
+        {
+          "name": "Groups",
+          "signatures": [
+            "IReadOnlyList<TGroup?> Groups { get; set; }"
+          ]
+        },
+        {
+          "name": "ItemsOf",
+          "signatures": [
+            "Func<TGroup?, IEnumerable<TItem?>> ItemsOf { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupKey",
+          "signatures": [
+            "Func<TGroup?, string> GroupKey { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupTitle",
+          "signatures": [
+            "Func<TGroup?, string> GroupTitle { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupCount",
+          "signatures": [
+            "Func<TGroup?, string>? GroupCount { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupPercent",
+          "signatures": [
+            "Func<TGroup?, double>? GroupPercent { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupBadge",
+          "signatures": [
+            "Func<TGroup?, string>? GroupBadge { get; set; }"
+          ]
+        },
+        {
+          "name": "ItemKey",
+          "signatures": [
+            "Func<TItem?, string> ItemKey { get; set; }"
+          ]
+        },
+        {
+          "name": "ItemTitle",
+          "signatures": [
+            "Func<TItem?, string> ItemTitle { get; set; }"
+          ]
+        },
+        {
+          "name": "Views",
+          "signatures": [
+            "IReadOnlyList<OSBoardView>? Views { get; set; }"
+          ]
+        },
+        {
+          "name": "InView",
+          "signatures": [
+            "Func<TItem?, string?, bool>? InView { get; set; }"
+          ]
+        },
+        {
+          "name": "Loading",
+          "signatures": [
+            "bool Loading { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyText",
+          "signatures": [
+            "string? EmptyText { get; set; }"
+          ]
+        },
+        {
+          "name": "EmptyIcon",
+          "signatures": [
+            "string? EmptyIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "MessageIconSize",
+          "signatures": [
+            "int MessageIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "SkeletonRows",
+          "signatures": [
+            "int SkeletonRows { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchPlaceholder",
+          "signatures": [
+            "string? SearchPlaceholder { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchClearLabel",
+          "signatures": [
+            "string? SearchClearLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchIcon",
+          "signatures": [
+            "string SearchIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "SearchClearIcon",
+          "signatures": [
+            "string SearchClearIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "ViewsLabel",
+          "signatures": [
+            "string? ViewsLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "GroupsLabel",
+          "signatures": [
+            "string? GroupsLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "HeadTemplate",
+          "signatures": [
+            "RenderFragment<OSBoardScope<TGroup?, TItem?>>? HeadTemplate { get; set; }"
+          ]
+        },
+        {
+          "name": "RowsTemplate",
+          "signatures": [
+            "RenderFragment<OSBoardScope<TGroup?, TItem?>>? RowsTemplate { get; set; }"
+          ]
+        },
+        {
+          "name": "SelectView",
+          "signatures": [
+            "void SelectView(string? key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeadItem",
+      "signature": "class OSHeadItem : OSComponent",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeader",
+      "signature": "sealed class OSHeader : OSRegion",
+      "members": [
+        {
+          "name": "CenterBrand",
+          "signatures": [
+            "bool CenterBrand { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeaderCenter",
+      "signature": "sealed class OSHeaderCenter : OSHeaderSlot",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeaderEnd",
+      "signature": "sealed class OSHeaderEnd : OSHeaderSlot",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeaderSlot",
+      "signature": "abstract class OSHeaderSlot : OSComponent",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSHeaderStart",
+      "signature": "sealed class OSHeaderStart : OSHeaderSlot",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSIcon",
+      "signature": "class OSIcon : OSComponent",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "int Size { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSIconButton",
+      "signature": "class OSIconButton : OSButtonBase",
+      "members": [
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Active",
+          "signatures": [
+            "bool? Active { get; set; }"
+          ]
+        },
+        {
+          "name": "FocusAsync",
+          "signatures": [
+            "ValueTask FocusAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSIconNav",
+      "signature": "class OSIconNav : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<IconNavItem>? Items { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "ShowActiveLabel",
+          "signatures": [
+            "bool ShowActiveLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSImageField",
+      "signature": "class OSImageField : OSFieldBase",
+      "members": [
+        {
+          "name": "Src",
+          "signatures": [
+            "string? Src { get; set; }"
+          ]
+        },
+        {
+          "name": "Alt",
+          "signatures": [
+            "string Alt { get; set; }"
+          ]
+        },
+        {
+          "name": "Round",
+          "signatures": [
+            "bool Round { get; set; }"
+          ]
+        },
+        {
+          "name": "Accept",
+          "signatures": [
+            "string? Accept { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxBytes",
+          "signatures": [
+            "long MaxBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "Uploading",
+          "signatures": [
+            "bool Uploading { get; set; }"
+          ]
+        },
+        {
+          "name": "Removing",
+          "signatures": [
+            "bool Removing { get; set; }"
+          ]
+        },
+        {
+          "name": "PickText",
+          "signatures": [
+            "string PickText { get; set; }"
+          ]
+        },
+        {
+          "name": "RemoveText",
+          "signatures": [
+            "string RemoveText { get; set; }"
+          ]
+        },
+        {
+          "name": "RemoveYesText",
+          "signatures": [
+            "string RemoveYesText { get; set; }"
+          ]
+        },
+        {
+          "name": "CancelText",
+          "signatures": [
+            "string CancelText { get; set; }"
+          ]
+        },
+        {
+          "name": "PickIcon",
+          "signatures": [
+            "string PickIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "RemoveIcon",
+          "signatures": [
+            "string RemoveIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "YesIcon",
+          "signatures": [
+            "string YesIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "CancelIcon",
+          "signatures": [
+            "string CancelIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "OnPick",
+          "signatures": [
+            "EventCallback<IBrowserFile> OnPick { get; set; }"
+          ]
+        },
+        {
+          "name": "OnTooBig",
+          "signatures": [
+            "EventCallback<IBrowserFile> OnTooBig { get; set; }"
+          ]
+        },
+        {
+          "name": "OnRemove",
+          "signatures": [
+            "EventCallback OnRemove { get; set; }"
+          ]
+        },
+        {
+          "name": "OnAsk",
+          "signatures": [
+            "EventCallback OnAsk { get; set; }"
+          ]
+        },
+        {
+          "name": "OnCancel",
+          "signatures": [
+            "EventCallback OnCancel { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSInlineText",
+      "signature": "class OSInlineText : ComponentBase",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSJobDialog{TPlan,TResult}",
+      "signature": "class OSJobDialog<TPlan, TResult> : OSComponent, IAsyncDisposable",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Path",
+          "signatures": [
+            "string? Path { get; set; }"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "IJobSource? Source { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "ResultTitle",
+          "signatures": [
+            "string? ResultTitle { get; set; }"
+          ]
+        },
+        {
+          "name": "Texts",
+          "signatures": [
+            "OSJobTexts? Texts { get; set; }"
+          ]
+        },
+        {
+          "name": "Plan",
+          "signatures": [
+            "RenderFragment<TPlan?>? Plan { get; set; }"
+          ]
+        },
+        {
+          "name": "Result",
+          "signatures": [
+            "RenderFragment<TResult?>? Result { get; set; }"
+          ]
+        },
+        {
+          "name": "PhaseNames",
+          "signatures": [
+            "IReadOnlyList<string>? PhaseNames { get; set; }"
+          ]
+        },
+        {
+          "name": "NumberText",
+          "signatures": [
+            "Func<int, string>? NumberText { get; set; }"
+          ]
+        },
+        {
+          "name": "DigitText",
+          "signatures": [
+            "Func<string, string>? DigitText { get; set; }"
+          ]
+        },
+        {
+          "name": "StartIcon",
+          "signatures": [
+            "string? StartIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "StartText",
+          "signatures": [
+            "string? StartText { get; set; }"
+          ]
+        },
+        {
+          "name": "Width",
+          "signatures": [
+            "string Width { get; set; }"
+          ]
+        },
+        {
+          "name": "PollInterval",
+          "signatures": [
+            "TimeSpan PollInterval { get; set; }"
+          ]
+        },
+        {
+          "name": "OnDone",
+          "signatures": [
+            "EventCallback<TResult?> OnDone { get; set; }"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSJobState",
+      "signature": "enum OSJobState",
+      "members": [
+        {
+          "name": "Idle",
+          "signatures": [
+            "Idle = 0"
+          ]
+        },
+        {
+          "name": "Running",
+          "signatures": [
+            "Running = 1"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "Done = 2"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 3"
+          ]
+        },
+        {
+          "name": "Cancelled",
+          "signatures": [
+            "Cancelled = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSJobStatus",
+      "signature": "sealed class OSJobStatus",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "string? Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "OSJobState State { get; set; }"
+          ]
+        },
+        {
+          "name": "Phase",
+          "signatures": [
+            "int Phase { get; set; }"
+          ]
+        },
+        {
+          "name": "PhaseCount",
+          "signatures": [
+            "int PhaseCount { get; set; }"
+          ]
+        },
+        {
+          "name": "PhaseName",
+          "signatures": [
+            "string? PhaseName { get; set; }"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "int Done { get; set; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int Total { get; set; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; set; }"
+          ]
+        },
+        {
+          "name": "StartedAt",
+          "signatures": [
+            "DateTimeOffset? StartedAt { get; set; }"
+          ]
+        },
+        {
+          "name": "EndedAt",
+          "signatures": [
+            "DateTimeOffset? EndedAt { get; set; }"
+          ]
+        },
+        {
+          "name": "Elapsed",
+          "signatures": [
+            "double Elapsed { get; set; }"
+          ]
+        },
+        {
+          "name": "Remaining",
+          "signatures": [
+            "double? Remaining { get; set; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; set; }"
+          ]
+        },
+        {
+          "name": "Result",
+          "signatures": [
+            "JsonElement? Result { get; set; }"
+          ]
+        },
+        {
+          "name": "FileUrl",
+          "signatures": [
+            "string? FileUrl { get; set; }"
+          ]
+        },
+        {
+          "name": "FileName",
+          "signatures": [
+            "string? FileName { get; set; }"
+          ]
+        },
+        {
+          "name": "Percent",
+          "signatures": [
+            "int Percent { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSJobTexts",
+      "signature": "sealed class OSJobTexts",
+      "members": [
+        {
+          "name": "Loading",
+          "signatures": [
+            "string? Loading { get; init; }"
+          ]
+        },
+        {
+          "name": "Start",
+          "signatures": [
+            "string? Start { get; init; }"
+          ]
+        },
+        {
+          "name": "Cancel",
+          "signatures": [
+            "string? Cancel { get; init; }"
+          ]
+        },
+        {
+          "name": "Stop",
+          "signatures": [
+            "string? Stop { get; init; }"
+          ]
+        },
+        {
+          "name": "Close",
+          "signatures": [
+            "string? Close { get; init; }"
+          ]
+        },
+        {
+          "name": "Again",
+          "signatures": [
+            "string? Again { get; init; }"
+          ]
+        },
+        {
+          "name": "Download",
+          "signatures": [
+            "string? Download { get; init; }"
+          ]
+        },
+        {
+          "name": "Phase",
+          "signatures": [
+            "string? Phase { get; init; }"
+          ]
+        },
+        {
+          "name": "Of",
+          "signatures": [
+            "string? Of { get; init; }"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "string? Done { get; init; }"
+          ]
+        },
+        {
+          "name": "Elapsed",
+          "signatures": [
+            "string? Elapsed { get; init; }"
+          ]
+        },
+        {
+          "name": "Remaining",
+          "signatures": [
+            "string? Remaining { get; init; }"
+          ]
+        },
+        {
+          "name": "About",
+          "signatures": [
+            "string? About { get; init; }"
+          ]
+        },
+        {
+          "name": "Seconds",
+          "signatures": [
+            "string? Seconds { get; init; }"
+          ]
+        },
+        {
+          "name": "Minutes",
+          "signatures": [
+            "string? Minutes { get; init; }"
+          ]
+        },
+        {
+          "name": "Unknown",
+          "signatures": [
+            "string? Unknown { get; init; }"
+          ]
+        },
+        {
+          "name": "Lost",
+          "signatures": [
+            "string? Lost { get; init; }"
+          ]
+        },
+        {
+          "name": "Stopped",
+          "signatures": [
+            "string? Stopped { get; init; }"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "string? Failed { get; init; }"
+          ]
+        },
+        {
+          "name": "Hint",
+          "signatures": [
+            "string? Hint { get; init; }"
+          ]
+        },
+        {
+          "name": "StoppedNote",
+          "signatures": [
+            "string? StoppedNote { get; init; }"
+          ]
+        },
+        {
+          "name": "FailedNote",
+          "signatures": [
+            "string? FailedNote { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSLabel",
+      "signature": "class OSLabel : OSComponent",
+      "members": [
+        {
+          "name": "For",
+          "signatures": [
+            "string? For { get; set; }"
+          ]
+        },
+        {
+          "name": "Required",
+          "signatures": [
+            "bool Required { get; set; }"
+          ]
+        },
+        {
+          "name": "Star",
+          "signatures": [
+            "string Star { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSListFieldBase{TValue}",
+      "signature": "abstract class OSListFieldBase<TValue> : OSFieldBase",
+      "members": [
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<TValue?>? Items { get; set; }"
+          ]
+        },
+        {
+          "name": "TextOf",
+          "signatures": [
+            "Func<TValue?, string>? TextOf { get; set; }"
+          ]
+        },
+        {
+          "name": "KeyOf",
+          "signatures": [
+            "Func<TValue?, string>? KeyOf { get; set; }"
+          ]
+        },
+        {
+          "name": "DisabledOf",
+          "signatures": [
+            "Func<TValue?, bool>? DisabledOf { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSLoader",
+      "signature": "class OSLoader : OSComponent",
+      "members": [
+        {
+          "name": "Size",
+          "signatures": [
+            "int Size { get; set; }"
+          ]
+        },
+        {
+          "name": "Rate",
+          "signatures": [
+            "double Rate { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSMark",
+      "signature": "class OSMark : OSComponent",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "int Size { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSMenu",
+      "signature": "class OSMenu : OSComponent",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "Trigger",
+          "signatures": [
+            "RenderFragment? Trigger { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSMenuItem",
+      "signature": "class OSMenuItem : OSComponent",
+      "members": [
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; set; }"
+          ]
+        },
+        {
+          "name": "Danger",
+          "signatures": [
+            "bool Danger { get; set; }"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "bool Disabled { get; set; }"
+          ]
+        },
+        {
+          "name": "OnClick",
+          "signatures": [
+            "EventCallback OnClick { get; set; }"
+          ]
+        },
+        {
+          "name": "Href",
+          "signatures": [
+            "string? Href { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSMenuRule",
+      "signature": "class OSMenuRule : ComponentBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSMultiDropdown{TValue}",
+      "signature": "class OSMultiDropdown<TValue> : OSListFieldBase<TValue>, IAsyncDisposable",
+      "members": [
+        {
+          "name": "Values",
+          "signatures": [
+            "IReadOnlyList<TValue?>? Values { get; set; }"
+          ]
+        },
+        {
+          "name": "ValuesChanged",
+          "signatures": [
+            "EventCallback<IReadOnlyList<TValue?>> ValuesChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "NoteOf",
+          "signatures": [
+            "Func<TValue?, string>? NoteOf { get; set; }"
+          ]
+        },
+        {
+          "name": "CountText",
+          "signatures": [
+            "Func<int, string>? CountText { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "NoneText",
+          "signatures": [
+            "string? NoneText { get; set; }"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSNav",
+      "signature": "class OSNav : OSComponent",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSNavLink",
+      "signature": "class OSNavLink : OSComponent",
+      "members": [
+        {
+          "name": "Href",
+          "signatures": [
+            "string Href { get; set; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "string? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Tip",
+          "signatures": [
+            "string? Tip { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Match",
+          "signatures": [
+            "NavLinkMatch Match { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSNavSection",
+      "signature": "class OSNavSection : OSComponent",
+      "members": [
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSPage",
+      "signature": "abstract class OSPage : OSViewBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSPageHead",
+      "signature": "class OSPageHead : OSComponent",
+      "members": [
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Subtitle",
+          "signatures": [
+            "string? Subtitle { get; set; }"
+          ]
+        },
+        {
+          "name": "SubtitleContent",
+          "signatures": [
+            "RenderFragment? SubtitleContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Actions",
+          "signatures": [
+            "RenderFragment? Actions { get; set; }"
+          ]
+        },
+        {
+          "name": "Details",
+          "signatures": [
+            "RenderFragment? Details { get; set; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSPager",
+      "signature": "class OSPager : OSComponent",
+      "members": [
+        {
+          "name": "Current",
+          "signatures": [
+            "int Current { get; set; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; set; }"
+          ]
+        },
+        {
+          "name": "Window",
+          "signatures": [
+            "int Window { get; set; }"
+          ]
+        },
+        {
+          "name": "OnGo",
+          "signatures": [
+            "EventCallback<int> OnGo { get; set; }"
+          ]
+        },
+        {
+          "name": "Summary",
+          "signatures": [
+            "RenderFragment? Summary { get; set; }"
+          ]
+        },
+        {
+          "name": "Sizes",
+          "signatures": [
+            "IReadOnlyList<int>? Sizes { get; set; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "int Size { get; set; }"
+          ]
+        },
+        {
+          "name": "OnSize",
+          "signatures": [
+            "EventCallback<int> OnSize { get; set; }"
+          ]
+        },
+        {
+          "name": "SizeText",
+          "signatures": [
+            "Func<int, string>? SizeText { get; set; }"
+          ]
+        },
+        {
+          "name": "SizeLabel",
+          "signatures": [
+            "string? SizeLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "SizeNote",
+          "signatures": [
+            "string? SizeNote { get; set; }"
+          ]
+        },
+        {
+          "name": "PageText",
+          "signatures": [
+            "Func<int, string>? PageText { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        },
+        {
+          "name": "PrevLabel",
+          "signatures": [
+            "string? PrevLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "NextLabel",
+          "signatures": [
+            "string? NextLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "PrevIcon",
+          "signatures": [
+            "string PrevIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "NextIcon",
+          "signatures": [
+            "string NextIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "StepIconSize",
+          "signatures": [
+            "int StepIconSize { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSPanel",
+      "signature": "abstract class OSPanel : OSViewBase",
+      "members": [
+        {
+          "name": "OnFail",
+          "signatures": [
+            "EventCallback<string> OnFail { get; set; }"
+          ]
+        },
+        {
+          "name": "ReloadAsync",
+          "signatures": [
+            "Task ReloadAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSPanelLayout",
+      "signature": "class OSPanelLayout : LayoutComponentBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSRegion",
+      "signature": "abstract class OSRegion : OSComponent",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSearchField",
+      "signature": "class OSSearchField : OSTextFieldBase",
+      "members": [
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "ClearIcon",
+          "signatures": [
+            "string ClearIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "ClearLabel",
+          "signatures": [
+            "string? ClearLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Clearable",
+          "signatures": [
+            "bool Clearable { get; set; }"
+          ]
+        },
+        {
+          "name": "OnSearch",
+          "signatures": [
+            "EventCallback<string> OnSearch { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSelectField{TValue}",
+      "signature": "class OSSelectField<TValue> : OSSingleFieldBase<TValue>",
+      "members": [
+        {
+          "name": "GroupOf",
+          "signatures": [
+            "Func<TValue?, string>? GroupOf { get; set; }"
+          ]
+        },
+        {
+          "name": "BlankText",
+          "signatures": [
+            "string? BlankText { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSShell",
+      "signature": "class OSShell : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "MenuLabel",
+          "signatures": [
+            "string? MenuLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "MenuCloseLabel",
+          "signatures": [
+            "string? MenuCloseLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "MenuIcon",
+          "signatures": [
+            "string MenuIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "MoreLabel",
+          "signatures": [
+            "string? MoreLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "MoreIcon",
+          "signatures": [
+            "string MoreIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Claim",
+          "signatures": [
+            "void Claim(OSRegion region)"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSidebar",
+      "signature": "sealed class OSSidebar : OSRegion",
+      "members": [
+        {
+          "name": "Placement",
+          "signatures": [
+            "SidebarPlacement Placement { get; set; }"
+          ]
+        },
+        {
+          "name": "Side",
+          "signatures": [
+            "SidebarSide Side { get; set; }"
+          ]
+        },
+        {
+          "name": "DrawerEdge",
+          "signatures": [
+            "DrawerEdge DrawerEdge { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSidebarFoot",
+      "signature": "class OSSidebarFoot : OSComponent",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSidebarHead",
+      "signature": "class OSSidebarHead : OSComponent",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSingleFieldBase{TValue}",
+      "signature": "abstract class OSSingleFieldBase<TValue> : OSListFieldBase<TValue>",
+      "members": [
+        {
+          "name": "Value",
+          "signatures": [
+            "TValue? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "ValueChanged",
+          "signatures": [
+            "EventCallback<TValue?> ValueChanged { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSpinner",
+      "signature": "class OSSpinner : OSComponent",
+      "members": [
+        {
+          "name": "Size",
+          "signatures": [
+            "int Size { get; set; }"
+          ]
+        },
+        {
+          "name": "Thickness",
+          "signatures": [
+            "int Thickness { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSStatCard",
+      "signature": "class OSStatCard : OSComponent",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Delta",
+          "signatures": [
+            "string? Delta { get; set; }"
+          ]
+        },
+        {
+          "name": "Up",
+          "signatures": [
+            "bool? Up { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "RiseIcon",
+          "signatures": [
+            "string? RiseIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "FallIcon",
+          "signatures": [
+            "string? FallIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "DeltaIconSize",
+          "signatures": [
+            "int DeltaIconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Unit",
+          "signatures": [
+            "string? Unit { get; set; }"
+          ]
+        },
+        {
+          "name": "Tone",
+          "signatures": [
+            "StatTone Tone { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSStatusChip",
+      "signature": "class OSStatusChip : OSComponent",
+      "members": [
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        },
+        {
+          "name": "Tone",
+          "signatures": [
+            "ChipTone Tone { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSSwitch",
+      "signature": "class OSSwitch : OSFieldBase",
+      "members": [
+        {
+          "name": "Value",
+          "signatures": [
+            "bool Value { get; set; }"
+          ]
+        },
+        {
+          "name": "ValueChanged",
+          "signatures": [
+            "EventCallback<bool> ValueChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "OnText",
+          "signatures": [
+            "string? OnText { get; set; }"
+          ]
+        },
+        {
+          "name": "OffText",
+          "signatures": [
+            "string? OffText { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTabBar",
+      "signature": "sealed class OSTabBar : OSRegion",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string? Label { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTabs{TValue}",
+      "signature": "class OSTabs<TValue> : OSComponent",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "string Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<TValue?>? Items { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "TValue? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "ValueChanged",
+          "signatures": [
+            "EventCallback<TValue?> ValueChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "TextOf",
+          "signatures": [
+            "Func<TValue?, string>? TextOf { get; set; }"
+          ]
+        },
+        {
+          "name": "KeyOf",
+          "signatures": [
+            "Func<TValue?, string>? KeyOf { get; set; }"
+          ]
+        },
+        {
+          "name": "PanelOf",
+          "signatures": [
+            "Func<TValue?, string>? PanelOf { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTextField",
+      "signature": "class OSTextField : OSTextFieldBase",
+      "members": [
+        {
+          "name": "Type",
+          "signatures": [
+            "string Type { get; set; }"
+          ]
+        },
+        {
+          "name": "ReadOnly",
+          "signatures": [
+            "bool ReadOnly { get; set; }"
+          ]
+        },
+        {
+          "name": "Immediate",
+          "signatures": [
+            "bool Immediate { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "ShowIcon",
+          "signatures": [
+            "string ShowIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "HideIcon",
+          "signatures": [
+            "string HideIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "ShowLabel",
+          "signatures": [
+            "string? ShowLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "HideLabel",
+          "signatures": [
+            "string? HideLabel { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTextFieldBase",
+      "signature": "abstract class OSTextFieldBase : OSFieldBase",
+      "members": [
+        {
+          "name": "Placeholder",
+          "signatures": [
+            "string? Placeholder { get; set; }"
+          ]
+        },
+        {
+          "name": "Dir",
+          "signatures": [
+            "string Dir { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "ValueChanged",
+          "signatures": [
+            "EventCallback<string> ValueChanged { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSThemeToggle",
+      "signature": "class OSThemeToggle : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "LightLabel",
+          "signatures": [
+            "string LightLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "DarkLabel",
+          "signatures": [
+            "string DarkLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "LightIcon",
+          "signatures": [
+            "string LightIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "DarkIcon",
+          "signatures": [
+            "string DarkIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "TooltipSide",
+          "signatures": [
+            "TooltipSide TooltipSide { get; set; }"
+          ]
+        },
+        {
+          "name": "IncludeSystem",
+          "signatures": [
+            "bool IncludeSystem { get; set; }"
+          ]
+        },
+        {
+          "name": "SystemLabel",
+          "signatures": [
+            "string? SystemLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "SystemIcon",
+          "signatures": [
+            "string SystemIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSToTop",
+      "signature": "class OSToTop : OSComponent, IAsyncDisposable",
+      "members": [
+        {
+          "name": "Label",
+          "signatures": [
+            "string Label { get; set; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string Icon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Threshold",
+          "signatures": [
+            "int Threshold { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        },
+        {
+          "name": "Anchor",
+          "signatures": [
+            "string Anchor { get; set; }"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSToastHost",
+      "signature": "class OSToastHost : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "DismissLabel",
+          "signatures": [
+            "string? DismissLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "DismissIcon",
+          "signatures": [
+            "string DismissIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "Limit",
+          "signatures": [
+            "int Limit { get; set; }"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTooltip",
+      "signature": "class OSTooltip : OSComponent",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Side",
+          "signatures": [
+            "TooltipSide Side { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildContent",
+          "signatures": [
+            "RenderFragment? ChildContent { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTreeNode{TItem}",
+      "signature": "class OSTreeNode<TItem> : ComponentBase",
+      "members": [
+        {
+          "name": "Item",
+          "signatures": [
+            "TItem? Item { get; set; }"
+          ]
+        },
+        {
+          "name": "Depth",
+          "signatures": [
+            "int Depth { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSTree{TItem}",
+      "signature": "class OSTree<TItem> : OSComponent",
+      "members": [
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<TItem?>? Items { get; set; }"
+          ]
+        },
+        {
+          "name": "ChildrenOf",
+          "signatures": [
+            "Func<TItem?, IReadOnlyList<TItem?>>? ChildrenOf { get; set; }"
+          ]
+        },
+        {
+          "name": "KeyOf",
+          "signatures": [
+            "Func<TItem?, string>? KeyOf { get; set; }"
+          ]
+        },
+        {
+          "name": "Row",
+          "signatures": [
+            "RenderFragment<TItem?>? Row { get; set; }"
+          ]
+        },
+        {
+          "name": "StartOpen",
+          "signatures": [
+            "Func<TItem?, bool>? StartOpen { get; set; }"
+          ]
+        },
+        {
+          "name": "ToggleIcon",
+          "signatures": [
+            "string ToggleIcon { get; set; }"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "int IconSize { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenLabel",
+          "signatures": [
+            "string? OpenLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "ShutLabel",
+          "signatures": [
+            "string? ShutLabel { get; set; }"
+          ]
+        },
+        {
+          "name": "Toggle",
+          "signatures": [
+            "void Toggle(TItem? item)"
+          ]
+        },
+        {
+          "name": "OpenAll",
+          "signatures": [
+            "void OpenAll()"
+          ]
+        },
+        {
+          "name": "ShutAll",
+          "signatures": [
+            "void ShutAll()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSView",
+      "signature": "abstract class OSView : OSViewBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "OSViewBase",
+      "signature": "abstract class OSViewBase : OSComponent, IDisposable",
+      "members": [
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "PagerCo",
+      "signature": "static class PagerCo",
+      "members": [
+        {
+          "name": "Gap",
+          "signatures": [
+            "const int Gap = 0"
+          ]
+        },
+        {
+          "name": "Window",
+          "signatures": [
+            "const int Window = 2"
+          ]
+        },
+        {
+          "name": "StepIconSize",
+          "signatures": [
+            "const int StepIconSize = 14"
+          ]
+        },
+        {
+          "name": "StepIcon",
+          "signatures": [
+            "const string StepIcon = \"os:chevron\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "RazorHighlighter",
+      "signature": "sealed class RazorHighlighter : RegexHighlighter",
+      "members": [
+        {
+          "name": "Language",
+          "signatures": [
+            "string Language { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "RegexHighlighter",
+      "signature": "abstract class RegexHighlighter : ICodeHighlighter",
+      "members": [
+        {
+          "name": "Language",
+          "signatures": [
+            "string Language { get; }"
+          ]
+        },
+        {
+          "name": "Highlight",
+          "signatures": [
+            "MarkupString Highlight(string? code)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "RouteCo",
+      "signature": "static class RouteCo",
+      "members": [
+        {
+          "name": "FocusSelector",
+          "signatures": [
+            "const string FocusSelector = \"h1\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ShellCo",
+      "signature": "static class ShellCo",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "const string Key = \"os-rail\""
+          ]
+        },
+        {
+          "name": "MenuIcon",
+          "signatures": [
+            "const string MenuIcon = \"os:menu\""
+          ]
+        },
+        {
+          "name": "MoreIcon",
+          "signatures": [
+            "const string MoreIcon = \"os:dots\""
+          ]
+        },
+        {
+          "name": "NavId",
+          "signatures": [
+            "const string NavId = \"os-shell-nav\""
+          ]
+        },
+        {
+          "name": "Escape",
+          "signatures": [
+            "const string Escape = \"Escape\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ShellOptions",
+      "signature": "sealed class ShellOptions",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "RailOpen",
+          "signatures": [
+            "bool RailOpen { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ShellService",
+      "signature": "sealed class ShellService",
+      "members": [
+        {
+          "name": "ShellService",
+          "signatures": [
+            "ShellService(JsService js, BlazorOptions options)"
+          ]
+        },
+        {
+          "name": "RailOpen",
+          "signatures": [
+            "bool RailOpen { get; }"
+          ]
+        },
+        {
+          "name": "DrawerOpen",
+          "signatures": [
+            "bool DrawerOpen { get; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "event Action? Changed"
+          ]
+        },
+        {
+          "name": "InitAsync",
+          "signatures": [
+            "Task InitAsync()"
+          ]
+        },
+        {
+          "name": "ToggleRailAsync",
+          "signatures": [
+            "Task ToggleRailAsync()"
+          ]
+        },
+        {
+          "name": "ToggleDrawer",
+          "signatures": [
+            "void ToggleDrawer()"
+          ]
+        },
+        {
+          "name": "CloseDrawer",
+          "signatures": [
+            "void CloseDrawer()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "SidebarPlacement",
+      "signature": "enum SidebarPlacement",
+      "members": [
+        {
+          "name": "Rail",
+          "signatures": [
+            "Rail = 0"
+          ]
+        },
+        {
+          "name": "Drawer",
+          "signatures": [
+            "Drawer = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "SidebarSide",
+      "signature": "enum SidebarSide",
+      "members": [
+        {
+          "name": "Start",
+          "signatures": [
+            "Start = 0"
+          ]
+        },
+        {
+          "name": "End",
+          "signatures": [
+            "End = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "SpinnerCo",
+      "signature": "static class SpinnerCo",
+      "members": [
+        {
+          "name": "Size",
+          "signatures": [
+            "const int Size = 20"
+          ]
+        },
+        {
+          "name": "Thickness",
+          "signatures": [
+            "const int Thickness = 2"
+          ]
+        },
+        {
+          "name": "LoaderSize",
+          "signatures": [
+            "const int LoaderSize = 96"
+          ]
+        },
+        {
+          "name": "Rate",
+          "signatures": [
+            "const double Rate = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "StatTone",
+      "signature": "enum StatTone",
+      "members": [
+        {
+          "name": "None",
+          "signatures": [
+            "None = 0"
+          ]
+        },
+        {
+          "name": "Up",
+          "signatures": [
+            "Up = 1"
+          ]
+        },
+        {
+          "name": "Down",
+          "signatures": [
+            "Down = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "StateCo",
+      "signature": "static class StateCo",
+      "members": [
+        {
+          "name": "SkeletonRows",
+          "signatures": [
+            "const int SkeletonRows = 3"
+          ]
+        },
+        {
+          "name": "MessageIconSize",
+          "signatures": [
+            "const int MessageIconSize = 22"
+          ]
+        },
+        {
+          "name": "ErrorIcon",
+          "signatures": [
+            "const string ErrorIcon = \"os:alert\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TabsCo",
+      "signature": "static class TabsCo",
+      "members": [
+        {
+          "name": "TabOf",
+          "signatures": [
+            "static string TabOf(string tabsId, string? key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ThemeCo",
+      "signature": "static class ThemeCo",
+      "members": [
+        {
+          "name": "Attr",
+          "signatures": [
+            "const string Attr = \"data-theme\""
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "const string Key = \"os-theme\""
+          ]
+        },
+        {
+          "name": "Dark",
+          "signatures": [
+            "const string Dark = \"dark\""
+          ]
+        },
+        {
+          "name": "Light",
+          "signatures": [
+            "const string Light = \"light\""
+          ]
+        },
+        {
+          "name": "SystemIcon",
+          "signatures": [
+            "const string SystemIcon = \"os:monitor\""
+          ]
+        },
+        {
+          "name": "LightIcon",
+          "signatures": [
+            "const string LightIcon = \"os:sun\""
+          ]
+        },
+        {
+          "name": "DarkIcon",
+          "signatures": [
+            "const string DarkIcon = \"os:moon\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ThemeMode",
+      "signature": "enum ThemeMode",
+      "members": [
+        {
+          "name": "System",
+          "signatures": [
+            "System = 0"
+          ]
+        },
+        {
+          "name": "Light",
+          "signatures": [
+            "Light = 1"
+          ]
+        },
+        {
+          "name": "Dark",
+          "signatures": [
+            "Dark = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ThemeOptions",
+      "signature": "sealed class ThemeOptions",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Attr",
+          "signatures": [
+            "string Attr { get; set; }"
+          ]
+        },
+        {
+          "name": "Dark",
+          "signatures": [
+            "string Dark { get; set; }"
+          ]
+        },
+        {
+          "name": "Light",
+          "signatures": [
+            "string Light { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ThemeService",
+      "signature": "sealed class ThemeService : IAsyncDisposable",
+      "members": [
+        {
+          "name": "ThemeService",
+          "signatures": [
+            "ThemeService(JsService js, BlazorOptions options)"
+          ]
+        },
+        {
+          "name": "Mode",
+          "signatures": [
+            "ThemeMode Mode { get; }"
+          ]
+        },
+        {
+          "name": "IsDark",
+          "signatures": [
+            "bool IsDark { get; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "event Action? Changed"
+          ]
+        },
+        {
+          "name": "InitAsync",
+          "signatures": [
+            "Task InitAsync()"
+          ]
+        },
+        {
+          "name": "SetAsync",
+          "signatures": [
+            "Task SetAsync(ThemeMode mode)"
+          ]
+        },
+        {
+          "name": "ToggleAsync",
+          "signatures": [
+            "Task ToggleAsync()"
+          ]
+        },
+        {
+          "name": "SystemChanged",
+          "signatures": [
+            "Task SystemChanged(bool dark)"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ToTopCo",
+      "signature": "static class ToTopCo",
+      "members": [
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 18"
+          ]
+        },
+        {
+          "name": "Threshold",
+          "signatures": [
+            "const int Threshold = 400"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "const string Icon = \"os:arrow-up\""
+          ]
+        },
+        {
+          "name": "Anchor",
+          "signatures": [
+            "const string Anchor = \"h1\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "Toast",
+      "signature": "sealed record Toast",
+      "members": [
+        {
+          "name": "Toast",
+          "signatures": [
+            "Toast(string Message, ChipTone Tone, int Duration)"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string Message { get; init; }"
+          ]
+        },
+        {
+          "name": "Tone",
+          "signatures": [
+            "ChipTone Tone { get; init; }"
+          ]
+        },
+        {
+          "name": "Duration",
+          "signatures": [
+            "int Duration { get; init; }"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "Guid Id { get; }"
+          ]
+        },
+        {
+          "name": "Urgent",
+          "signatures": [
+            "bool Urgent { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "ToastCo",
+      "signature": "static class ToastCo",
+      "members": [
+        {
+          "name": "Duration",
+          "signatures": [
+            "const int Duration = 4000"
+          ]
+        },
+        {
+          "name": "Limit",
+          "signatures": [
+            "const int Limit = 4"
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        },
+        {
+          "name": "DismissIcon",
+          "signatures": [
+            "const string DismissIcon = \"os:close\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TokenCo",
+      "signature": "static class TokenCo",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "const string Key = \"os-token\""
+          ]
+        },
+        {
+          "name": "Scheme",
+          "signatures": [
+            "const string Scheme = \"Bearer\""
+          ]
+        },
+        {
+          "name": "Stamp",
+          "signatures": [
+            "const string Stamp = \"O\""
+          ]
+        },
+        {
+          "name": "StampOf",
+          "signatures": [
+            "static string StampOf(string key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TokenOptions",
+      "signature": "sealed class TokenOptions",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string? Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Storage",
+          "signatures": [
+            "TokenStorage Storage { get; set; }"
+          ]
+        },
+        {
+          "name": "Enabled",
+          "signatures": [
+            "bool Enabled { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TokenStorage",
+      "signature": "enum TokenStorage",
+      "members": [
+        {
+          "name": "Session",
+          "signatures": [
+            "Session = 0"
+          ]
+        },
+        {
+          "name": "Memory",
+          "signatures": [
+            "Memory = 1"
+          ]
+        },
+        {
+          "name": "Local",
+          "signatures": [
+            "Local = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TokenStore",
+      "signature": "sealed class TokenStore",
+      "members": [
+        {
+          "name": "TokenStore",
+          "signatures": [
+            "TokenStore(JsService js, BlazorOptions options)"
+          ]
+        },
+        {
+          "name": "Token",
+          "signatures": [
+            "string? Token { get; }"
+          ]
+        },
+        {
+          "name": "ExpiresAt",
+          "signatures": [
+            "DateTimeOffset ExpiresAt { get; }"
+          ]
+        },
+        {
+          "name": "IsValid",
+          "signatures": [
+            "bool IsValid { get; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "event Action? Changed"
+          ]
+        },
+        {
+          "name": "LoadAsync",
+          "signatures": [
+            "Task LoadAsync()"
+          ]
+        },
+        {
+          "name": "SetAsync",
+          "signatures": [
+            "Task SetAsync(string? token, DateTimeOffset expiresAt)"
+          ]
+        },
+        {
+          "name": "ClearAsync",
+          "signatures": [
+            "Task ClearAsync()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TooltipSide",
+      "signature": "enum TooltipSide",
+      "members": [
+        {
+          "name": "Top",
+          "signatures": [
+            "Top = 0"
+          ]
+        },
+        {
+          "name": "Bottom",
+          "signatures": [
+            "Bottom = 1"
+          ]
+        },
+        {
+          "name": "Start",
+          "signatures": [
+            "Start = 2"
+          ]
+        },
+        {
+          "name": "End",
+          "signatures": [
+            "End = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "TreeCo",
+      "signature": "static class TreeCo",
+      "members": [
+        {
+          "name": "ToggleIcon",
+          "signatures": [
+            "const string ToggleIcon = \"os:chevron\""
+          ]
+        },
+        {
+          "name": "IconSize",
+          "signatures": [
+            "const int IconSize = 16"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor",
+      "key": "_Imports",
+      "signature": "class _Imports",
+      "members": []
+    }
+  ],
+  "samples": [
+    {
+      "key": "dataset",
+      "code": "using var set = new OSDataSet<Customer>((query, token) =>\n    api.GetAsync<ApiPage<Customer>>(\"customers\", query, token));\n\nawait set.LoadAsync();\nawait set.SearchAsync(\"ali\");\nawait set.SortAsync(\"name\");\nawait set.GoAsync(2);",
+      "topic": "data"
+    },
+    {
+      "key": "validate",
+      "code": "var editor = new OSEditor<Customer>(\n    draft => Task.FromResult(new ApiResult { Succeed = true }),\n    () => new Customer(),\n    \"name\");\n\neditor.New();\neditor.Require(\"name\", editor.Draft.Name, \"Name is required.\");",
+      "topic": "data",
+      "output": "Name is required."
+    },
+    {
+      "key": "source",
+      "code": "public sealed class MemorySource : IJobSource\n{\n    private OSJobStatus _status = new() { State = OSJobState.Idle };\n\n    public Task<ApiResult<OSJobStatus>> StatusAsync(CancellationToken token = default) => Reply(_status);\n\n    public Task<ApiResult<TPlan>> PlanAsync<TPlan>(CancellationToken token = default) =>\n        Task.FromResult(new ApiResult<TPlan>\n        {\n            Succeed = true,\n            Data = JsonSerializer.Deserialize<TPlan>(\"\"\"{ \"Rows\": 120 }\"\"\")\n        });\n\n    public Task<ApiResult<OSJobStatus>> StartAsync(CancellationToken token = default)\n    {\n        _status = new OSJobStatus { State = OSJobState.Running, Total = 120 };\n\n        return Reply(_status);\n    }\n\n    public Task<ApiResult<OSJobStatus>> StopAsync(CancellationToken token = default)\n    {\n        _status.State = OSJobState.Cancelled;\n\n        return Reply(_status);\n    }\n\n    private static Task<ApiResult<OSJobStatus>> Reply(OSJobStatus status) =>\n        Task.FromResult(new ApiResult<OSJobStatus> { Succeed = true, Data = status });\n}",
+      "topic": "jobs"
+    },
+    {
+      "key": "texts",
+      "code": "public static readonly OSJobTexts Texts = new()\n{\n    Start = \"Import\",\n    Stop = \"Cancel import\",\n    Hint = \"Large files can take a few minutes.\",\n    Again = \"\"\n};",
+      "topic": "jobs"
+    },
+    {
+      "key": "progress",
+      "code": "var status = new OSJobStatus { State = OSJobState.Running, Done = 30, Total = 120 };",
+      "topic": "jobs",
+      "output": "25"
+    },
+    {
+      "key": "notify",
+      "code": "toast.Good(\"Saved.\");\ntoast.Warn(\"The file is large.\");\ntoast.Bad(\"The server did not answer.\");\ntoast.Show(\"Link copied\");",
+      "topic": "overlays"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSBlazor(options =>\n{\n    options.Theme.Key = \"app-theme\";\n    options.Shell.RailOpen = false;\n});"
+    },
+    {
+      "key": "notify",
+      "code": "toast.Good(\"Saved.\");\ntoast.Warn(\"The file is large.\");"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSBlazor(options =>\n{\n    options.Theme.Key = \"app-theme\";\n    options.Shell.RailOpen = false;\n});",
+      "topic": "setup"
+    },
+    {
+      "key": "texts",
+      "code": "services.AddOSBlazor(options =>\n    options.Locale.Text.AddEmbedded(typeof(SetupSamples).Assembly));",
+      "topic": "setup"
+    },
+    {
+      "key": "own-locale",
+      "code": "var locale = new LocaleOptions();\n\nlocale.Text.AddEmbedded(typeof(BlazorOptions).Assembly);\nlocale.Text.AddEmbedded(typeof(SetupSamples).Assembly);\n\nservices.AddOSLocale(locale);\nservices.AddOSBlazor();",
+      "topic": "setup"
+    },
+    {
+      "key": "rail",
+      "code": "await shell.InitAsync();\n\nawait shell.ToggleRailAsync();\n\nshell.ToggleDrawer();\nshell.CloseDrawer();",
+      "topic": "shell"
+    },
+    {
+      "key": "names",
+      "code": "services.AddOSBlazor(options =>\n{\n    options.Theme.Key = \"app-theme\";\n    options.Theme.Dark = \"night\";\n    options.Theme.Light = \"day\";\n});",
+      "topic": "themes"
+    },
+    {
+      "key": "switch",
+      "code": "await theme.InitAsync();\n\nawait theme.SetAsync(ThemeMode.Dark);\nawait theme.ToggleAsync();",
+      "topic": "themes"
+    },
+    {
+      "key": "actions",
+      "code": "<OSButton Kind=\"ButtonKind.Key\" Icon=\"plus\" OnClick=\"Add\">Add</OSButton>\n<OSButton Kind=\"ButtonKind.Danger\" OnClick=\"Remove\">Remove</OSButton>\n<OSButton Kind=\"ButtonKind.Ghost\" Href=\"/docs\" Target=\"_blank\">Docs</OSButton>\n<OSIconButton Icon=\"download\" Label=\"Download\" />\n\n@code {\n    private void Add() { }\n\n    private void Remove() { }\n}",
+      "topic": "buttons",
+      "language": "Razor"
+    },
+    {
+      "key": "copy-and-save",
+      "code": "<OSCopyButton Text=\"dotnet add package OS.Blazor\" Label=\"Copy\" DoneLabel=\"Copied\" />\n<OSFileButton Text=\"@csv\" FileName=\"people.csv\" Label=\"Save as CSV\" Mime=\"text/csv\" />\n\n@code {\n    private readonly string csv = \"name,age\\nAli,30\";\n}",
+      "topic": "buttons",
+      "language": "Razor"
+    },
+    {
+      "key": "picker",
+      "code": "<OSFilePicker Text=\"Choose a file\" Accept=\".xlsx\" MaxBytes=\"5000000\" OnPick=\"Picked\" OnTooBig=\"TooBig\" />\n\n@code {\n    private void Picked(IBrowserFile file) { }\n\n    private void TooBig(IBrowserFile file) { }\n}",
+      "topic": "buttons",
+      "language": "Razor"
+    },
+    {
+      "key": "grid",
+      "code": "<OSDataGrid T=\"Person\" Rows=\"people\" RowKey=\"@(p => p.Id)\" Loading=\"loading\" Error=\"@error\">\n    <Columns>\n        <OSColumn T=\"Person\" Title=\"Name\" Name=\"name\" Text=\"@(p => p.Name)\" />\n        <OSColumn T=\"Person\" Title=\"Age\" Name=\"age\" Numeric=\"true\" Text=\"@(p => p.Age.ToString())\" SortBy=\"@(p => p.Age)\" />\n    </Columns>\n</OSDataGrid>\n\n@code {\n    private sealed record Person(int Id, string Name, int Age);\n\n    private readonly Person[] people = [new(1, \"Ali\", 30), new(2, \"Sara\", 27)];\n\n    private bool loading = false;\n\n    private string? error = null;\n}",
+      "topic": "data",
+      "language": "Razor"
+    },
+    {
+      "key": "state",
+      "code": "<OSDataState Loading=\"busy\" Empty=\"names.Count == 0\" Error=\"@problem\">\n    <ul>\n        @foreach (var item in names)\n        {\n            <li>@item</li>\n        }\n    </ul>\n</OSDataState>\n\n@code {\n    private readonly List<string> names = [\"Ali\", \"Sara\"];\n\n    private bool busy = false;\n\n    private string? problem = null;\n}",
+      "topic": "data",
+      "language": "Razor"
+    },
+    {
+      "key": "cards",
+      "code": "<OSCard Title=\"Orders\" Caption=\"Today\">\n    <OSStatCard Label=\"Revenue\" Value=\"1,250\" Unit=\"USD\" Delta=\"4%\" Up=\"true\" Tone=\"StatTone.Up\" />\n    <OSChip Text=\"Paid\" Tone=\"ChipTone.Good\" />\n    <OSStatusChip Tone=\"ChipTone.Warn\">Pending</OSStatusChip>\n</OSCard>",
+      "topic": "display",
+      "language": "Razor"
+    },
+    {
+      "key": "head",
+      "code": "<OSPageHead Title=\"Orders\" Subtitle=\"All orders of this month\">\n    <Actions>\n        <OSButton Kind=\"ButtonKind.Key\" Icon=\"plus\">New order</OSButton>\n    </Actions>\n    <Details>\n        <OSHeadItem Label=\"Total\">128</OSHeadItem>\n        <OSHeadItem Label=\"Open\">12</OSHeadItem>\n    </Details>\n</OSPageHead>",
+      "topic": "display",
+      "language": "Razor"
+    },
+    {
+      "key": "code",
+      "code": "<OSCodeBlock Code=\"@source\" Language=\"C#\" CopyLabel=\"Copy\" CopiedLabel=\"Copied\" Output=\"42\" OutputLabel=\"Output\" />\n<OSInlineText Text=\"Call `AddOSBlazor` once at startup.\" />\n\n@code {\n    private const string source = \"var answer = 42;\";\n}",
+      "topic": "display",
+      "language": "Razor"
+    },
+    {
+      "key": "text",
+      "code": "<OSTextField Label=\"Name\" Hint=\"As written on the ID card\" Required=\"true\" @bind-Value=\"name\" Error=\"@nameError\" />\n<OSTextField Label=\"Password\" Type=\"password\" @bind-Value=\"password\" />\n<OSSearchField Placeholder=\"Search\" OnSearch=\"Search\" />\n\n@code {\n    private string name = \"\";\n\n    private string? nameError = \"Name is required.\";\n\n    private string password = \"\";\n\n    private void Search(string term) { }\n}",
+      "topic": "fields",
+      "language": "Razor"
+    },
+    {
+      "key": "lists",
+      "code": "<OSSelectField TValue=\"Country\" Label=\"Country\" Items=\"countries\" TextOf=\"@(c => c.Name)\" KeyOf=\"@(c => c.Code)\" BlankText=\"Choose\" @bind-Value=\"country\" />\n<OSChoiceField TValue=\"Country\" Label=\"Home\" Items=\"countries\" TextOf=\"@(c => c.Name)\" KeyOf=\"@(c => c.Code)\" @bind-Value=\"home\" />\n<OSMultiDropdown TValue=\"Country\" Label=\"Visited\" Items=\"countries\" TextOf=\"@(c => c.Name)\" KeyOf=\"@(c => c.Code)\" @bind-Values=\"visited\" />\n\n@code {\n    private sealed record Country(string Code, string Name);\n\n    private readonly Country[] countries = [new(\"ir\", \"Iran\"), new(\"tr\", \"Türkiye\"), new(\"de\", \"Germany\")];\n\n    private Country? country;\n\n    private Country? home;\n\n    private IReadOnlyList<Country> visited = [];\n}",
+      "topic": "fields",
+      "language": "Razor"
+    },
+    {
+      "key": "switch",
+      "code": "<OSSwitch @bind-Value=\"active\" OnText=\"Active\" OffText=\"Inactive\" />\n\n@code {\n    private bool active = true;\n}",
+      "topic": "fields",
+      "language": "Razor"
+    },
+    {
+      "key": "dialog",
+      "code": "<OSJobDialog TPlan=\"ImportPlan\" TResult=\"ImportResult\" @bind-Open=\"importing\" Path=\"/api/import\" Title=\"Import customers\" Texts=\"texts\" OnDone=\"Imported\">\n    <Plan Context=\"plan\">\n        <p>@plan.Rows rows will be imported.</p>\n    </Plan>\n    <Result Context=\"result\">\n        <p>@result.Added rows were added.</p>\n    </Result>\n</OSJobDialog>\n\n@code {\n    private sealed record ImportPlan(int Rows);\n\n    private sealed record ImportResult(int Added);\n\n    private bool importing;\n\n    private readonly OSJobTexts texts = new() { Start = \"Import\" };\n\n    private void Imported(ImportResult result) { }\n}",
+      "topic": "jobs",
+      "language": "Razor"
+    },
+    {
+      "key": "tabs",
+      "code": "<OSTabs TValue=\"string\" Id=\"orders-tabs\" Label=\"Orders\" Items=\"views\" TextOf=\"@(v => v)\" KeyOf=\"@(v => v)\" @bind-Value=\"view\" />\n\n@code {\n    private readonly string[] views = [\"Open\", \"Closed\"];\n\n    private string view = \"Open\";\n}",
+      "topic": "navigation",
+      "language": "Razor"
+    },
+    {
+      "key": "accordion",
+      "code": "<OSAccordion @bind-OpenId=\"openId\">\n    <OSAccordionItem Id=\"shipping\" Title=\"Shipping\">Orders ship within two days.</OSAccordionItem>\n    <OSAccordionItem Id=\"returns\" Title=\"Returns\">Free within 30 days.</OSAccordionItem>\n    <OSAccordionLeaf Title=\"Contact us\" Href=\"/contact\" />\n</OSAccordion>\n\n@code {\n    private string? openId = \"shipping\";\n}",
+      "topic": "navigation",
+      "language": "Razor"
+    },
+    {
+      "key": "tree",
+      "code": "<OSTree TItem=\"Folder\" Items=\"roots\" ChildrenOf=\"@(f => f.Children)\" KeyOf=\"@(f => f.Name)\">\n    <Row Context=\"folder\">@folder.Name</Row>\n</OSTree>\n\n@code {\n    private sealed record Folder(string Name, IReadOnlyList<Folder> Children);\n\n    private readonly Folder[] roots = [new(\"src\", [new(\"Core\", [])]), new(\"docs\", [])];\n}",
+      "topic": "navigation",
+      "language": "Razor"
+    },
+    {
+      "key": "pager",
+      "code": "<OSPager Current=\"page\" Count=\"12\" OnGo=\"Go\" Sizes=\"sizes\" Size=\"size\" OnSize=\"Resize\" />\n\n@code {\n    private int page = 1;\n\n    private int size = 10;\n\n    private readonly int[] sizes = [10, 25, 50];\n\n    private void Go(int target) => page = target;\n\n    private void Resize(int value) => size = value;\n}",
+      "topic": "navigation",
+      "language": "Razor"
+    },
+    {
+      "key": "dialogs",
+      "code": "<OSButton OnClick=\"() => editing = true\">Edit</OSButton>\n<OSButton Kind=\"ButtonKind.Danger\" OnClick=\"() => deleting = true\">Delete</OSButton>\n\n<OSDialog @bind-Open=\"editing\" Title=\"Edit order\">\n    <ChildContent>\n        <p>The order form goes here.</p>\n    </ChildContent>\n    <Footer>\n        <OSButton Kind=\"ButtonKind.Key\" OnClick=\"() => editing = false\">Save</OSButton>\n    </Footer>\n</OSDialog>\n\n<OSConfirm @bind-Open=\"deleting\" Title=\"Delete this order?\" Text=\"This cannot be undone.\" YesText=\"Delete\" YesKind=\"ButtonKind.Danger\" OnYes=\"Delete\" />\n\n@code {\n    private bool editing;\n\n    private bool deleting;\n\n    private Task Delete()\n    {\n        deleting = false;\n\n        return Task.CompletedTask;\n    }\n}",
+      "topic": "overlays",
+      "language": "Razor"
+    },
+    {
+      "key": "menu-and-tip",
+      "code": "<OSMenu Label=\"More\" Icon=\"dots\">\n    <OSMenuItem Icon=\"pencil\" OnClick=\"RenameItem\">Rename</OSMenuItem>\n    <OSMenuRule />\n    <OSMenuItem Icon=\"trash\" Danger=\"true\" OnClick=\"RemoveItem\">Remove</OSMenuItem>\n</OSMenu>\n\n<OSTooltip Text=\"Copy the link\" Side=\"TooltipSide.Bottom\">\n    <OSCopyButton Text=\"https://example.com/orders/1\" Label=\"Copy\" />\n</OSTooltip>\n\n@code {\n    private void RenameItem() { }\n\n    private void RemoveItem() { }\n}",
+      "topic": "overlays",
+      "language": "Razor"
+    },
+    {
+      "key": "toast-host",
+      "code": "@inject IToastService Toasts\n\n<OSToastHost DismissLabel=\"Dismiss\" />\n<OSButton OnClick=\"Saved\">Save</OSButton>\n\n@code {\n    private void Saved() => Toasts.Good(\"Saved.\");\n}",
+      "topic": "overlays",
+      "language": "Razor"
+    },
+    {
+      "key": "layout",
+      "code": "<OSShell MenuLabel=\"Menu\">\n    <OSHeader>\n        <OSHeaderStart>Orders</OSHeaderStart>\n        <OSHeaderEnd>\n            <OSThemeToggle LightLabel=\"Light\" DarkLabel=\"Dark\" />\n        </OSHeaderEnd>\n    </OSHeader>\n    <OSSidebar>\n        <OSNav Label=\"Main\">\n            <OSNavSection Title=\"Sales\">\n                <OSNavLink Href=\"/orders\" Icon=\"receipt\" Text=\"Orders\" />\n                <OSNavLink Href=\"/customers\" Icon=\"users\" Text=\"Customers\" />\n            </OSNavSection>\n        </OSNav>\n    </OSSidebar>\n    <OSBody>@Body</OSBody>\n</OSShell>",
+      "topic": "shell",
+      "language": "Razor"
+    },
+    {
+      "key": "toggle",
+      "code": "<OSThemeToggle LightLabel=\"Light\" DarkLabel=\"Dark\" IncludeSystem=\"true\" SystemLabel=\"System\" />",
+      "topic": "themes",
+      "language": "Razor"
+    }
+  ]
+}

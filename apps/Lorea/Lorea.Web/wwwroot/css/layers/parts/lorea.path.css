@@ -1,0 +1,73 @@
+@layer lorea.parts {
+    .dep-path {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .dep-step {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.25rem minmax(0, 1fr);
+        gap: 0.85rem;
+        padding-block-end: 1.25rem;
+        opacity: 0;
+        animation: lorea-rise 400ms ease-out forwards;
+        animation-delay: calc(var(--d, 0) * 220ms);
+    }
+
+    .dep-step:not(:last-child)::after {
+        position: absolute;
+        inset-block: 1rem 0;
+        inset-inline-start: calc(0.625rem - 1px);
+        inline-size: 2px;
+        background: var(--lorea-accent);
+        content: "";
+        transform: scaleY(0);
+        transform-origin: top;
+        animation: lorea-grow 400ms ease-out forwards;
+        animation-delay: calc(var(--d, 0) * 220ms + 200ms);
+    }
+
+    .dep-dot {
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin-block-start: 0.15rem;
+        border: 2px solid var(--lorea-accent);
+        border-radius: 50%;
+        background: var(--lorea-bg);
+    }
+
+    .dep-step[data-depth="0"] .dep-dot {
+        background: var(--lorea-accent);
+    }
+
+    .dep-copy {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.3rem 0.75rem;
+    }
+
+    .dep-copy code {
+        color: var(--lorea-heading);
+        font-weight: 600;
+    }
+
+    .dep-copy a {
+        color: var(--lorea-link);
+    }
+
+    .dep-copy a code {
+        color: inherit;
+    }
+
+    .dep-title {
+        color: var(--lorea-ink);
+    }
+
+    .dep-kind {
+        color: var(--lorea-muted);
+        font-size: 0.8rem;
+    }
+}

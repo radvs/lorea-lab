@@ -1,0 +1,38 @@
+<Project>
+
+	<PropertyGroup>
+		<ProjectType Condition="'$(ProjectType)' == ''">Lib</ProjectType>
+		<AssemblyName Condition="'$(AssemblyName)' == ''">$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace Condition="'$(RootNamespace)' == ''">$(MSBuildProjectName)</RootNamespace>
+		<PackageId Condition="'$(PackageId)' == ''">$(MSBuildProjectName)</PackageId>
+
+		<LangVersion>14.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>None</AnalysisMode>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+		<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+		<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+
+		<Authors>OriginStack</Authors>
+		<Company>OriginStack</Company>
+		<Product>OriginStack</Product>
+		<Copyright>© 2026 OriginStack</Copyright>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(ProjectType)' == 'Lib' OR '$(ProjectType)' == 'Web' OR '$(ProjectType)' == 'Console'">
+		<TargetFramework>net10.0</TargetFramework>
+	</PropertyGroup>
+
+</Project>

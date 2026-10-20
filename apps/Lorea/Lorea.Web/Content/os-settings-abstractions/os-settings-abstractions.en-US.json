@@ -1,0 +1,151 @@
+{
+  "os-settings-abstractions": {
+    "title": "Settings abstractions",
+    "summary": "The nine setting kinds with their parsing rules, the models an admin screen shows and saves, and the stable codes. Small enough for a UI project to reference without the settings engine.",
+    "gives": {
+      "1": "Share the same models and error codes between the server and a UI library without pulling in the store, cache or sources.",
+      "2": "Write your own kind by deriving from `SettingKind<T>` and registering it with `AddOSSettingKind` in OS.Settings."
+    },
+    "topics": {
+      "kinds": {
+        "title": "Kinds and rules",
+        "summary": "How a text becomes a typed value, and the rules that limit it.",
+        "points": {
+          "1": {
+            "title": "Text to value",
+            "text": "A kind turns what a person typed into normalized text and a typed value."
+          },
+          "2": {
+            "title": "No exceptions",
+            "text": "`TryNormalize` returns either normalized text or a stable error key."
+          },
+          "3": {
+            "title": "Nine built-in kinds",
+            "text": "text, integer, decimal, boolean, url, path, duration, choice and list."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Converting text",
+            "text": "A kind turns the text a person typed into a normalized text and a typed value.\n\n`TryNormalize` trims the text and checks the length and the rules. It returns either the normalized text or a stable error key, never an exception. `Read` and `Write` convert between that text and the value."
+          },
+          "2": {
+            "title": "Built-in kinds",
+            "text": "text is any text and may be empty. integer is a `long`. decimal is a `decimal`, always written with a dot. boolean is there too.\n\nurl is http or https without a user name. path is a site-relative path that starts with a slash and has no `..` in it. duration is a `TimeSpan`, written like `00:00:30` for thirty seconds.\n\nchoice is one of the allowed options. list is comma separated and repeated items are removed."
+          },
+          "3": {
+            "title": "Rules",
+            "text": "`SettingRules` holds the minimum and maximum, the maximum length and the allowed options."
+          }
+        },
+        "type": {
+          "ISettingKind": "A kind without its value type: name, normalizing and reading as an object.",
+          "ISettingKind{T}": "A kind that reads and writes a value of type T.",
+          "SettingKind{T}": "The base class of the built-in kinds. Derive from it to write your own.",
+          "TextSettingKind": "Any text, up to 4,000 characters. May be empty.",
+          "IntegerSettingKind": "A whole number as `long`, optionally within a range.",
+          "DecimalSettingKind": "A decimal number, written with a dot in every culture.",
+          "BooleanSettingKind": "true or false.",
+          "UrlSettingKind": "An absolute http or https address without credentials.",
+          "PathSettingKind": "A path on the site, starting with a slash.",
+          "DurationSettingKind": "A time span in the form `00:00:30`. A bare number is refused.",
+          "ChoiceSettingKind": "One of the options in the rules, matched without regard to letter case.",
+          "ListSettingKind": "A comma separated list, up to 256 items, optionally limited to the allowed options.",
+          "SettingRules": "Minimum, maximum, maximum length and allowed options of a setting."
+        },
+        "member": {
+          "ISettingKind": {
+            "TryNormalize": "Checks a text against the rules and returns the normalized text or an error key.",
+            "ReadObject": "Reads a normalized text as an object."
+          },
+          "SettingKind{T}": {
+            "Read": "Reads a normalized text as T.",
+            "Write": "Writes a value as normalized text.",
+            "TryParse": "What a kind overrides to accept its own format."
+          },
+          "SettingRules": {
+            "Min": "The smallest allowed value. For a duration it counts seconds, and for a list it counts items.",
+            "Max": "The largest allowed value.",
+            "MaxLength": "The longest allowed text.",
+            "Options": "The allowed options of a choice or a list.",
+            "InRange": "True when a number is between Min and Max."
+          }
+        }
+      },
+      "models": {
+        "title": "Models",
+        "summary": "What an admin screen reads and what it sends back.",
+        "points": {
+          "1": {
+            "title": "Menu list",
+            "text": "`SettingSectionHead` lists a section in a menu."
+          },
+          "2": {
+            "title": "Section and items",
+            "text": "`SettingSectionModel` is one section with its items."
+          },
+          "3": {
+            "title": "Saving",
+            "text": "To save, send a `SettingSaveModel`."
+          },
+          "4": {
+            "title": "Secrets have no value",
+            "text": "A secret item never has its value."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading a section",
+            "text": "`SettingSectionHead` lists a section in a menu. `SettingSectionModel` is one section with its `SettingItemModel` items.\n\nEach item has its key, kind, access, rules, current value and default. Where the value comes from is given by `SettingOrigin`. The version to send back and whether the item can be edited are there too.\n\nA secret item never has its value, only `HasSecret`."
+          },
+          "2": {
+            "title": "Saving and access",
+            "text": "To save, send a `SettingSaveModel` with the section, the scope and a list of `SettingChange` entries. Each is a new value or a reset, together with the version that was read.\n\n`SettingAccess` says whether a key is public, internal, secret or system."
+          }
+        },
+        "type": {
+          "SettingAccess": "Public, Internal, Secret or System.",
+          "SettingOrigin": "Where a shown value comes from: Default, Inherited, Own or Environment.",
+          "SettingChange": "One change in a save: a value or a reset, with the version it was read at.",
+          "SettingItemModel": "One setting as the screen shows it.",
+          "SettingSaveModel": "A save request: section, scope and changes.",
+          "SettingSectionHead": "The short form of a section, for a menu.",
+          "SettingSectionModel": "A whole section with its items."
+        }
+      },
+      "codes": {
+        "title": "Codes and limits",
+        "summary": "Names and limits that never change, so a UI can translate them.",
+        "points": {
+          "1": {
+            "title": "Limits",
+            "text": "Key, app code, text and list lengths have fixed limits."
+          },
+          "2": {
+            "title": "Fixed names",
+            "text": "The nine kind names and the configuration section name are fixed."
+          },
+          "3": {
+            "title": "Translation keys",
+            "text": "Error codes are keys for translation, not texts for people."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Limits and names",
+            "text": "`SettingCodes` holds the limits: key length 128, app code length 24, text length 4,000 and list items 256. It also holds the separators and the name of the configuration section, `OSSettings`.\n\n`SettingCodes.Kind` has the names of the nine kinds."
+          },
+          "2": {
+            "title": "Error keys",
+            "text": "`SettingCodes.Error` has the error keys that results carry. `settings.errors.range` is for a number out of range. `settings.errors.conflict` is for a stale version and `settings.errors.forbidden` is for a missing permission.\n\nThey are keys for your localization, not texts for people."
+          }
+        },
+        "type": {
+          "SettingCodes": "Limits, separators and the configuration section name.",
+          "SettingCodes.Kind": "The names of the nine kinds.",
+          "SettingCodes.Error": "The error keys used by results and field errors."
+        }
+      }
+    }
+  }
+}

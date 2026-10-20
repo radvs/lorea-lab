@@ -1,0 +1,225 @@
+@using Lorea.Web.Components.Map
+@implements IAsyncDisposable
+
+<section id="packages" class="stack-map" aria-labelledby="packages-title">
+    <div class="map-heading">
+        <h2 id="packages-title">@Text["map.title"]</h2>
+        <p>@Text["map.note"]</p>
+    </div>
+
+    <div class="map-frame">
+        <div class="map-bar">
+            <OSTabs TValue="string"
+                    Id="map-views"
+                    Label="@Text["map.viewLabel"]"
+                    Items="Views"
+                    Value="@_view"
+                    ValueChanged="ShowView"
+                    TextOf="ViewText"
+                    PanelOf="@(_ => ViewPanel)" />
+
+            <OSSearchField Class="map-search"
+                           Value="@_query"
+                           ValueChanged="Search"
+                           Placeholder="@Text["map.search"]"
+                           ClearLabel="@Text["map.searchClear"]"
+                           aria-label="@Text["map.search"]" />
+
+            <div class="map-tools">
+                @if (CanToggleAddOns)
+                {
+                    <OSButton Kind="ButtonKind.Ghost" Size="ButtonSize.Small" OnClick="ToggleAddOns">@Text[Graph.HasFolded ? "map.expand" : "map.collapse"]</OSButton>
+                }
+
+                @if (_selected is not null)
+                {
+                    <OSButton Kind="ButtonKind.Ghost" Size="ButtonSize.Small" OnClick="Clear">@Text["map.clear"]</OSButton>
+                }
+            </div>
+        </div>
+
+        <div id="@ViewPanel" class="map-view" role="tabpanel" aria-label="@ViewText(_view)">
+            @if (_view == WiresView)
+            {
+                var focus = FocusOf(_hover ?? Active?.Id);
+                <div class="map-canvas">
+                    <svg class="map-svg"
+                         viewBox="0 0 @F(Layout.Width) @F(Layout.Height)"
+                         style="--map-w: @F(Layout.Width)"
+                         role="group"
+                         aria-label="@Text["map.label"]">
+                        <defs>
+                            <pattern id="map-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+                                <circle class="map-dot" cx="2" cy="2" r="1.1" />
+                            </pattern>
+                        </defs>
+                        <rect width="@F(Layout.Width)" height="@F(Layout.Height)" fill="url(#map-dots)" />
+
+                        @for (var depth = 0; depth <= Layout.Levels; depth++)
+                        {
+                            <g>
+                                <text class="map-level" x="@F(Layout.Width - 14)" y="@F(Layout.RowY(depth) + MapLayout.NodeHeight / 2 + 4)" text-anchor="end">@LevelText(depth)</text>
+                            </g>
+                        }
+
+                        @foreach (var wire in Wires)
+                        {
+                            <path class="@WireClass(wire, focus)" d="@wire.Path" />
+                        }
+
+                        @foreach (var node in Graph.Nodes)
+                        {
+                            var spot = Layout.Spots[node.Id];
+                            <g id="@NodeDomId(node.Id)"
+                               class="@NodeClass(node, focus)"
+                               tabindex="0"
+                               role="button"
+                               aria-pressed="@(node.Id == Active?.Id ? "true" : "false")"
+                               aria-label="@NodeLabel(node)"
+                               @onclick="() => Pick(node.Id)"
+                               @onkeydown="e => OnKey(e, node.Id)"
+                               @onmouseenter="() => Hover(node.Id)"
+                               @onmouseleave="() => Hover(null)"
+                               @onfocus="() => Hover(node.Id)"
+                               @onblur="() => Hover(null)">
+                                <rect class="map-box" x="@F(spot.X - spot.Width / 2)" y="@F(spot.Y)" width="@F(spot.Width)" height="@F(MapLayout.NodeHeight)" rx="6" />
+                                <text class="map-name" x="@F(spot.X)" y="@F(spot.Y + 22)" text-anchor="middle">@node.Name</text>
+                                <text class="map-sub" x="@F(spot.X)" y="@F(spot.Y + 40)" text-anchor="middle">@TitleOf(node)</text>
+                            </g>
+                        }
+                    </svg>
+                </div>
+            }
+            else
+            {
+                var groups = GroupsOf(_query);
+                @if (groups.Count == 0)
+                {
+                    <p class="map-empty">@Text["map.empty"]</p>
+                }
+                else
+                {
+                    <div class="map-groups">
+                        @foreach (var group in groups)
+                        {
+                            <section class="map-group">
+                                <header>
+                                    <h3>@GroupTitle(group.Id)</h3>
+                                    <span>@Text["map.count", Digits(group.Entries.Count)]</span>
+                                </header>
+                                <div class="map-libs">
+                                    @foreach (var entry in group.Entries)
+                                    {
+                                        var open = entry.Slug == _selected;
+                                        <button type="button" class="map-lib" aria-expanded="@(open ? "true" : "false")" @onclick="() => Pick(entry.Slug)">
+                                            <code>@entry.Name</code>
+                                            <span>@Text[entry.TextKey("title")]</span>
+                                        </button>
+
+                                        @if (open)
+                                        {
+                                            <div class="map-types">
+                                                @foreach (var type in entry.Api.Types)
+                                                {
+                                                    var topic = TopicOf(entry, type);
+                                                    @if (topic is null)
+                                                    {
+                                                        <code>@TypeName(type)</code>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@TopicUrl(entry, topic)"><code>@TypeName(type)</code></a>
+                                                    }
+                                                }
+
+                                                @if (entry.Api.Types.Count == 0)
+                                                {
+                                                    <p>@Text["map.typesNone"]</p>
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </section>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
+        @if (_view == WiresView)
+        {
+            <ul class="map-legend">
+                <li><i class="map-key"></i>@Text["map.legendIdle"]</li>
+                <li><i class="map-key is-direct"></i>@Text["map.legendDirect"]</li>
+                <li><i class="map-key is-indirect"></i>@Text["map.legendIndirect"]</li>
+                <li>@Text["map.legendLevel"]</li>
+            </ul>
+        }
+
+        <div class="map-panel" aria-live="polite">
+            @if (Active is not { } current)
+            {
+                <p class="map-hint">@Text["map.pick"]</p>
+            }
+            else
+            {
+                <h3>
+                    <code>@current.Name</code>
+                    <span>@TitleOf(current)</span>
+                </h3>
+
+                @if (current.Entry is { } entry)
+                {
+                    <p class="map-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></p>
+                }
+                else
+                {
+                    <p class="map-summary">@Text["map.familyNote", FamilyOf(current)]</p>
+                    <div class="map-rel">
+                        <b>@Text["map.members"]</b>
+                        @foreach (var member in current.Members)
+                        {
+                            <OSChip Text="@member.Name" Size="ChipSize.Small" OnClick="() => PickMember(member)" dir="ltr" />
+                        }
+                    </div>
+                }
+
+                <div class="map-rel">
+                    <b>@Text["map.relies"]</b>
+                    @{
+                        var relies = NodesOf(PanelGraph.Down(current.Id));
+                    }
+                    @foreach (var other in relies)
+                    {
+                        <OSChip Text="@other.Name" Size="ChipSize.Small" OnClick="() => Pick(other.Id)" dir="ltr" />
+                    }
+                    @if (relies.Count == 0)
+                    {
+                        <span class="map-none">@Text["map.reliesNone"]</span>
+                    }
+                </div>
+
+                <div class="map-rel">
+                    <b>@Text["map.builtOn"]</b>
+                    @{
+                        var builtOn = NodesOf(PanelGraph.Up(current.Id));
+                    }
+                    @foreach (var other in builtOn)
+                    {
+                        <OSChip Text="@other.Name" Size="ChipSize.Small" OnClick="() => Pick(other.Id)" dir="ltr" />
+                    }
+                    @if (builtOn.Count == 0)
+                    {
+                        <span class="map-none">@Text["map.builtOnNone"]</span>
+                    }
+                </div>
+
+                @if (current.Entry is { } page)
+                {
+                    <OSButton Kind="ButtonKind.Key" Href="@PackageUrl(page)">@Text["map.open"]</OSButton>
+                }
+            }
+        </div>
+    </div>
+</section>

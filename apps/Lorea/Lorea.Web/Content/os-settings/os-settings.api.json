@@ -1,0 +1,811 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingGate",
+      "signature": "interface ISettingGate",
+      "members": [
+        {
+          "name": "CanAsync",
+          "signatures": [
+            "ValueTask<bool> CanAsync(string permission, Scope scope, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingProbe",
+      "signature": "interface ISettingProbe",
+      "members": [
+        {
+          "name": "Section",
+          "signatures": [
+            "string Section { get; }"
+          ]
+        },
+        {
+          "name": "ProbeAsync",
+          "signatures": [
+            "ValueTask<OSResult> ProbeAsync(SettingDraft draft, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingProvider",
+      "signature": "interface ISettingProvider",
+      "members": [
+        {
+          "name": "GetSections",
+          "signatures": [
+            "IEnumerable<SettingSection> GetSections()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingReader",
+      "signature": "interface ISettingReader",
+      "members": [
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "ValueTask<T?> GetAsync<T>(string key, CancellationToken token = default)",
+            "ValueTask<T?> GetAsync<T>(string key, ScopeChain chain, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SectionAsync",
+          "signatures": [
+            "ValueTask<T> SectionAsync<T>(string section, CancellationToken token = default) where T : class, new()",
+            "ValueTask<T> SectionAsync<T>(string section, ScopeChain chain, CancellationToken token = default) where T : class, new()"
+          ]
+        },
+        {
+          "name": "PublicAsync",
+          "signatures": [
+            "ValueTask<IReadOnlyDictionary<string, string>> PublicAsync(ScopeChain chain, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "InvalidateAsync",
+          "signatures": [
+            "ValueTask InvalidateAsync(Scope scope)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingSectionValidator",
+      "signature": "interface ISettingSectionValidator",
+      "members": [
+        {
+          "name": "Section",
+          "signatures": [
+            "string Section { get; }"
+          ]
+        },
+        {
+          "name": "ValidateAsync",
+          "signatures": [
+            "ValueTask<IReadOnlyList<FieldError>> ValidateAsync(SettingDraft draft, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingSource",
+      "signature": "interface ISettingSource",
+      "members": [
+        {
+          "name": "LoadAsync",
+          "signatures": [
+            "Task<IReadOnlyList<SettingRow>> LoadAsync(string appCode, Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<SettingRow>>> SaveAsync(string appCode, Scope scope, IReadOnlyList<SettingWrite> writes, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SyncKeysAsync",
+          "signatures": [
+            "Task SyncKeysAsync(string appCode, IReadOnlyList<SettingKeyRow> keys, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingStore",
+      "signature": "interface ISettingStore",
+      "members": [
+        {
+          "name": "GetSectionsAsync",
+          "signatures": [
+            "Task<OSResult<List<SettingSectionHead>>> GetSectionsAsync(Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetSectionAsync",
+          "signatures": [
+            "Task<OSResult<SettingSectionModel>> GetSectionAsync(string section, Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<OSResult<SettingSectionModel>> SaveAsync(SettingSaveModel request, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingSync",
+      "signature": "interface ISettingSync",
+      "members": [
+        {
+          "name": "SyncAsync",
+          "signatures": [
+            "Task SyncAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "JsonSettingSource",
+      "signature": "sealed class JsonSettingSource : ISettingSource",
+      "members": [
+        {
+          "name": "JsonSettingSource",
+          "signatures": [
+            "JsonSettingSource(string path, TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "LoadAsync",
+          "signatures": [
+            "Task<IReadOnlyList<SettingRow>> LoadAsync(string appCode, Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<SettingRow>>> SaveAsync(string appCode, Scope scope, IReadOnlyList<SettingWrite> writes, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SyncKeysAsync",
+          "signatures": [
+            "Task SyncKeysAsync(string appCode, IReadOnlyList<SettingKeyRow> keys, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingCatalog",
+      "signature": "sealed class SettingCatalog",
+      "members": [
+        {
+          "name": "SettingCatalog",
+          "signatures": [
+            "SettingCatalog(IEnumerable<ISettingProvider> providers, SettingKindRegistry kinds, SettingOptions options, ScopeRegistry scopes, ISecretKeyRing keys)"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; }"
+          ]
+        },
+        {
+          "name": "Sections",
+          "signatures": [
+            "IReadOnlyList<SettingSection> Sections { get; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<SettingInfo> Items { get; }"
+          ]
+        },
+        {
+          "name": "TryGet",
+          "signatures": [
+            "bool TryGet(string? key, out SettingInfo? info)"
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "SettingInfo Find(string key)"
+          ]
+        },
+        {
+          "name": "TryGetSection",
+          "signatures": [
+            "bool TryGetSection(string? code, out SettingSection? section)"
+          ]
+        },
+        {
+          "name": "FindSection",
+          "signatures": [
+            "SettingSection FindSection(string code)"
+          ]
+        },
+        {
+          "name": "SectionOf",
+          "signatures": [
+            "SettingSection SectionOf(string key)"
+          ]
+        },
+        {
+          "name": "DefaultOf",
+          "signatures": [
+            "string DefaultOf(string key)"
+          ]
+        },
+        {
+          "name": "ScopesOf",
+          "signatures": [
+            "IReadOnlyList<byte> ScopesOf(string key)"
+          ]
+        },
+        {
+          "name": "KindOf",
+          "signatures": [
+            "ISettingKind KindOf(string key)",
+            "ISettingKind<T?> KindOf<T>(string key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingDraft",
+      "signature": "sealed class SettingDraft",
+      "members": [
+        {
+          "name": "Section",
+          "signatures": [
+            "string Section { get; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; }"
+          ]
+        },
+        {
+          "name": "Get",
+          "signatures": [
+            "T? Get<T>(string key)"
+          ]
+        },
+        {
+          "name": "Bind",
+          "signatures": [
+            "T Bind<T>() where T : class, new()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingEx",
+      "signature": "static class SettingEx",
+      "members": [
+        {
+          "name": "KeyOf",
+          "signatures": [
+            "static string KeyOf(string section, string property)"
+          ]
+        },
+        {
+          "name": "AddOSSettings",
+          "signatures": [
+            "static IServiceCollection AddOSSettings(this IServiceCollection services, Action<SettingOptions> setup)"
+          ]
+        },
+        {
+          "name": "AddOSSettingProvider",
+          "signatures": [
+            "static IServiceCollection AddOSSettingProvider<TProvider>(this IServiceCollection services) where TProvider : class, ISettingProvider"
+          ]
+        },
+        {
+          "name": "AddOSSettingGate",
+          "signatures": [
+            "static IServiceCollection AddOSSettingGate<TGate>(this IServiceCollection services) where TGate : class, ISettingGate"
+          ]
+        },
+        {
+          "name": "AddOSSettingValidator",
+          "signatures": [
+            "static IServiceCollection AddOSSettingValidator<TValidator>(this IServiceCollection services) where TValidator : class, ISettingSectionValidator"
+          ]
+        },
+        {
+          "name": "AddOSSettingProbe",
+          "signatures": [
+            "static IServiceCollection AddOSSettingProbe<TProbe>(this IServiceCollection services) where TProbe : class, ISettingProbe"
+          ]
+        },
+        {
+          "name": "AddOSSettingJson",
+          "signatures": [
+            "static IServiceCollection AddOSSettingJson(this IServiceCollection services, string path)"
+          ]
+        },
+        {
+          "name": "SyncOSSettingsAsync",
+          "signatures": [
+            "static Task SyncOSSettingsAsync(this IServiceProvider services, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "AddOSSettingKind",
+          "signatures": [
+            "static IServiceCollection AddOSSettingKind<TKind>(this IServiceCollection services) where TKind : class, ISettingKind"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingInfo",
+      "signature": "sealed class SettingInfo",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "required string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "required string Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "string Default { get; init; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "SettingAccess Access { get; init; }"
+          ]
+        },
+        {
+          "name": "Scopable",
+          "signatures": [
+            "bool Scopable { get; init; }"
+          ]
+        },
+        {
+          "name": "Rules",
+          "signatures": [
+            "SettingRules Rules { get; init; }"
+          ]
+        },
+        {
+          "name": "ViewOrder",
+          "signatures": [
+            "int ViewOrder { get; init; }"
+          ]
+        },
+        {
+          "name": "IsSecret",
+          "signatures": [
+            "bool IsSecret { get; }"
+          ]
+        },
+        {
+          "name": "IsSystem",
+          "signatures": [
+            "bool IsSystem { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingKeyRow",
+      "signature": "sealed class SettingKeyRow",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "SettingAccess Access { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingKindRegistry",
+      "signature": "sealed class SettingKindRegistry",
+      "members": [
+        {
+          "name": "SettingKindRegistry",
+          "signatures": [
+            "SettingKindRegistry(IEnumerable<ISettingKind> kinds)"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyCollection<ISettingKind> Items { get; }"
+          ]
+        },
+        {
+          "name": "TryGet",
+          "signatures": [
+            "bool TryGet(string? name, out ISettingKind? kind)"
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "ISettingKind Find(string name)",
+            "ISettingKind<T?> Find<T>(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingOptions",
+      "signature": "sealed class SettingOptions",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "EnvironmentSection",
+          "signatures": [
+            "string EnvironmentSection { get; set; }"
+          ]
+        },
+        {
+          "name": "Fresh",
+          "signatures": [
+            "TimeSpan Fresh { get; set; }"
+          ]
+        },
+        {
+          "name": "AllKinds",
+          "signatures": [
+            "IReadOnlyCollection<byte> AllKinds { get; }"
+          ]
+        },
+        {
+          "name": "AllowScopes",
+          "signatures": [
+            "SettingOptions AllowScopes(string prefix, params byte[] kinds)"
+          ]
+        },
+        {
+          "name": "Cache",
+          "signatures": [
+            "SettingOptions Cache(byte kind, TimeSpan fresh)"
+          ]
+        },
+        {
+          "name": "FreshOf",
+          "signatures": [
+            "TimeSpan FreshOf(byte kind)"
+          ]
+        },
+        {
+          "name": "AllowedFor",
+          "signatures": [
+            "IReadOnlyCollection<byte> AllowedFor(string key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingRow",
+      "signature": "sealed class SettingRow",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; init; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "byte[]? Secret { get; init; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "string Version { get; init; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingSection",
+      "signature": "sealed class SettingSection",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "required string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "TitleKey",
+          "signatures": [
+            "required string TitleKey { get; init; }"
+          ]
+        },
+        {
+          "name": "ViewPerm",
+          "signatures": [
+            "required string ViewPerm { get; init; }"
+          ]
+        },
+        {
+          "name": "EditPerm",
+          "signatures": [
+            "required string EditPerm { get; init; }"
+          ]
+        },
+        {
+          "name": "DescriptionKey",
+          "signatures": [
+            "string? DescriptionKey { get; init; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; init; }"
+          ]
+        },
+        {
+          "name": "BindType",
+          "signatures": [
+            "Type? BindType { get; init; }"
+          ]
+        },
+        {
+          "name": "ViewOrder",
+          "signatures": [
+            "int ViewOrder { get; init; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<SettingInfo> Items { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingWrite",
+      "signature": "sealed class SettingWrite",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; init; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "byte[]? Secret { get; init; }"
+          ]
+        },
+        {
+          "name": "Reset",
+          "signatures": [
+            "bool Reset { get; init; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "string Version { get; init; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "lookup",
+      "code": "// In an app DI builds the catalog and you inject SettingCatalog; it is built by hand here only to run the sample.\nvar kinds = new SettingKindRegistry([new TextSettingKind(), new IntegerSettingKind(), new UrlSettingKind(), new BooleanSettingKind(), new DurationSettingKind()]);\nvar options = new SettingOptions { AppCode = \"shop\" };\nvar catalog = new SettingCatalog([new LinksSettings()], kinds, options, new ScopeRegistry(null), new AppKeyRing());\n\nvar key = \"links.token-length\";\n\n// Expected: section \"links\", kind \"integer\", default \"6\", and 5 keys in the catalog.",
+      "topic": "catalog",
+      "output": "links\ninteger\n6\n5"
+    },
+    {
+      "key": "normalize",
+      "code": "var kind = new IntegerSettingKind();\nvar rules = new SettingRules { Min = 4, Max = 64 };\n\n// \" 012 \" is trimmed and cleaned up: true, value \"12\".\nvar fits = kind.TryNormalize(\" 012 \", rules, out var value, out _);\n\n// 100 is above Max = 64: false, error \"settings.errors.range\". Nothing is thrown.\nvar tooBig = kind.TryNormalize(\"100\", rules, out _, out var error);",
+      "topic": "catalog",
+      "output": "True\n12\nFalse\nsettings.errors.range"
+    },
+    {
+      "key": "duration",
+      "code": "var kind = new DurationSettingKind();\n\n// Thirty seconds, written with colons: accepted.\nvar full = kind.TryNormalize(\"00:00:30\", null, out var value, out _);\n\n// A bare 30 would mean 30 days, so it is refused with \"settings.errors.duration\".\nvar bare = kind.TryNormalize(\"30\", null, out _, out var error);",
+      "topic": "catalog",
+      "output": "True\n00:00:30\nFalse\nsettings.errors.duration"
+    },
+    {
+      "key": "list-and-choice",
+      "code": "var names = new SettingRules { Options = [\"alpha\", \"beta\"] };\n\n// The repeated BETA is dropped and the case follows the rules: \"beta,alpha\".\nnew ListSettingKind().TryNormalize(\"Beta, alpha, BETA\", names, out var items, out _);\n\n// A choice must be one of the options; ALPHA becomes \"alpha\".\nnew ChoiceSettingKind().TryNormalize(\"ALPHA\", names, out var one, out _);\n\n// gamma is not an option: \"settings.errors.choice\".\nnew ChoiceSettingKind().TryNormalize(\"gamma\", names, out _, out var error);",
+      "topic": "catalog",
+      "output": "beta,alpha\nalpha\nsettings.errors.choice"
+    },
+    {
+      "key": "names",
+      "code": "// The property TokenLength of the links section is the key \"links.token-length\".\nvar key = SettingEx.KeyOf(\"links\", \"TokenLength\");\n\n// Dots become colons and dashes become underscores, so every shell accepts the name.\nvar portable = key.Replace('.', ':').Replace('-', '_');",
+      "topic": "environment",
+      "output": "links.token-length\nOSSettings:links.token-length\nOSSettings:links:token_length"
+    },
+    {
+      "key": "override",
+      "code": "// From now on every read of links.token-length returns 9, whatever is stored.\nconfig.AddInMemoryCollection(new Dictionary<string, string?>\n{\n    [\"OSSettings:links:token_length\"] = \"9\"\n});",
+      "topic": "environment"
+    },
+    {
+      "key": "check-error",
+      "code": "var saved = await store.SaveAsync(request, token);\nif (saved.Succeeded)\n    return \"saved\";\n\n// A rejected value names its field, for example \"links.token-length: settings.errors.range\".\n// Other failures only have a code, for example \"settings.errors.conflict\".\nvar first = saved.Errors?.FirstOrDefault();",
+      "topic": "environment"
+    },
+    {
+      "key": "register",
+      "code": "// The key ring encrypts secret settings such as links.api-token.\nservices.AddOSSecretKeyRing<AppKeyRing>();\n\n// The app's name in storage, the settings it declares, and where saved values are kept.\nservices.AddOSSettings(options => options.AppCode = \"shop\");\nservices.AddOSSettingProvider<LinksSettings>();\nservices.AddOSSettingJson(\"data/settings.json\");"
+    },
+    {
+      "key": "read",
+      "code": "// 6 from the code default, until an admin saves another value or the environment overrides it.\nvar length = await settings.GetAsync<long>(\"links.token-length\", token);"
+    },
+    {
+      "key": "get",
+      "code": "// An integer key is read as long and a duration key as TimeSpan; any other type throws.\nvar length = await settings.GetAsync<long>(\"links.token-length\", token);\nvar timeout = await settings.GetAsync<TimeSpan>(\"links.timeout\", token);\n\n// With nothing stored these are the defaults: \"6 characters, 00:00:30 timeout\".",
+      "topic": "reading"
+    },
+    {
+      "key": "section",
+      "code": "// TokenLength, BaseUrl, Timeout and Enabled are filled from links.token-length, links.base-url, and so on.\nvar options = await settings.SectionAsync<LinkOptions>(\"links\", token);",
+      "topic": "reading"
+    },
+    {
+      "key": "tenant",
+      "code": "// Scope kind 1 is the \"tenant\" kind registered in setup. The chain is: this tenant, then the whole app.\nvar chain = ScopeChain.Of(registry, [new Scope(1, tenantId)]);\n\n// The tenant's own limit if it saved one, otherwise the app value, otherwise the default 100.\nvar limit = await settings.GetAsync<long>(\"billing.limit\", chain, token);",
+      "topic": "reading"
+    },
+    {
+      "key": "public-values",
+      "code": "// Only links.token-length and links.base-url are Public; timeout, enabled and the secret token are left out.\nvar values = await settings.PublicAsync(ScopeChain.AppOnly, token);",
+      "topic": "reading"
+    },
+    {
+      "key": "refresh",
+      "code": "// The next read of an app-wide value goes to the source again instead of the cache.\nawait settings.InvalidateAsync(Scope.App);",
+      "topic": "reading"
+    },
+    {
+      "key": "provider",
+      "code": "public sealed class BillingSettings : ISettingProvider\n{\n    public IEnumerable<SettingSection> GetSections()\n    {\n        yield return new SettingSection\n        {\n            Code = \"billing\",\n            TitleKey = \"settings.sections.billing.title\",\n            ViewPerm = \"billing.view\",\n            EditPerm = \"billing.edit\",\n            Items =\n            [\n                // Each tenant may have its own limit; without one it is 100.\n                new() { Key = \"billing.limit\", Kind = SettingCodes.Kind.Integer, Default = \"100\", Scopable = true, Rules = new() { Min = 1 } },\n                // Only usd or eur are accepted.\n                new() { Key = \"billing.currency\", Kind = SettingCodes.Kind.Choice, Default = \"usd\", Rules = new() { Options = [\"usd\", \"eur\"] } },\n                // A comma-separated list, such as \"owner, accountant\".\n                new() { Key = \"billing.notify\", Kind = SettingCodes.Kind.List, Default = \"owner\" },\n                // A secret has no default in code; an admin sets it and it is stored encrypted.\n                new() { Key = \"billing.gateway-key\", Kind = SettingCodes.Kind.Text, Access = SettingAccess.Secret }\n            ]\n        };\n    }\n}",
+      "topic": "setup"
+    },
+    {
+      "key": "options",
+      "code": "// Scope kind 1 is a tenant.\nservices.AddOSScopeKind(1, \"tenant\", null, 10);\n\nservices.AddOSSettings(options =>\n{\n    options.AppCode = \"shop\";\n    // App-wide values are cached for 30 seconds.\n    options.Fresh = TimeSpan.FromSeconds(30);\n\n    // A tenant may override billing.limit, and tenant values are cached for 5 minutes.\n    options.AllowScopes(\"billing.limit\", 1);\n    options.Cache(1, TimeSpan.FromMinutes(5));\n});\n\nservices.AddOSSettingProvider<BillingSettings>();",
+      "topic": "setup"
+    },
+    {
+      "key": "startup-check",
+      "code": "var services = new ServiceCollection();\nservices.AddOSSecretKeyRing<AppKeyRing>();\n// The mistake: \"Shop\" has a capital letter.\nservices.AddOSSettings(options => options.AppCode = \"Shop\");\nservices.AddOSSettingProvider<LinksSettings>();\n\nusing var provider = services.BuildServiceProvider();\n\nstring result;\n// Building the catalog checks everything, so do this once at start.\ntry\n{\n    provider.GetRequiredService<SettingCatalog>();\n    result = \"ready\";\n}\ncatch (OSException ex)\n{\n    result = ex.Message;\n}",
+      "topic": "setup",
+      "output": "Settings need a lower-case AppCode of 1 to 24 characters (letters, digits and dashes)."
+    },
+    {
+      "key": "json",
+      "code": "// Saved values go to this file; the folder is created on the first save.\nservices.AddOSSettingJson(\"data/settings.json\");",
+      "topic": "sources"
+    },
+    {
+      "key": "save-and-load",
+      "code": "// The store normally does this for you; here the source is used directly.\nvar source = new JsonSettingSource(\"data/settings.json\");\n\n// A new key needs no Version.\nvar write = new SettingWrite { Key = \"links.token-length\", Value = \"20\" };\n\nvar saved = await source.SaveAsync(\"shop\", Scope.App, [write], token);\nif (!saved.Succeeded)\n    return saved.Code!;\n\n// The row comes back with a Version; the next change to this key must send it.\nvar rows = await source.LoadAsync(\"shop\", Scope.App, token);",
+      "topic": "sources"
+    },
+    {
+      "key": "update",
+      "code": "var rows = await source.LoadAsync(\"shop\", Scope.App, token);\nvar row = rows.Single(r => r.Key == \"links.token-length\");\n\n// Send back the Version you loaded: Ok, or Conflict if someone saved this key after you loaded it.\nvar write = new SettingWrite { Key = row.Key, Value = \"30\", Version = row.Version };\nvar result = await source.SaveAsync(\"shop\", Scope.App, [write], token);",
+      "topic": "sources"
+    },
+    {
+      "key": "sync",
+      "code": "// Needed only for a source that keeps its own table of keys; the JSON file ignores it.\nawait services.SyncOSSettingsAsync(token);",
+      "topic": "sources"
+    },
+    {
+      "key": "gate",
+      "code": "public sealed class AdminGate : ISettingGate\n{\n    public ValueTask<bool> CanAsync(string permission, Scope scope, CancellationToken token = default)\n    {\n        // A real gate checks the current user's roles. This one lets everyone view and edit the links section.\n        var allowed = permission is \"settings.view\" or \"settings.edit\";\n        return ValueTask.FromResult(allowed);\n    }\n}",
+      "topic": "store"
+    },
+    {
+      "key": "validator",
+      "code": "public sealed class LinksValidator : ISettingSectionValidator\n{\n    public string Section => \"links\";\n\n    public ValueTask<IReadOnlyList<FieldError>> ValidateAsync(SettingDraft draft, CancellationToken token = default)\n    {\n        List<FieldError> errors = [];\n\n        // The draft holds the new values plus the unchanged ones, so this sees the timeout the section will really have.\n        if (draft.Get<TimeSpan>(\"links.timeout\") > TimeSpan.FromMinutes(5))\n            errors.Add(new FieldError(\"links.timeout\", \"links.errors.timeout\", \"links.errors.timeout\"));\n\n        return ValueTask.FromResult<IReadOnlyList<FieldError>>(errors);\n    }\n}",
+      "topic": "store"
+    },
+    {
+      "key": "probe",
+      "code": "public sealed class LinksProbe : ISettingProbe\n{\n    public string Section => \"links\";\n\n    public async ValueTask<OSResult> ProbeAsync(SettingDraft draft, CancellationToken token = default)\n    {\n        // Try the new base URL before saving it; if it does not answer, the save stops with links.errors.unreachable.\n        using var client = new HttpClient();\n        using var reply = await client.GetAsync(draft.Get<string>(\"links.base-url\"), token);\n\n        return reply.IsSuccessStatusCode ? OSResult.Ok() : OSResult.Unavailable(\"links.errors.unreachable\", \"links.errors.unreachable\");\n    }\n}",
+      "topic": "store"
+    },
+    {
+      "key": "register",
+      "code": "// Both the validator and the probe say Section => \"links\", so they run only when links is saved.\nservices.AddOSSettingGate<AdminGate>();\nservices.AddOSSettingValidator<LinksValidator>();\nservices.AddOSSettingProbe<LinksProbe>();",
+      "topic": "store"
+    },
+    {
+      "key": "edit",
+      "code": "// Read first: each item carries the Version the save must send back.\nvar section = await store.GetSectionAsync(\"links\", Scope.App, token);\nvar length = section.Data!.Items.Single(item => item.Key == \"links.token-length\");\nvar timeout = section.Data.Items.Single(item => item.Key == \"links.timeout\");\n\nvar saved = await store.SaveAsync(new SettingSaveModel\n{\n    Section = \"links\",\n    Scope = Scope.App,\n    Changes =\n    [\n        // Set token length to 20.\n        new() { Key = length.Key, Value = \"20\", Version = length.Version },\n\n        // Remove the stored timeout so the default 00:00:30 applies again.\n        new() { Key = timeout.Key, Reset = true, Version = timeout.Version }\n    ]\n}, token);\n\n// Ok, or Conflict if someone changed one of these rows after you read the section.",
+      "topic": "store"
+    }
+  ]
+}

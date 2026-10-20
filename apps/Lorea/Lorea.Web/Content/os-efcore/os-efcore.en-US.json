@@ -1,0 +1,908 @@
+{
+  "os-efcore": {
+    "title": "Data with EF Core",
+    "summary": "Everything your app needs around EF Core, done once: saves that tell you what happened instead of throwing, who-and-when columns filled in for you, soft delete, change history, paging, batch work and transactions that do not lose data. You add one database package next to it: SQLite, SQL Server, PostgreSQL or MySQL.",
+    "gives": {
+      "1": "Every save answers with an `OSResult`: how many rows were added, changed and deleted, or a clear code such as `data.duplicate` with the field that caused it. No database exception reaches your screen.",
+      "2": "Created by, changed by, deleted by and their times are filled in on every save. Delete can keep the row as deleted, and a full change history is one line away.",
+      "3": "Paging that stays fast on big tables, batch updates that do not lock the database for minutes, and transactions that retry safely and never half-save."
+    },
+    "sample": {
+      "register": "Set up the data layer once",
+      "save": "Save and see what happened",
+      "page": "Show one page of a list"
+    },
+    "topics": {
+      "start": {
+        "title": "Start here",
+        "summary": "A short walk from an empty project to saving, paging and handling an error, and which database package to pick.",
+        "points": {
+          "1": {
+            "title": "Pick a package",
+            "text": "Choose the database package by where your data lives."
+          },
+          "2": {
+            "title": "Same steps",
+            "text": "Entities, a context, one `AddOS...` call, then migrations."
+          },
+          "3": {
+            "title": "Save and page",
+            "text": "Use `SaveAsync` and `PageAsync`, and check `Code` on errors."
+          },
+          "4": {
+            "title": "Reviewable SQL",
+            "text": "`dotnet ef migrations script --idempotent` gives SQL you can read before it runs."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Which package",
+            "text": "OS.EFCore is the shared part; a database package does the database-specific part. Pick the package by where your data lives.\n\nSQLite: a single file next to the app, no server, ideal for desktop apps, small services and tests; it can encrypt the whole file.\n\nSQL Server or Azure SQL: the usual choice for company systems; real-server tests ran on LocalDB.\n\nPostgreSQL: a free, strong server database; tested with unit tests only so far.\n\nMySQL: when MySQL is already in place; today it runs on Oracle's provider (GPL with an open-source exception) and has unit tests only."
+          },
+          "2": {
+            "title": "The steps",
+            "text": "The steps are the same everywhere. Write your entities, deriving from `TrackedEntity` or `StampedEntity` when you want the who-and-when columns. Write a context that derives from `OSDbContext`.\n\nOne call to `AddOSSqlite`, `AddOSSqlServer`, `AddOSPostgres` or `AddOSMySql` is enough, because it registers OS.EFCore too. Add `AddOSEFCore` only to change shared settings, before or after the provider."
+          },
+          "3": {
+            "title": "Schema and saving",
+            "text": "Create the schema with the normal EF tools: `dotnet ef migrations add Initial`. For production, `dotnet ef migrations script --idempotent` gives SQL you can review before it runs.\n\nThen save with `SaveAsync`, page with `PageAsync` and look at the result's `Code` when something goes wrong. The samples below show the real output of each step."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Set up the data layer",
+            "note": "In a real app you would use `AddOSSqlite` (or another database package) instead of `UseSqlite`; it does the same plus the database's own settings."
+          },
+          "first-save": {
+            "title": "Your first save, and what comes back",
+            "note": "`Demo.Open()` opens a throwaway in-memory database with the same setup as a real app, so the output below is real."
+          },
+          "first-error": {
+            "title": "What happens when a save fails",
+            "note": "The name is unique, so the second save fails. Nothing is thrown: you get `Conflict`, the code `data.duplicate` and a trace id for the logs."
+          },
+          "first-page": {
+            "title": "Show one page of a list",
+            "note": "The sort name usually comes from the screen. An unknown name is ignored, and the key is added so the order is always the same."
+          }
+        },
+        "type": {
+          "EFCoreEx": "Registration, model switches and small helpers.",
+          "EFCoreOptions": "Settings shared by every context in the app."
+        },
+        "member": {
+          "EFCoreEx": {
+            "AddOSEFCore": "Registers the shared options and the save pipeline. The database packages call it for you, so you need it only to change settings or to use `AddOSDbContext` directly. It is safe to call more than once, in any order: every call updates the same options, so a later call wins only for the values it sets.",
+            "AddOSDbContext": "Registers a context with your own provider setup; the database packages call it for you. Pooled by default. Throws if `AddOSEFCore` was not called first; the database packages never hit this, because they register the core themselves.",
+            "UseOS": "Applies the OS.EFCore setup (save pipeline, no-tracking queries, timeouts) to a builder you made yourself, for tools and tests.",
+            "Audit": "Turns on the change history for one entity. Needs `ApplyAudit` in the model.",
+            "Versioned": "Adds a `Version` Guid that changes on every save, so two people editing the same row are noticed.",
+            "KeepText": "Keeps one text property exactly as given, skipping `NormalizeText`.",
+            "IgnoreSoftDelete": "Shows soft-deleted rows in this one query.",
+            "Find": "Picks a connection row by name (ignoring case and spaces), or the main row, or the first valid one. Null if nothing matches."
+          },
+          "EFCoreOptions": {
+            "AppCode": "A short name of your app, written into every history row so you can tell apps apart in a shared database. At most 50 characters.",
+            "MigrateOnStart": "Applies pending migrations when the app starts. Off by default: several instances starting together should not race to change the schema.",
+            "HistoryTable": "A different name for EF's migrations history table.",
+            "HistorySchema": "The schema of that table. Needs `HistoryTable`.",
+            "NormalizeText": "A function applied to every text value you save, for example to turn Arabic ي and ك into Persian ی and ک. Values are also trimmed. Off when null.",
+            "MaxPageSize": "The largest page anyone can ask for, so a request for a million rows gets 200. 200 by default.",
+            "RetryCount": "How many times the server packages retry a temporary failure. 3 by default; 0 turns retries off.",
+            "RetryDelay": "The longest wait between two retries. 5 seconds by default.",
+            "CommandTimeout": "How long one database command may run before it gives up. 15 seconds by default.",
+            "UseRelationalNulls": "Compares nulls the database way instead of the C# way. Off by default.",
+            "SlowTransactionThreshold": "A transaction slower than this is logged as a warning with its name and time. 2 seconds by default."
+          }
+        }
+      },
+      "context": {
+        "title": "Your context",
+        "summary": "Derive from `OSDbContext`, read with `Entity`, change with `ForUpdate`, and save with `SaveAsync`.",
+        "points": {
+          "1": {
+            "title": "Reading and changing",
+            "text": "`Entity<T>()` reads fast; `ForUpdate<T>()` loads to change."
+          },
+          "2": {
+            "title": "Save result",
+            "text": "`Save` returns an `OSResult<SaveCounts>` with counts or an error code."
+          },
+          "3": {
+            "title": "Partial save",
+            "text": "`Patch` saves only the fields you name."
+          },
+          "4": {
+            "title": "Read-only guard",
+            "text": "A context with `IReadOnlyContext` throws on any save."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading and changing",
+            "text": "Your context derives from `OSDbContext` and configures entities as usual. Queries do not track what they return, which keeps reading fast.\n\nUse `Entity<T>()` to read and `ForUpdate<T>()` when you load something to change it. If you change an entity you read with `Entity<T>()`, nothing is saved, because nobody is watching it."
+          },
+          "2": {
+            "title": "Save results",
+            "text": "`Save` and `SaveAsync` return `OSResult<SaveCounts>`: `data.saved` with the counts, `data.unchanged` when there was nothing to save, or an error code.\n\nWhen a form sends an object back, `Patch` saves only the fields you name and leaves the rest alone."
+          },
+          "3": {
+            "title": "Protected and background",
+            "text": "A context that also implements `IReadOnlyContext` throws on any save, which protects report or replica contexts from accidental writes.\n\nBackground jobs that have no request scope open a context with `IDbFactory<TContext>` and dispose it themselves."
+          },
+          "4": {
+            "title": "Shared options",
+            "text": "The server packages share one options base, `DbServerOptions<TBuilder>`, so connection string, encryption and retry work the same way everywhere."
+          }
+        },
+        "sample": {
+          "model": {
+            "title": "A context with one audited, versioned entity",
+            "note": "`ApplyAudit` adds the history table. Leave it out if no entity calls `Audit()`."
+          },
+          "edit": {
+            "title": "Load, change and save",
+            "note": "`ForUpdate` turns change tracking on for this query only."
+          },
+          "patch": {
+            "title": "Save only what the form sent",
+            "note": "Only `Name` was saved. `Code` kept its value even though the form sent null."
+          },
+          "read-only": {
+            "title": "A context that can never write",
+            "note": "This is a programming mistake, so it throws instead of returning a result."
+          },
+          "factory": {
+            "title": "Open a context in a background job",
+            "note": "The job owns the context, so it disposes it."
+          },
+          "connections": {
+            "title": "Pick a connection from settings by name",
+            "note": "`ToString` shows only the name, so a password in a connection string does not end up in a log by accident."
+          }
+        },
+        "type": {
+          "OSDbContext": "The base context: saving, paging, batch work and transactions.",
+          "IDbFactory{TContext}": "Opens a context where there is no request scope.",
+          "IReadOnlyContext": "Marks a context that must never save.",
+          "SaveCounts": "How many rows one save added, changed and deleted.",
+          "DbConnectionEntry": "One named connection string from your settings.",
+          "DbServerOptions{TBuilder}": "Shared connection settings of the server database packages."
+        },
+        "member": {
+          "OSDbContext": {
+            "Entity": "The table of an entity for reading. Nothing is tracked.",
+            "ForUpdate": "A tracked query, for entities you will change and save.",
+            "Patch": "Marks only the named properties as changed, attaching the entity if needed. Throws if you name none.",
+            "Save": "Saves and returns the counts, `data.unchanged` or an error code. Known database errors never throw.",
+            "SaveAsync": "Saves and returns the counts, `data.unchanged` or an error code. Known database errors never throw.",
+            "TranAsync": "Runs several steps as one unit that commits only on success. See Transactions.",
+            "PageAsync": "Reads one page by number, with or without a total. See Paging.",
+            "PageAfterAsync": "Reads the page after a cursor. See Paging.",
+            "StreamAsync": "Reads every row in batches without tracking. See Paging.",
+            "BatchDeleteAsync": "Deletes matching rows in batches of 1000. See Batch work.",
+            "BatchSoftDeleteAsync": "Soft deletes matching rows in batches of 1000.",
+            "BatchUpdateAsync": "Updates matching rows in batches of 1000.",
+            "Dispose": "Releases the context and forgets its request scope; a pooled context goes back to the pool.",
+            "DisposeAsync": "Releases the context and forgets its request scope; a pooled context goes back to the pool."
+          },
+          "IDbFactory{TContext}": {
+            "Open": "Opens a context bound to the current scope. Dispose it when you are done.",
+            "OpenAsync": "Opens a context bound to the current scope. Dispose it when you are done."
+          },
+          "SaveCounts": {
+            "SaveCounts": "Creates the counts.",
+            "Added": "Rows inserted.",
+            "Modified": "Rows changed.",
+            "Deleted": "Rows deleted, including soft deletes.",
+            "Total": "All three together."
+          },
+          "DbConnectionEntry": {
+            "Name": "The name you look the connection up by.",
+            "Connection": "The connection string. Keep it in user secrets or environment variables, not in source.",
+            "IsMain": "Marks the connection used when no name is given.",
+            "IsValid": "True when both name and connection are filled in.",
+            "ToString": "Only the name, never the connection string."
+          },
+          "DbServerOptions{TBuilder}": {
+            "ConnectionString": "The connection string. Required; a broken one is rejected without echoing it.",
+            "Encrypt": "Requires an encrypted connection. On by default; turn it off only for development.",
+            "RetryOnFailure": "Uses the database's retry strategy for temporary failures. On by default; the count comes from `EFCoreOptions.RetryCount`."
+          }
+        }
+      },
+      "entities": {
+        "title": "Who and when, filled in for you",
+        "summary": "Pick the stamp columns an entity needs; creator, editor, deleter and their times are written on every save.",
+        "points": {
+          "1": {
+            "title": "Stamp interfaces",
+            "text": "Add an interface and the save fills who and when."
+          },
+          "2": {
+            "title": "Soft delete",
+            "text": "`ISoftDelete` keeps the row and hides it from queries."
+          },
+          "3": {
+            "title": "UTC and user",
+            "text": "Times come from `TimeProvider`, the user from `IDataActor`."
+          },
+          "4": {
+            "title": "Safe create stamp",
+            "text": "A create stamp can never be overwritten."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The interfaces",
+            "text": "Most tables need to know who created a row, who changed it last and when. Instead of setting these by hand, give the entity the matching interface and the save fills them in.\n\n`ICreateStamp` adds `CreateDate` and `CreateBy`, `IModifyStamp` adds `ModifiedDate` and `ModifiedBy`, and `ISoftDelete` adds `IsDeleted`, `DeletedDate` and `DeletedBy`.\n\n`IStamped` is create plus modify and `ITracked` is all three; the base classes `StampedEntity` and `TrackedEntity` already hold the properties. When tables are created, stamp columns go after your own columns."
+          },
+          "2": {
+            "title": "Time and user",
+            "text": "Times are UTC from `TimeProvider`. The user comes from `IDataActor`, a small class your app registers as scoped; it is read when you save, so pooled contexts never mix users.\n\nIf no `IDataActor` is registered, the user columns stay empty; nothing fails."
+          },
+          "3": {
+            "title": "Create stamp and soft delete",
+            "text": "A create stamp cannot be overwritten: even if the code or a form sets `CreateBy`, the old value stays.\n\nRemoving an entity with `ISoftDelete` keeps the row and marks it deleted, and every query hides deleted rows until you ask with `IgnoreSoftDelete()`."
+          }
+        },
+        "sample": {
+          "entities": {
+            "title": "Two entities with stamps",
+            "note": "`TrackedEntity` gives create, modify and soft delete stamps; `StampedEntity` gives create and modify."
+          },
+          "actor": {
+            "title": "Tell the data layer who is working",
+            "note": "Register it as scoped. `IpAddress` and `SessionId` are optional and go only into the change history."
+          },
+          "after-save": {
+            "title": "What the stamps hold after a save",
+            "note": "Creator, UTC time and a fresh version were filled in; the modify stamp is still empty."
+          },
+          "after-edit": {
+            "title": "What changes after an edit",
+            "note": "The edit wrote `ModifiedBy` and the time two hours later. The attempt to change `CreateBy` was ignored."
+          },
+          "remove": {
+            "title": "Remove keeps the row as deleted",
+            "note": "Normal queries no longer see it (0), but the row is still there, marked with who deleted it."
+          },
+          "options": {
+            "title": "History, version token and text kept as is",
+            "note": "All three are switches on the entity; nothing changes in the entity class."
+          },
+          "normalize": {
+            "title": "Clean up text before it is saved",
+            "note": "Runs on every saved string except properties marked `KeepText`."
+          }
+        },
+        "type": {
+          "ICreateStamp": "When and by whom a row was created.",
+          "IModifyStamp": "When and by whom a row was last changed.",
+          "ISoftDelete": "A row that is marked deleted instead of removed.",
+          "IStamped": "Create and modify stamps together.",
+          "ITracked": "Create, modify and soft delete stamps together.",
+          "StampedEntity": "A base class with create and modify stamps.",
+          "TrackedEntity": "A base class with create, modify and soft delete stamps.",
+          "IDataActor": "Who is behind a save. Your app implements it."
+        },
+        "member": {
+          "ICreateStamp": {
+            "CreateDate": "UTC time the row was created. Set once and never overwritten.",
+            "CreateBy": "Id of the user who created the row."
+          },
+          "IModifyStamp": {
+            "ModifiedDate": "UTC time of the last change; empty until the first edit.",
+            "ModifiedBy": "Id of the user who changed the row last."
+          },
+          "ISoftDelete": {
+            "IsDeleted": "True once the row is removed. Queries skip such rows.",
+            "DeletedDate": "UTC time of the delete.",
+            "DeletedBy": "Id of the user who deleted the row."
+          },
+          "StampedEntity": {
+            "CreateDate": "UTC time the row was created.",
+            "CreateBy": "Id of the creator.",
+            "ModifiedDate": "UTC time of the last change.",
+            "ModifiedBy": "Id of the last editor."
+          },
+          "TrackedEntity": {
+            "IsDeleted": "True once the row is removed.",
+            "DeletedDate": "UTC time of the delete.",
+            "DeletedBy": "Id of the user who deleted the row."
+          },
+          "IDataActor": {
+            "Id": "The user's id, written into the stamps. Null leaves them empty.",
+            "Name": "The user's display name, written into history rows.",
+            "IpAddress": "The client address, written only into history rows. Optional; personal data, never logged.",
+            "SessionId": "The session, written only into history rows. Optional."
+          }
+        }
+      },
+      "concurrency": {
+        "title": "Two people, one row",
+        "summary": "With `Versioned()`, the second person to save an old copy gets `data.changed` instead of silently erasing the first person's work.",
+        "points": {
+          "1": {
+            "title": "Silent overwrite",
+            "text": "Without protection, the later save erases the earlier one unnoticed."
+          },
+          "2": {
+            "title": "Version token",
+            "text": "`Versioned()` adds a `Version` Guid that changes on every save."
+          },
+          "3": {
+            "title": "Conflict result",
+            "text": "A stale save stops with `data.changed` and writes nothing."
+          },
+          "4": {
+            "title": "Any database",
+            "text": "The same token works on every database package."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The problem",
+            "text": "Sara and Reza open the same customer. Sara saves first. Without protection, Reza's save would overwrite Sara's change and nobody would notice."
+          },
+          "2": {
+            "title": "How it works",
+            "text": "`Versioned()` adds a `Version` Guid that changes on every save, and the save checks that the version in the database is still the one you loaded.\n\nIf it is not, the save stops and returns `Conflict` with the code `data.changed`; nothing is written. Batch updates refresh the version too."
+          },
+          "3": {
+            "title": "What to do next",
+            "text": "What to do next is a business decision: show the user the new data and let them try again, or reload and re-apply the change automatically when that is safe.\n\nThe same token works on every database package, so your model does not change when the database does."
+          }
+        },
+        "sample": {
+          "conflict": {
+            "title": "What the second person gets",
+            "note": "Sara's save succeeds; Reza's returns `Conflict` and `data.changed`, and his change is not written."
+          },
+          "retry": {
+            "title": "Reload and try once more",
+            "note": "Only do this when re-applying the change is safe; otherwise ask the user."
+          }
+        }
+      },
+      "audit": {
+        "title": "Change history",
+        "summary": "Call `Audit()` on an entity and every insert, change and delete leaves a row with the old and new values.",
+        "points": {
+          "1": {
+            "title": "Change history",
+            "text": "`ApplyAudit()` and `Audit()` write one `AuditRecord` per changed row."
+          },
+          "2": {
+            "title": "Old and new",
+            "text": "Each changed field keeps its old and new value."
+          },
+          "3": {
+            "title": "Never recorded",
+            "text": "Stamps, version and sensitive names are never written."
+          },
+          "4": {
+            "title": "Purging",
+            "text": "`PurgeAuditsAsync` removes old history in batches."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Turning it on",
+            "text": "When someone asks who changed a price and what it was before, the change history answers. Add the table with `modelBuilder.ApplyAudit()` and call `Audit()` on the entities you care about.\n\nIf an entity calls `Audit()` but `ApplyAudit` is missing, the save throws so you notice at once."
+          },
+          "2": {
+            "title": "What is written",
+            "text": "Each save then writes one `AuditRecord` per changed row: what happened, which row, who, when, from which app, and each changed field with its old and new value.\n\nA soft delete is recorded as a delete. Values are written the same way on every machine (invariant culture). A new row whose id comes from the database gets its real id in the history within the same transaction."
+          },
+          "3": {
+            "title": "What is never written",
+            "text": "Some things are never written: the stamp columns, the version token, sensitive names such as `Password`, `PasswordHash`, `Token` and `Secret`, and properties marked `[NoAudit]`."
+          },
+          "4": {
+            "title": "Cleaning up",
+            "text": "Old history is removed with `PurgeAuditsAsync`, in bounded batches, from a scheduled job."
+          }
+        },
+        "sample": {
+          "trail": {
+            "title": "The history after an insert and an edit",
+            "note": "One row per change. The edit records only the field that actually changed."
+          },
+          "secret": {
+            "title": "Keep a field out of the history",
+            "note": "`PasswordHash` is skipped by its name, `Notes` by the attribute."
+          },
+          "history": {
+            "title": "Read the history of one row",
+            "note": "The key is the primary key as text; a composite key is joined with `|`."
+          },
+          "purge": {
+            "title": "Remove old history",
+            "note": "Up to 20 batches of 5000 rows per call, so it never holds a long lock."
+          },
+          "table": {
+            "title": "Choose the table name",
+            "note": "The default is `Audits` with no schema."
+          }
+        },
+        "type": {
+          "AuditRecord": "One recorded change of one row.",
+          "AuditChange": "One field with its old and new value.",
+          "AuditAction": "What happened to the row.",
+          "AuditEx": "Setting up the history table and removing old rows.",
+          "NoAuditAttribute": "Keeps a property out of the history."
+        },
+        "member": {
+          "AuditRecord": {
+            "Id": "The history row's own id.",
+            "AppCode": "Which app made the change, from `EFCoreOptions.AppCode`.",
+            "EntityName": "The entity's class name.",
+            "EntityKey": "The changed row's key as text.",
+            "Action": "Added, modified or deleted.",
+            "ActorId": "Who made the change, from `IDataActor.Id`.",
+            "ActorName": "Their display name.",
+            "IpAddress": "Their address, if your `IDataActor` gives one.",
+            "SessionId": "Their session, if your `IDataActor` gives one.",
+            "Changes": "The changed fields, stored as JSON.",
+            "CreateDate": "UTC time of the change."
+          },
+          "AuditChange": {
+            "AuditChange": "Creates one field change.",
+            "Field": "The property name.",
+            "Old": "The value before, or null for an insert.",
+            "New": "The value after, or null for a delete."
+          },
+          "AuditAction": {
+            "Added": "The row was inserted.",
+            "Modified": "The row was changed.",
+            "Deleted": "The row was deleted or soft deleted."
+          },
+          "AuditEx": {
+            "ApplyAudit": "Adds the history table to the model, with indexes for entity, user and time.",
+            "PurgeAuditsAsync": "Removes history older than the given days and returns how many rows went. 730 days by default.",
+            "RetentionDays": "The default retention: 730 days, two years."
+          }
+        }
+      },
+      "paging": {
+        "title": "Paging and reading in bulk",
+        "summary": "Page by number for screens, continue after a cursor for long lists, and stream when you need every row.",
+        "points": {
+          "1": {
+            "title": "Page by number",
+            "text": "`PageAsync` reads one page by its number."
+          },
+          "2": {
+            "title": "Cursor paging",
+            "text": "`PageAfterAsync` continues after the last row and stays fast."
+          },
+          "3": {
+            "title": "Streaming",
+            "text": "`StreamAsync` reads a whole table in batches of 5000."
+          },
+          "4": {
+            "title": "Two rules",
+            "text": "Sort by something unique and respect `MaxPageSize`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Page by number",
+            "text": "Loading a whole table to show twenty rows is slow and wastes memory. `PageAsync` reads one page by number.\n\nWith `count: true` it also counts all rows so the screen can show 'page 3 of 5'. With `count: false` it reads one extra row and only tells you whether there is a next page, which is far cheaper on big tables."
+          },
+          "2": {
+            "title": "Deep pages and cursors",
+            "text": "Page numbers get slow deep into a large table, because the database still walks past the skipped rows. `PageAfterAsync` avoids that: it continues right after the last row you saw, using a sort key and an id so rows with the same date are never skipped.\n\nIt gives you `Next`, a short cursor to send back for the following page. A cursor that cannot be read simply fails to decode; treat it as a bad request."
+          },
+          "3": {
+            "title": "Whole table",
+            "text": "`StreamAsync` reads a whole table in batches of 5000 for exports and jobs."
+          },
+          "4": {
+            "title": "Two rules",
+            "text": "Always sort by something unique (`OrderBy(name, type)` adds the key for you). Remember that page size is capped by `EFCoreOptions.MaxPageSize`."
+          }
+        },
+        "sample": {
+          "offset": {
+            "title": "Page by number, with a total",
+            "note": "Use this for screens with page numbers."
+          },
+          "page-numbers": {
+            "title": "What the page info tells you",
+            "note": "With a total you get the page count; without one you only know whether more rows exist."
+          },
+          "no-count": {
+            "title": "Page by number without counting",
+            "note": "Good for 'load more' buttons on big tables."
+          },
+          "keyset": {
+            "title": "Continue after a cursor",
+            "note": "The cursor is not signed. It only says where to start, and its values go to SQL as parameters, so a forged cursor can only move the window."
+          },
+          "cursor": {
+            "title": "Make and read a cursor",
+            "note": "Text that is not a cursor returns false instead of throwing."
+          },
+          "stream": {
+            "title": "Read every row for an export",
+            "note": "The key must be unique, for example the id. Progress reports how many rows were read so far."
+          }
+        },
+        "type": {
+          "KeysetPage{T}": "One page and the cursor of the next page.",
+          "PageCursor": "Turns the last row's keys into a short text and back."
+        },
+        "member": {
+          "KeysetPage{T}": {
+            "Next": "The cursor for the next page, or null on the last page."
+          },
+          "PageCursor": {
+            "Encode": "Makes a URL-safe cursor from a key and an id.",
+            "TryDecode": "Reads a cursor back. False for empty, too long or broken text.",
+            "MaxLength": "The longest cursor that is accepted: 512 characters."
+          }
+        }
+      },
+      "batches": {
+        "title": "Changing many rows at once",
+        "summary": "Update or delete thousands of rows in batches of 1000, each batch short, with stamps and history kept right.",
+        "points": {
+          "1": {
+            "title": "Batches of 1000",
+            "text": "Keys are picked 1000 at a time so others keep working."
+          },
+          "2": {
+            "title": "Two update forms",
+            "text": "Setters are fast SQL; `Action<T>` loads and saves."
+          },
+          "3": {
+            "title": "Own transactions",
+            "text": "Each batch is a short transaction; `atomicAll: true` makes it all-or-nothing."
+          },
+          "4": {
+            "title": "Safe start",
+            "text": "A batch refuses to start with unsaved changes."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "How batches work",
+            "text": "One big UPDATE over a large table can lock it for minutes, and loading every row into memory can run out of it. The batch methods pick the matching keys 1000 at a time and work on each batch, so other users keep working.\n\nFor entities without history they send one SQL statement per batch and fill in the stamps themselves. For entities with `Audit()` they load each batch and save it, so every row gets its history entry."
+          },
+          "2": {
+            "title": "Update and delete",
+            "text": "`BatchUpdateAsync` has two forms: with setters it is fast and SQL-only, and it refuses audited entities because the history needs the old values. With an `Action<T>` it loads and saves, slower but complete.\n\n`BatchDeleteAsync` on a soft-delete entity marks rows deleted, like `Remove`."
+          },
+          "3": {
+            "title": "Transactions and results",
+            "text": "Each batch is its own short transaction; pass `atomicAll: true` to make the whole job all-or-nothing when it is small.\n\nThe result is `data.deleted` or `data.batchDone` with the number of rows, or `data.notFound` when nothing matched. A batch refuses to start while the context has unsaved changes, so they are not saved by accident."
+          }
+        },
+        "sample": {
+          "soft-delete": {
+            "title": "Soft delete many rows",
+            "note": "Deleted and modified stamps are set in the same statement."
+          },
+          "setters": {
+            "title": "Update with one statement per batch",
+            "note": "Fast. Not allowed for audited entities."
+          },
+          "apply": {
+            "title": "Update by loading and saving",
+            "note": "Slower, but history, stamps and version work like a normal save."
+          },
+          "atomic": {
+            "title": "All batches or none",
+            "note": "Only for small jobs; a long transaction makes other users wait."
+          }
+        }
+      },
+      "transactions": {
+        "title": "Transactions",
+        "summary": "Put steps that must succeed together into `TranAsync`; it commits only when your work returns success.",
+        "points": {
+          "1": {
+            "title": "All or nothing",
+            "text": "`TranAsync` groups several steps; a failure rolls everything back."
+          },
+          "2": {
+            "title": "Safe retry",
+            "text": "On a temporary problem the whole function runs again."
+          },
+          "3": {
+            "title": "Nesting",
+            "text": "An inner `TranAsync` joins the outer one."
+          },
+          "4": {
+            "title": "Keep it short",
+            "text": "Send email or call services only after the commit."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "When to use it",
+            "text": "A single `SaveAsync` is already all-or-nothing. You need `TranAsync` when several steps belong together, such as checking a customer and saving an invoice.\n\nWrite the work as a function that returns an `OSResult`. A successful result commits; a failed result, an exception or a cancellation rolls everything back, and nothing half-done stays."
+          },
+          "2": {
+            "title": "Retries and errors",
+            "text": "If the database reports a temporary problem, the whole function runs again from a clean start, so load what you need inside it, not before. Database errors inside the work stop it and come back from `TranAsync` as the usual `data.*` result.\n\nA `TranAsync` inside another one joins the outer one: only the outer one commits, and if an inner step fails, the whole unit rolls back."
+          },
+          "3": {
+            "title": "TranOptions and Verify",
+            "text": "`TranOptions` sets the isolation level (Read committed by default), a timeout for this unit, a name for the logs, and `Verify`.\n\n`Verify` matters in one rare case: the commit succeeded but the connection dropped before the answer came back. EF then asks your `Verify` whether the data is there; without it, the work could run twice, which can insert rows twice when their ids come from the database."
+          },
+          "4": {
+            "title": "Good habits",
+            "text": "Keep transactions short and send email or call other services only after the commit."
+          }
+        },
+        "sample": {
+          "order": {
+            "title": "Check and save as one unit",
+            "note": "Returning a failed result rolls back; the invoice is never saved without the check."
+          },
+          "nested": {
+            "title": "A transaction inside a transaction",
+            "note": "The inner call joins the outer one. Only the outer one commits."
+          },
+          "options": {
+            "title": "Isolation, timeout, name and commit check",
+            "note": "`Verify` answers whether the commit really happened."
+          },
+          "after-commit": {
+            "title": "Send the email after the commit",
+            "note": "If the email were inside and the transaction retried, the customer would get it twice."
+          }
+        },
+        "type": {
+          "TranOptions": "How one transaction runs: isolation, timeout, name and commit check."
+        },
+        "member": {
+          "TranOptions": {
+            "Isolation": "The isolation level. Read committed by default; Snapshot and Serializable when you need them.",
+            "Timeout": "The command timeout for this unit only; restored afterwards.",
+            "Verify": "Called when the commit fails with a temporary error; return true if the data is already there.",
+            "Name": "A name for the slow-transaction log. At most 100 characters."
+          }
+        }
+      },
+      "errors": {
+        "title": "Errors and messages",
+        "summary": "A failed save returns a clear code, a status and the field that caused it, never a raw database exception.",
+        "points": {
+          "1": {
+            "title": "Stable codes",
+            "text": "A save never throws for a known database problem; the result carries a code."
+          },
+          "2": {
+            "title": "Field names",
+            "text": "`Errors` names the field for duplicate, required, too long and missing reference."
+          },
+          "3": {
+            "title": "Localized messages",
+            "text": "Messages come from your `IStringLocalizer` if you register one."
+          },
+          "4": {
+            "title": "Safe details",
+            "text": "Values, connection strings and server names never appear."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Why codes",
+            "text": "A raw database error is useless to a user and can leak table names and values. Here a save never throws for a known database problem. The database package recognizes its own error numbers and the result carries one stable code.\n\nProgramming mistakes, such as saving on a read-only context, still throw."
+          },
+          "2": {
+            "title": "Error codes",
+            "text": "`data.duplicate` when a unique value is taken (Conflict), `data.inUse` when a row is still referenced and cannot be deleted (Conflict), `data.missingRef` when a related row does not exist (Invalid), `data.required` and `data.tooLong` (Invalid), `data.changed` when someone else saved first (Conflict).\n\n`data.busy` for a deadlock, lock or timeout that did not clear after retries (Unavailable), `data.offline` when the database cannot be reached (Unavailable), and `data.error` for anything else.\n\nFor duplicate, required, too long and missing reference, `Errors` names the field. On success the codes are `data.saved`, `data.unchanged`, `data.deleted`, `data.notFound` and `data.batchDone`."
+          },
+          "3": {
+            "title": "Messages and privacy",
+            "text": "Messages come from your `IStringLocalizer` if you register one: first the key `code.Entity.Property`, then `code`; otherwise a short English sentence.\n\nEvery error has a `TraceId`; the details go to the log and to `IErrorSink`, while values, connection strings and server names never appear in a result or a log."
+          }
+        },
+        "sample": {
+          "duplicate": {
+            "title": "What a duplicate value returns",
+            "note": "Status, code, one field error for `Name`, and the default English message."
+          },
+          "unchanged": {
+            "title": "Saving with nothing to save",
+            "note": "Not an error: `data.unchanged` tells you nothing was written."
+          },
+          "handle": {
+            "title": "Turn a result into an answer for the user",
+            "note": "Decide on the code, never on the message text."
+          },
+          "codes": {
+            "title": "All error codes",
+            "note": "These are also the keys for your translations."
+          },
+          "localize": {
+            "title": "Use your own messages",
+            "note": "Any registered `IStringLocalizer` works, for example OS.Locale."
+          }
+        },
+        "type": {
+          "DataCodes": "The stable result codes, and the name of the soft delete filter."
+        },
+        "member": {
+          "DataCodes": {
+            "SoftDeleteFilter": "The name of the query filter that hides deleted rows.",
+            "Duplicate": "A unique value is already used.",
+            "InUse": "The row is still referenced by other rows.",
+            "MissingRef": "A related row does not exist.",
+            "Required": "A required value is missing.",
+            "TooLong": "A value is too long or out of range.",
+            "Changed": "Someone else saved this row first.",
+            "Busy": "Deadlock, lock or timeout; try again.",
+            "Offline": "The database cannot be reached.",
+            "Error": "Any other data error.",
+            "Saved": "The save worked; counts are in the data.",
+            "Unchanged": "There was nothing to save.",
+            "Deleted": "A batch delete worked; the count is in the data.",
+            "NotFound": "Nothing matched.",
+            "BatchDone": "A batch update worked; the count is in the data."
+          }
+        }
+      },
+      "dates": {
+        "title": "Dates and time zones",
+        "summary": "Store `DateTimeOffset` in UTC everywhere; each database package keeps it so it sorts and compares correctly.",
+        "points": {
+          "1": {
+            "title": "One rule",
+            "text": "Use `DateTimeOffset`, store UTC, show local time only at the end."
+          },
+          "2": {
+            "title": "UTC stamps",
+            "text": "Stamps and history use UTC from `TimeProvider`."
+          },
+          "3": {
+            "title": "Per database",
+            "text": "Each package stores the value the way that works best there."
+          },
+          "4": {
+            "title": "Database filtering",
+            "text": "Filtering and sorting by date run in the database."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The rule",
+            "text": "Mixing local times from different servers and users makes reports wrong. The rule is simple: use `DateTimeOffset`, store UTC, and turn it into local time only when you show it.\n\nThe stamps and the change history already use UTC from `TimeProvider`, and in tests you can register your own clock."
+          },
+          "2": {
+            "title": "Each database",
+            "text": "Each database package stores the value in the way that works best there. SQLite keeps UTC ticks, a number, because SQLite cannot compare dates. SQL Server keeps `datetimeoffset` as is.\n\nPostgreSQL turns every value to UTC before writing, because `timestamptz` accepts only offset zero. MySQL keeps UTC `datetime(6)`, so fractional seconds are not lost.\n\nIn all of them the value comes back as UTC, and filtering and sorting by date run in the database."
+          }
+        },
+        "sample": {
+          "utc": {
+            "title": "The same moment, written in UTC",
+            "note": "The offset changes, the moment does not: the two values are equal."
+          },
+          "range": {
+            "title": "Filter and sort by date",
+            "note": "Runs in SQL on every database package."
+          },
+          "clock": {
+            "title": "Use your own clock",
+            "note": "Register it before `AddOSEFCore`; a fake clock makes stamp times predictable in tests."
+          }
+        }
+      },
+      "migrations": {
+        "title": "Schema changes and naming",
+        "summary": "You run migrations with the normal EF tools; the history table and snake_case names are settings.",
+        "points": {
+          "1": {
+            "title": "Visible migrations",
+            "text": "OS.EFCore does not hide migrations from you."
+          },
+          "2": {
+            "title": "Production script",
+            "text": "Generate an idempotent script, review it, run it in deployment."
+          },
+          "3": {
+            "title": "Off by default",
+            "text": "`MigrateOnStart` is off because two instances could both change the schema."
+          },
+          "4": {
+            "title": "Snake case",
+            "text": "`ApplySnakeCaseName` renames to snake_case, for new databases only."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Development and production",
+            "text": "OS.EFCore does not hide migrations from you. Create them with `dotnet ef migrations add Name` and apply them with `dotnet ef database update` during development.\n\nFor production, generate a script with `dotnet ef migrations script --idempotent`, review it, and run it as part of your deployment."
+          },
+          "2": {
+            "title": "Migrating on start",
+            "text": "`MigrateOnStart` applies pending migrations when the app starts; it is off by default, because two app instances starting at the same time could both try to change the schema.\n\n`HistoryTable` and `HistorySchema` rename EF's migrations history table."
+          },
+          "3": {
+            "title": "Snake case names",
+            "text": "`ApplySnakeCaseName` turns table, column, key and index names into snake_case, which is common on PostgreSQL.\n\nCall it at the end of `OnModelCreating`, and only for a new database: on an existing one it would rename everything."
+          }
+        },
+        "sample": {
+          "history": {
+            "title": "History table and migrations at start-up",
+            "note": "Leave `MigrateOnStart` off unless exactly one instance runs."
+          },
+          "naming": {
+            "title": "Turn on snake_case names",
+            "note": "Names you set yourself with `ToTable` or `HasColumnName` are kept."
+          },
+          "snake": {
+            "title": "How names are converted",
+            "note": "Acronyms stay together: `OSSettingValue` becomes `os_setting_value`."
+          }
+        },
+        "type": {
+          "NamingEx": "snake_case names for the model."
+        },
+        "member": {
+          "NamingEx": {
+            "ApplySnakeCaseName": "Renames tables, columns, keys and indexes to snake_case, keeping names you set explicitly.",
+            "ToSnake": "Converts one PascalCase name to snake_case."
+          }
+        }
+      },
+      "faq": {
+        "title": "Common questions",
+        "summary": "Short answers to the problems people run into most.",
+        "points": {
+          "1": {
+            "title": "Nothing saved",
+            "text": "You probably read with `Entity<T>()`; use `ForUpdate<T>()` or `Patch`."
+          },
+          "2": {
+            "title": "Row still there",
+            "text": "Soft delete is intended; `IgnoreSoftDelete()` shows such rows."
+          },
+          "3": {
+            "title": "Result codes",
+            "text": "`data.changed`, `data.busy` and `data.error` each have a clear next step."
+          },
+          "4": {
+            "title": "Stamps and paging",
+            "text": "Register `IDataActor` as scoped and sort by something unique."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Saves that do nothing",
+            "text": "I changed an entity and saved, but nothing happened. You probably read it with `Entity<T>()`, which does not track changes; load it with `ForUpdate<T>()`, or use `Patch` for an object from a form.\n\nI deleted a row but it is still in the table. The entity has soft delete; that is intended, and `IgnoreSoftDelete()` shows such rows."
+          },
+          "2": {
+            "title": "Error codes",
+            "text": "My save returns `data.changed`. Someone else saved the same row after you loaded it; reload and let the user decide.\n\nMy save returns `data.busy`. The database was locked or slow and the retries did not help; try again later, and keep transactions short.\n\nMy save returns `data.error`. The database package did not recognize the error; the `TraceId` in the result finds the details in the log."
+          },
+          "3": {
+            "title": "Batches, stamps, paging",
+            "text": "A batch says it cannot run. Save or clear pending changes first, and use the `Action<T>` form of `BatchUpdateAsync` for audited entities.\n\nThe stamps are empty. Register your `IDataActor` as scoped; without it the user columns stay empty.\n\nPaging repeats or skips rows. Sort by something unique; `OrderBy(name, type)` and `PageAfterAsync` already do."
+          },
+          "4": {
+            "title": "Connection string",
+            "text": "Where does my connection string go? In user secrets, environment variables or a key vault, never in source or in a log."
+          }
+        },
+        "sample": {
+          "tracking": {
+            "title": "Why a change was not saved",
+            "note": "The first change was on an untracked entity, so nothing was saved; the second used `ForUpdate`."
+          },
+          "still-there": {
+            "title": "Why a deleted row is still in the table",
+            "note": "Normal queries see 0 rows; with `IgnoreSoftDelete` the deleted row is still there."
+          }
+        }
+      }
+    }
+  }
+}

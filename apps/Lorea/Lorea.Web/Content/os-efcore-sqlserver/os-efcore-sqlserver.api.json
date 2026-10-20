@@ -1,0 +1,63 @@
+{
+  "types": [
+    {
+      "namespace": "OS.EFCore.SqlServer",
+      "key": "SqlServerEx",
+      "signature": "static class SqlServerEx",
+      "members": [
+        {
+          "name": "AddOSSqlServer",
+          "signatures": [
+            "static IServiceCollection AddOSSqlServer<TContext>(this IServiceCollection services, Action<SqlServerOptions> configure, bool pooled = true) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "UseOSSqlServer",
+          "signatures": [
+            "static DbContextOptionsBuilder UseOSSqlServer(this DbContextOptionsBuilder builder, SqlServerOptions options, EFCoreOptions core)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.SqlServer",
+      "key": "SqlServerOptions",
+      "signature": "sealed class SqlServerOptions : DbServerOptions<SqlConnectionStringBuilder>",
+      "members": [
+        {
+          "name": "TrustServerCertificate",
+          "signatures": [
+            "bool TrustServerCertificate { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "secure",
+      "code": "var services = new ServiceCollection();\nservices.AddOSSqlServer<Shop>(o => o.ConnectionString = \"Server=db;Database=shop;Integrated Security=True;Encrypt=False;TrustServerCertificate=True\", pooled: false);\n\nusing var provider = services.BuildServiceProvider();\nusing var scope = provider.CreateScope();\nvar used = new SqlConnectionStringBuilder(scope.ServiceProvider.GetRequiredService<Shop>().Database.GetConnectionString());",
+      "topic": "connection",
+      "output": "Encrypt = True\nTrustServerCertificate = False"
+    },
+    {
+      "key": "retries",
+      "code": "var services = new ServiceCollection();\nservices.AddOSEFCore(o =>\n{\n    o.RetryCount = 5;\n    o.RetryDelay = TimeSpan.FromSeconds(10);\n    o.CommandTimeout = TimeSpan.FromSeconds(30);\n});\nservices.AddOSSqlServer<Shop>(o => o.ConnectionString = \"Server=db;Database=shop;Integrated Security=True\", pooled: false);\n\nusing var provider = services.BuildServiceProvider();\nusing var scope = provider.CreateScope();\nvar db = scope.ServiceProvider.GetRequiredService<Shop>();",
+      "topic": "connection",
+      "output": "True\n30"
+    },
+    {
+      "key": "save-item",
+      "code": "db.Add(item);\nvar result = await db.SaveAsync(token);",
+      "topic": "errors"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSSqlServer<Shop>(o => o.ConnectionString = connectionString);"
+    },
+    {
+      "key": "local-db",
+      "code": "services.AddOSSqlServer<Shop>(o =>\n{\n    o.ConnectionString = \"Server=(localdb)\\\\MSSQLLocalDB;Database=Shop;Integrated Security=True\";\n    o.TrustServerCertificate = true;\n});"
+    }
+  ]
+}

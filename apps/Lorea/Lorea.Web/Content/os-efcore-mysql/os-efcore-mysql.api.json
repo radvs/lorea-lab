@@ -1,0 +1,73 @@
+{
+  "types": [
+    {
+      "namespace": "OS.EFCore.MySql",
+      "key": "MySqlEx",
+      "signature": "static class MySqlEx",
+      "members": [
+        {
+          "name": "AddOSMySql",
+          "signatures": [
+            "static IServiceCollection AddOSMySql<TContext>(this IServiceCollection services, Action<MySqlOptions> configure, bool pooled = true) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "UseOSMySql",
+          "signatures": [
+            "static DbContextOptionsBuilder UseOSMySql(this DbContextOptionsBuilder builder, MySqlOptions options, EFCoreOptions core)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.MySql",
+      "key": "MySqlOptions",
+      "signature": "sealed class MySqlOptions : DbServerOptions<MySqlConnectionStringBuilder>",
+      "members": [
+        {
+          "name": "VerifyServerCertificate",
+          "signatures": [
+            "bool VerifyServerCertificate { get; set; }"
+          ]
+        },
+        {
+          "name": "CharacterSet",
+          "signatures": [
+            "string CharacterSet { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "secure",
+      "code": "var services = new ServiceCollection();\nservices.AddOSMySql<Shop>(o => o.ConnectionString = \"Server=db;Database=shop;User ID=app;SslMode=Disabled;AllowPublicKeyRetrieval=true;CharacterSet=latin1\", pooled: false);\n\nusing var provider = services.BuildServiceProvider();\nusing var scope = provider.CreateScope();\nvar used = new MySqlConnectionStringBuilder(scope.ServiceProvider.GetRequiredService<Shop>().Database.GetConnectionString());",
+      "topic": "connection",
+      "output": "SslMode = Required\nAllowPublicKeyRetrieval = False\nCharacterSet = utf8mb4"
+    },
+    {
+      "key": "collation",
+      "code": "modelBuilder.UseCollation(\"utf8mb4_0900_ai_ci\");",
+      "topic": "connection"
+    },
+    {
+      "key": "save-item",
+      "code": "db.Add(item);\nvar result = await db.SaveAsync(token);",
+      "topic": "errors"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSMySql<Shop>(o => o.ConnectionString = connectionString);"
+    },
+    {
+      "key": "verify",
+      "code": "services.AddOSMySql<Shop>(o =>\n{\n    o.ConnectionString = connectionString;\n    o.VerifyServerCertificate = true;\n});"
+    },
+    {
+      "key": "from-settings",
+      "code": "services.AddOSMySql<Shop>(o =>\n{\n    o.ConnectionString = connectionString;\n    o.CharacterSet = \"utf8mb4\";\n});",
+      "topic": "provider"
+    }
+  ]
+}

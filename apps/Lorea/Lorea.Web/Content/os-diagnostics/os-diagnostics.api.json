@@ -1,0 +1,526 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "DiagnosticsEx",
+      "signature": "static class DiagnosticsEx",
+      "members": [
+        {
+          "name": "AddOSDiagnostics",
+          "signatures": [
+            "static IServiceCollection AddOSDiagnostics(this IServiceCollection services, Action<DiagnosticsOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "DiagnosticsOptions",
+      "signature": "sealed class DiagnosticsOptions",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "QueueSize",
+          "signatures": [
+            "int QueueSize { get; set; }"
+          ]
+        },
+        {
+          "name": "BatchSize",
+          "signatures": [
+            "int BatchSize { get; set; }"
+          ]
+        },
+        {
+          "name": "FlushEvery",
+          "signatures": [
+            "TimeSpan FlushEvery { get; set; }"
+          ]
+        },
+        {
+          "name": "PerFingerprintPerMinute",
+          "signatures": [
+            "int PerFingerprintPerMinute { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxStack",
+          "signatures": [
+            "int MaxStack { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorFilter",
+      "signature": "sealed record ErrorFilter",
+      "members": [
+        {
+          "name": "Hours",
+          "signatures": [
+            "int Hours { get; init; }"
+          ]
+        },
+        {
+          "name": "ErrorType",
+          "signatures": [
+            "string? ErrorType { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorFingerprint",
+      "signature": "static class ErrorFingerprint",
+      "members": [
+        {
+          "name": "Of",
+          "signatures": [
+            "static string Of(ErrorReport report)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorFound",
+      "signature": "sealed record ErrorFound",
+      "members": [
+        {
+          "name": "Fingerprint",
+          "signatures": [
+            "required string Fingerprint { get; init; }"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "required string TraceId { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorIssue",
+      "signature": "sealed record ErrorIssue",
+      "members": [
+        {
+          "name": "Fingerprint",
+          "signatures": [
+            "required string Fingerprint { get; init; }"
+          ]
+        },
+        {
+          "name": "ErrorType",
+          "signatures": [
+            "string? ErrorType { get; init; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "string? Method { get; init; }"
+          ]
+        },
+        {
+          "name": "Route",
+          "signatures": [
+            "string? Route { get; init; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; init; }"
+          ]
+        },
+        {
+          "name": "FirstDate",
+          "signatures": [
+            "DateTimeOffset FirstDate { get; init; }"
+          ]
+        },
+        {
+          "name": "LastDate",
+          "signatures": [
+            "DateTimeOffset LastDate { get; init; }"
+          ]
+        },
+        {
+          "name": "Users",
+          "signatures": [
+            "int Users { get; init; }"
+          ]
+        },
+        {
+          "name": "IsNew",
+          "signatures": [
+            "bool IsNew { get; init; }"
+          ]
+        },
+        {
+          "name": "Bins",
+          "signatures": [
+            "IReadOnlyList<int> Bins { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorIssueDetail",
+      "signature": "sealed record ErrorIssueDetail",
+      "members": [
+        {
+          "name": "Issue",
+          "signatures": [
+            "required ErrorIssue Issue { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; init; }"
+          ]
+        },
+        {
+          "name": "StackTrace",
+          "signatures": [
+            "string? StackTrace { get; init; }"
+          ]
+        },
+        {
+          "name": "StackHidden",
+          "signatures": [
+            "bool StackHidden { get; init; }"
+          ]
+        },
+        {
+          "name": "Found",
+          "signatures": [
+            "string? Found { get; init; }"
+          ]
+        },
+        {
+          "name": "Samples",
+          "signatures": [
+            "IReadOnlyList<ErrorSample> Samples { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorLedger",
+      "signature": "sealed class ErrorLedger : IErrorSink",
+      "members": [
+        {
+          "name": "ErrorLedger",
+          "signatures": [
+            "ErrorLedger(DiagnosticsOptions options, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "Dropped",
+          "signatures": [
+            "long Dropped { get; }"
+          ]
+        },
+        {
+          "name": "TryReport",
+          "signatures": [
+            "bool TryReport(ErrorReport report)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorLimits",
+      "signature": "static class ErrorLimits",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "const int AppCode = 16"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "const int TraceId = 64"
+          ]
+        },
+        {
+          "name": "Type",
+          "signatures": [
+            "const int Type = 256"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "const int Source = 256"
+          ]
+        },
+        {
+          "name": "Fingerprint",
+          "signatures": [
+            "const int Fingerprint = 16"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "const int Message = 500"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "const int Method = 16"
+          ]
+        },
+        {
+          "name": "Route",
+          "signatures": [
+            "const int Route = 256"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorRecord",
+      "signature": "sealed record ErrorRecord",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "required string AppCode { get; init; }"
+          ]
+        },
+        {
+          "name": "Report",
+          "signatures": [
+            "required ErrorReport Report { get; init; }"
+          ]
+        },
+        {
+          "name": "Fingerprint",
+          "signatures": [
+            "required string Fingerprint { get; init; }"
+          ]
+        },
+        {
+          "name": "Suppressed",
+          "signatures": [
+            "int Suppressed { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorSample",
+      "signature": "sealed record ErrorSample",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; init; }"
+          ]
+        },
+        {
+          "name": "Date",
+          "signatures": [
+            "DateTimeOffset Date { get; init; }"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "string? TraceId { get; init; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int? UserId { get; init; }"
+          ]
+        },
+        {
+          "name": "UserName",
+          "signatures": [
+            "string? UserName { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "ErrorSummary",
+      "signature": "sealed record ErrorSummary",
+      "members": [
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; init; }"
+          ]
+        },
+        {
+          "name": "Issues",
+          "signatures": [
+            "int Issues { get; init; }"
+          ]
+        },
+        {
+          "name": "TopType",
+          "signatures": [
+            "string? TopType { get; init; }"
+          ]
+        },
+        {
+          "name": "LastDate",
+          "signatures": [
+            "DateTimeOffset? LastDate { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "IErrorReader",
+      "signature": "interface IErrorReader",
+      "members": [
+        {
+          "name": "IssuesAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<ErrorIssue>>> IssuesAsync(ErrorFilter? filter, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetIssueAsync",
+          "signatures": [
+            "Task<OSResult<ErrorIssueDetail>> GetIssueAsync(string fingerprint, ErrorFilter? filter, string? trace, bool withStack, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FindAsync",
+          "signatures": [
+            "Task<OSResult<ErrorFound>> FindAsync(string trace, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SummaryAsync",
+          "signatures": [
+            "Task<OSResult<ErrorSummary>> SummaryAsync(DateTimeOffset since, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "TypesAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<string>>> TypesAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics",
+      "key": "IErrorStore",
+      "signature": "interface IErrorStore",
+      "members": [
+        {
+          "name": "WriteAsync",
+          "signatures": [
+            "Task WriteAsync(IReadOnlyList<ErrorRecord> records, CancellationToken token = default)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "fingerprint",
+      "code": "var stack = \"   at Shop.Orders.OrderService.Save(Order order) in C:\\\\shop\\\\OrderService.cs:line \";\n\nvar monday = ErrorFingerprint.Of(Report(\"System.InvalidOperationException\", stack + \"42\"));\nvar tuesday = ErrorFingerprint.Of(Report(\"System.InvalidOperationException\", stack + \"57\"));\nvar other = ErrorFingerprint.Of(Report(\"System.ArgumentException\", stack + \"42\"));",
+      "topic": "ledger",
+      "output": "True\nFalse\n16"
+    },
+    {
+      "key": "rate-limit",
+      "code": "var clock = new FakeTimeProvider();\nvar ledger = new ErrorLedger(new DiagnosticsOptions { AppCode = \"shop\", PerFingerprintPerMinute = 2 }, clock);\nvar report = Report(\"System.TimeoutException\");\n\nvar first = ledger.TryReport(report);\nvar second = ledger.TryReport(report);\nvar third = ledger.TryReport(report);\n\nclock.Advance(TimeSpan.FromMinutes(1));\nvar nextMinute = ledger.TryReport(report);",
+      "topic": "ledger",
+      "output": "True\nTrue\nFalse\nTrue"
+    },
+    {
+      "key": "dropped",
+      "code": "var ledger = new ErrorLedger(new DiagnosticsOptions { AppCode = \"shop\", QueueSize = 1 }, TimeProvider.System);\n\nvar queued = ledger.TryReport(Report(\"System.TimeoutException\"));\nvar full = ledger.TryReport(Report(\"System.IO.IOException\"));",
+      "topic": "ledger",
+      "output": "True\nFalse\n1"
+    },
+    {
+      "key": "quick",
+      "code": "sink.TryReport(ErrorReport.From(error));"
+    },
+    {
+      "key": "from-exception",
+      "code": "var report = ErrorReport.From(Failure()) with { Method = \"POST\", Route = \"/orders\", StatusCode = 500 };",
+      "topic": "report",
+      "output": "System.InvalidOperationException\nThe stock is empty.\nPOST\n/orders"
+    },
+    {
+      "key": "send",
+      "code": "sink.TryReport(ErrorReport.From(error) with { Method = \"POST\", Route = \"/orders\", StatusCode = 500, UserId = 7 });",
+      "topic": "report"
+    },
+    {
+      "key": "hook",
+      "code": "public sealed record OrderPlaced(int Id);\n\npublic sealed class AuditHook : IHook<OrderPlaced>\n{\n    public HookFailure OnFailure => HookFailure.Log;\n\n    public ValueTask HandleAsync(OrderPlaced e, CancellationToken token = default) =>\n        throw new InvalidOperationException(\"The audit store is down.\");\n}",
+      "topic": "report"
+    },
+    {
+      "key": "register-hook",
+      "code": "services.AddSingleton<IErrorStore, StoreSamples.MemoryStore>();\nservices.AddOSDiagnostics(o => o.AppCode = \"shop\");\nservices.AddOSHook<OrderPlaced, AuditHook>();",
+      "topic": "report"
+    },
+    {
+      "key": "register",
+      "code": "services.AddSingleton<IErrorStore, StoreSamples.MemoryStore>();\nservices.AddOSDiagnostics(o => o.AppCode = \"shop\");",
+      "topic": "setup"
+    },
+    {
+      "key": "configure",
+      "code": "services.AddOSDiagnostics(o =>\n{\n    o.AppCode = \"shop\";\n    o.PerFingerprintPerMinute = 2;\n    o.FlushEvery = TimeSpan.FromSeconds(5);\n    o.MaxStack = 4 * 1024;\n});",
+      "topic": "setup"
+    },
+    {
+      "key": "defaults",
+      "code": "var options = new DiagnosticsOptions();",
+      "topic": "setup",
+      "output": "512\n50\n00:00:02\n5\n8192"
+    },
+    {
+      "key": "write-batch",
+      "code": "public sealed class MemoryStore : IErrorStore\n{\n    private readonly List<ErrorRecord> _records = [];\n\n    public Task WriteAsync(IReadOnlyList<ErrorRecord> records, CancellationToken token = default)\n    {\n        lock (_records)\n            _records.AddRange(records);\n\n        return Task.CompletedTask;\n    }\n}",
+      "topic": "store"
+    },
+    {
+      "key": "last-day",
+      "code": "var result = await reader.IssuesAsync(new ErrorFilter { Hours = 24 }, token);",
+      "topic": "store"
+    },
+    {
+      "key": "open",
+      "code": "var found = await reader.FindAsync(traceId, token);",
+      "topic": "store"
+    }
+  ]
+}

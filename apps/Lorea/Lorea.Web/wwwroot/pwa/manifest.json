@@ -1,0 +1,38 @@
+{
+  "name": "Lorea",
+  "short_name": "Lorea",
+  "description": "Documentation and live samples for the OriginStack .NET packages.",
+  "scope": "../",
+  "start_url": "../",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#F8F8F8",
+  "categories": [ "documentation", "developer tools" ],
+  "icons": [
+    {
+      "src": "../imgs/brand/lorea-favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "../imgs/brand/lorea-icon-96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "../imgs/brand/lorea-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "../imgs/brand/lorea-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

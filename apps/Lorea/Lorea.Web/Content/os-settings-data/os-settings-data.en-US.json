@@ -1,0 +1,338 @@
+{
+  "os-settings-data": {
+    "title": "Settings store",
+    "summary": "The database behind OS.Settings: saved values and the list of known keys live in their own `SettingsDb` on any OS.EFCore provider, every change is checked against a version, and secrets are stored exactly as OS.Settings sealed them.",
+    "gives": {
+      "1": "An `ISettingSource` for OS.Settings that works on SQLite, SQL Server, PostgreSQL and MySQL, with one line of registration.",
+      "2": "Safe concurrent editing: a change made with an old version is refused as a conflict, and a batch is saved all together or not at all.",
+      "3": "Secrets stay sealed: the database only ever holds the bytes OS.Settings produced, never a readable value."
+    },
+    "sample": {
+      "quick": "Settings in a SQLite file next to the app",
+      "encrypted": "An encrypted settings file with the key from a vault"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Register the store, give `SettingsDb` a provider and create its tables once.",
+        "points": {
+          "1": {
+            "title": "Database version",
+            "text": "This package implements `ISettingSource` on a database."
+          },
+          "2": {
+            "title": "One registration",
+            "text": "`AddOSSettingsData` registers the source, and the last one wins."
+          },
+          "3": {
+            "title": "Own context",
+            "text": "Rows live in `SettingsDb`, registered like your own context."
+          },
+          "4": {
+            "title": "Tables are not created",
+            "text": "The tables are not created for you."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering the source",
+            "text": "OS.Settings keeps saved values in an `ISettingSource`. This package is the database version of it.\n\n`AddOSSettingsData` registers it. It adds the OS.Settings services itself when they are not registered yet, so `AddOSSettings` is optional here, but you still need it to set the `AppCode`.\n\nIt replaces whatever source was registered before, so the last one you register wins. The JSON file source from `AddOSSettingJson` is the other choice."
+          },
+          "2": {
+            "title": "Context and tables",
+            "text": "The rows live in `SettingsDb`, a context of the package's own. You register it with any OS.EFCore provider exactly as you would your own context, for example with `AddOSSqlite<SettingsDb>(o => o.Path = \"data/settings.db\")` in your setup.\n\nIf the context is not registered, the first read or save throws an error that names `SettingsDb`."
+          },
+          "3": {
+            "title": "Creating the tables",
+            "text": "The tables are not created for you. Call `EnsureCreatedAsync` once at startup. If you use migrations, add them with the option `--context SettingsDb` in your command."
+          },
+          "4": {
+            "title": "Source behavior",
+            "text": "The source is a singleton that opens a short scope for every call, so it is safe to use from any service.\n\nEvery date is stored in UTC."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register everything",
+            "note": "`AddOSSettings` sets the app code and `AddOSSettingsData` stores the values. The provider registers OS.EFCore by itself, so there is no separate `AddOSEFCore` line."
+          },
+          "create-table": {
+            "title": "Create the tables at startup",
+            "note": "Run this once before the app starts serving; with migrations, use `MigrateAsync` instead."
+          },
+          "round-trip": {
+            "title": "Save a value and read it back",
+            "note": "The version is 32 characters of text and changes on every save; the date comes back in UTC."
+          }
+        },
+        "type": {
+          "SettingsDataEx": "Registration.",
+          "SettingsDb": "The package's own context. Register it with a provider; it holds the value table and the key table."
+        },
+        "member": {
+          "SettingsDataEx": {
+            "AddOSSettingsData": "Registers the database source and validates the options at once. It also adds the OS.Settings services if they are missing, replaces any other `ISettingSource`, and a second call replaces the first."
+          },
+          "SettingsDb": {
+            "SettingsDb": "Created by the provider registration; you do not create it yourself."
+          }
+        }
+      },
+      "storage": {
+        "title": "What is stored",
+        "summary": "One row per value and scope, one row per known key, and how a row is versioned.",
+        "points": {
+          "1": {
+            "title": "Two tables",
+            "text": "Everything lives in two tables: values and keys."
+          },
+          "2": {
+            "title": "Value kept as is",
+            "text": "A value is kept exactly as saved, with no trimming and no length limit."
+          },
+          "3": {
+            "title": "Sealed secrets",
+            "text": "Sealed bytes go in `Secret` and `Value` stays empty."
+          },
+          "4": {
+            "title": "Guid version",
+            "text": "The version is a `Guid` column renewed on every save."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The values table",
+            "text": "`SettingValueEntry` is one saved value. It belongs to an app, given by `AppCode`. It also belongs to a scope, given by `ScopeKind` and `ScopeId`, where kind 0 is the whole app. Then it has a key. The combination of those four is unique.\n\nThe value is kept exactly as saved, without trimming or normalizing. It has no length limit, because a list setting can be longer than a text setting."
+          },
+          "2": {
+            "title": "Secret settings",
+            "text": "A secret setting leaves `Value` empty and stores the sealed bytes in `Secret`.\n\nOS.Settings binds the app, scope and key into those bytes, so a row copied to another key cannot be opened."
+          },
+          "3": {
+            "title": "Stamps and version",
+            "text": "Besides its own columns, a row has four creation and change stamps from OS.EFCore: `CreateDate` for when it was created, `CreateBy` for who created it, `ModifiedDate` for when it changed and `ModifiedBy` for who changed it. So you can see who changed a setting when your app provides an `IDataActor`.\n\nThe version is a hidden `Guid` column that OS.EFCore renews on every save. It is what makes concurrent editing safe, and it is handed out as 32 characters of text. A guid works on every database, unlike a SQL Server `rowversion`."
+          },
+          "4": {
+            "title": "The keys table",
+            "text": "`SettingKeyEntry` is the list of keys the app knows, filled by the sync described in the next topics.\n\nThere is no foreign key between the two tables, so saving a value never depends on the order in which keys were synced."
+          }
+        },
+        "sample": {
+          "rows": {
+            "title": "One row per value and scope",
+            "note": "The same key can hold a different value for the whole app (scope 0) and for tenant 5 (scope 1:5)."
+          },
+          "stamps": {
+            "title": "Stamps come from the context",
+            "note": "The change time moves two hours on, the creation time stays."
+          },
+          "keys": {
+            "title": "The key list",
+            "note": "Each key records its kind and who may see it; `Secret` keys are the ones stored sealed."
+          }
+        },
+        "type": {
+          "SettingValueEntry": "One saved value of one key, for one app and scope.",
+          "SettingKeyEntry": "One key the app knows, with its kind and access."
+        },
+        "member": {
+          "SettingValueEntry": {
+            "Id": "Database key, growing with every row.",
+            "AppCode": "Which app the value belongs to, at most 24 characters.",
+            "ScopeKind": "The kind of scope, for example 1 for tenant; 0 is the whole app.",
+            "ScopeId": "Which tenant, user or other scope of that kind; 0 for the whole app.",
+            "Key": "The setting key, at most 128 characters.",
+            "Value": "The saved value as text, exactly as OS.Settings normalized it. Empty for secrets. No length limit.",
+            "Secret": "The sealed bytes of a secret setting, or empty. The database cannot read them.",
+            "SecretDate": "When the secret was last replaced, in UTC."
+          },
+          "SettingKeyEntry": {
+            "AppCode": "Which app the key belongs to.",
+            "Key": "The setting key. Together with the app code it is the table's key.",
+            "Kind": "The kind of value: text, integer, url and so on, at most 64 characters.",
+            "Access": "Who may see the key: public, internal, secret or system, as declared in the catalog.",
+            "IsActive": "False once the app stops declaring the key; the row and its saved values are kept.",
+            "FirstSeenDate": "When the key was first synced, in UTC.",
+            "SyncDate": "When the key was last synced, in UTC."
+          }
+        }
+      },
+      "saving": {
+        "title": "Saving safely",
+        "summary": "Every change carries the version it was read with; an old version is a conflict, and a batch is all or nothing.",
+        "points": {
+          "1": {
+            "title": "Database guarantees",
+            "text": "Usually `ISettingStore` calls the source; these are the database's guarantees."
+          },
+          "2": {
+            "title": "Version you read",
+            "text": "Changing an existing key needs the version you read."
+          },
+          "3": {
+            "title": "All or nothing",
+            "text": "All writes of one call are saved together in one transaction."
+          },
+          "4": {
+            "title": "No silent overwrite",
+            "text": "Nobody overwrites a change they have not seen."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Version and conflicts",
+            "text": "You rarely call the source yourself, because `ISettingStore` does it after checking permissions and values. What follows is what the database guarantees.\n\nChanging an existing key needs the version you read. With no version the answer is `Invalid`, with the error key `settings.errors.version`. With an old version it is `Conflict`, with the error key `settings.errors.conflict`. In that case nothing is changed."
+          },
+          "2": {
+            "title": "New keys and resets",
+            "text": "A new key must be saved without a version. Sending one is a conflict too, because it means the row was removed meanwhile.\n\nA reset needs the version as well. Resetting a key that has no row is quietly ignored."
+          },
+          "3": {
+            "title": "Transaction",
+            "text": "All the writes of one call are checked first and then saved together in one transaction. If one key is stale, none of them is saved.\n\nIf two people save the same key at the same instant, the database refuses the second one and the answer is again `Conflict`. So nobody overwrites a change they have not seen."
+          },
+          "4": {
+            "title": "The answer and secrets",
+            "text": "The answer lists the saved rows with their new versions. Reset keys are not in it.\n\nSecrets arrive already sealed, and the source stores them without looking inside."
+          }
+        },
+        "sample": {
+          "update": {
+            "title": "Change a value",
+            "note": "Send the version you read; the answer carries the new one."
+          },
+          "conflict": {
+            "title": "An old version is refused",
+            "note": "Someone saved USD after this caller read EUR, so GBP is refused and USD stays."
+          },
+          "missing-version": {
+            "title": "A change without a version",
+            "note": "Rejected as invalid, with the key and the error code for the form to show."
+          },
+          "reset": {
+            "title": "Go back to the default",
+            "note": "A reset removes the row, so the value comes from the default again."
+          },
+          "secret": {
+            "title": "A secret is stored as sealed bytes",
+            "note": "The value stays empty; only the bytes OS.Settings sealed are written."
+          },
+          "batch": {
+            "title": "All or nothing",
+            "note": "One stale key refuses the whole batch, so the new title is not saved either."
+          }
+        }
+      },
+      "sync": {
+        "title": "Syncing keys",
+        "summary": "The catalog's keys are copied into the key table; keys that disappear are deactivated, not deleted.",
+        "points": {
+          "1": {
+            "title": "Writing keys",
+            "text": "The catalog's keys are written into the key table."
+          },
+          "2": {
+            "title": "Retired keys",
+            "text": "A key the app stops declaring is marked inactive and keeps its value."
+          },
+          "3": {
+            "title": "Other apps",
+            "text": "Keys of other apps in the same database are never touched."
+          },
+          "4": {
+            "title": "Not needed to read",
+            "text": "Reading and saving values does not need the sync."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "How keys are written",
+            "text": "`SyncOSSettingsAsync` hands the catalog's keys to the source, and this package writes them into the key table. The store does the same before its first save.\n\nNew keys are added with the time they were first seen. Known keys get their kind and access refreshed.\n\nKeys the app no longer declares are marked inactive and keep their row and their saved values. So a key that comes back in the next release finds its value again."
+          },
+          "2": {
+            "title": "Concurrency and other apps",
+            "text": "Keys of other apps in the same database are never touched, because every call works on one `AppCode`.\n\nIf two instances start at the same moment and both try to add the same key, the second attempt is repeated once. If it still fails, the call throws an error instead of silently leaving the table half filled."
+          },
+          "3": {
+            "title": "Why the key table exists",
+            "text": "Nothing here is needed to read or save values. The key table exists so that admin tools, reports and migrations can see which settings an app has ever had."
+          }
+        },
+        "sample": {
+          "changes": {
+            "title": "What a sync does",
+            "note": "The logo is new, the page size is no longer declared, and the title stays."
+          },
+          "return": {
+            "title": "A key comes back",
+            "note": "The same row becomes active again instead of a second row being added."
+          },
+          "apps": {
+            "title": "Apps do not touch each other",
+            "note": "A sync for the blog app leaves the shop app's keys alone."
+          }
+        }
+      },
+      "options": {
+        "title": "Options",
+        "summary": "The names of the two tables and an optional schema.",
+        "points": {
+          "1": {
+            "title": "Checked at start",
+            "text": "A wrong value stops the app the moment it starts."
+          },
+          "2": {
+            "title": "Plain names",
+            "text": "Table and schema names must be plain, at most 128 characters."
+          },
+          "3": {
+            "title": "Two distinct tables",
+            "text": "The two tables must have different names."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Checking options",
+            "text": "All options are checked when you call `AddOSSettingsData`, so a wrong value stops the app at startup."
+          },
+          "2": {
+            "title": "Table and schema names",
+            "text": "Table and schema names must be plain names. Only letters, digits and the character `_` are allowed, and a name must start with a letter. The maximum is 128 characters, and the two tables must be different.\n\nThis lets the settings share a database with other tables, or live in a schema of their own."
+          },
+          "3": {
+            "title": "When names are read",
+            "text": "The names are read once, when the model of `SettingsDb` is first built. So they cannot change while the app runs."
+          }
+        },
+        "sample": {
+          "defaults": {
+            "title": "The defaults",
+            "note": "Two tables named after their rows and no schema; good for most apps."
+          },
+          "bad-table": {
+            "title": "A table name that is not a plain name",
+            "note": "Rejected at registration, before anything touches the database."
+          },
+          "same-table": {
+            "title": "Both tables with one name",
+            "note": "The two tables must be different."
+          },
+          "own-names": {
+            "title": "Your own table names and schema",
+            "note": "For a shared database where the tables must follow a naming rule."
+          }
+        },
+        "type": {
+          "SettingsDataOptions": "The table names and the schema."
+        },
+        "member": {
+          "SettingsDataOptions": {
+            "ValuesTable": "Table of saved values, `SettingValues` by default. Letters, digits and `_` only, starting with a letter.",
+            "KeysTable": "Table of known keys, `SettingKeys` by default. Same rules; it must differ from the values table.",
+            "Schema": "Schema of both tables. None by default; a plain name when set."
+          }
+        }
+      }
+    }
+  }
+}

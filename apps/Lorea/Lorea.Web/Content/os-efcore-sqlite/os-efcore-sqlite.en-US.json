@@ -1,0 +1,219 @@
+{
+  "os-efcore-sqlite": {
+    "title": "SQLite",
+    "summary": "A database in one file next to your app, with no server to install. Safe connection settings, optional encryption of the whole file, and dates that sort correctly.",
+    "gives": {
+      "1": "One line gives you a context on a SQLite file with foreign keys, WAL, a wait for busy writers and a sensible sync level already set.",
+      "2": "Encrypt the whole file with a key that lives only as long as the user's session, and manage encrypted files through a small vault.",
+      "3": "Dates you can sort and filter, and SQLite errors turned into the same `data.*` results as every other database."
+    },
+    "sample": {
+      "register": "A context on a SQLite file",
+      "encrypted": "An encrypted file with a key from the session",
+      "in-memory": "A database in memory, for tools and tests"
+    },
+    "topics": {
+      "connection": {
+        "title": "Connecting and tuning",
+        "summary": "Give a path or ask for memory; the connection settings are applied each time a connection opens.",
+        "points": {
+          "1": {
+            "title": "Settings on every open",
+            "text": "SQLite forgets most settings, so they are applied each time the file opens."
+          },
+          "2": {
+            "title": "Busy wait",
+            "text": "`BusyTimeout` is how long a writer waits before the save returns `data.busy`."
+          },
+          "3": {
+            "title": "Path or memory",
+            "text": "Set either `Path` or `InMemory`, never both."
+          },
+          "4": {
+            "title": "Fixed statements",
+            "text": "Nothing you pass is pasted into SQL."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What is applied",
+            "text": "SQLite is a file, so 'connecting' means opening the file with the right settings, and SQLite forgets most settings when a connection closes. `AddOSSqlite` registers your context through the core, so stamps, history, errors and transactions all work.\n\nOn every open it applies, in order: the encryption key (if you use one), then foreign keys on (SQLite leaves them off by default), a busy wait so a second writer waits instead of failing at once, WAL for files so readers never wait for the writer, and the sync level."
+          },
+          "2": {
+            "title": "Sync level",
+            "text": "`Normal` is the usual choice with WAL; use `Full` when every commit must survive a power cut, at some cost in speed.\n\nThe settings use fixed statements only; nothing you pass is pasted into SQL."
+          },
+          "3": {
+            "title": "Path, waiting and retry",
+            "text": "Set either `Path` or `InMemory`, never both. SQLite has no network, so there is no retry strategy.\n\n`BusyTimeout` is how long a writer waits, and the EF command timeout from `EFCoreOptions` is the outer limit. If the wait runs out, the save returns `data.busy`. `UseOSSqlite` does the same for a builder you make yourself."
+          }
+        },
+        "sample": {
+          "tune": {
+            "title": "Wait time and sync level",
+            "note": "Three seconds of waiting for another writer, and `Full` sync for data that must survive a power cut."
+          },
+          "manual": {
+            "title": "Set up a builder yourself",
+            "note": "For a tool or a test that builds its own context. Call `UseOS` after it so the save pipeline is added."
+          }
+        },
+        "type": {
+          "SqliteOptions": "Where the database is and how its connections behave.",
+          "SqliteSynchronous": "How hard SQLite works to keep a commit through a power cut.",
+          "SqliteEx": "Registration and setup."
+        },
+        "member": {
+          "SqliteOptions": {
+            "Path": "The database file, relative or absolute. Required unless `InMemory` is set. The folder must exist.",
+            "InMemory": "A database in memory that lives as long as the app. Cannot be encrypted.",
+            "Key": "A function that returns the encryption key for each new connection. Leave it null for a plain file.",
+            "BusyTimeout": "How long a writer waits for another writer. 5 seconds by default, at most 5 minutes.",
+            "WriteAheadLog": "Uses WAL for files so readers and the writer do not block each other. On by default.",
+            "Synchronous": "The sync level. `Normal` by default.",
+            "Pooling": "Keeps connections open for reuse. On by default."
+          },
+          "SqliteSynchronous": {
+            "Off": "No syncing. Fastest; a power cut can corrupt the file. Only for throwaway data.",
+            "Normal": "The usual choice with WAL: safe against crashes; a power cut can lose the last commit.",
+            "Full": "Every commit is synced. Survives a power cut; a little slower.",
+            "Extra": "Like Full with one more sync step, for the most careful setups."
+          },
+          "SqliteEx": {
+            "AddOSSqlite": "Registers a context on SQLite. Registers OS.EFCore too when it is not registered yet, so one call is enough; call `AddOSEFCore` as well, before or after, only to change its settings.",
+            "UseOSSqlite": "Applies the SQLite setup to a builder.",
+            "NowTicksSql": "SQLite's current UTC time in the same ticks format as stored dates, for a column default."
+          }
+        }
+      },
+      "encryption": {
+        "title": "Encrypting the file",
+        "summary": "Encrypt every page of the file; without the key it cannot be read, even by copying it.",
+        "points": {
+          "1": {
+            "title": "Useless copies",
+            "text": "An encrypted file is useless without the key."
+          },
+          "2": {
+            "title": "Fixed cipher",
+            "text": "ChaCha20-Poly1305 with PBKDF2 at 256,000 rounds."
+          },
+          "3": {
+            "title": "Key as function",
+            "text": "`Key` is read only when a connection opens."
+          },
+          "4": {
+            "title": "Vault",
+            "text": "`ISqliteVault` checks, encrypts and re-keys files."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Why and how",
+            "text": "A SQLite file can be copied off a laptop or a backup. With encryption, the copy is useless without the key. The package uses SQLite3 Multiple Ciphers with ChaCha20-Poly1305 and a key stretched by PBKDF2 with 256,000 rounds.\n\nThese settings are fixed, because they are part of the file format: changing them would make existing files unreadable, and files made by the older framework still open."
+          },
+          "2": {
+            "title": "The key",
+            "text": "A key needs at least 12 characters. Give the key as a function, `Key`, so it is read only when a connection opens and never sits in the connection string or in the long-lived pooled options.\n\nWhen the user signs out or the key changes, call `ISqliteVault.Close()` so no pooled connection keeps the key."
+          },
+          "3": {
+            "title": "ISqliteVault",
+            "text": "`ISqliteVault` also tells whether a file is missing, plain or encrypted by reading its header, checks a key, encrypts a plain file and changes the key; these return an `OSResult` with a code from `SqliteCodes`.\n\nA wrong key or a damaged file gives `data.offline` on save, never a crash, and neither the key nor the path appears in a result or in our logs."
+          }
+        },
+        "sample": {
+          "key-stays-out": {
+            "title": "The key never appears in the connection string",
+            "note": "The file is encrypted, and the connection string does not contain the key."
+          },
+          "encrypt": {
+            "title": "Encrypt a plain file",
+            "note": "Only a plain file can be encrypted; otherwise the result says `sqlite.notPlain`."
+          },
+          "change-key": {
+            "title": "Change the key",
+            "note": "The current key is checked first; pooled connections are closed afterwards."
+          },
+          "sign-in": {
+            "title": "Check a key at sign-in",
+            "note": "False for a wrong key, a short key or a file that is not encrypted."
+          },
+          "sign-out": {
+            "title": "Close everything at sign-out",
+            "note": "After this no pooled connection keeps the key in memory."
+          }
+        },
+        "type": {
+          "ISqliteVault": "Checks, encrypts and re-keys SQLite files.",
+          "SqliteFileState": "Whether a file is missing, plain or encrypted.",
+          "SqliteCodes": "The result codes of the vault."
+        },
+        "member": {
+          "ISqliteVault": {
+            "Probe": "Reads the first bytes of the file and tells whether it is missing, plain or encrypted. Needs no key.",
+            "CanOpenAsync": "Whether a key opens an encrypted file.",
+            "EncryptAsync": "Encrypts a plain file with a key, then turns WAL back on.",
+            "ChangeKeyAsync": "Moves an encrypted file to a new key after checking the current one.",
+            "Close": "Closes all pooled SQLite connections in the app."
+          },
+          "SqliteFileState": {
+            "Missing": "No file, or an empty one.",
+            "Plain": "A normal, readable SQLite file.",
+            "Encrypted": "No readable header, so the file is encrypted."
+          },
+          "SqliteCodes": {
+            "KeyTooShort": "The key has fewer than 12 characters.",
+            "KeyRejected": "The current key does not open the file.",
+            "NotPlain": "The file is not a plain database, so it cannot be encrypted again."
+          }
+        }
+      },
+      "notes": {
+        "title": "Dates, errors and logs",
+        "summary": "Where SQLite behaves differently, what errors come back, and one logging tip.",
+        "points": {
+          "1": {
+            "title": "Dates as ticks",
+            "text": "Dates are stored as UTC ticks and filter in SQL."
+          },
+          "2": {
+            "title": "Error mapping",
+            "text": "SQLite codes map to the usual `data.*` results."
+          },
+          "3": {
+            "title": "Debug logs",
+            "text": "EF's Debug logs can show the file path; filter that category."
+          },
+          "4": {
+            "title": "Real files",
+            "text": "Every test of this package runs on real files."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Dates",
+            "text": "SQLite cannot compare `DateTimeOffset` values, so every date is stored as UTC ticks, a number that sorts correctly. `Where` and `OrderBy` on dates run in SQL and values come back as UTC."
+          },
+          "2": {
+            "title": "Error mapping",
+            "text": "Errors are mapped from SQLite's own codes, checked on sqlite.org: a taken unique or primary key value gives `data.duplicate` with the column, a missing value `data.required`, a foreign key `data.missingRef` (or `data.inUse` when deleting), a busy or locked database `data.busy`, and a wrong key or damaged file `data.offline`."
+          },
+          "3": {
+            "title": "Logs and tests",
+            "text": "EF's own Debug-level connection logs can show the file path; if you send Debug logs anywhere, filter that category.\n\nEvery test of this package runs on real files."
+          }
+        },
+        "sample": {
+          "date-storage": {
+            "title": "How a date is stored",
+            "note": "The column holds an integer (UTC ticks), and the value comes back with offset zero."
+          },
+          "hide-debug-paths": {
+            "title": "Keep file paths out of Debug logs",
+            "note": "Raises the minimum level of EF's connection log category."
+          }
+        }
+      }
+    }
+  }
+}

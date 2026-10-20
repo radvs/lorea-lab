@@ -1,0 +1,246 @@
+{
+  "os-web-identity": {
+    "title": "هویت برای وب",
+    "summary": "هویت برای برنامه‌های وب روی OS.Web.API: یک middleware که درخواست واردشده را به principal با مجوزهای cache‌شده تبدیل می‌کند و نشست‌های باطل را رد می‌کند، attribute `[Perm]` با پاسخ‌های تمیز ۴۰۱ و ۴۰۳، دروازه‌ی مجوز برای jobهای API و یک controller ورود آماده با ورود، گام دوم، تمدید، خروج و نشست‌ها.",
+    "gives": {
+      "1": "یک خط ثبت: `AddOSIdentityWeb`. گام pipeline خودش بین احراز هویت و مجوزدهی قرار می‌گیرد.",
+      "2": "`[Perm(\"shop:orders:view\")]` روی controller، action یا endpoint؛ پاسخ‌ها بدنه‌ی `OSResult` است که کلاینت از قبل می‌فهمد.",
+      "3": "یک controller ورود که با یک کلاس خالی از آن ارث می‌برید: ۴۰۱، ۴۲۳ و ۴۲۹ را درست جواب می‌دهد، توکن‌های وابسته به نشست می‌سازد و به کاربر اجازه می‌دهد نشست‌های خودش را پایان دهد."
+    },
+    "sample": {
+      "quick": "هویت برای یک API وب با login source خودتان"
+    },
+    "topics": {
+      "start": {
+        "title": "شروع کار",
+        "summary": "یک بار ثبت کنید، و هر درخواست واردشده پیش از مجوزدهی یک principal می‌گیرد.",
+        "points": {
+          "1": {
+            "title": "یک خط ثبت",
+            "text": "`AddOSIdentityWeb` اگر سرویس‌های هویت را ثبت نکرده باشید آن‌ها را هم ثبت می‌کند."
+          },
+          "2": {
+            "title": "بدون خط اضافه در pipeline",
+            "text": "با `UseOSWebApi` میان‌افزار خودش در جای درست اضافه می‌شود."
+          },
+          "3": {
+            "title": "ترتیب مهم است",
+            "text": "principal باید پیش از مجوزدهی و بعد از احراز هویت وجود داشته باشد."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "ثبت",
+            "text": "`AddOSIdentityWeb(o => ...)` همان `IdentityOptions` را که `AddOSIdentity` می‌گیرد می‌گیرد و بخش‌های وب را اضافه می‌کند: `IHttpContextAccessor`، accessorی که principal فعلی را روی درخواست پیدا می‌کند، provider و handler و result handler مجوز، دروازه‌ی job برای `OS.Web.API` و گام pipeline.\n\nچیزهایی را که فقط برنامه‌ی شما می‌داند هم ثبت می‌کنید: `AddOSPermProvider<T>` برای درخت مجوز و `AddOSLoginSource<T>` برای جدول کاربران. با پایگاه داده `AddOSIdentityData<YourContext>()` نقش‌ها و نشست‌ها را ذخیره می‌کند؛ بدون آن نشست‌ها در حافظه می‌مانند.\n\n`AddOSCaching` را هم ثبت کنید: بدون cache مجوزهای کاربر در هر درخواست از ذخیره‌گاه خوانده می‌شود."
+          },
+          "2": {
+            "title": "pipeline",
+            "text": "`IdentityPipelineStep` رابط `IApiPipelineStep` در `OS.Web.API` را پیاده می‌کند. `UseOSWebApi` همه‌ی گام‌های ثبت‌شده را بعد از احراز هویت و پیش از مجوزدهی اجرا می‌کند، پس نوشتن `app.UseOSWebApi()` کافی است.\n\nاگر pipeline خودتان را بدون `UseOSWebApi` می‌سازید، `app.UseOSIdentity()` را خودتان بین `UseAuthentication()` و `UseAuthorization()` صدا بزنید. دوبار صدا زدن ضرری ندارد ولی کمی کار اضافه است."
+          },
+          "3": {
+            "title": "claim نشست",
+            "text": "`IdentityClaims.SessionId` همان نام claim یعنی `sid` است که شناسه‌ی نشست را داخل توکن می‌برد. middleware نوع claim بلندی را هم که بعضی handlerهای bearer به `sid` نگاشت می‌کنند می‌پذیرد. `IdentityClaims.ItemKey` کلیدی است که principal زیر آن روی درخواست نگه داشته می‌شود."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "ثبت بخش‌های وب",
+            "note": "login source و درخت مجوز مال شماست؛ بقیه یک خط است."
+          },
+          "pipeline": {
+            "title": "pipeline خودتان",
+            "note": "فقط وقتی `UseOSWebApi` را استفاده نمی‌کنید."
+          }
+        },
+        "type": {
+          "IdentityWebEx": "ثبت و صدا زدن دستی در pipeline.",
+          "IdentityPipelineStep": "گام pipeline که middleware principal را در جای درست اضافه می‌کند.",
+          "IdentityClaims": "نام claim نشست و کلید آیتم درخواست."
+        },
+        "member": {
+          "IdentityWebEx": {
+            "AddOSIdentityWeb": "اگر لازم باشد سرویس‌های هویت و به‌علاوه‌ی بخش‌های وب را ثبت می‌کند؛ accessor principal را با نمونه‌ی مخصوص درخواست جایگزین می‌کند.",
+            "UseOSIdentity": "middleware principal را اضافه می‌کند؛ فقط برای pipelineای که بدون `UseOSWebApi` ساخته شده."
+          }
+        }
+      },
+      "principal": {
+        "title": "principal یک درخواست",
+        "summary": "چه کسی صدا می‌زند، چه کارهایی مجاز است، و کی جواب فقط یک ۴۰۱ ساده است.",
+        "points": {
+          "1": {
+            "title": "یک بار برای هر درخواست",
+            "text": "شناسه‌ی کاربر از توکن می‌آید و مجوزها از cache."
+          },
+          "2": {
+            "title": "نشست باطل فوری می‌ایستد",
+            "text": "توکن معتبرِ یک نشست باطل رد می‌شود، پس logout واقعی است."
+          },
+          "3": {
+            "title": "جدول شما می‌تواند نه بگوید",
+            "text": "`IAccountGate` به جدول کاربران خودتان اجازه می‌دهد حساب غیرفعال را رد کند."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "middleware چه می‌کند",
+            "text": "برای درخواستی بدون کاربر واردشده کاری نمی‌کند و رد می‌شود. برای کاربر واردشده شناسه را از claimها می‌خواند، نشست داخل توکن را (اگر باشد) بررسی می‌کند، از account gate اختیاری می‌پرسد، مجوزها را از cache می‌خواند و یک `Principal` روی درخواست نگه می‌دارد.\n\nتوکنی که نشستش باطل، منقضی، بی‌استفاده، ناشناخته یا شناسه‌ی نامعتبر باشد با ۴۰۱ و بدنه‌ی `OSResult` با کد `identity.errors.invalid-login` رد می‌شود. وقتی account gate بگوید حساب فعال نیست هم همین است. جواب هیچ‌وقت نمی‌گوید کدام بود.\n\nمجوزها از `IPermCache` می‌آیند: یک بار محاسبه می‌شوند و ۶۰ ثانیه سرو می‌شوند. هر سرور نسخه‌ی خودش را نگه می‌دارد، پس مجوز باطل‌شده روی سرور دیگر تا یک دقیقه زنده می‌ماند."
+          },
+          "2": {
+            "title": "خواندن کاربر فعلی",
+            "text": "`HttpPrincipalAccessor` همان `IPrincipalAccessor` برای برنامه‌های وب است: principal نگه‌داشته‌شده روی درخواست فعلی را برمی‌گرداند، یا بیرون از درخواست هیچ. `IPrincipalAccessor` یا `IPermChecker` را هرجا inject کنید؛ singleton هم مشکلی ندارد، چون accessor در هر فراخوانی درخواست فعلی را می‌بیند.\n\nاین جای holderهای استاتیکی را می‌گیرد که برنامه‌های قدیمی دستی می‌نوشتند."
+          },
+          "3": {
+            "title": "account gate",
+            "text": "یک توکن امضاشده می‌تواند بیشتر از تغییر جدول کاربران شما عمر کند: کاربر ممکن است بعد از صدور توکن غیرفعال شود. `IAccountGate.IsActiveAsync(userId)` را روی جدول خودتان پیاده و ثبت کنید؛ middleware در هر درخواست از آن می‌پرسد و وقتی false بدهد با ۴۰۱ رد می‌کند. بدون gate هر توکن معتبر رد می‌شود."
+          }
+        },
+        "sample": {
+          "from-request": {
+            "title": "principal از یک درخواست",
+            "note": "شناسه و نام از توکن می‌آید، مجوز از cache؛ درخواست ناشناس هیچ‌کدام را ندارد."
+          },
+          "revoked-session": {
+            "title": "نشست باطل فوری می‌ایستد",
+            "note": "توکن هنوز معتبر است، نشست نه."
+          }
+        },
+        "type": {
+          "PrincipalMiddleware": "principal یک درخواست را می‌سازد، نشست و حساب را بررسی می‌کند و در صورت لزوم با ۴۰۱ رد می‌کند.",
+          "HttpPrincipalAccessor": "principal فعلی را روی درخواست فعلی پیدا می‌کند.",
+          "IAccountGate": "به جدول کاربران خودتان اجازه می‌دهد بگوید حساب فعال نیست."
+        }
+      },
+      "perms": {
+        "title": "محافظت با مجوز",
+        "summary": "`[Perm(\"...\")]` را هر جا که باید دسترسی محدود شود بگذارید. نبودن ورود ۴۰۱ است و نبودن مجوز ۴۰۳.",
+        "points": {
+          "1": {
+            "title": "یک policy معمولی ASP.NET",
+            "text": "`[Perm]` یک `AuthorizeAttribute` است، پس روی controller، action و endpointهای minimal API کار می‌کند."
+          },
+          "2": {
+            "title": "هر یک از چند مجوز",
+            "text": "`[Perm(\"a\", \"b\")]` وقتی کاربر a یا b را داشته باشد رد می‌شود."
+          },
+          "3": {
+            "title": "نام غلط زود خطا می‌دهد",
+            "text": "نام ناصحیح هنگام ساخت attribute خطا می‌دهد، نه در اولین درخواست."
+          },
+          "4": {
+            "title": "پاسخ‌های تمیز",
+            "text": "ردکردن‌ها بدنه‌ی `OSResult` هستند و برای ۴۰۱ هدر `WWW-Authenticate: Bearer` دارند."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "استفاده از attribute",
+            "text": "`[Perm(\"shop:orders:view\")]` را روی controller یا action بنویسید، یا `.RequirePerm(\"shop:orders:view\")` را روی endpoint در minimal API. نام‌ها به حروف کوچک تبدیل می‌شوند و همان لحظه با قانون‌های نام مجوز بررسی می‌شوند. با چند نام، کاربر به یکی از آن‌ها نیاز دارد.\n\nپشت صحنه attribute نام یک policy را می‌دهد (`perm:shop:orders:view`). `PermPolicyProvider` آن policy را در اولین استفاده می‌سازد و نگه می‌دارد؛ هر نام policy دیگری به provider پیش‌فرض می‌رود، پس policyهای خودتان کار می‌کنند. policy یک کاربر احراز‌شده و یک `PermRequirement` می‌خواهد."
+          },
+          "2": {
+            "title": "بررسی",
+            "text": "`PermHandler` برای هر نام از `IPermChecker` در طول scope chain فعلی، از نزدیک‌ترین scope تا برنامه، می‌پرسد. وقتی برنامه‌ی شما scope دارد (فروشگاه، شعبه)، مجوزی که فقط در فروشگاه ۵ داده شده فقط برای درخواست‌های داخل فروشگاه ۵ رد می‌شود و deny در یک فروشگاه بر allow در همه‌جا غلبه می‌کند. بدون منبع scope، chain فقط خود برنامه است.\n\nroot همه‌چیز را رد می‌کند. اینجا چیزی با پایگاه داده بررسی نمی‌شود: مجوزها از قبل روی principal هستند."
+          },
+          "3": {
+            "title": "پاسخ‌ها",
+            "text": "`AuthResultHandler` ردکردن‌ها را می‌نویسد: ۴۰۱ برای فراخوانی که وارد نشده (با `WWW-Authenticate: Bearer` و کد `identity.errors.invalid-login`) و ۴۰۳ برای فراخوانی واردشده که مجوز ندارد (کد `identity.errors.perm-denied`). هر دو JSON از نوع `OSResult` هستند، همان شکل هر خطای دیگر API."
+          },
+          "4": {
+            "title": "jobها",
+            "text": "`PermJobGate` رابط `IJobGate` در `OS.Web.API` را پیاده می‌کند: jobی که یک مجوز اعلام کرده فقط برای فراخوانی که آن را دارد مجاز است. برایتان ثبت می‌شود؛ بدون آن jobهایی که مجوز دارند برای همه رد می‌شوند."
+          }
+        },
+        "sample": {
+          "guards": {
+            "title": "چهار درخواست، چهار جواب",
+            "note": "مجاز، ممنوع، ناشناس و root، روی endpointهایی که با `RequirePerm` محافظت شده‌اند."
+          },
+          "on-a-controller": {
+            "title": "روی controller",
+            "note": "attribute روی کلاس و روی یک action؛ هر دو با هم یعنی هر دو باید رد شوند."
+          },
+          "bad-name": {
+            "title": "نام غلط زود می‌ایستد",
+            "note": "خطا همان جا که attribute نوشته شده پرتاب می‌شود."
+          }
+        },
+        "type": {
+          "PermAttribute": "`[Perm(\"a\", \"b\")]`: یک attribute مجوز برای controller، action یا endpoint؛ هر یک از نام‌ها کافی است.",
+          "PermRequirement": "نیازمندی پشت policy: فهرستی از نام‌ها که هر یک آن را برآورده می‌کند.",
+          "PermPolicyProvider": "policyهای `perm:` را در لحظه می‌سازد و بقیه‌ی policyها را به provider پیش‌فرض می‌سپارد.",
+          "PermHandler": "نام‌ها را در طول scope chain فعلی با permission checker بررسی می‌کند.",
+          "AuthResultHandler": "۴۰۱ و ۴۰۳ را به‌شکل JSON از نوع `OSResult` می‌نویسد.",
+          "PermEndpointEx": "`RequirePerm(...)` برای endpointهای minimal API.",
+          "PermJobGate": "یک job را فقط برای فراخوانی که مجوز آن را دارد مجاز می‌کند."
+        }
+      },
+      "login": {
+        "title": "controller ورود",
+        "summary": "با یک کلاس خالی از `ApiAuthController` ارث ببرید و ورود، گام دوم، تمدید، خروج و نشست‌ها را داشته باشید.",
+        "points": {
+          "1": {
+            "title": "یک کلاس خالی",
+            "text": "کلاس شما وابستگی‌هایش را به پایه می‌دهد و چیزی اضافه نمی‌کند؛ مسیر نام کلاس بدون `Controller` است."
+          },
+          "2": {
+            "title": "توکن وابسته به نشست",
+            "text": "توکن شناسه‌ی نشست را دارد و هیچ‌وقت بیشتر از نشست عمر نمی‌کند."
+          },
+          "3": {
+            "title": "کدهای وضعیت صادق",
+            "text": "۴۰۱ برای ورود نادرست، ۴۲۳ برای قفل، ۴۲۹ برای throttle، هر دو با `Retry-After`."
+          },
+          "4": {
+            "title": "فقط نشست‌های خودش",
+            "text": "کاربر می‌تواند نشست‌های خودش را ببیند و پایان دهد، نه نشست‌های دیگران را."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "ارث بردن",
+            "text": "کلاس را یک بار بنویسید: `public sealed class AuthController(LoginService login, ITokenService tokens, IPrincipalAccessor principals, ISessionStore sessions, JwtOptions jwt, TimeProvider time) : ApiAuthController(login, tokens, principals, sessions, jwt, time);`. پایه یک `ApiController` است، پس مسیرهای نسخه‌دار و شکل wire از نوع `OSResult` همراهش می‌آید. JWT باید در options مربوط به `OS.Web.API` روشن باشد.\n\ncontroller هیچ‌وقت جدول کاربران شما را نمی‌بیند. از `LoginService` استفاده می‌کند که از `ILoginSource`ای که ثبت کرده‌اید استفاده می‌کند."
+          },
+          "2": {
+            "title": "ورود",
+            "text": "`POST login` یک `LoginBody` می‌گیرد: یک شناسه (نام، ایمیل یا موبایل)، یک secret و یک روش اختیاری (`code`، `magic-link` و مانند آن). با ۲۰۰ و یک `LoginResponseModel` جواب می‌دهد: توکن، کاربر و شناسه‌ی نشست.\n\nوقتی روش یک گام دیگر لازم دارد، جواب ۲۰۰ با وضعیت `info` و فقط شناسه و نوع چالش است. `POST login/verify` یک `VerifyBody` با آن شناسه و پاسخ (کد، توکن لینک یا عامل دوم) می‌گیرد و ورود را با همان پاسخ تمام می‌کند.\n\nرمز غلط و نام ناموجود هر دو ۴۰۱ با `identity.errors.invalid-login` می‌دهند. حساب غیرفعال ۴۰۳ می‌دهد و رمز موقت منقضی ۴۰۱ با `identity.errors.temp-expired`."
+          },
+          "3": {
+            "title": "قفل و throttle",
+            "text": "ورود قفل‌شده ۴۲۳ با کد `identity.errors.locked` می‌دهد؛ throttle ۴۲۹ با `identity.errors.throttled`. هر دو یک `RetryModel` با `retryAfterSeconds` در بدنه و هدر `Retry-After` دارند، تا کلاینت بتواند شمارش معکوس نشان دهد. throttle نام‌های ناموجود را هم می‌شمارد، پس نام ناموجود مثل نام موجود دیده می‌شود."
+          },
+          "4": {
+            "title": "بعد از ورود",
+            "text": "`POST renew` تا وقتی نشست هنوز معتبر است یک توکن تازه برای همان نشست می‌دهد. `POST logout` نشست فعلی را پایان می‌دهد؛ همان توکن فوری از کار می‌افتد. `POST logout-all` همه‌ی نشست‌های کاربر را پایان می‌دهد و در یک `SessionCountModel` می‌گوید چند نشست را پایان داده.\n\n`GET access` مجموعه‌ی مجوز فراخوان را برای رابط کاربری برمی‌گرداند. `GET sessions` نشست‌های فعال فراخوان را فهرست می‌کند. `DELETE sessions/{id}` یکی از آن‌ها را پایان می‌دهد؛ شناسه‌ای که مال فراخوان نباشد ۴۰۴ می‌دهد، پس کسی نمی‌تواند نشست دیگری را پایان دهد."
+          }
+        },
+        "sample": {
+          "own-controller": {
+            "title": "controller برنامه‌ی شما",
+            "note": "کل کلاس: فقط سرویس‌هایش را به پایه می‌دهد."
+          },
+          "sign-in": {
+            "title": "ورود و باز کردن یک endpoint محافظت‌شده",
+            "note": "توکن ورود `access` را باز می‌کند؛ بدون آن جواب ۴۰۱ است."
+          },
+          "throttle": {
+            "title": "پنج اشتباه، بعد ۴۲۹",
+            "note": "جواب ششم می‌گوید کی دوباره امتحان کنید."
+          },
+          "logout-ends-the-token": {
+            "title": "logout واقعی است",
+            "note": "همان توکن قبل از logout کار می‌کند و بعد از آن نه."
+          }
+        },
+        "type": {
+          "ApiAuthController": "controller انتزاعی ورود: ورود، گام دوم، تمدید، خروج، خروج از همه، دسترسی، نشست‌ها.",
+          "LoginBody": "درخواست ورود: شناسه، secret و یک روش اختیاری.",
+          "VerifyBody": "گام دوم: شناسه‌ی چالش و پاسخ.",
+          "LoginResponseModel": "یک توکن با کاربر و نشست، یا فقط شناسه و نوع چالش.",
+          "LoginUserModel": "کاربر واردشده در جواب ورود: شناسه، نام کاربری، نام کامل.",
+          "RetryModel": "چند ثانیه صبر کنید؛ همراه ۴۲۳ و ۴۲۹ فرستاده می‌شود.",
+          "SessionCountModel": "یک action چند نشست را پایان داد، برای logout-all."
+        }
+      }
+    }
+  }
+}

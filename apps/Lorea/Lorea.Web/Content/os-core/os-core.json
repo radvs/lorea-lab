@@ -1,0 +1,93 @@
+{
+  "slug": "os-core",
+  "name": "OS.Core",
+  "version": "1.0.0",
+  "group": "foundation",
+  "uses": [],
+  "topics": [
+    {
+      "slug": "text",
+      "namespaces": [
+        "OS.Text"
+      ]
+    },
+    {
+      "slug": "numbers",
+      "namespaces": [
+        "OS.Numbers"
+      ]
+    },
+    {
+      "slug": "results",
+      "namespaces": [
+        "OS.Results"
+      ]
+    },
+    {
+      "slug": "errors",
+      "namespaces": [
+        "OS.Exceptions"
+      ]
+    },
+    {
+      "slug": "hooks",
+      "namespaces": [
+        "OS.Hooks"
+      ]
+    },
+    {
+      "slug": "data",
+      "namespaces": [
+        "OS.Queries",
+        "OS.Paging",
+        "OS.Collections",
+        "OS.Models"
+      ]
+    },
+    {
+      "slug": "ids",
+      "namespaces": [
+        "OS.Ids"
+      ]
+    },
+    {
+      "slug": "objects",
+      "namespaces": [
+        "OS.Objects",
+        "OS.Enums",
+        "OS.Reflection"
+      ]
+    },
+    {
+      "slug": "modules",
+      "namespaces": [
+        "OS.Modules",
+        "OS.Runtime"
+      ]
+    },
+    {
+      "slug": "config",
+      "namespaces": [
+        "OS.Config"
+      ]
+    },
+    {
+      "slug": "scopes",
+      "namespaces": [
+        "OS.Scopes"
+      ]
+    },
+    {
+      "slug": "secrets",
+      "namespaces": [
+        "OS.Secrets"
+      ]
+    },
+    {
+      "slug": "reports",
+      "namespaces": [
+        "OS.Reports"
+      ]
+    }
+  ]
+}

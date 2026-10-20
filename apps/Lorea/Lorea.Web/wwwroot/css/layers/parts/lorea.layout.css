@@ -1,0 +1,127 @@
+@layer lorea.parts {
+    .lorea-header {
+        position: sticky;
+        z-index: 10;
+        inset-block-start: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 1rem;
+        min-block-size: 3.5rem;
+        padding-inline: max(1.5rem, calc((100% - var(--lorea-page-width)) / 2));
+        border-block-end: 1px solid var(--lorea-rule);
+        background: var(--lorea-chrome);
+    }
+
+    .lorea-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--lorea-heading);
+        font-size: 1rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .lorea-brand {
+        justify-self: start;
+    }
+
+    .brand-mark {
+        display: block;
+        inline-size: 2rem;
+        block-size: 2rem;
+    }
+
+    .lorea-lang {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+    }
+
+    .header-tools {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .language-option {
+        min-block-size: 2.25rem;
+        padding: 0 0.65rem;
+        border: 0;
+        color: var(--lorea-muted);
+        background: transparent;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .language-option:hover {
+        color: var(--lorea-heading);
+        background: var(--lorea-hover);
+    }
+
+    .lorea-main {
+        inline-size: min(calc(100% - 3rem), var(--lorea-page-width));
+        margin-inline: auto;
+        padding-block: clamp(1rem, 2.5vw, 1.75rem) 0;
+    }
+
+    .return-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-block-start: 0.25rem;
+        color: var(--lorea-ink);
+        font-size: 0.82rem;
+        font-weight: 650;
+        text-decoration-color: var(--lorea-accent);
+    }
+
+    .return-link:hover {
+        color: var(--lorea-accent);
+    }
+
+    .not-found-page {
+        max-inline-size: 54rem;
+        min-block-size: min(58vh, 34rem);
+        margin-inline: auto;
+        padding-block: clamp(4rem, 12vw, 9rem);
+    }
+
+    .not-found-page h1 {
+        max-inline-size: 16ch;
+        margin: 0;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        letter-spacing: -0.06em;
+        line-height: 1.2;
+        text-wrap: balance;
+    }
+
+    .not-found-code {
+        margin: 1rem 0 0;
+        color: var(--lorea-accent);
+        font-family: var(--lorea-code-font);
+        font-size: 0.9rem;
+        letter-spacing: 0.07em;
+    }
+
+    .not-found-page > p:not(.not-found-code) {
+        max-inline-size: 45ch;
+        margin-block: 1.2rem;
+        color: var(--lorea-muted);
+        line-height: 1.8;
+    }
+
+    @media (max-width: 620px) {
+            .lorea-header {
+                padding-inline: 1rem;
+            }
+
+            .lorea-main {
+                inline-size: min(calc(100% - 2rem), var(--lorea-page-width));
+                padding-block-start: 1.25rem;
+            }
+    }
+}

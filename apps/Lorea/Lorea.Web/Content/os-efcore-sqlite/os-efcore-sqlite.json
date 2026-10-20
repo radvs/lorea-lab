@@ -1,0 +1,27 @@
+{
+  "slug": "os-efcore-sqlite",
+  "name": "OS.EFCore.Sqlite",
+  "version": "1.0.0",
+  "group": "data",
+  "family": "os-efcore",
+  "uses": [
+    "os-efcore"
+  ],
+  "topics": [
+    {
+      "slug": "connection",
+      "namespaces": [ "OS.EFCore.Sqlite" ],
+      "types": [ "SqliteOptions", "SqliteSynchronous", "SqliteEx" ]
+    },
+    {
+      "slug": "encryption",
+      "namespaces": [ "OS.EFCore.Sqlite" ],
+      "types": [ "ISqliteVault", "SqliteFileState", "SqliteCodes" ]
+    },
+    {
+      "slug": "notes",
+      "namespaces": [ "OS.EFCore.Sqlite" ],
+      "types": []
+    }
+  ]
+}

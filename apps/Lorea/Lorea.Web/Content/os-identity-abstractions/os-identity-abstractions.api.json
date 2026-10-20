@@ -1,0 +1,1988 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Identity",
+      "key": "AppIdentity",
+      "signature": "sealed class AppIdentity",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "AppKind Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "IsValid",
+          "signatures": [
+            "bool IsValid { get; }"
+          ]
+        },
+        {
+          "name": "PermName",
+          "signatures": [
+            "string PermName(params string[] segments)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "AppKind",
+      "signature": "enum AppKind",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "WebApi",
+          "signatures": [
+            "WebApi = 1"
+          ]
+        },
+        {
+          "name": "WebApp",
+          "signatures": [
+            "WebApp = 2"
+          ]
+        },
+        {
+          "name": "WinApp",
+          "signatures": [
+            "WinApp = 3"
+          ]
+        },
+        {
+          "name": "WPFApp",
+          "signatures": [
+            "WPFApp = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "AppPerm",
+      "signature": "class AppPerm",
+      "members": [
+        {
+          "name": "Granted",
+          "signatures": [
+            "HashSet<string> Granted { get; init; }"
+          ]
+        },
+        {
+          "name": "Overrides",
+          "signatures": [
+            "Dictionary<string, PermAccess> Overrides { get; init; }"
+          ]
+        },
+        {
+          "name": "Sources",
+          "signatures": [
+            "Dictionary<string, string> Sources { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "AppStatus",
+      "signature": "enum AppStatus",
+      "members": [
+        {
+          "name": "IsActive",
+          "signatures": [
+            "IsActive = 0"
+          ]
+        },
+        {
+          "name": "InActive",
+          "signatures": [
+            "InActive = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ClientKind",
+      "signature": "enum ClientKind",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "Desktop",
+          "signatures": [
+            "Desktop = 1"
+          ]
+        },
+        {
+          "name": "Web",
+          "signatures": [
+            "Web = 2"
+          ]
+        },
+        {
+          "name": "Mobile",
+          "signatures": [
+            "Mobile = 3"
+          ]
+        },
+        {
+          "name": "Api",
+          "signatures": [
+            "Api = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "Gender",
+      "signature": "enum Gender",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "Female",
+          "signatures": [
+            "Female = 1"
+          ]
+        },
+        {
+          "name": "Male",
+          "signatures": [
+            "Male = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IAccount",
+      "signature": "interface IAccount",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "UserStatus Status { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ILockable",
+      "signature": "interface ILockable",
+      "members": [
+        {
+          "name": "FailedAccessNo",
+          "signatures": [
+            "int? FailedAccessNo { get; set; }"
+          ]
+        },
+        {
+          "name": "FailedAccessDate",
+          "signatures": [
+            "DateTimeOffset? FailedAccessDate { get; set; }"
+          ]
+        },
+        {
+          "name": "LockedUntil",
+          "signatures": [
+            "DateTimeOffset? LockedUntil { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ILogin",
+      "signature": "interface ILogin : ILockable",
+      "members": [
+        {
+          "name": "Provider",
+          "signatures": [
+            "string Provider { get; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "string? Secret { get; set; }"
+          ]
+        },
+        {
+          "name": "IsTempSecret",
+          "signatures": [
+            "bool IsTempSecret { get; set; }"
+          ]
+        },
+        {
+          "name": "TempExpireDate",
+          "signatures": [
+            "DateTimeOffset? TempExpireDate { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "LoginStatus Status { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPermChecker",
+      "signature": "interface IPermChecker",
+      "members": [
+        {
+          "name": "IsRoot",
+          "signatures": [
+            "bool IsRoot { get; }"
+          ]
+        },
+        {
+          "name": "IsGranted",
+          "signatures": [
+            "bool IsGranted(string name)",
+            "bool IsGranted(string name, ScopeChain chain)",
+            "bool IsGranted(PermInfo perm)"
+          ]
+        },
+        {
+          "name": "Require",
+          "signatures": [
+            "OSResult? Require(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPermProvider",
+      "signature": "interface IPermProvider",
+      "members": [
+        {
+          "name": "GetPerms",
+          "signatures": [
+            "IReadOnlyList<PermInfo> GetPerms()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPrincipalAccessor",
+      "signature": "interface IPrincipalAccessor",
+      "members": [
+        {
+          "name": "Current",
+          "signatures": [
+            "Principal? Current { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IUser",
+      "signature": "interface IUser",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Uid",
+          "signatures": [
+            "Guid Uid { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes",
+      "signature": "static class IdentityCodes",
+      "members": [
+        {
+          "name": "ModuleCode",
+          "signatures": [
+            "const string ModuleCode = \"idn\""
+          ]
+        },
+        {
+          "name": "DefaultSchema",
+          "signatures": [
+            "const string DefaultSchema = \"sec\""
+          ]
+        },
+        {
+          "name": "PasswordProvider",
+          "signatures": [
+            "const string PasswordProvider = \"password\""
+          ]
+        },
+        {
+          "name": "RootRole",
+          "signatures": [
+            "const string RootRole = \"root\""
+          ]
+        },
+        {
+          "name": "NoAvatar",
+          "signatures": [
+            "const string NoAvatar = \"no-avatar\""
+          ]
+        },
+        {
+          "name": "PermSeparator",
+          "signatures": [
+            "const char PermSeparator = ':'"
+          ]
+        },
+        {
+          "name": "Wildcard",
+          "signatures": [
+            "const string Wildcard = \"*\""
+          ]
+        },
+        {
+          "name": "SegmentWildcard",
+          "signatures": [
+            "const string SegmentWildcard = \":*\""
+          ]
+        },
+        {
+          "name": "TextKey",
+          "signatures": [
+            "static string TextKey(string group, string member)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.Challenge",
+      "signature": "static class IdentityCodes.Challenge",
+      "members": [
+        {
+          "name": "Otp",
+          "signatures": [
+            "const string Otp = \"otp\""
+          ]
+        },
+        {
+          "name": "MagicLink",
+          "signatures": [
+            "const string MagicLink = \"magic-link\""
+          ]
+        },
+        {
+          "name": "SecondFactor",
+          "signatures": [
+            "const string SecondFactor = \"second-factor\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.Error",
+      "signature": "static class IdentityCodes.Error",
+      "members": [
+        {
+          "name": "RoleNotFound",
+          "signatures": [
+            "const string RoleNotFound = \"identity.errors.role-not-found\""
+          ]
+        },
+        {
+          "name": "RoleReadOnly",
+          "signatures": [
+            "const string RoleReadOnly = \"identity.errors.role-read-only\""
+          ]
+        },
+        {
+          "name": "RoleSystem",
+          "signatures": [
+            "const string RoleSystem = \"identity.errors.role-system\""
+          ]
+        },
+        {
+          "name": "RoleCodeTaken",
+          "signatures": [
+            "const string RoleCodeTaken = \"identity.errors.role-code-taken\""
+          ]
+        },
+        {
+          "name": "RoleCodeInvalid",
+          "signatures": [
+            "const string RoleCodeInvalid = \"identity.errors.role-code-invalid\""
+          ]
+        },
+        {
+          "name": "RolePatternInvalid",
+          "signatures": [
+            "const string RolePatternInvalid = \"identity.errors.role-pattern-invalid\""
+          ]
+        },
+        {
+          "name": "RoleInUse",
+          "signatures": [
+            "const string RoleInUse = \"identity.errors.role-in-use\""
+          ]
+        },
+        {
+          "name": "RoleChanged",
+          "signatures": [
+            "const string RoleChanged = \"identity.errors.role-changed\""
+          ]
+        },
+        {
+          "name": "PermDenied",
+          "signatures": [
+            "const string PermDenied = \"identity.errors.perm-denied\""
+          ]
+        },
+        {
+          "name": "AppUnknown",
+          "signatures": [
+            "const string AppUnknown = \"identity.errors.app-unknown\""
+          ]
+        },
+        {
+          "name": "PasswordLength",
+          "signatures": [
+            "const string PasswordLength = \"identity.errors.password-length\""
+          ]
+        },
+        {
+          "name": "RoleTitleRequired",
+          "signatures": [
+            "const string RoleTitleRequired = \"identity.errors.role-title-required\""
+          ]
+        },
+        {
+          "name": "InvalidLogin",
+          "signatures": [
+            "const string InvalidLogin = \"identity.errors.invalid-login\""
+          ]
+        },
+        {
+          "name": "Locked",
+          "signatures": [
+            "const string Locked = \"identity.errors.locked\""
+          ]
+        },
+        {
+          "name": "Throttled",
+          "signatures": [
+            "const string Throttled = \"identity.errors.throttled\""
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "const string Disabled = \"identity.errors.disabled\""
+          ]
+        },
+        {
+          "name": "TempExpired",
+          "signatures": [
+            "const string TempExpired = \"identity.errors.temp-expired\""
+          ]
+        },
+        {
+          "name": "ChallengeInvalid",
+          "signatures": [
+            "const string ChallengeInvalid = \"identity.errors.challenge-invalid\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.Limit",
+      "signature": "static class IdentityCodes.Limit",
+      "members": [
+        {
+          "name": "SessionKeyBytes",
+          "signatures": [
+            "const int SessionKeyBytes = 32"
+          ]
+        },
+        {
+          "name": "PasswordBytes",
+          "signatures": [
+            "const int PasswordBytes = 1024"
+          ]
+        },
+        {
+          "name": "PasswordMin",
+          "signatures": [
+            "const int PasswordMin = 8"
+          ]
+        },
+        {
+          "name": "PasswordMax",
+          "signatures": [
+            "const int PasswordMax = 128"
+          ]
+        },
+        {
+          "name": "TempHours",
+          "signatures": [
+            "const int TempHours = 72"
+          ]
+        },
+        {
+          "name": "TempLength",
+          "signatures": [
+            "const int TempLength = 10"
+          ]
+        },
+        {
+          "name": "TempAlphabet",
+          "signatures": [
+            "const string TempAlphabet = \"abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.SecReason",
+      "signature": "static class IdentityCodes.SecReason",
+      "members": [
+        {
+          "name": "NoUser",
+          "signatures": [
+            "const string NoUser = \"no-user\""
+          ]
+        },
+        {
+          "name": "BadSecret",
+          "signatures": [
+            "const string BadSecret = \"bad-secret\""
+          ]
+        },
+        {
+          "name": "Locked",
+          "signatures": [
+            "const string Locked = \"locked\""
+          ]
+        },
+        {
+          "name": "Throttled",
+          "signatures": [
+            "const string Throttled = \"throttled\""
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "const string Disabled = \"disabled\""
+          ]
+        },
+        {
+          "name": "Deleted",
+          "signatures": [
+            "const string Deleted = \"deleted\""
+          ]
+        },
+        {
+          "name": "TempExpired",
+          "signatures": [
+            "const string TempExpired = \"temp-expired\""
+          ]
+        },
+        {
+          "name": "TooManyTries",
+          "signatures": [
+            "const string TooManyTries = \"too-many-tries\""
+          ]
+        },
+        {
+          "name": "ByAdmin",
+          "signatures": [
+            "const string ByAdmin = \"by-admin\""
+          ]
+        },
+        {
+          "name": "ByUser",
+          "signatures": [
+            "const string ByUser = \"by-user\""
+          ]
+        },
+        {
+          "name": "ScreenUnlock",
+          "signatures": [
+            "const string ScreenUnlock = \"screen-unlock\""
+          ]
+        },
+        {
+          "name": "Expired",
+          "signatures": [
+            "const string Expired = \"expired\""
+          ]
+        },
+        {
+          "name": "Idle",
+          "signatures": [
+            "const string Idle = \"idle\""
+          ]
+        },
+        {
+          "name": "Unknown",
+          "signatures": [
+            "const string Unknown = \"unknown-session\""
+          ]
+        },
+        {
+          "name": "Challenge",
+          "signatures": [
+            "const string Challenge = \"challenge\""
+          ]
+        },
+        {
+          "name": "ChallengeWrong",
+          "signatures": [
+            "const string ChallengeWrong = \"challenge-wrong\""
+          ]
+        },
+        {
+          "name": "ChallengeExpired",
+          "signatures": [
+            "const string ChallengeExpired = \"challenge-expired\""
+          ]
+        },
+        {
+          "name": "NoMethod",
+          "signatures": [
+            "const string NoMethod = \"no-method\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.SessionReason",
+      "signature": "static class IdentityCodes.SessionReason",
+      "members": [
+        {
+          "name": "LoggedOut",
+          "signatures": [
+            "const string LoggedOut = \"logged-out\""
+          ]
+        },
+        {
+          "name": "PasswordChanged",
+          "signatures": [
+            "const string PasswordChanged = \"password-changed\""
+          ]
+        },
+        {
+          "name": "SignedOutEverywhere",
+          "signatures": [
+            "const string SignedOutEverywhere = \"signed-out-everywhere\""
+          ]
+        },
+        {
+          "name": "AccountDisabled",
+          "signatures": [
+            "const string AccountDisabled = \"account-disabled\""
+          ]
+        },
+        {
+          "name": "AdminRevoked",
+          "signatures": [
+            "const string AdminRevoked = \"admin-revoked\""
+          ]
+        },
+        {
+          "name": "IdleTimeout",
+          "signatures": [
+            "const string IdleTimeout = \"idle-timeout\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityCodes.Size",
+      "signature": "static class IdentityCodes.Size",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "const int AppCode = 24"
+          ]
+        },
+        {
+          "name": "RoleCode",
+          "signatures": [
+            "const int RoleCode = 32"
+          ]
+        },
+        {
+          "name": "PermName",
+          "signatures": [
+            "const int PermName = 128"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "const int Title = 128"
+          ]
+        },
+        {
+          "name": "PermTitle",
+          "signatures": [
+            "const int PermTitle = 256"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "const int Description = 512"
+          ]
+        },
+        {
+          "name": "EnumText",
+          "signatures": [
+            "const int EnumText = 28"
+          ]
+        },
+        {
+          "name": "Reason",
+          "signatures": [
+            "const int Reason = 64"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "const int Provider = 32"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "const int Target = 128"
+          ]
+        },
+        {
+          "name": "ClientName",
+          "signatures": [
+            "const int ClientName = 128"
+          ]
+        },
+        {
+          "name": "Ip",
+          "signatures": [
+            "const int Ip = 45"
+          ]
+        },
+        {
+          "name": "SessionKeyHash",
+          "signatures": [
+            "const int SessionKeyHash = 64"
+          ]
+        },
+        {
+          "name": "MetaText",
+          "signatures": [
+            "const int MetaText = 256"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginCheck",
+      "signature": "sealed record LoginCheck",
+      "members": [
+        {
+          "name": "LoginCheck",
+          "signatures": [
+            "LoginCheck(LoginState State, bool NeedsSave = false, TimeSpan LockRemaining = default)"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "LoginState State { get; init; }"
+          ]
+        },
+        {
+          "name": "NeedsSave",
+          "signatures": [
+            "bool NeedsSave { get; init; }"
+          ]
+        },
+        {
+          "name": "LockRemaining",
+          "signatures": [
+            "TimeSpan LockRemaining { get; init; }"
+          ]
+        },
+        {
+          "name": "IsOk",
+          "signatures": [
+            "bool IsOk { get; }"
+          ]
+        },
+        {
+          "name": "Fail",
+          "signatures": [
+            "static LoginCheck Fail(LoginState state, bool needsSave = false, TimeSpan remaining = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginState",
+      "signature": "enum LoginState",
+      "members": [
+        {
+          "name": "Ok",
+          "signatures": [
+            "Ok = 1"
+          ]
+        },
+        {
+          "name": "InvalidCred",
+          "signatures": [
+            "InvalidCred = 2"
+          ]
+        },
+        {
+          "name": "Locked",
+          "signatures": [
+            "Locked = 3"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "Disabled = 4"
+          ]
+        },
+        {
+          "name": "TempPassExpired",
+          "signatures": [
+            "TempPassExpired = 5"
+          ]
+        },
+        {
+          "name": "Throttled",
+          "signatures": [
+            "Throttled = 6"
+          ]
+        },
+        {
+          "name": "ChallengeRequired",
+          "signatures": [
+            "ChallengeRequired = 7"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginStatus",
+      "signature": "enum LoginStatus",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "Active",
+          "signatures": [
+            "Active = 1"
+          ]
+        },
+        {
+          "name": "Disabled",
+          "signatures": [
+            "Disabled = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "OpenedSession",
+      "signature": "sealed record OpenedSession",
+      "members": [
+        {
+          "name": "OpenedSession",
+          "signatures": [
+            "OpenedSession(Guid Id, string Key, DateTimeOffset ExpireDate)"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "Guid Id { get; init; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset ExpireDate { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermAccess",
+      "signature": "enum PermAccess",
+      "members": [
+        {
+          "name": "Allow",
+          "signatures": [
+            "Allow = 0"
+          ]
+        },
+        {
+          "name": "Deny",
+          "signatures": [
+            "Deny = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermChange",
+      "signature": "enum PermChange",
+      "members": [
+        {
+          "name": "Added",
+          "signatures": [
+            "Added = 0"
+          ]
+        },
+        {
+          "name": "Removed",
+          "signatures": [
+            "Removed = 1"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "Changed = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermGrant",
+      "signature": "class PermGrant",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Order",
+          "signatures": [
+            "int Order { get; set; }"
+          ]
+        },
+        {
+          "name": "HasAccess",
+          "signatures": [
+            "bool HasAccess { get; set; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "PermState State { get; set; }"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "string? Source { get; set; }"
+          ]
+        },
+        {
+          "name": "RoleAccess",
+          "signatures": [
+            "bool RoleAccess { get; set; }"
+          ]
+        },
+        {
+          "name": "Via",
+          "signatures": [
+            "string? Via { get; set; }"
+          ]
+        },
+        {
+          "name": "IsNew",
+          "signatures": [
+            "bool IsNew { get; set; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "List<PermGrant> Items { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermInfo",
+      "signature": "class PermInfo",
+      "members": [
+        {
+          "name": "PermInfo",
+          "signatures": [
+            "PermInfo(string name)"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "string? Description { get; set; }"
+          ]
+        },
+        {
+          "name": "Order",
+          "signatures": [
+            "int Order { get; set; }"
+          ]
+        },
+        {
+          "name": "ParentName",
+          "signatures": [
+            "string? ParentName { get; set; }"
+          ]
+        },
+        {
+          "name": "Children",
+          "signatures": [
+            "List<PermInfo> Children { get; set; }"
+          ]
+        },
+        {
+          "name": "IsValid",
+          "signatures": [
+            "bool IsValid { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermOverride",
+      "signature": "class PermOverride",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "PermAccess Access { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset? ExpireDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermSet",
+      "signature": "class PermSet",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "int Version { get; set; }"
+          ]
+        },
+        {
+          "name": "IsRoot",
+          "signatures": [
+            "bool IsRoot { get; set; }"
+          ]
+        },
+        {
+          "name": "Perms",
+          "signatures": [
+            "HashSet<string> Perms { get; set; }"
+          ]
+        },
+        {
+          "name": "Scoped",
+          "signatures": [
+            "List<ScopedPerms> Scoped { get; set; }"
+          ]
+        },
+        {
+          "name": "IsEmpty",
+          "signatures": [
+            "bool IsEmpty { get; }"
+          ]
+        },
+        {
+          "name": "Has",
+          "signatures": [
+            "bool Has(string? name)",
+            "bool Has(string? name, Scope scope)",
+            "bool Has(string? name, ScopeChain chain)"
+          ]
+        },
+        {
+          "name": "Add",
+          "signatures": [
+            "void Add(string? name, Scope scope)"
+          ]
+        },
+        {
+          "name": "Remove",
+          "signatures": [
+            "void Remove(string? name)",
+            "void Remove(string? name, Scope scope)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermState",
+      "signature": "enum PermState",
+      "members": [
+        {
+          "name": "Inherit",
+          "signatures": [
+            "Inherit = 0"
+          ]
+        },
+        {
+          "name": "Allow",
+          "signatures": [
+            "Allow = 1"
+          ]
+        },
+        {
+          "name": "Deny",
+          "signatures": [
+            "Deny = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermTarget",
+      "signature": "enum PermTarget",
+      "members": [
+        {
+          "name": "User",
+          "signatures": [
+            "User = 0"
+          ]
+        },
+        {
+          "name": "Role",
+          "signatures": [
+            "Role = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "Principal",
+      "signature": "class Principal",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Uid",
+          "signatures": [
+            "Guid Uid { get; set; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "Guid SessionId { get; set; }"
+          ]
+        },
+        {
+          "name": "UserName",
+          "signatures": [
+            "string UserName { get; set; }"
+          ]
+        },
+        {
+          "name": "FullName",
+          "signatures": [
+            "string FullName { get; set; }"
+          ]
+        },
+        {
+          "name": "Mobile",
+          "signatures": [
+            "string Mobile { get; set; }"
+          ]
+        },
+        {
+          "name": "BirthDate",
+          "signatures": [
+            "DateOnly? BirthDate { get; set; }"
+          ]
+        },
+        {
+          "name": "Roles",
+          "signatures": [
+            "List<string> Roles { get; set; }"
+          ]
+        },
+        {
+          "name": "Perms",
+          "signatures": [
+            "PermSet Perms { get; set; }"
+          ]
+        },
+        {
+          "name": "Avatar",
+          "signatures": [
+            "string Avatar { get; set; }"
+          ]
+        },
+        {
+          "name": "IsTempPass",
+          "signatures": [
+            "bool IsTempPass { get; set; }"
+          ]
+        },
+        {
+          "name": "IsAuthenticated",
+          "signatures": [
+            "bool IsAuthenticated { get; }"
+          ]
+        },
+        {
+          "name": "AgeOn",
+          "signatures": [
+            "int AgeOn(DateOnly today)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "RoleDetail",
+      "signature": "class RoleDetail : RoleInfo",
+      "members": [
+        {
+          "name": "Patterns",
+          "signatures": [
+            "List<string> Patterns { get; set; }"
+          ]
+        },
+        {
+          "name": "Orphans",
+          "signatures": [
+            "List<string> Orphans { get; set; }"
+          ]
+        },
+        {
+          "name": "Grants",
+          "signatures": [
+            "List<PermGrant> Grants { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "RoleInfo",
+      "signature": "class RoleInfo",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "string? Description { get; set; }"
+          ]
+        },
+        {
+          "name": "IsSystem",
+          "signatures": [
+            "bool IsSystem { get; set; }"
+          ]
+        },
+        {
+          "name": "IsAppWide",
+          "signatures": [
+            "bool IsAppWide { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "RoleStatus Status { get; set; }"
+          ]
+        },
+        {
+          "name": "UserCount",
+          "signatures": [
+            "int UserCount { get; set; }"
+          ]
+        },
+        {
+          "name": "GrantCount",
+          "signatures": [
+            "int GrantCount { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "RoleStatus",
+      "signature": "enum RoleStatus",
+      "members": [
+        {
+          "name": "IsActive",
+          "signatures": [
+            "IsActive = 0"
+          ]
+        },
+        {
+          "name": "InActive",
+          "signatures": [
+            "InActive = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "RoleUpsert",
+      "signature": "class RoleUpsert",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "string? Description { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "RoleStatus Status { get; set; }"
+          ]
+        },
+        {
+          "name": "Patterns",
+          "signatures": [
+            "List<string> Patterns { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ScopedPerms",
+      "signature": "class ScopedPerms",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "byte Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Allow",
+          "signatures": [
+            "HashSet<string> Allow { get; set; }"
+          ]
+        },
+        {
+          "name": "Deny",
+          "signatures": [
+            "HashSet<string> Deny { get; set; }"
+          ]
+        },
+        {
+          "name": "Is",
+          "signatures": [
+            "bool Is(Scope scope)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SecEvent",
+      "signature": "enum SecEvent",
+      "members": [
+        {
+          "name": "LoginTried",
+          "signatures": [
+            "LoginTried = 1"
+          ]
+        },
+        {
+          "name": "OtpTried",
+          "signatures": [
+            "OtpTried = 2"
+          ]
+        },
+        {
+          "name": "SessionOpened",
+          "signatures": [
+            "SessionOpened = 3"
+          ]
+        },
+        {
+          "name": "SessionClosed",
+          "signatures": [
+            "SessionClosed = 4"
+          ]
+        },
+        {
+          "name": "SessionRevoked",
+          "signatures": [
+            "SessionRevoked = 5"
+          ]
+        },
+        {
+          "name": "SecretChanged",
+          "signatures": [
+            "SecretChanged = 6"
+          ]
+        },
+        {
+          "name": "ContactVerified",
+          "signatures": [
+            "ContactVerified = 7"
+          ]
+        },
+        {
+          "name": "ContactTaken",
+          "signatures": [
+            "ContactTaken = 8"
+          ]
+        },
+        {
+          "name": "LoginLocked",
+          "signatures": [
+            "LoginLocked = 9"
+          ]
+        },
+        {
+          "name": "LoginUnlocked",
+          "signatures": [
+            "LoginUnlocked = 10"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SecLogEntry",
+      "signature": "sealed class SecLogEntry",
+      "members": [
+        {
+          "name": "Event",
+          "signatures": [
+            "SecEvent Event { get; set; }"
+          ]
+        },
+        {
+          "name": "Result",
+          "signatures": [
+            "SecResult Result { get; set; }"
+          ]
+        },
+        {
+          "name": "Reason",
+          "signatures": [
+            "string? Reason { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string? AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int? UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "LoginId",
+          "signatures": [
+            "int? LoginId { get; set; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "Guid? SessionId { get; set; }"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "string? Provider { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientKind",
+          "signatures": [
+            "ClientKind ClientKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientName",
+          "signatures": [
+            "string? ClientName { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "WithClient",
+          "signatures": [
+            "SecLogEntry WithClient(SessionClient? client)"
+          ]
+        },
+        {
+          "name": "Clamp",
+          "signatures": [
+            "SecLogEntry Clamp()"
+          ]
+        },
+        {
+          "name": "MaskTarget",
+          "signatures": [
+            "static string? MaskTarget(string? target)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SecResult",
+      "signature": "enum SecResult",
+      "members": [
+        {
+          "name": "Success",
+          "signatures": [
+            "Success = 1"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 2"
+          ]
+        },
+        {
+          "name": "Blocked",
+          "signatures": [
+            "Blocked = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionClient",
+      "signature": "class SessionClient",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "ClientKind Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "Meta",
+          "signatures": [
+            "SessionMeta Meta { get; set; }"
+          ]
+        },
+        {
+          "name": "SameAs",
+          "signatures": [
+            "bool SameAs(ClientKind kind, string? name, string? ip)"
+          ]
+        },
+        {
+          "name": "Clamp",
+          "signatures": [
+            "SessionClient Clamp()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionInfo",
+      "signature": "class SessionInfo",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "Guid Id { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientKind",
+          "signatures": [
+            "ClientKind ClientKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientName",
+          "signatures": [
+            "string? ClientName { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "Metadata",
+          "signatures": [
+            "SessionMeta Metadata { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "LastSeenDate",
+          "signatures": [
+            "DateTimeOffset LastSeenDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset ExpireDate { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokedDate",
+          "signatures": [
+            "DateTimeOffset? RevokedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokeReason",
+          "signatures": [
+            "string? RevokeReason { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokedBy",
+          "signatures": [
+            "int? RevokedBy { get; set; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "SessionState State { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionMeta",
+      "signature": "class SessionMeta",
+      "members": [
+        {
+          "name": "DeviceName",
+          "signatures": [
+            "string? DeviceName { get; set; }"
+          ]
+        },
+        {
+          "name": "OsName",
+          "signatures": [
+            "string? OsName { get; set; }"
+          ]
+        },
+        {
+          "name": "AppVersion",
+          "signatures": [
+            "string? AppVersion { get; set; }"
+          ]
+        },
+        {
+          "name": "UserAgent",
+          "signatures": [
+            "string? UserAgent { get; set; }"
+          ]
+        },
+        {
+          "name": "Culture",
+          "signatures": [
+            "string? Culture { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionState",
+      "signature": "enum SessionState",
+      "members": [
+        {
+          "name": "Valid",
+          "signatures": [
+            "Valid = 1"
+          ]
+        },
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 2"
+          ]
+        },
+        {
+          "name": "Expired",
+          "signatures": [
+            "Expired = 3"
+          ]
+        },
+        {
+          "name": "Idle",
+          "signatures": [
+            "Idle = 4"
+          ]
+        },
+        {
+          "name": "Revoked",
+          "signatures": [
+            "Revoked = 5"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "UserStatus",
+      "signature": "enum UserStatus",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "IsActive",
+          "signatures": [
+            "IsActive = 1"
+          ]
+        },
+        {
+          "name": "InActive",
+          "signatures": [
+            "InActive = 2"
+          ]
+        },
+        {
+          "name": "Deleted",
+          "signatures": [
+            "Deleted = 4"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": []
+}

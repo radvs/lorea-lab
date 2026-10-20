@@ -1,0 +1,72 @@
+{
+  "slug": "os-efcore",
+  "name": "OS.EFCore",
+  "version": "1.0.0",
+  "group": "data",
+  "uses": [
+    "os-core",
+    "os-io"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "EFCoreEx", "EFCoreOptions" ]
+    },
+    {
+      "slug": "context",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "OSDbContext", "IDbFactory{TContext}", "IReadOnlyContext", "SaveCounts", "DbConnectionEntry", "DbServerOptions{TBuilder}" ]
+    },
+    {
+      "slug": "entities",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "ICreateStamp", "IModifyStamp", "ISoftDelete", "IStamped", "ITracked", "StampedEntity", "TrackedEntity", "IDataActor" ]
+    },
+    {
+      "slug": "concurrency",
+      "namespaces": [ "OS.EFCore" ],
+      "types": []
+    },
+    {
+      "slug": "audit",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "AuditRecord", "AuditChange", "AuditAction", "AuditEx", "NoAuditAttribute" ]
+    },
+    {
+      "slug": "paging",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "KeysetPage{T}", "PageCursor" ]
+    },
+    {
+      "slug": "batches",
+      "namespaces": [ "OS.EFCore" ],
+      "types": []
+    },
+    {
+      "slug": "transactions",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "TranOptions" ]
+    },
+    {
+      "slug": "errors",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "DataCodes" ]
+    },
+    {
+      "slug": "dates",
+      "namespaces": [ "OS.EFCore" ],
+      "types": []
+    },
+    {
+      "slug": "migrations",
+      "namespaces": [ "OS.EFCore" ],
+      "types": [ "NamingEx" ]
+    },
+    {
+      "slug": "faq",
+      "namespaces": [ "OS.EFCore" ],
+      "types": []
+    }
+  ]
+}

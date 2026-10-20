@@ -1,0 +1,22 @@
+{
+  "slug": "os-efcore-postgres",
+  "name": "OS.EFCore.Postgres",
+  "version": "1.0.0",
+  "group": "data",
+  "family": "os-efcore",
+  "uses": [
+    "os-efcore"
+  ],
+  "topics": [
+    {
+      "slug": "connection",
+      "namespaces": [ "OS.EFCore.Postgres" ],
+      "types": [ "PostgresOptions", "PostgresEx" ]
+    },
+    {
+      "slug": "errors",
+      "namespaces": [ "OS.EFCore.Postgres" ],
+      "types": []
+    }
+  ]
+}

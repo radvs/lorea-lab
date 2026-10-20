@@ -1,0 +1,8 @@
+<Project>
+
+	<Target Name="OsShowProjectInfo" BeforeTargets="BeforeBuild">
+		<Message Importance="High" Text="[OS] $(MSBuildProjectName) | Type=$(ProjectType) | TFM=$(TargetFramework) | Asm=$(AssemblyName) | Pkg=$(PackageId)" />
+		<Message Importance="High" Text="[OS] Title=$(Title)" Condition="'$(Title)' != ''" />
+	</Target>
+
+</Project>

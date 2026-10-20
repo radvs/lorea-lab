@@ -1,0 +1,47 @@
+{
+  "slug": "os-web-api",
+  "name": "OS.Web.API",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core",
+    "os-locale"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "WebApiEx", "SecretKeysEx", "SecretKeysOptions", "DataProtectionKeyRing", "IApiPipelineStep" ]
+    },
+    {
+      "slug": "options",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "WebApiOptions", "JwtOptions", "ApiVersionOptions", "RateLimitOptions", "WebApiCodes" ]
+    },
+    {
+      "slug": "controllers",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "ApiController", "ApiAuthorizedController", "HttpEx" ]
+    },
+    {
+      "slug": "auth",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "ITokenService", "TokenService", "TokenModel" ]
+    },
+    {
+      "slug": "errors",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "ApiExceptionHandler" ]
+    },
+    {
+      "slug": "docs",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "ApiVersionText" ]
+    },
+    {
+      "slug": "jobs",
+      "namespaces": [ "OS.WebApi" ],
+      "types": [ "ApiJobController", "IApiJob", "IJobGate", "JobProgress", "JobRunner", "JobStatus", "JobState" ]
+    }
+  ]
+}

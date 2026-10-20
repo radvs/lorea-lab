@@ -1,0 +1,482 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "ApiAuthController",
+      "signature": "abstract class ApiAuthController : ApiController",
+      "members": [
+        {
+          "name": "Login",
+          "signatures": [
+            "Task<IActionResult> Login(LoginBody body, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Verify",
+          "signatures": [
+            "Task<IActionResult> Verify(VerifyBody body, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Renew",
+          "signatures": [
+            "Task<IActionResult> Renew(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Logout",
+          "signatures": [
+            "Task<IActionResult> Logout(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "LogoutAll",
+          "signatures": [
+            "Task<IActionResult> LogoutAll(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "IActionResult Access()"
+          ]
+        },
+        {
+          "name": "Sessions",
+          "signatures": [
+            "Task<IActionResult> Sessions(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "EndSession",
+          "signatures": [
+            "Task<IActionResult> EndSession(Guid id, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "AuthResultHandler",
+      "signature": "sealed class AuthResultHandler : IAuthorizationMiddlewareResultHandler",
+      "members": [
+        {
+          "name": "HandleAsync",
+          "signatures": [
+            "Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "HttpPrincipalAccessor",
+      "signature": "sealed class HttpPrincipalAccessor : IPrincipalAccessor",
+      "members": [
+        {
+          "name": "HttpPrincipalAccessor",
+          "signatures": [
+            "HttpPrincipalAccessor(IHttpContextAccessor http)"
+          ]
+        },
+        {
+          "name": "Current",
+          "signatures": [
+            "Principal? Current { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "IAccountGate",
+      "signature": "interface IAccountGate",
+      "members": [
+        {
+          "name": "IsActiveAsync",
+          "signatures": [
+            "ValueTask<bool> IsActiveAsync(int userId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "IdentityClaims",
+      "signature": "static class IdentityClaims",
+      "members": [
+        {
+          "name": "SessionId",
+          "signatures": [
+            "const string SessionId = \"sid\""
+          ]
+        },
+        {
+          "name": "ItemKey",
+          "signatures": [
+            "const string ItemKey = \"os-principal\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "IdentityPipelineStep",
+      "signature": "sealed class IdentityPipelineStep : IApiPipelineStep",
+      "members": [
+        {
+          "name": "Configure",
+          "signatures": [
+            "void Configure(IApplicationBuilder app)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "IdentityWebEx",
+      "signature": "static class IdentityWebEx",
+      "members": [
+        {
+          "name": "AddOSIdentityWeb",
+          "signatures": [
+            "static IServiceCollection AddOSIdentityWeb(this IServiceCollection services, Action<IdentityOptions>? setup = null)"
+          ]
+        },
+        {
+          "name": "UseOSIdentity",
+          "signatures": [
+            "static IApplicationBuilder UseOSIdentity(this IApplicationBuilder app)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "LoginBody",
+      "signature": "sealed class LoginBody",
+      "members": [
+        {
+          "name": "Identifier",
+          "signatures": [
+            "string Identifier { get; set; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "string? Secret { get; set; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "string? Method { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "LoginResponseModel",
+      "signature": "sealed class LoginResponseModel",
+      "members": [
+        {
+          "name": "Token",
+          "signatures": [
+            "TokenModel? Token { get; init; }"
+          ]
+        },
+        {
+          "name": "User",
+          "signatures": [
+            "LoginUserModel? User { get; init; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "Guid? SessionId { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeId",
+          "signatures": [
+            "string? ChallengeId { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeKind",
+          "signatures": [
+            "string? ChallengeKind { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "LoginUserModel",
+      "signature": "sealed class LoginUserModel",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; init; }"
+          ]
+        },
+        {
+          "name": "UserName",
+          "signatures": [
+            "string UserName { get; init; }"
+          ]
+        },
+        {
+          "name": "FullName",
+          "signatures": [
+            "string? FullName { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermAttribute",
+      "signature": "sealed class PermAttribute : AuthorizeAttribute",
+      "members": [
+        {
+          "name": "PermAttribute",
+          "signatures": [
+            "PermAttribute(params string[] names)"
+          ]
+        },
+        {
+          "name": "PolicyPrefix",
+          "signatures": [
+            "const string PolicyPrefix = \"perm:\""
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "IReadOnlyList<string> Names { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermEndpointEx",
+      "signature": "static class PermEndpointEx",
+      "members": [
+        {
+          "name": "RequirePerm",
+          "signatures": [
+            "static TBuilder RequirePerm<TBuilder>(this TBuilder builder, params string[] names) where TBuilder : class, IEndpointConventionBuilder"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermHandler",
+      "signature": "sealed class PermHandler : AuthorizationHandler<PermRequirement>",
+      "members": [
+        {
+          "name": "PermHandler",
+          "signatures": [
+            "PermHandler(IPermChecker checker, IScopeResolver? scopes = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermJobGate",
+      "signature": "sealed class PermJobGate : IJobGate",
+      "members": [
+        {
+          "name": "PermJobGate",
+          "signatures": [
+            "PermJobGate(IPermChecker checker)"
+          ]
+        },
+        {
+          "name": "CanAsync",
+          "signatures": [
+            "ValueTask<bool> CanAsync(string permission, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermPolicyProvider",
+      "signature": "sealed class PermPolicyProvider : DefaultAuthorizationPolicyProvider",
+      "members": [
+        {
+          "name": "PermPolicyProvider",
+          "signatures": [
+            "PermPolicyProvider(IOptions<AuthorizationOptions> options)"
+          ]
+        },
+        {
+          "name": "GetPolicyAsync",
+          "signatures": [
+            "Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PermRequirement",
+      "signature": "sealed record PermRequirement : IAuthorizationRequirement",
+      "members": [
+        {
+          "name": "PermRequirement",
+          "signatures": [
+            "PermRequirement(IReadOnlyList<string> Names)"
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "IReadOnlyList<string> Names { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "PrincipalMiddleware",
+      "signature": "sealed class PrincipalMiddleware",
+      "members": [
+        {
+          "name": "PrincipalMiddleware",
+          "signatures": [
+            "PrincipalMiddleware(RequestDelegate next)"
+          ]
+        },
+        {
+          "name": "InvokeAsync",
+          "signatures": [
+            "Task InvokeAsync(HttpContext context, IPermCache perms, ISessionStore sessions)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "RetryModel",
+      "signature": "sealed class RetryModel",
+      "members": [
+        {
+          "name": "RetryAfterSeconds",
+          "signatures": [
+            "int RetryAfterSeconds { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "SessionCountModel",
+      "signature": "sealed class SessionCountModel",
+      "members": [
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Web.Identity",
+      "key": "VerifyBody",
+      "signature": "sealed class VerifyBody",
+      "members": [
+        {
+          "name": "ChallengeId",
+          "signatures": [
+            "string ChallengeId { get; set; }"
+          ]
+        },
+        {
+          "name": "Answer",
+          "signatures": [
+            "string Answer { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "own-controller",
+      "code": "public sealed class ShopAuthController(LoginService login, ITokenService tokens, IPrincipalAccessor principals, ISessionStore sessions, JwtOptions jwt, TimeProvider time)\n    : ApiAuthController(login, tokens, principals, sessions, jwt, time);",
+      "topic": "login"
+    },
+    {
+      "key": "sign-in",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await AuthApp.StartAsync();\n\n    var (token, sessionId) = await app.SignInAsync();\n\n    return\n    [\n        $\"token received: {token.Length > 0}\",\n        $\"session: {sessionId != Guid.Empty}\",\n        $\"with the token: {SampleRun.Status(await app.GetAsync(\"access\", token))}\",\n        $\"without it: {SampleRun.Status(await app.GetAsync(\"access\"))}\"\n    ];\n});",
+      "topic": "login",
+      "output": "token received: True\nsession: True\nwith the token: 200\nwithout it: 401"
+    },
+    {
+      "key": "throttle",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await AuthApp.StartAsync();\n\n    for (var i = 0; i < 5; i++)\n        await app.PostAsync(\"login\", new { identifier = \"radman\", secret = \"wrong\" });\n\n    var sixth = await app.PostAsync(\"login\", new { identifier = \"radman\", secret = \"right-pass\" });\n\n    return [$\"sixth answer: {SampleRun.Status(sixth)}\", $\"Retry-After: {sixth.Headers.RetryAfter?.Delta?.TotalSeconds} seconds\"];\n});",
+      "topic": "login",
+      "output": "sixth answer: 429\nRetry-After: 30 seconds"
+    },
+    {
+      "key": "logout-ends-the-token",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await AuthApp.StartAsync();\n\n    var (token, _) = await app.SignInAsync();\n\n    var before = await app.GetAsync(\"access\", token);\n    await app.PostAsync(\"logout\", token: token);\n    var after = await app.GetAsync(\"access\", token);\n\n    return [$\"before logout: {SampleRun.Status(before)}\", $\"after logout: {SampleRun.Status(after)}\"];\n});",
+      "topic": "login",
+      "output": "before logout: 200\nafter logout: 401"
+    },
+    {
+      "key": "quick",
+      "code": "services.AddOSCaching();\nservices.AddOSIdentityWeb(o => o.App = new AppIdentity { Code = \"shop\" });\nservices.AddOSPermProvider<ShopPerms>();\nservices.AddOSLoginSource<UserSource>();"
+    },
+    {
+      "key": "on-a-controller",
+      "code": "[Perm(\"shop:orders:view\")]\npublic sealed class OrdersController : ApiAuthorizedController\n{\n    [HttpGet]\n    public IActionResult List() => ApiOk(new[] { \"order 1\", \"order 2\" });\n\n    [HttpDelete(\"{id:int}\")]\n    [Perm(\"shop:orders:delete\")]\n    public IActionResult Delete(int id) => ApiResult(OSResult.Ok());\n}",
+      "topic": "perms"
+    },
+    {
+      "key": "guards",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await TestApp.StartAsync();\n\n    return\n    [\n        $\"user 7, view orders: {SampleRun.Status(await app.GetAsync(\"/orders\", user: 7))}\",\n        $\"user 7, edit orders: {SampleRun.Status(await app.GetAsync(\"/edit\", user: 7))}\",\n        $\"nobody signed in: {SampleRun.Status(await app.GetAsync(\"/orders\"))}\",\n        $\"root, edit orders: {SampleRun.Status(await app.GetAsync(\"/edit\", user: 1))}\"\n    ];\n});",
+      "topic": "perms",
+      "output": "user 7, view orders: 200\nuser 7, edit orders: 403\nnobody signed in: 401\nroot, edit orders: 200"
+    },
+    {
+      "key": "bad-name",
+      "code": "try\n{\n    _ = new PermAttribute(\"Bad Name\");\n\n    return \"accepted\";\n}\ncatch (ArgumentException error)\n{\n    return error.Message;\n}",
+      "topic": "perms",
+      "output": "'bad name' is not a valid permission name. (Parameter 'names')"
+    },
+    {
+      "key": "from-request",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await TestApp.StartAsync();\n\n    var signedIn = await TestApp.ReadAsync(await app.GetAsync(\"/me\", user: 7));\n    var anonymous = await TestApp.ReadAsync(await app.GetAsync(\"/me\"));\n\n    return\n    [\n        $\"signed in: id {signedIn.GetProperty(\"id\")}, name {signedIn.GetProperty(\"name\")}\",\n        $\"may view orders: {signedIn.GetProperty(\"view\")}\",\n        $\"may edit orders: {signedIn.GetProperty(\"edit\")}\",\n        $\"anonymous: id {anonymous.GetProperty(\"id\")}\"\n    ];\n});",
+      "topic": "principal",
+      "output": "signed in: id 7, name radman\nmay view orders: True\nmay edit orders: False\nanonymous: id "
+    },
+    {
+      "key": "revoked-session",
+      "code": "SampleRun.Run<object[]>(async () =>\n{\n    await using var app = await TestApp.StartAsync();\n    await using var scope = app.App.Services.CreateAsyncScope();\n\n    var sessions = scope.ServiceProvider.GetRequiredService<ISessionStore>();\n    var opened = await sessions.OpenAsync(7);\n\n    var before = await app.GetAsync(\"/me\", user: 7, session: opened.Id);\n\n    await sessions.RevokeAsync(opened.Id, IdentityCodes.SessionReason.AdminRevoked);\n\n    var after = await app.GetAsync(\"/me\", user: 7, session: opened.Id);\n\n    return [$\"before the revoke: {SampleRun.Status(before)}\", $\"after the revoke: {SampleRun.Status(after)}\"];\n});",
+      "topic": "principal",
+      "output": "before the revoke: 200\nafter the revoke: 401"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSCaching();\nservices.AddOSIdentityWeb(o => o.App = new AppIdentity { Code = \"shop\" });\nservices.AddOSPermProvider<ShopPerms>();\nservices.AddOSLoginSource<UserSource>();",
+      "topic": "start"
+    },
+    {
+      "key": "pipeline",
+      "code": "app.UseAuthentication();\napp.UseOSIdentity();\napp.UseAuthorization();",
+      "topic": "start"
+    }
+  ]
+}

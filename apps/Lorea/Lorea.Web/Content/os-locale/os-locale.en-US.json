@@ -1,0 +1,354 @@
+{
+  "os-locale": {
+    "title": "Culture and region",
+    "summary": "Persian and English rules in one profile: digits, dates, numbers in words, regional checks, translated text and text templates.",
+    "gives": {
+      "1": "Write numbers and dates the way each language does, including the Persian calendar and native digits.",
+      "2": "Check and clean phone numbers, national IDs and other regional data without a separate package.",
+      "3": "Load translated text from JSON files and fill templates from your own models."
+    },
+    "sample": {
+      "words": "Write a year in Persian words",
+      "date": "Write Nowruz in the Persian calendar"
+    },
+    "topics": {
+      "setup": {
+        "title": "Setup",
+        "summary": "Register the profiles once and look them up by culture name.",
+        "points": {
+          "1": {
+            "title": "Register once",
+            "text": "`AddOSLocale` registers everything this package offers."
+          },
+          "2": {
+            "title": "Ready defaults",
+            "text": "With no profiles added you get Persian, English and Iran."
+          },
+          "3": {
+            "title": "Look up by name",
+            "text": "Find profiles in the registry by culture name."
+          },
+          "4": {
+            "title": "Early failure",
+            "text": "A wrong culture name fails at startup."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What gets registered",
+            "text": "`AddOSLocale` registers everything this package offers: the `ILocaleRegistry` with its culture and region profiles, the translated text behind `IStringLocalizer`, and the `ITemplateRenderer`.\n\nWith no profiles added you get Persian, English and Iran."
+          },
+          "2": {
+            "title": "Checking culture names",
+            "text": "Culture names are checked at startup.\n\nSo a typo such as `fe-IR` fails right away instead of quietly falling back."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register the package",
+            "note": "Text files are read in the order they are added; later sources override the same keys, so add library texts first and the app's last."
+          },
+          "lookup": {
+            "title": "Find a profile",
+            "note": "`GetCulture` falls back to the parent culture, then the default. `TryGetCulture` never falls back, which makes it the right check for user input."
+          },
+          "custom": {
+            "title": "Add a culture of your own",
+            "note": "A profile only overrides what differs. Adding any culture replaces the built-in list, so add Persian and English again if you still need them."
+          }
+        },
+        "member": {
+          "LocaleEx": {
+            "AddOSLocale": "Registers the registry, translated text and templates. Call it once per application."
+          },
+          "ILocaleRegistry": {
+            "GetCulture": "Returns the profile for a culture, its parent, a culture of the same language or the default, in that order.",
+            "TryGetCulture": "True only for a real culture name that matches a registered profile, without falling back to the default.",
+            "Get": "Returns a registered profile by its type, for example `Get<IranRegionProfile>()`."
+          }
+        }
+      },
+      "culture": {
+        "title": "Culture",
+        "summary": "Numbers, dates and words written the way each language writes them.",
+        "points": {
+          "1": {
+            "title": "Culture profile",
+            "text": "An `ICultureProfile` knows how one language writes things."
+          },
+          "2": {
+            "title": "No language checks",
+            "text": "Let the current culture's profile do the formatting."
+          },
+          "3": {
+            "title": "Persian",
+            "text": "`PersianCultureProfile` uses the Solar Hijri calendar and Persian digits."
+          },
+          "4": {
+            "title": "English",
+            "text": "`EnglishCultureProfile` uses the Gregorian calendar and Latin digits."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What a profile is",
+            "text": "An `ICultureProfile` knows how one language writes things: its calendar, its digits, how to spell a number and how to clean its letters.\n\nAsk the registry for the profile of the current culture and let it format, so your code never checks the language itself."
+          },
+          "2": {
+            "title": "Two ready profiles",
+            "text": "`PersianCultureProfile` uses the Solar Hijri calendar and Persian digits.\n\n`EnglishCultureProfile` uses the Gregorian calendar and Latin digits."
+          }
+        },
+        "sample": {
+          "numbers": {
+            "title": "Format numbers and money",
+            "note": "Separators and digits come from the culture. Money has no decimals, and the unit follows the amount."
+          },
+          "words": {
+            "title": "Write numbers in words",
+            "note": "Both profiles cover the whole `long` range, negatives included."
+          },
+          "dates": {
+            "title": "Format a date in each calendar",
+            "note": "Each `DateStyle` decides the order of parts for its language. A custom pattern uses the tokens yyyy, MMMM, MM, M, dddd, dd and d."
+          },
+          "parse": {
+            "title": "Read a date someone typed",
+            "note": "The result is a normal `DateOnly`. Strict mode accepts only yyyy/MM/dd or yyyy-MM-dd, so the same text fails there."
+          },
+          "normalize": {
+            "title": "Clean Persian text",
+            "note": "Arabic ye, kaf and teh marbuta become Persian letters and extra spaces go. ZWNJ and line breaks are kept."
+          },
+          "periods": {
+            "title": "Find the start of a month or year",
+            "note": "Months and years follow the profile's calendar, so for Persian the year starts at Nowruz."
+          }
+        },
+        "type": {
+          "DateStyle": "Preset layouts: Short, Long, Full and Compact."
+        },
+        "member": {
+          "ICultureProfile": {
+            "ToNativeDigits": "Turns every digit into the culture's own digits and leaves everything else as it is.",
+            "NormalizeText": "Trims and collapses spaces; the Persian profile also fixes Arabic letters.",
+            "Isolate": "Wraps text in a bidi isolate in the culture's direction, so it shows correctly inside text of the other direction.",
+            "TryParseDate": "Reads a date in the profile's calendar; native digits are accepted.",
+            "FormatNumber": "Group separators and native digits, with up to the given number of decimals.",
+            "FormatMoney": "Like `FormatNumber` without decimals, followed by the unit when you pass one.",
+            "ToWords": "Writes the number in words.",
+            "ToOrdinalWords": "Writes the ordinal in words, for example \"third\".",
+            "FormatDate": "Formats a date with a `DateStyle` or a custom pattern.",
+            "FormatDateTime": "The date followed by HH:mm, or a custom pattern with the time tokens HH, H, hh, h, mm, ss and tt.",
+            "GetAge": "Completed years since a birth date, counted in the profile's calendar.",
+            "StartOfWeek": "The first day of the week that holds the date; take the first day from the region profile."
+          }
+        }
+      },
+      "region": {
+        "title": "Region",
+        "summary": "Country rules: phone numbers, national IDs, the working week, currency units and divisions.",
+        "points": {
+          "1": {
+            "title": "Country rules",
+            "text": "An `IRegionProfile` holds what depends on the country, not the language."
+          },
+          "2": {
+            "title": "Iran included",
+            "text": "`IranRegionProfile` brings the Iranian rules and data."
+          },
+          "3": {
+            "title": "No exceptions",
+            "text": "`Try` methods return false instead of throwing."
+          },
+          "4": {
+            "title": "Forgiving input",
+            "text": "Persian digits and stray spaces or dashes are accepted."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Country rules",
+            "text": "An `IRegionProfile` holds what depends on the country rather than the language.\n\n`IranRegionProfile` brings the Iranian rules and data."
+          },
+          "2": {
+            "title": "What Iran includes",
+            "text": "It has mobile and landline numbers and the national ID check. The week starts on Saturday with Friday off. It has rial and toman, and the list of provinces, counties and cities.\n\nEvery `Try` method accepts Persian digits and stray spaces or dashes. They return false instead of throwing."
+          }
+        },
+        "sample": {
+          "phone": {
+            "title": "Store a mobile number in one form",
+            "note": "Any common form becomes E.164 for storage; `TryFormatNational` turns it back into the form people write."
+          },
+          "national-id": {
+            "title": "Check a national ID",
+            "note": "Leading zeros that a spreadsheet dropped are restored before the check digit is tested. IDs made of one repeated digit are rejected."
+          },
+          "week": {
+            "title": "The working week and local time",
+            "note": "Only UTC values are converted. Unspecified ones pass through unless you say how to read them."
+          },
+          "currency": {
+            "title": "Convert rials to tomans",
+            "note": "Store the code (`IRR`, `TOMAN`), not the name; `GetName` picks the name for the culture."
+          },
+          "divisions": {
+            "title": "Search provinces and cities",
+            "note": "The search ignores spaces and ZWNJ and fixes Arabic letters, so «كرمان» finds «کرمان». It also finds counties and cities with the same name; here only provinces (level 1) are kept."
+          }
+        },
+        "type": {
+          "NamedItem": "Region data with a stable code that is safe to store, and a name per culture.",
+          "Division": "One administrative division; for Iran 1 is a province, 2 a county, 3 a district and 4 a city.",
+          "CurrencyUnit": "A display unit of the currency; `Factor` is how many base units one of it is worth."
+        },
+        "member": {
+          "IRegionProfile": {
+            "TryNormalizeMobile": "Reads a mobile number in any common form and returns it in E.164, for example `+989121234567`.",
+            "TryNormalizeLandline": "The same for landlines.",
+            "TryFormatNational": "Turns an E.164 number of this region back into its national form.",
+            "TryNormalizeNationalId": "Cleans and checks a national ID and restores dropped leading zeros.",
+            "ToRegionTime": "Converts a time to the region's time zone.",
+            "GetToday": "Today's date in the region's time zone.",
+            "ConvertCurrency": "Converts an amount between two units of the region's currency.",
+            "GetDivisions": "The root divisions, or the children of the one you pass.",
+            "SearchDivisions": "Finds divisions whose name contains the text."
+          }
+        }
+      },
+      "text": {
+        "title": "Text",
+        "summary": "Digits in any script, masked numbers, bidi-safe text and translated strings.",
+        "points": {
+          "1": {
+            "title": "Digits in any script",
+            "text": "`Digits` converts between Latin, Persian and Arabic-Indic digits."
+          },
+          "2": {
+            "title": "Masked numbers",
+            "text": "`Mask` hides all but the last digits of a number."
+          },
+          "3": {
+            "title": "Bidi-safe text",
+            "text": "`Bidi` keeps left-to-right text readable inside right-to-left text."
+          },
+          "4": {
+            "title": "Translated text",
+            "text": "Each culture has a JSON file, read through `IStringLocalizer`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Digits and masking",
+            "text": "`Digits` converts between Latin, Persian and Arabic-Indic digits.\n\n`Mask` hides all but the last digits of a card or phone number."
+          },
+          "2": {
+            "title": "Bidi text",
+            "text": "`Bidi` keeps a piece of left-to-right text readable inside right-to-left text, and the other way round."
+          },
+          "3": {
+            "title": "Translated text",
+            "text": "Translated text lives in JSON files, one per culture (`fa-IR.json` and `en-US.json`).\n\nRegister them with `AddEmbedded` or `AddFolder` and read them through the standard `IStringLocalizer`. A missing key falls back to the parent culture, then to English."
+          }
+        },
+        "sample": {
+          "convert-digits": {
+            "title": "Convert digits between scripts",
+            "note": "Only digits change; letters, dashes and spaces stay as they are."
+          },
+          "mask-card": {
+            "title": "Mask a card number",
+            "note": "Separators are kept, so the masked number keeps its familiar shape."
+          },
+          "translate": {
+            "title": "Read translated text",
+            "note": "Here text is the injected `IStringLocalizer`. Keys follow the nesting of the JSON file, joined with dots."
+          }
+        },
+        "member": {
+          "TextLocaleOptions": {
+            "AddEmbedded": "Reads JSON files embedded in an assembly. Works everywhere, including Blazor WebAssembly.",
+            "AddFolder": "Reads JSON files from a folder on disk. Not available in Blazor WebAssembly.",
+            "FallbackCulture": "The culture searched last when a key is missing; English by default."
+          },
+          "Bidi": {
+            "Isolate": "Wraps text in a Unicode isolate (LRI or RLI with PDI).",
+            "Strip": "Removes every bidi control character, for example before saving pasted text."
+          }
+        }
+      },
+      "templates": {
+        "title": "Text templates",
+        "summary": "Fill text from a model, with filters and the current culture's formatting.",
+        "points": {
+          "1": {
+            "title": "Fill a template",
+            "text": "`ITemplateRenderer` fills text such as `{Customer|upper}` from a model."
+          },
+          "2": {
+            "title": "Filters",
+            "text": "Filters run left to right, and you can register your own."
+          },
+          "3": {
+            "title": "Current culture",
+            "text": "Numbers and dates use the current culture's digits and calendar."
+          },
+          "4": {
+            "title": "Compiled once",
+            "text": "Each template is compiled once and cached."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading from a model",
+            "text": "`ITemplateRenderer` fills text such as `{Customer|upper}` from a model. A path reads public properties and fields.\n\n`{@Name}` reads a global value. `{{` and `}}` write a brace."
+          },
+          "2": {
+            "title": "Filters and culture",
+            "text": "Filters run left to right: lower, upper, left, right, trim and format, plus any you register.\n\nNumbers and dates come out in the current culture's digits and calendar."
+          },
+          "3": {
+            "title": "Compiling and safety",
+            "text": "Templates are compiled once and cached.\n\nWhen users can edit templates, pass a view model rather than an entity, so nothing private can be read."
+          }
+        },
+        "sample": {
+          "model": {
+            "title": "The model used below"
+          },
+          "render": {
+            "title": "Fill a template from a model",
+            "note": "The current culture here is Persian, so the amount and the date come out in Persian digits and the Persian calendar."
+          },
+          "globals": {
+            "title": "Use a global value",
+            "note": "Globals are set once at registration and are available to every template."
+          },
+          "filter": {
+            "title": "Write a filter",
+            "note": "A filter gets the value, the texts inside its parentheses and the current culture profile."
+          },
+          "custom": {
+            "title": "Use your filter"
+          },
+          "localize": {
+            "title": "Take the template from translated text",
+            "note": "`Localize` reads the template by key from the translation files, then fills it; a missing key renders the key itself."
+          }
+        },
+        "member": {
+          "ITemplateRenderer": {
+            "Render": "Fills a template from a model, or from global values only.",
+            "Localize": "Reads the template from translated text by key, then fills it."
+          },
+          "TextTemplateOptions": {
+            "AddFilter": "Registers a filter as a singleton, so it can take constructor dependencies.",
+            "AddGlobal": "Adds a value read with `{@Name}`.",
+            "MaxCachedTemplates": "How many compiled templates are kept; beyond that, new ones are compiled on every call."
+          }
+        }
+      }
+    }
+  }
+}

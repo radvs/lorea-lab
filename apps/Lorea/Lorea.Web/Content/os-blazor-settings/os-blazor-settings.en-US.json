@@ -1,0 +1,386 @@
+{
+  "os-blazor-settings": {
+    "title": "Settings admin page",
+    "summary": "A ready-made Blazor page where an administrator reads and edits the settings of OS.Settings: sections, scopes, validation, secrets, resets and conflict handling, with no form code of your own.",
+    "gives": {
+      "1": "One component, `OSSettingBoard`, that lists every settings section and opens each one for viewing or editing.",
+      "2": "Editing that is safe: values are checked in the browser with the same rules as the server, a change made on a stale version is flagged as a conflict, and secrets are never shown back.",
+      "3": "Per-scope values (for example per shop) that follow the whole-app value until you give them their own."
+    },
+    "sample": {
+      "quick-start": "Register the library"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Register the library, point it at your settings routes and put the board on a page.",
+        "points": {
+          "1": {
+            "title": "One registration",
+            "text": "`AddOSBlazorSettings` also registers `OS.Blazor`, so you do not call both."
+          },
+          "2": {
+            "title": "Three routes",
+            "text": "The page talks to a list route, a section route and a save route under one `Root`."
+          },
+          "3": {
+            "title": "Texts order",
+            "text": "The library texts must be added before the locale is built."
+          },
+          "4": {
+            "title": "Server not included",
+            "text": "This package is only the browser side; your server serves the routes."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering",
+            "text": "`AddOSBlazorSettings` registers `SettingClient`, `SettingText` and the options. It also calls `AddOSBlazor` for you when that is not done yet, and adds the package's own English and Persian texts at the same time.\n\nCalling it a second time changes nothing, so a shared setup method may call it safely."
+          },
+          "2": {
+            "title": "The routes",
+            "text": "`SettingClient` calls three routes under `Root` (default `settings`): `GET {Root}/sections` lists the sections, `GET {Root}/sections/{code}` reads one, and `POST {Root}/sections/{code}` saves it. Scope goes in the query as `kind` and `id`.\n\nThe replies must be the standard `OSResult` shape that `ApiClient` reads. Your server side is not part of this package."
+          },
+          "3": {
+            "title": "Texts order",
+            "text": "The locale copies its text sources when `AddOSBlazor` runs. If your app calls `AddOSBlazor` first, `AddOSBlazorSettings` can no longer add its texts, and the page shows raw keys such as `settings.board.find`.\n\nIn that case add them yourself inside `AddOSBlazor`, as the last sample shows."
+          },
+          "4": {
+            "title": "Section and item texts",
+            "text": "Titles of sections and settings come from your own locale files, not from this package: `settings.sections.{code}.title` style keys of your choice (the section sends its own `TitleKey`), and `settings.items.{key}.title` for each setting. See the texts topic."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register",
+            "note": "Enough for most apps."
+          },
+          "own-route": {
+            "title": "Use another route",
+            "note": "`Root` is trimmed of slashes, and an empty value is refused."
+          },
+          "texts-after-blazor": {
+            "title": "Add the texts yourself",
+            "note": "Needed only when `AddOSBlazor` already ran with its own options."
+          },
+          "routes": {
+            "title": "The calls it makes",
+            "note": "The three routes with their scope, as the client sends them."
+          }
+        },
+        "type": {
+          "SettingsUiEx": "`AddOSBlazorSettings`: registers the client, the texts service and the options.",
+          "SettingsUiOptions": "The only option is `Root`, the route prefix of the server.",
+          "SettingClient": "Three calls over `ApiClient`: sections, one section, save."
+        },
+        "member": {
+          "SettingsUiOptions": {
+            "Root": "The route prefix, without leading or trailing slash. Default `settings`."
+          },
+          "SettingClient": {
+            "IsConflict": "True when a failed save carries the code `settings.errors.conflict`."
+          }
+        }
+      },
+      "board": {
+        "title": "The board",
+        "summary": "The admin page and its parts: section list, section sheet, scopes, search, add and reset.",
+        "points": {
+          "1": {
+            "title": "One tag",
+            "text": "`<OSSettingBoard />` is the whole page."
+          },
+          "2": {
+            "title": "Scopes",
+            "text": "Give it `Scopes` to let the administrator edit per shop, per tenant or any other scope."
+          },
+          "3": {
+            "title": "Preview",
+            "text": "A `Preview` template shows your own live preview next to the form."
+          },
+          "4": {
+            "title": "Part components",
+            "text": "The row, sheet, field, add and reset parts are public and can be reused alone."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The page",
+            "text": "The board loads the section list and then each section. A row shows the section title, how many values were changed and warnings such as an invalid stored value or a missing key. From a row you can view, edit or reset the section.\n\nA search box finds sections by title and also by the titles and keys of the settings inside them."
+          },
+          "2": {
+            "title": "Scopes",
+            "text": "Without `Scopes` the board edits the whole-app values. With `SettingScopeOption` items (a `Kind`, an `Id` and a `Name`) it shows a scope picker. A scope's value starts as the whole-app value; the administrator can give it its own value and later send it back.\n\nSome settings cannot differ per scope. They stay locked in the scope view with a note."
+          },
+          "3": {
+            "title": "The section sheet",
+            "text": "Editing happens in `OSSettingSheet`, a dialog. It has a View and an Edit mode, a counter of unsaved changes, and asks before closing with unsaved work.\n\nWhen the server answers a save with a field error, the message appears under that setting; a general error shows at the top."
+          },
+          "4": {
+            "title": "Preview and parts",
+            "text": "`Preview` is a `RenderFragment<SettingDesk>`: your markup receives the live editing state, so it can show, for example, how an e-mail would look before you save.\n\n`OSSettingRow`, `OSSettingField`, `OSSettingAdd` and `OSSettingReset` are the parts the board is built from. They need the same services as the board; use them only if you build a custom layout."
+          }
+        },
+        "sample": {
+          "page": {
+            "title": "The whole page",
+            "note": "Everything for whole-app settings."
+          },
+          "scopes": {
+            "title": "With scopes",
+            "note": "Each option has a scope kind and an id; the names are shown as given."
+          },
+          "preview": {
+            "title": "A live preview",
+            "note": "The template gets the current editing state."
+          }
+        },
+        "type": {
+          "OSSettingBoard": "The admin page. Parameters: `Scopes` and `Preview`.",
+          "OSSettingSheet": "The dialog that views or edits one section.",
+          "OSSettingRow": "One line in the list, with chips and the view, edit and reset buttons.",
+          "OSSettingField": "One setting: the right editor for its kind, its state chips and its error.",
+          "OSSettingAdd": "Asks for a scope and a section before opening the editor.",
+          "OSSettingReset": "Confirms and sends the reset of a section's own values.",
+          "SettingScopeOption": "A scope the administrator can pick: kind, id and display name."
+        },
+        "member": {
+          "SettingScopeOption": {
+            "Kind": "The scope kind; 0 is reserved for the whole app.",
+            "Id": "The scope id inside its kind.",
+            "Name": "The name shown in the picker."
+          }
+        }
+      },
+      "editing": {
+        "title": "Editing state",
+        "summary": "`SettingDesk` holds the drafts of one section: what changed, what is wrong, what was reset and what clashed with someone else.",
+        "points": {
+          "1": {
+            "title": "No Razor",
+            "text": "`SettingDesk` is plain C#, so you can test or reuse it without a browser."
+          },
+          "2": {
+            "title": "Drafts",
+            "text": "A value equal to the saved one is not a change."
+          },
+          "3": {
+            "title": "Reset",
+            "text": "Reset goes back to the default at app level and back to the app value in a scope."
+          },
+          "4": {
+            "title": "Conflicts",
+            "text": "After a refused save, `Rebase` keeps your drafts and marks what the other person changed."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Drafts and changes",
+            "text": "`Set` records what the user typed. Typing the saved value again removes the draft, so `DirtyCount` counts only real changes. `ToSave` builds the `SettingSaveModel` with only those changes, with numbers written in Latin digits.\n\n`Undo` drops one draft and `Clear` drops all."
+          },
+          "2": {
+            "title": "Checks",
+            "text": "`FaultOf` returns the error key of the first problem (see the checking topic) and `FaultCount` counts them. The page keeps the Save button off while any fault remains."
+          },
+          "3": {
+            "title": "Resets and scopes",
+            "text": "`Reset` marks a setting to go back. In the app view it shows the default; in a scope view `Value` returns `null`, meaning the scope follows the app again. `Own` gives a scope its own value, starting from the current one.\n\nA setting that can only change at app level is `IsOutOfScope` in a scope view."
+          },
+          "4": {
+            "title": "Secrets and conflicts",
+            "text": "A secret's value never reaches the browser. An empty secret draft is not a change; a filled one is. `HasSecret` on the item tells whether a value exists.\n\nWhen a save is refused as a conflict, the page loads the fresh section and calls `Rebase`. Your drafts stay, and `ConflictOf` returns what the other person saved so you can keep yours (`KeepMine`) or take theirs (`Undo`)."
+          }
+        },
+        "sample": {
+          "draft": {
+            "title": "Make a change",
+            "note": "Setting the saved value again would not count."
+          },
+          "fault": {
+            "title": "A wrong value",
+            "note": "The desk gives the error key, the field turns it into a message."
+          },
+          "reset": {
+            "title": "Reset in the app and in a scope",
+            "note": "A scope returns `null` and so follows the app."
+          },
+          "conflict": {
+            "title": "Someone saved first",
+            "note": "Your draft stays and their value is kept beside it."
+          }
+        },
+        "type": {
+          "SettingDesk": "The editing state of one section."
+        },
+        "member": {
+          "SettingDesk": {
+            "Set": "Records a typed value; a value equal to the saved one clears the draft.",
+            "ToSave": "Builds the save request with only the changed settings.",
+            "Reset": "Marks the setting to go back to its default (app) or to the app value (scope).",
+            "Own": "Gives a scope its own value, starting from the current one.",
+            "Rebase": "Takes a fresh section after a conflict and marks the settings that changed underneath you.",
+            "FaultOf": "The error key of the draft, or `null` when it is valid.",
+            "Value": "What the field shows now: the draft, the saved value, or `null` after a scope reset."
+          }
+        }
+      },
+      "checking": {
+        "title": "Checking values",
+        "summary": "The browser checks a value with the same kinds the server uses, and accepts Persian and Arabic digits for numbers.",
+        "points": {
+          "1": {
+            "title": "Same rules",
+            "text": "`SettingCheck` calls the kinds of `OS.Settings.Abstractions`, so the browser and the server cannot drift apart."
+          },
+          "2": {
+            "title": "Error keys",
+            "text": "A failure returns a key such as `settings.errors.range`, which the page turns into a message."
+          },
+          "3": {
+            "title": "Digits",
+            "text": "Numbers and durations accept Persian and Arabic digits and the Arabic decimal mark."
+          },
+          "4": {
+            "title": "Server is the gate",
+            "text": "The browser check only saves a round trip; the server checks again."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What it checks",
+            "text": "`Check` takes a setting and a typed text and returns `null` for valid or an error key. The kinds are text, integer, decimal, boolean, url, path, duration, choice and list. Their limits (range, maximum length, allowed options) come from the setting's `Rules`.\n\nA secret only has to be non-empty."
+          },
+          "2": {
+            "title": "Digits",
+            "text": "Before checking an integer, a decimal or a duration, `Latin` turns `۱۲٫۵` into `12.5`. The same step runs when the value is saved, so the server always receives Latin digits. Text, url and choice values are not changed."
+          },
+          "3": {
+            "title": "Durations and lists",
+            "text": "A duration is written as `hh:mm:ss`, with days as `d.hh:mm:ss`; a bare number is refused because it would mean days. The page shows an amount and a unit and converts them with `Duration` and `TryDuration`.\n\nLists are comma separated; `Split` and `Join` convert them."
+          }
+        },
+        "sample": {
+          "faults": {
+            "title": "Which errors come back",
+            "note": "Valid values return `null`."
+          },
+          "persian-digits": {
+            "title": "Persian digits",
+            "note": "Accepted for numbers, left alone in text."
+          },
+          "durations": {
+            "title": "Durations",
+            "note": "A bare number is not a duration."
+          }
+        },
+        "type": {
+          "SettingCheck": "Static helpers for checking, digits, durations and lists."
+        },
+        "member": {
+          "SettingCheck": {
+            "Check": "The error key for a typed value, or `null` when it is valid.",
+            "Latin": "Persian and Arabic digits and the Arabic decimal mark to Latin; trims the text.",
+            "Duration": "Seconds to the `hh:mm:ss` text the duration kind expects.",
+            "TryDuration": "Reads that text back; refuses negative values."
+          }
+        }
+      },
+      "texts": {
+        "title": "Texts and formatting",
+        "summary": "Which locale keys the page reads, how values are shown, and how to write the texts of your own settings.",
+        "points": {
+          "1": {
+            "title": "Package texts",
+            "text": "Labels of the page and the error messages ship in English and Persian."
+          },
+          "2": {
+            "title": "Your texts",
+            "text": "Titles, hints, units and option names of your settings come from your locale files."
+          },
+          "3": {
+            "title": "Fallback",
+            "text": "A setting without a title shows its key; a missing hint or unit is simply left out."
+          },
+          "4": {
+            "title": "Culture",
+            "text": "Numbers and durations are shown in the current culture, digits included."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Keys of your settings",
+            "text": "For a setting with the key `mail.port` the page looks for `settings.items.mail.port.title`, `.hint` and `.unit`. A choice or list option is read from `settings.items.mail.port.options.{option}`.\n\nSection titles and descriptions use the `TitleKey` and `DescriptionKey` your server sends. When a scope kind is listed, its name is `settings.board.scope-kinds.{kind}`."
+          },
+          "2": {
+            "title": "Package keys",
+            "text": "Everything else (`settings.board.*` for the page, `settings.errors.*` for messages) ships inside the package in `en-US` and `fa-IR`. You can override any key by adding your own text source after the package's."
+          },
+          "3": {
+            "title": "Showing values",
+            "text": "`SettingText.Format` writes a value the way the page shows it: a boolean as On or Off, a duration in its best unit, an amount with its unit, a secret as dots, a list as its option names. `Bytes` writes a size.\n\n`SettingsUiCodes` holds the key names, so you can read them in code instead of retyping them."
+          }
+        },
+        "sample": {
+          "values": {
+            "title": "How values are shown",
+            "note": "These run in English; Persian digits appear with a Persian culture."
+          },
+          "own-keys": {
+            "title": "Add your own texts",
+            "note": "Your assembly is added after the package, so its keys win."
+          }
+        },
+        "type": {
+          "SettingText": "Reads titles, hints, units and option names, and formats values for display.",
+          "SettingsUiCodes": "The locale keys, icon names and limits the page uses."
+        },
+        "member": {
+          "SettingText": {
+            "Format": "A value as the page shows it.",
+            "Title": "The setting's title, or its key when no text exists.",
+            "Bytes": "A size in KB or MB."
+          }
+        }
+      },
+      "styling": {
+        "title": "Styling",
+        "summary": "One CSS file, built on the OS.Blazor tokens, that follows light and dark themes and right-to-left layout.",
+        "points": {
+          "1": {
+            "title": "One file",
+            "text": "Link `os-settings.css` once."
+          },
+          "2": {
+            "title": "Tokens",
+            "text": "It reads the `OS.Blazor` color and size tokens, with its own `--os-set-*` names on top."
+          },
+          "3": {
+            "title": "RTL",
+            "text": "It uses logical properties, so Persian pages mirror by themselves."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Adding the file",
+            "text": "Add `<link rel=\"stylesheet\" href=\"_content/OS.Blazor.Settings/os-settings.css\" />` next to the OS.Blazor styles, in `index.html` or `App.razor`."
+          },
+          "2": {
+            "title": "Changing the look",
+            "text": "The board reads `--os-set-accent`, `--os-set-gap`, `--os-set-bg` and a few more, each falling back to an OS.Blazor token. Set them on `.os-set-board` or any parent to restyle only this page.\n\nColors follow the active theme, so no extra dark mode work is needed."
+          }
+        },
+        "sample": {
+          "include": {
+            "title": "Include the file",
+            "note": "Once per app."
+          },
+          "tokens": {
+            "title": "Change the accent",
+            "note": "Only the board changes; other pages keep their colors."
+          }
+        },
+        "type": {}
+      }
+    }
+  }
+}

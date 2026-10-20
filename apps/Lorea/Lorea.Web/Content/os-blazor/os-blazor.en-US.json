@@ -1,0 +1,662 @@
+{
+  "os-blazor": {
+    "title": "Blazor kit",
+    "summary": "Ready-made Blazor components and services: buttons, fields, dialogs, themes and an API client, all set up with one call.",
+    "gives": {
+      "1": "Controls that work in both right-to-left and left-to-right layouts.",
+      "2": "Light and dark themes that are remembered between visits.",
+      "3": "One `AddOSBlazor` call that sets up `OS.Locale` too."
+    },
+    "sample": {
+      "register": "Set up the library",
+      "notify": "Show a message"
+    },
+    "topics": {
+      "setup": {
+        "title": "Setup",
+        "summary": "One call registers the services, texts and options the controls need.",
+        "points": {
+          "1": {
+            "title": "One registration",
+            "text": "`AddOSBlazor` registers everything the controls use."
+          },
+          "2": {
+            "title": "Shared base",
+            "text": "Every control inherits `OSComponent`, so it takes `Class` and `Extra`."
+          },
+          "3": {
+            "title": "API helpers",
+            "text": "`ApiClient` and `TokenStore` help you call a JSON API."
+          },
+          "4": {
+            "title": "Token storage",
+            "text": "The token stays in session storage by default."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What gets registered",
+            "text": "`AddOSBlazor` registers what every control uses: `ThemeService`, `ShellService`, the toast service, the API client and `OS.Locale` with its translated text.\n\nPass an action to change the theme storage key, the icon sprite or the shell's starting state."
+          },
+          "2": {
+            "title": "Class and Extra",
+            "text": "All controls inherit `OSComponent`. So each one accepts `Class` for your own CSS classes and `Extra` for any other HTML attribute."
+          },
+          "3": {
+            "title": "API and token",
+            "text": "`ApiClient` and `TokenStore` are small helpers for a JSON API.\n\nThe token is kept in session storage by default. In production, prefer an HttpOnly cookie behind your own backend."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register the library",
+            "note": "Call it once at startup. A second call does nothing, so shared setup code can call it safely."
+          },
+          "texts": {
+            "title": "Add your own texts",
+            "note": "The library's texts are added first, so keys in your files override them."
+          },
+          "own-locale": {
+            "title": "Set up OS.Locale yourself",
+            "note": "When you call `AddOSLocale` before `AddOSBlazor`, add the library's texts to your own options, otherwise the dialog texts stay empty."
+          }
+        },
+        "type": {
+          "BlazorDI": "The one entry point: `AddOSBlazor`.",
+          "BlazorOptions": "Everything you can change at startup: locale, API, token, icons, theme and shell.",
+          "OSComponent": "The base of every control. It adds `Class` and `Extra` so you never have to wrap a control just to style it.",
+          "IconOptions": "Where the icon sprite lives and which prefix its icons use.",
+          "ThemeOptions": "The storage key and the attribute values used for light and dark.",
+          "ApiClient": "Sends JSON requests, adds the token and returns an `ApiResult`. Network and server failures come back as results, not as exceptions.",
+          "TokenStore": "Keeps the access token and its expiry for `ApiClient`."
+        },
+        "member": {
+          "BlazorDI": {
+            "AddOSBlazor": "Registers the services, options and texts once; a second call does nothing."
+          }
+        }
+      },
+      "shell": {
+        "title": "Shell and layout",
+        "summary": "The page frame: header, sidebar, body, footer and the navigation inside them.",
+        "points": {
+          "1": {
+            "title": "App setup",
+            "text": "`OSApp` sets up routing, the layout and an error page."
+          },
+          "2": {
+            "title": "Page frame",
+            "text": "`OSShell` is the frame, and you fill its regions yourself."
+          },
+          "3": {
+            "title": "Sidebar",
+            "text": "Use `OSNav`, `OSNavSection` and `OSNavLink` in the sidebar."
+          },
+          "4": {
+            "title": "Page bases",
+            "text": "Pages inherit `OSPage` or `OSPanel`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The frame",
+            "text": "`OSApp` sets up routing, the layout and an error page.\n\n`OSShell` is the frame the layout draws. You fill its regions with `OSHeader`, `OSSidebar`, `OSBody`, `OSFooter` and `OSTabBar`. `OSHeader` is split into start, center and end."
+          },
+          "2": {
+            "title": "Sidebar and drawer",
+            "text": "Put `OSNav`, `OSNavSection` and `OSNavLink` in the sidebar.\n\n`ShellService` remembers whether the side rail is open. It also controls the drawer used on small screens."
+          },
+          "3": {
+            "title": "Pages",
+            "text": "Pages inherit `OSPage`, which shows a toast when something fails.\n\nOr they inherit `OSPanel`, which loads its data and tracks the busy and error state.\n\nBoth give you `Api`, the translated text `L` and the current culture profile."
+          }
+        },
+        "sample": {
+          "rail": {
+            "title": "Open and close the sidebar",
+            "note": "`InitAsync` reads the saved state once. The rail's state is remembered between visits; the drawer is not."
+          },
+          "layout": {
+            "title": "An app layout",
+            "note": "Regions are claimed by the shell, so their order inside it does not matter."
+          }
+        },
+        "type": {
+          "OSApp": "Router, layout and error page in one component. Give it the assembly that holds your pages.",
+          "OSShell": "The frame of the app. Its regions are the child components you place inside it.",
+          "OSSidebar": "The side area. `Placement`, `Side` and `DrawerEdge` decide where it sits on large and small screens.",
+          "OSNavLink": "A sidebar link with an icon that marks the current page.",
+          "OSPage": "Base class for pages. `Failed` shows an error toast.",
+          "OSPanel": "Base class for parts of a page that load their own data. Override `ReloadAsync`.",
+          "OSView": "A plain base for views that only need `Api`, `L` and the culture.",
+          "ShellService": "The state of the side rail and the drawer.",
+          "ShellOptions": "Whether the rail starts open and the key it is saved under."
+        },
+        "member": {
+          "ShellService": {
+            "ToggleRailAsync": "Opens or closes the rail and saves the choice.",
+            "ToggleDrawer": "Opens or closes the drawer used on small screens."
+          }
+        }
+      },
+      "buttons": {
+        "title": "Buttons",
+        "summary": "Buttons that act, link, copy and pick files.",
+        "points": {
+          "1": {
+            "title": "Button or link",
+            "text": "Give a button `Href` and it becomes a link; otherwise it raises `OnClick`."
+          },
+          "2": {
+            "title": "Look",
+            "text": "`ButtonKind` and `ButtonSize` set the look."
+          },
+          "3": {
+            "title": "Copy button",
+            "text": "`OSCopyButton` copies a text."
+          },
+          "4": {
+            "title": "File picking",
+            "text": "`OSFilePicker` opens the file dialog."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Buttons and links",
+            "text": "`OSButton` and `OSIconButton` share one base. Give them `Href` and they render as a link, with `Target` when needed. Otherwise they raise `OnClick`.\n\n`ButtonKind` and `ButtonSize` set the look."
+          },
+          "2": {
+            "title": "Copy and files",
+            "text": "`OSCopyButton` copies `Text`, or whatever `TextFactory` returns, and shows `DoneLabel` for a moment.\n\n`OSFileButton` saves a text as a file. `OSFilePicker` opens the file dialog.\n\nWhen the file passes `MaxBytes`, it reports `OnTooBig` instead of `OnPick`."
+          }
+        },
+        "sample": {
+          "actions": {
+            "title": "Buttons and links",
+            "note": "`Kind` sets the look. With `Href` a button becomes a link."
+          },
+          "copy-and-save": {
+            "title": "Copy text and save a file",
+            "note": "Both buttons show a short confirmation by themselves."
+          },
+          "picker": {
+            "title": "Pick a file with a size limit",
+            "note": "`OnTooBig` runs instead of `OnPick` when the file is larger than `MaxBytes`."
+          }
+        },
+        "type": {
+          "OSButton": "A text button with an optional icon.",
+          "OSIconButton": "An icon-only button. `Label` is required because it becomes the accessible name.",
+          "OSCopyButton": "Copies text to the clipboard. Use `TextFactory` when the text must be built at click time.",
+          "OSFileButton": "Downloads `Text` as a file named `FileName`.",
+          "OSFilePicker": "Lets the user pick one file and checks its size first."
+        }
+      },
+      "fields": {
+        "title": "Fields",
+        "summary": "Text, search, choice and dropdown inputs with labels, hints and errors.",
+        "points": {
+          "1": {
+            "title": "Shared options",
+            "text": "Every field takes `Label`, `Hint`, `Error`, `Required` and `Disabled`."
+          },
+          "2": {
+            "title": "List fields",
+            "text": "The four list fields share one shape and take `Items`."
+          },
+          "3": {
+            "title": "Switch",
+            "text": "`OSSwitch` is a boolean."
+          },
+          "4": {
+            "title": "Image and search",
+            "text": "`OSImageField` handles a picture and `OSSearchField` gives you the search text."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Shared options",
+            "text": "Every field takes `Label`, `Hint`, `Error`, `Required` and `Disabled`. `OSFieldFrame` draws them the same way everywhere."
+          },
+          "2": {
+            "title": "List fields",
+            "text": "`OSSelectField`, `OSChoiceField`, `OSDropdown` and `OSMultiDropdown` share one shape. Pass `Items`.\n\nThen tell the field how to read an item with `TextOf` and `KeyOf`. `DisabledOf` turns single items off."
+          },
+          "3": {
+            "title": "Switch, image, search",
+            "text": "`OSSwitch` is a boolean.\n\n`OSImageField` previews, picks and removes a picture. `OSSearchField` raises `OnSearch` with the text."
+          }
+        },
+        "sample": {
+          "text": {
+            "title": "Text, password and search",
+            "note": "`Error` shows under the field and turns it red."
+          },
+          "lists": {
+            "title": "Select, choice and multi-select",
+            "note": "All three read their items the same way: `Items`, `TextOf` and `KeyOf`."
+          },
+          "switch": {
+            "title": "An on/off switch",
+            "note": "`OnText` and `OffText` show next to the switch."
+          }
+        },
+        "type": {
+          "OSTextField": "Single-line input. `Type` also covers passwords, with a show/hide button.",
+          "OSSearchField": "Text input with a search icon and a clear button.",
+          "OSSelectField{TValue}": "A native select. `GroupOf` groups the items and `BlankText` adds an empty choice.",
+          "OSChoiceField{TValue}": "Pick one item from a visible list of radio choices. `NoneText` adds a choice for nothing, and `Clearable` lets the user undo a pick.",
+          "OSSwitch": "An on/off switch bound to a `bool`.",
+          "OSImageField": "Shows a picture with buttons to pick, replace and remove it. You handle the upload.",
+          "OSDropdown{TValue}": "A dropdown for one value, with an `ItemTemplate` for custom rows.",
+          "OSMultiDropdown{TValue}": "A dropdown for several values at once, bound to `Values`.",
+          "OSFieldFrame": "The label, hint and error around a field. Use it to build your own field."
+        }
+      },
+      "display": {
+        "title": "Display",
+        "summary": "Cards, chips, labels, icons, page headers and code.",
+        "points": {
+          "1": {
+            "title": "Cards",
+            "text": "`OSCard` is a titled block and `OSStatCard` shows a number with its change."
+          },
+          "2": {
+            "title": "Chips",
+            "text": "`OSChip` and `OSStatusChip` show a short state in color."
+          },
+          "3": {
+            "title": "Icons and marks",
+            "text": "`OSIcon` draws an icon by name and `OSMark` is a small mark."
+          },
+          "4": {
+            "title": "Code",
+            "text": "`OSCodeBlock` shows code with a copy button."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Cards, chips and icons",
+            "text": "`OSCard` is a titled block and `OSStatCard` shows a number with its change.\n\n`OSChip` and `OSStatusChip` show a short state in one of the `ChipTone` colors. `OSIcon` draws a sprite icon by name. `OSMark` is a small mark with text or an icon."
+          },
+          "2": {
+            "title": "Page head",
+            "text": "`OSPageHead` is the title row of a page. Its `Details` slot takes `OSHeadItem` rows."
+          },
+          "3": {
+            "title": "Code and inline text",
+            "text": "`OSCodeBlock` shows code with a copy button and an optional output. It is colored by an `ICodeHighlighter`, and C# is built in.\n\n`OSInlineText` renders text written between backticks as separate left-to-right code. This keeps names like `IHook<TEvent>` readable inside Persian sentences."
+          }
+        },
+        "sample": {
+          "cards": {
+            "title": "Cards, chips and stats",
+            "note": "`Tone` colors a chip. A stat card takes its direction from `Up`."
+          },
+          "head": {
+            "title": "A page head",
+            "note": "`Actions` sits at the end of the title row and `Details` holds the `OSHeadItem` rows."
+          },
+          "code": {
+            "title": "Code with output, and inline code",
+            "note": "`OSCodeBlock` colors C# only; any other `Language` is shown as plain text."
+          }
+        },
+        "type": {
+          "OSCard": "A titled block with optional actions.",
+          "OSStatCard": "A label, a value and a change, colored by `StatTone`.",
+          "OSChip": "A small pill. It becomes a link with `Href` or a button with `OnClick`.",
+          "OSStatusChip": "A chip that only shows a state; its tone carries the meaning.",
+          "OSIcon": "Draws one icon from the sprite set in `IconOptions`.",
+          "OSPageHead": "Title, subtitle, actions and a row of details at the top of a page.",
+          "OSHeadItem": "One label and value pair inside `OSPageHead`.",
+          "OSCodeBlock": "Code with a copy button, a language and an optional output below it.",
+          "OSInlineText": "Plain text where `backtick` parts become inline code.",
+          "ICodeHighlighter": "Turns code into colored HTML. Register your own to support another language."
+        }
+      },
+      "overlays": {
+        "title": "Dialogs and messages",
+        "summary": "Dialogs, confirmations, toasts, tooltips and menus.",
+        "points": {
+          "1": {
+            "title": "Dialog",
+            "text": "`OSDialog` is a modal window with a footer."
+          },
+          "2": {
+            "title": "Toasts",
+            "text": "Put one `OSToastHost` in the layout to show toasts."
+          },
+          "3": {
+            "title": "Tooltip",
+            "text": "`OSTooltip` shows a text next to its content."
+          },
+          "4": {
+            "title": "Menu",
+            "text": "`OSMenu` opens a list of rows from a button."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Dialog and confirm",
+            "text": "`OSDialog` is a modal window with a footer. `OSConfirm` is the ready-made yes/no version."
+          },
+          "2": {
+            "title": "Toasts",
+            "text": "Toasts need one `OSToastHost` in the layout.\n\nAfter that, any component can inject `IToastService` and call `Good`, `Warn` or `Bad`."
+          },
+          "3": {
+            "title": "Tooltip and menu",
+            "text": "`OSTooltip` wraps content and shows a text on the chosen `TooltipSide`.\n\n`OSMenu` opens a list of `OSMenuItem` rows from a button. `OSMenuRule` is the divider."
+          }
+        },
+        "sample": {
+          "notify": {
+            "title": "Show a message",
+            "note": "Messages disappear on their own. Calls with an empty text are ignored."
+          },
+          "dialogs": {
+            "title": "A dialog and a confirmation",
+            "note": "Both bind `Open`. `OnYes` of the confirmation runs only when the user agrees."
+          },
+          "menu-and-tip": {
+            "title": "A menu and a tooltip",
+            "note": "`Danger` marks the destructive item; `OSMenuRule` draws the divider."
+          },
+          "toast-host": {
+            "title": "Show toasts",
+            "note": "One `OSToastHost` in the layout is enough for the whole app."
+          }
+        },
+        "type": {
+          "OSDialog": "A modal window. Bind `Open` and fill `ChildContent` and `Footer`.",
+          "OSConfirm": "A yes/no question. `OnYes` runs when the user agrees and `Busy` disables the buttons meanwhile.",
+          "OSToastHost": "Draws the toasts. Place one in the layout.",
+          "IToastService": "What components inject to show a message.",
+          "OSTooltip": "Shows a small text next to the wrapped content on hover or focus.",
+          "OSMenu": "A button that opens a list of actions.",
+          "OSMenuItem": "One row of a menu. `Danger` marks destructive actions."
+        },
+        "member": {
+          "IToastService": {
+            "Show": "Shows a message in any `ChipTone`, with an optional duration.",
+            "Good": "Shows a success message.",
+            "Warn": "Shows a warning.",
+            "Bad": "Shows an error."
+          }
+        }
+      },
+      "navigation": {
+        "title": "Navigation",
+        "summary": "Tabs, accordions, trees, pagers and shortcuts.",
+        "points": {
+          "1": {
+            "title": "Tabs",
+            "text": "`OSTabs` shows one panel at a time."
+          },
+          "2": {
+            "title": "Accordion",
+            "text": "`OSAccordion` has sections that open one at a time or several at once."
+          },
+          "3": {
+            "title": "Tree",
+            "text": "`OSTree` draws nested items."
+          },
+          "4": {
+            "title": "Pager",
+            "text": "`OSPager` moves between pages."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Tabs and accordion",
+            "text": "`OSTabs` shows one panel at a time for a list of items.\n\n`OSAccordion` holds `OSAccordionItem` sections, with one or several open at once. It also holds `OSAccordionLeaf` rows that behave as links."
+          },
+          "2": {
+            "title": "Tree and icon bar",
+            "text": "`OSTree` draws nested items. Tell it where the children are with `ChildrenOf`.\n\n`OSIconNav` is a compact icon bar."
+          },
+          "3": {
+            "title": "Pager and back to top",
+            "text": "`OSPager` moves between pages and can offer page sizes.\n\n`OSToTop` appears after scrolling and brings the user back to the top."
+          }
+        },
+        "sample": {
+          "tabs": {
+            "title": "Tabs",
+            "note": "Bind `Value` to the selected item."
+          },
+          "accordion": {
+            "title": "An accordion",
+            "note": "`OpenId` is the id of the open section. Leaves link instead of opening."
+          },
+          "tree": {
+            "title": "A tree",
+            "note": "`ChildrenOf` tells the tree where the children are; `Row` draws each item."
+          },
+          "pager": {
+            "title": "A pager with page sizes",
+            "note": "The pager only reports the choice; you load the page."
+          }
+        },
+        "type": {
+          "OSTabs{TValue}": "Tabs for a list of items. Bind `Value` to the selected item.",
+          "OSAccordion": "A group of collapsible sections. `Multiple` lets several stay open.",
+          "OSAccordionItem": "A section with a title, optional summary and actions, and a body.",
+          "OSAccordionLeaf": "A row inside an accordion that links somewhere instead of opening.",
+          "OSTree{TItem}": "A tree built from `Items` and `ChildrenOf`, with your own `Row` template.",
+          "OSIconNav": "A bar of icon buttons built from `IconNavItem` entries.",
+          "OSPager": "Page buttons with an optional page-size picker.",
+          "OSToTop": "A button that scrolls to the top once the page has moved past `Threshold`."
+        }
+      },
+      "data": {
+        "title": "Data views",
+        "summary": "Grids, boards, loading states and the helpers that feed them.",
+        "points": {
+          "1": {
+            "title": "Data grid",
+            "text": "`OSDataGrid<T>` handles sorting, search and paging for you."
+          },
+          "2": {
+            "title": "Group board",
+            "text": "`OSGroupBoard` shows items under group headings."
+          },
+          "3": {
+            "title": "Content states",
+            "text": "`OSDataState` covers the waiting, empty and failed cases."
+          },
+          "4": {
+            "title": "Server-side lists",
+            "text": "`OSDataSet<T>` keeps the query and rows of a server-side list."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Grid and board",
+            "text": "`OSDataGrid<T>` shows rows through `OSColumn<T>` columns. It handles sorting, search, paging and CSV export for you.\n\n`OSGroupBoard` shows items under group headings, with search and views."
+          },
+          "2": {
+            "title": "Waiting and errors",
+            "text": "`OSDataState` covers the waiting, empty and failed cases of any content.\n\n`OSBoundary` catches exceptions thrown while rendering."
+          },
+          "3": {
+            "title": "Data set and editor",
+            "text": "`OSDataSet<T>` keeps the query and the rows of a server-side list. The query holds page, size, search, sort and criteria.\n\n`OSEditor<TDraft>` does the same for a form. It keeps the draft, required fields, saving and the errors the server sends back."
+          }
+        },
+        "sample": {
+          "dataset": {
+            "title": "Load a server-side list",
+            "note": "The set cancels a request that is still running when a new one starts, so fast typing never shows old rows."
+          },
+          "validate": {
+            "title": "Check a required field",
+            "note": "`Require` records an error for the field; `SaveAsync` will not call the server while any error is recorded."
+          },
+          "grid": {
+            "title": "A data grid",
+            "note": "`Name` is the key used for sorting. Search and CSV export work on what `Text` returns."
+          },
+          "state": {
+            "title": "Loading, empty and error states",
+            "note": "The content shows only when none of the three applies."
+          }
+        },
+        "type": {
+          "OSDataGrid{T}": "A table with sorting, search, paging and export. Fill it with `OSColumn<T>` entries.",
+          "OSColumn{T}": "One column: `Title`, `Name` for sorting, and a `Template` or `Text` for the cell.",
+          "OSGroupBoard{TGroup,TItem}": "Items grouped under headings, with search and switchable views.",
+          "OSDataState": "Shows a spinner or skeleton, an empty message, an error or your content, whichever fits.",
+          "OSBoundary": "Catches errors from its content and offers a retry. It recovers on its own when the user navigates.",
+          "OSDataSet{T}": "The query and rows of a paged list, ready to bind to a grid and a pager.",
+          "OSEditor{TDraft}": "The state of an edit form: the draft, errors, busy flag and save.",
+          "OSLoader": "A larger loading indicator for whole sections.",
+          "OSSpinner": "A small inline spinner."
+        },
+        "member": {
+          "OSDataSet{T}": {
+            "SearchAsync": "Waits a moment for more typing before it asks the server.",
+            "SortAsync": "Sorts by the column and flips the direction when the same column is chosen again."
+          },
+          "OSEditor{TDraft}": {
+            "Require": "Records an error for the field when the value is missing.",
+            "SaveAsync": "Returns false without calling the server while an error is recorded. On success it closes the editor."
+          }
+        }
+      },
+      "jobs": {
+        "title": "Long-running jobs",
+        "summary": "A dialog that plans, runs, watches and stops a job on the server.",
+        "points": {
+          "1": {
+            "title": "Step by step",
+            "text": "`OSJobDialog<TPlan,TResult>` walks a long job through its steps."
+          },
+          "2": {
+            "title": "Server source",
+            "text": "It reaches the server through `IJobSource`."
+          },
+          "3": {
+            "title": "Custom texts",
+            "text": "`OSJobTexts` changes any of the texts."
+          },
+          "4": {
+            "title": "Lost connection",
+            "text": "After three failed status reads, the dialog says the connection is lost."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "How it runs",
+            "text": "`OSJobDialog<TPlan,TResult>` walks a long job through its steps. It first shows the plan and starts the job.\n\nThen it polls the status and offers Stop. Finally it shows the result or a file to download."
+          },
+          "2": {
+            "title": "Server access",
+            "text": "The dialog reaches the server through `IJobSource`. `HttpJobSource` is the ready-made one.\n\nIt uses `GET`, `GET /plan`, `POST` and `DELETE` on a single path."
+          },
+          "3": {
+            "title": "Texts and lost connection",
+            "text": "Texts come from the shipped translations, and `OSJobTexts` changes any of them. A value of `null` keeps the shipped text and an empty string hides that part.\n\nIf the status cannot be read three times in a row, the dialog says the connection is lost and polls less often."
+          }
+        },
+        "sample": {
+          "source": {
+            "title": "Use your own job source",
+            "note": "Anything that can answer these four calls works: a SignalR hub, a queue or a job running inside the app."
+          },
+          "texts": {
+            "title": "Change some texts",
+            "note": "Properties you leave out keep the shipped, translated text."
+          },
+          "progress": {
+            "title": "Read the progress",
+            "note": "`Percent` is rounded and is 0 while the total is unknown."
+          },
+          "dialog": {
+            "title": "A job dialog",
+            "note": "`Path` builds an `HttpJobSource`. Give `Source` instead to use your own."
+          }
+        },
+        "type": {
+          "OSJobDialog{TPlan,TResult}": "The dialog. Give it `Path` or a `Source`, templates for the plan and the result, and `OnDone`.",
+          "OSJobStatus": "What the server reports: state, phase, progress, time, message, result and an optional file.",
+          "OSJobState": "Idle, running, done, failed or cancelled.",
+          "OSJobTexts": "Optional overrides for every text in the dialog.",
+          "IJobSource": "The four calls the dialog needs: status, plan, start and stop.",
+          "HttpJobSource": "An `IJobSource` over HTTP, built on `ApiClient`."
+        },
+        "member": {
+          "OSJobStatus": {
+            "Percent": "Done as a percentage of Total, rounded."
+          },
+          "IJobSource": {
+            "PlanAsync": "Returns what the job is about to do, shown before the user starts it."
+          }
+        }
+      },
+      "themes": {
+        "title": "Themes and styles",
+        "summary": "Light, dark and system themes, and the design tokens behind them.",
+        "points": {
+          "1": {
+            "title": "Theme mode",
+            "text": "`ThemeService` keeps the chosen theme in browser storage."
+          },
+          "2": {
+            "title": "Toggle button",
+            "text": "`OSThemeToggle` is the ready-made button for switching themes."
+          },
+          "3": {
+            "title": "CSS variables",
+            "text": "Colors, spacing and the font come from CSS variables."
+          },
+          "4": {
+            "title": "Style layer",
+            "text": "Control styles live in the `os.ctrls` layer, so your own CSS wins without `!important`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Theme mode",
+            "text": "`ThemeService` keeps the chosen mode in browser storage, applies it to the page and tells you when it changes. The mode is `ThemeMode`: system, light or dark.\n\n`OSThemeToggle` is the ready-made button for it."
+          },
+          "2": {
+            "title": "Variables and fonts",
+            "text": "Colors, spacing and the font come from CSS variables such as `--os-font`. The library ships no fonts, so set that variable in your own CSS."
+          },
+          "3": {
+            "title": "Style layer",
+            "text": "All control styles live in the `os.ctrls` CSS layer. So your own unlayered CSS wins without `!important`."
+          }
+        },
+        "sample": {
+          "names": {
+            "title": "Rename the theme values",
+            "note": "The attribute and its two values are what your own CSS selects on."
+          },
+          "switch": {
+            "title": "Change the theme from code",
+            "note": "In system mode the page follows the device and updates when the device switches."
+          },
+          "toggle": {
+            "title": "A theme toggle",
+            "note": "`IncludeSystem` adds a third choice that follows the device."
+          }
+        },
+        "type": {
+          "ThemeService": "The current mode and whether the page is dark right now.",
+          "ThemeMode": "System, light or dark.",
+          "OSThemeToggle": "A button that switches between light and dark, optionally with a system choice."
+        },
+        "member": {
+          "ThemeService": {
+            "SetAsync": "Applies and saves the mode.",
+            "ToggleAsync": "Switches between light and dark based on what the page shows now.",
+            "Changed": "Raised after the theme is applied."
+          }
+        }
+      }
+    }
+  }
+}

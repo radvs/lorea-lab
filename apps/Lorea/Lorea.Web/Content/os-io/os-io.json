@@ -1,0 +1,75 @@
+{
+  "slug": "os-io",
+  "name": "OS.IO",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "paths",
+      "namespaces": [
+        "OS.IO.Files"
+      ],
+      "types": [
+        "PathEx",
+        "AppPaths",
+        "IOCodes"
+      ]
+    },
+    {
+      "slug": "files",
+      "namespaces": [
+        "OS.IO.Files"
+      ],
+      "types": [
+        "FileEx",
+        "DirEx",
+        "FileSpec",
+        "SizeEx",
+        "SizeUnit"
+      ]
+    },
+    {
+      "slug": "types",
+      "namespaces": [
+        "OS.IO.Files"
+      ],
+      "types": [
+        "FileType",
+        "FileTypeEx",
+        "MimeEx",
+        "ImageEncoding"
+      ]
+    },
+    {
+      "slug": "archives",
+      "namespaces": [
+        "OS.IO.Files"
+      ],
+      "types": [
+        "ArchiveEx"
+      ]
+    },
+    {
+      "slug": "env",
+      "namespaces": [
+        "OS.IO.Files"
+      ],
+      "types": [
+        "EnvFile"
+      ]
+    },
+    {
+      "slug": "json",
+      "namespaces": [
+        "OS.IO.Json"
+      ],
+      "types": [
+        "JsonEx",
+        "OSJsonOptions"
+      ]
+    }
+  ]
+}

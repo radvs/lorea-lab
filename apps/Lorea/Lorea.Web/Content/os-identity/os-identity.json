@@ -1,0 +1,101 @@
+{
+  "slug": "os-identity",
+  "name": "OS.Identity",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-identity-abstractions",
+    "os-caching"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "IdentityEx",
+        "IdentityModule",
+        "IdentityOptions",
+        "IIdentitySync",
+        "IIdentityMaintenance"
+      ]
+    },
+    {
+      "slug": "passwords",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "IPasswordHasher",
+        "PasswordHasher",
+        "PasswordHash",
+        "PasswordPolicy"
+      ]
+    },
+    {
+      "slug": "lockout",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "LockGuard",
+        "LockPolicy",
+        "LoginThrottle",
+        "Backoff"
+      ]
+    },
+    {
+      "slug": "perms",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "PermCatalog",
+        "PermPattern",
+        "PermChecker",
+        "PermGrantBuilder",
+        "IPermResolver",
+        "IPermCache",
+        "PermCache",
+        "DelegatePrincipalAccessor",
+        "AmbientPrincipalAccessor"
+      ]
+    },
+    {
+      "slug": "sessions",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "ISessionStore",
+        "MemorySessionStore",
+        "SessionKeys",
+        "SessionRules",
+        "SessionPolicy",
+        "ISecLog",
+        "MemorySecLog"
+      ]
+    },
+    {
+      "slug": "login",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "LoginService",
+        "LoginRequest",
+        "LoginOutcome",
+        "LoginSubject",
+        "ILoginSource",
+        "ILoginMethod",
+        "MethodResult",
+        "PasswordMethod",
+        "ILoginChallenges",
+        "MemoryLoginChallenges",
+        "ChallengeCheck",
+        "ChallengeState"
+      ]
+    }
+  ]
+}

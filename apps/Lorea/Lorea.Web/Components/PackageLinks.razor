@@ -1,0 +1,16 @@
+@if (Items.Count == 0)
+{
+    <p class="package-note">@Empty</p>
+}
+else
+{
+    <ul class="package-used">
+        @foreach (var item in Items)
+        {
+            <li>
+                <a href="@($"{Navigation.BaseUri}packages/{item.Slug}")"><code>@item.Name</code></a>
+                <span>@Text[item.TextKey("title")]</span>
+            </li>
+        }
+    </ul>
+}

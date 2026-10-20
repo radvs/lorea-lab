@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<ProjectType>Web</ProjectType>
+		<AssemblyName>Lorea.Web</AssemblyName>
+		<IsPackable>false</IsPackable>
+		<Title>Lorea</Title>
+		<Description>site for OriginStack libraries</Description>
+		<OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OS.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Locales\*.json" />
+		<!-- WithCulture="false": "{slug}.en-US.json" must stay in the main assembly, not move to a satellite one. -->
+		<EmbeddedResource Include="Content\**\*.json" WithCulture="false" />
+	</ItemGroup>
+
+</Project>

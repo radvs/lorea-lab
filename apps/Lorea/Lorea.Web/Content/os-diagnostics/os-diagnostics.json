@@ -1,0 +1,53 @@
+{
+  "slug": "os-diagnostics",
+  "name": "OS.Diagnostics",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "setup",
+      "namespaces": [
+        "OS.Diagnostics"
+      ],
+      "types": [
+        "DiagnosticsEx",
+        "DiagnosticsOptions"
+      ]
+    },
+    {
+      "slug": "report",
+      "namespaces": []
+    },
+    {
+      "slug": "ledger",
+      "namespaces": [
+        "OS.Diagnostics"
+      ],
+      "types": [
+        "ErrorLedger",
+        "ErrorFingerprint",
+        "ErrorLimits"
+      ]
+    },
+    {
+      "slug": "store",
+      "namespaces": [
+        "OS.Diagnostics"
+      ],
+      "types": [
+        "IErrorStore",
+        "ErrorRecord",
+        "IErrorReader",
+        "ErrorFilter",
+        "ErrorIssue",
+        "ErrorIssueDetail",
+        "ErrorSample",
+        "ErrorFound",
+        "ErrorSummary"
+      ]
+    }
+  ]
+}

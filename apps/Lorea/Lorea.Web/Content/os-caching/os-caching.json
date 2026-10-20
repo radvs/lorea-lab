@@ -1,0 +1,29 @@
+{
+  "slug": "os-caching",
+  "name": "OS.Caching",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "setup",
+      "namespaces": [
+        "OS.Caching"
+      ],
+      "types": [
+        "CacheOptions"
+      ]
+    },
+    {
+      "slug": "usage",
+      "namespaces": [
+        "OS.Caching"
+      ],
+      "types": [
+        "CacheEx"
+      ]
+    }
+  ]
+}

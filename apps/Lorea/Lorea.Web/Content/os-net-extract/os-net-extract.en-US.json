@@ -1,0 +1,344 @@
+{
+  "os-net-extract": {
+    "title": "Data extraction",
+    "summary": "Read fields such as a title, a price or an image from a web page or a JSON answer, with the rules written in configuration, not in code.",
+    "gives": {
+      "1": "Describe a site once, as selectors and JSON paths with fallbacks, and read the same fields from any of its pages.",
+      "2": "Fetch pages safely: private addresses are refused, the body has a size limit, and a bad answer becomes a state, not an exception.",
+      "3": "The HTML engine sits behind an interface, so the parser can change without touching the code that uses it."
+    },
+    "sample": {
+      "quick": "Read the title of a page by its host"
+    },
+    "topics": {
+      "providers": {
+        "title": "Providers and fields",
+        "summary": "Write what to read from each site as configuration.",
+        "points": {
+          "1": {
+            "title": "Rules in config",
+            "text": "Each site is described by an `ExtractProvider`, not by code."
+          },
+          "2": {
+            "title": "Fields",
+            "text": "Each `ExtractField` says where to read a value from."
+          },
+          "3": {
+            "title": "Simple setup",
+            "text": "`AddOSExtract` registers one safe HTTP client per provider."
+          },
+          "4": {
+            "title": "Always safe",
+            "text": "Private addresses are refused and big pages are not read."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Describing a source",
+            "text": "An `ExtractProvider` describes one source. `Name` is its name and `Host` is the host it serves. `BaseUrl` is optional.\n\n`Format` is `Html` or `Json`. `Timeout` is in seconds. `Priority` sets the order and `Fields` is the list of fields."
+          },
+          "2": {
+            "title": "Fields",
+            "text": "An `ExtractField` has a `Name` and the places to look.\n\nFor HTML, `Selectors` are tried in order. An `Attribute` (or several in `Attributes`) is read instead of the text. `Index` picks the n-th match and `Absolute` turns a relative link into a full one.\n\nFor JSON, `Paths` are tried in order. When the JSON sits inside a page, add an optional `Script` selector."
+          },
+          "3": {
+            "title": "Setup and safety",
+            "text": "`AddOSExtract` takes an `ExtractConfig` or an `IConfiguration` section named `os-extract`. It registers one safe HTTP client per provider and the factory. Calling it again merges the new providers and throws when a name already exists.\n\nEvery client is in safe mode, so private addresses are refused. A page over `MaxBytes` (5 MiB by default) is not read either."
+          }
+        },
+        "sample": {
+          "config": {
+            "title": "Describe a provider in JSON",
+            "note": "The same names work in a config file under os-extract. Fields tried in order stop at the first selector that matches."
+          },
+          "register": {
+            "title": "Register the providers",
+            "note": "The section name is os-extract."
+          },
+          "merge": {
+            "title": "Register providers in more than one place",
+            "note": "A repeated provider name throws an InvalidOperationException."
+          }
+        },
+        "type": {
+          "ExtractConfig": "The user agent, the body size cap and the list of providers.",
+          "ExtractProvider": "One source of data: where it lives, its format and its fields.",
+          "ExtractField": "One value to read, and where to look for it.",
+          "ExtractFormat": "Whether a provider's answer is HTML or JSON."
+        },
+        "member": {
+          "ExtractConfig": {
+            "Section": "The config section name, os-extract.",
+            "Probe": "The name of the built-in client used for hosts that have no provider.",
+            "UserAgent": "The User-Agent header sent by every client.",
+            "MaxBytes": "The largest page that is read, 5 MiB by default.",
+            "Providers": "The configured providers."
+          },
+          "ExtractProvider": {
+            "Name": "Unique name. It is also the name of the HTTP client.",
+            "Host": "The host this provider serves, used to find it from a link.",
+            "BaseUrl": "The address that relative links are added to.",
+            "Format": "Html or Json.",
+            "Timeout": "Seconds for one attempt.",
+            "Priority": "Lower numbers come first in the factory's list.",
+            "Fields": "The values to read.",
+            "MaxParallel": "How many requests of SendBulkAsync run at the same time. 4 by default."
+          },
+          "ExtractField": {
+            "Name": "The key of the value in the result.",
+            "Selectors": "CSS selectors, tried in order.",
+            "Attribute": "The attribute to read instead of the text.",
+            "Attributes": "More attributes to try after Attribute.",
+            "Index": "Which match to take, starting from 0.",
+            "Absolute": "Turn a relative link into a full one, using the page address.",
+            "Paths": "JSON paths, tried in order.",
+            "Script": "A selector for the element that holds the JSON, when it is inside a page."
+          }
+        }
+      },
+      "html": {
+        "title": "Reading HTML",
+        "summary": "Read text and attributes from a page with CSS selectors.",
+        "points": {
+          "1": {
+            "title": "HTML to a doc",
+            "text": "The engine parses HTML into an `IExtractDoc`."
+          },
+          "2": {
+            "title": "Read a field",
+            "text": "`ExtractEx.Read` tries each selector in order and returns the first match."
+          },
+          "3": {
+            "title": "Missing field",
+            "text": "A field with no match gives `NotFound` with the code `extract.miss`."
+          },
+          "4": {
+            "title": "No scripts run",
+            "text": "It doesn't run scripts or load other files."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading one field",
+            "text": "The engine parses HTML into an `IExtractDoc`, and `ExtractEx.Read` applies one `ExtractField` to it. It tries each selector in order and reads the text or the attribute. It returns the first match as an `OSResult<ExtractValue>`.\n\nA field with no match gives a `NotFound` result. Its `Data` is a miss, with the code `extract.miss`."
+          },
+          "2": {
+            "title": "Reading many fields",
+            "text": "`ReadAll` reads a list of fields into a dictionary and skips the ones that are missing.\n\n`Text`, `Attribute`, `TextWithFallback`, `AttributeWithFallback` and `Texts` are the same helpers one step lower, for code that doesn't use a provider."
+          },
+          "3": {
+            "title": "The engine behind it",
+            "text": "The parser is AngleSharp, but it is hidden behind `IExtractEngine` and `IExtractDoc`. Ask the container for `IExtractEngine` and call `Parse`.\n\nIt doesn't run scripts or load other files."
+          }
+        },
+        "sample": {
+          "read": {
+            "title": "Read a text and a link",
+            "note": "Absolute turns the relative link into a full address using the page address you pass."
+          },
+          "fallback": {
+            "title": "Try several selectors",
+            "note": "The selector that matched is kept in the value."
+          },
+          "texts": {
+            "title": "Read a list and pick one item",
+            "note": "Index starts from 0, so 1 is the second item."
+          },
+          "miss": {
+            "title": "Handle a field that is not on the page",
+            "note": "A missing field is a NotFound result with a code, not an exception."
+          }
+        },
+        "type": {
+          "ExtractEx": "Helpers to read fields from HTML and JSON.",
+          "ExtractValue": "A value that was read, or a miss, with the selector or path that was used.",
+          "IExtractDoc": "A parsed page that can be queried.",
+          "IExtractEngine": "Turns HTML text into an `IExtractDoc`."
+        },
+        "member": {
+          "ExtractEx": {
+            "Read": "Reads one field, trying its selectors in order.",
+            "ReadAll": "Reads many fields into a dictionary, skipping the missing ones.",
+            "Text": "Text of the first element that matches.",
+            "Attribute": "An attribute of the first element that matches.",
+            "TextWithFallback": "Text from the first selector that matches.",
+            "AttributeWithFallback": "An attribute from the first selector that matches.",
+            "Texts": "The text of every element that matches.",
+            "AddOSExtract": "Registers providers, one safe HTTP client for each, the engine and the factory.",
+            "ReadJson": "Reads one field from a JSON element, trying its paths in order.",
+            "Navigate": "Walks one path and returns the JSON element, or NotFound.",
+            "FromScriptTag": "Returns the text of a script tag, such as application/ld+json.",
+            "FromJson": "Reads a JSON body into a type, with the safe defaults of OS.IO.",
+            "FromHeader": "Reads a header value from a dictionary."
+          },
+          "ExtractValue": {
+            "Found": "True when something was read.",
+            "Value": "The text that was read.",
+            "Selector": "The selector or path that produced the value."
+          },
+          "IExtractDoc": {
+            "Text": "Text of the matching element.",
+            "Attr": "An attribute of the matching element.",
+            "Texts": "The text of all matching elements."
+          },
+          "IExtractEngine": {
+            "Parse": "Parses HTML. Empty text gives an Invalid result."
+          }
+        }
+      },
+      "json": {
+        "title": "Reading JSON",
+        "summary": "Read values from a JSON answer, or from JSON inside a page, with simple paths.",
+        "points": {
+          "1": {
+            "title": "Simple paths",
+            "text": "A path is names separated by dots, with an index in brackets for arrays."
+          },
+          "2": {
+            "title": "In order",
+            "text": "`ExtractEx.ReadJson` tries the paths and returns the first value that is not null."
+          },
+          "3": {
+            "title": "JSON inside a page",
+            "text": "`FromScriptTag` returns the text of a script tag."
+          },
+          "4": {
+            "title": "Bad JSON",
+            "text": "Invalid JSON gives the code `extract.json.invalid` and the state `Refused`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Paths and reading",
+            "text": "A path is a list of names separated by dots, with an index in brackets for arrays, such as `data.items[1].price`.\n\n`ExtractEx.ReadJson` tries the `Paths` of a field in order. It returns the first value that is not null, as text. Numbers and booleans come back as their JSON text.\n\n`Navigate` does the walking for one path and returns the element. It returns `NotFound` when a name or an index doesn't exist."
+          },
+          "2": {
+            "title": "JSON inside a page",
+            "text": "Many pages carry their data in a script tag, such as `application/ld+json`. `FromScriptTag` returns that text.\n\nIn a provider, the field's `Script` selector does the same before the paths are read."
+          },
+          "3": {
+            "title": "Other helpers and errors",
+            "text": "`FromJson<T>` reads a whole body into a type with the safe defaults of OS.IO. `FromHeader` reads a value from a dictionary of headers.\n\nBad JSON gives the code `extract.json.invalid` and the state `Refused`."
+          }
+        },
+        "sample": {
+          "path": {
+            "title": "Read values by path",
+            "note": "The second field falls back to the next path when the first one is missing."
+          },
+          "script-tag": {
+            "title": "Read JSON that sits inside a page",
+            "note": "Prices in JSON are often strings; the value is returned as text."
+          }
+        },
+        "type": {},
+        "member": {}
+      },
+      "service": {
+        "title": "Fetching and results",
+        "summary": "Find a provider, fetch a page and get the fields with the state of the fetch.",
+        "points": {
+          "1": {
+            "title": "Find a provider",
+            "text": "`IExtractFactory` finds a provider by name or by host."
+          },
+          "2": {
+            "title": "Unknown host",
+            "text": "A host nobody configured gets a field-less probe service."
+          },
+          "3": {
+            "title": "Result with state",
+            "text": "`ExtractResult` gives the fields with the `State` and the HTTP status."
+          },
+          "4": {
+            "title": "A state, not an error",
+            "text": "A page that can't be read is a state, not an exception."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Finding a service",
+            "text": "`IExtractFactory` finds a provider by name or by host and gives an `IExtractService` for it.\n\n`GetServiceByHost` falls back to a field-less probe service for a host nobody configured. That service fetches the page and reports the state without reading fields."
+          },
+          "2": {
+            "title": "Request and result",
+            "text": "`SendAsync` takes an `ExtractRequest` with the `Url`. Add the optional `Html` when you already have the page.\n\nIt returns an `ExtractResult` with the fields, the `State`, the HTTP `Status` and the `FinalUrl` after redirects. The `State` is one of: `Fetched`, `Missing` for 404, `Refused` for any other status, a wrong media type or a body over the limit, and `Unreachable` for network problems."
+          },
+          "3": {
+            "title": "State and bulk sending",
+            "text": "A page that can't be read is a state, not an exception. The `OSResult` is `Ok` as long as the fetch itself finished.\n\n`Code` explains the state, for example `extract.status` or `extract.no-fields`. `SendBulkAsync` sends a list of requests one after another and returns one result for each."
+          }
+        },
+        "sample": {
+          "send": {
+            "title": "Fetch a page and read its fields",
+            "note": "Check State before the fields; a missing page is a state, not an error."
+          },
+          "bulk": {
+            "title": "Fetch many pages",
+            "note": "The results come back in the order of the requests."
+          },
+          "by-host": {
+            "title": "Find the provider from a link",
+            "note": "With Html set, nothing is fetched; the same fields are read from the page you give."
+          }
+        },
+        "type": {
+          "IExtractFactory": "Finds providers and builds services for them.",
+          "ExtractFactory": "The default factory.",
+          "IExtractService": "Fetches and reads pages for one provider.",
+          "ExtractService": "The default service for HTML and JSON providers.",
+          "ExtractRequest": "What to fetch: the provider, the address and, optionally, the page itself.",
+          "ExtractResult": "The fields that were read and the state of the fetch.",
+          "ExtractState": "How the fetch ended.",
+          "ExtractCodes": "The codes of this package."
+        },
+        "member": {
+          "IExtractFactory": {
+            "Providers": "All providers, ordered by Priority.",
+            "GetProvider": "Finds a provider by name.",
+            "GetProviderByHost": "Finds a provider by the host it serves.",
+            "GetService": "Builds the service of a provider.",
+            "GetServiceByHost": "Builds the service for a host, or the probe service when no provider matches."
+          },
+          "IExtractService": {
+            "Provider": "The provider this service reads.",
+            "SendAsync": "Fetches one page and reads its fields.",
+            "SendBulkAsync": "Does the same for a list of requests."
+          },
+          "ExtractRequest": {
+            "Provider": "The provider name.",
+            "Url": "The page address. Required.",
+            "Html": "The page itself, when you already have it. Nothing is fetched then."
+          },
+          "ExtractResult": {
+            "Fields": "The values that were read, by field name.",
+            "State": "Pending, Fetched, Missing, Refused or Unreachable.",
+            "Status": "The HTTP status, or 0 if there was none.",
+            "FinalUrl": "The address after redirects.",
+            "IsRedirected": "True when the final address differs from the asked one.",
+            "Code": "Why the state is what it is.",
+            "Field": "The value of a field, or empty text.",
+            "Has": "True when the field has a value."
+          },
+          "ExtractCodes": {
+            "ProviderRequired": "No provider name was given.",
+            "ProviderNotFound": "No provider has that name or host.",
+            "HostRequired": "No host was given.",
+            "UrlRequired": "The request has no address.",
+            "HtmlEmpty": "The page text is empty.",
+            "Unreachable": "The server could not be reached.",
+            "Refused": "The address, the media type or the size was refused.",
+            "Status": "The server answered with a status other than 2xx.",
+            "NoFields": "The page was read but no field matched.",
+            "NoRequests": "The list of requests is empty.",
+            "NoSelectors": "The field has no selectors.",
+            "NoPaths": "The field has no paths.",
+            "Miss": "The selector or path matched nothing.",
+            "JsonInvalid": "The JSON is not valid."
+          }
+        }
+      }
+    }
+  }
+}

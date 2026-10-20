@@ -1,0 +1,20 @@
+<ol class="dep-path" aria-label="@Text["path.label"]">
+    @foreach (var step in Steps)
+    {
+        <li class="dep-step" data-depth="@Number(step.Depth)" style="--d: @Number(step.Depth)">
+            <span class="dep-dot" aria-hidden="true"></span>
+            <span class="dep-copy">
+                @if (step.Depth == 0)
+                {
+                    <code>@step.Entry.Name</code>
+                }
+                else
+                {
+                    <a href="@($"{Navigation.BaseUri}packages/{step.Entry.Slug}")"><code>@step.Entry.Name</code></a>
+                }
+                <span class="dep-title">@Text[step.Entry.TextKey("title")]</span>
+                <span class="dep-kind">@Text[KindKey(step.Depth)]</span>
+            </span>
+        </li>
+    }
+</ol>

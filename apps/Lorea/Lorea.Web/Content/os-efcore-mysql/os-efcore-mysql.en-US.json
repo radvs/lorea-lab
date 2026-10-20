@@ -1,0 +1,165 @@
+{
+  "os-efcore-mysql": {
+    "title": "MySQL",
+    "summary": "MySQL with a safe setup: SSL required, utf8mb4 for every language, the provider's own retries, dates in UTC with microseconds, and its error numbers turned into clear results. Your code never names the provider underneath.",
+    "gives": {
+      "1": "SSL is required, utf8mb4 is used and the client never fetches the server's public key, whatever the connection string says.",
+      "2": "Dates are stored as UTC `datetime(6)`, so fractional seconds are kept.",
+      "3": "The API is ours, so the provider underneath can change later without touching your code."
+    },
+    "sample": {
+      "register": "A context on MySQL",
+      "verify": "Check the server certificate too"
+    },
+    "topics": {
+      "connection": {
+        "title": "Connecting safely",
+        "summary": "Give a connection string; SSL, character set, retries and dates are set for you.",
+        "points": {
+          "1": {
+            "title": "Options win",
+            "text": "Options always override the connection string."
+          },
+          "2": {
+            "title": "Safe SSL",
+            "text": "`SslMode` is `Required` and `AllowPublicKeyRetrieval` is off."
+          },
+          "3": {
+            "title": "Full Unicode",
+            "text": "`utf8mb4` stores Persian text and emoji correctly."
+          },
+          "4": {
+            "title": "UTC dates",
+            "text": "Every `DateTimeOffset` is stored as UTC `datetime(6)`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Security settings",
+            "text": "`AddOSMySql` registers your context through the core. The options always win over the connection string: `SslMode` is `Required` (`VerifyFull` with `VerifyServerCertificate`, `Preferred` only when you set `Encrypt = false`).\n\n`AllowPublicKeyRetrieval` is off, because fetching the server's key over an unchecked connection invites a man-in-the-middle."
+          },
+          "2": {
+            "title": "Characters and collation",
+            "text": "`CharacterSet` is `utf8mb4`, so Persian text and emoji are stored correctly. Set a collation in your model with `modelBuilder.UseCollation(...)` if you need one."
+          },
+          "3": {
+            "title": "Retry and dates",
+            "text": "With `RetryOnFailure` on, the provider's own retrying strategy is used with `RetryCount` and `RetryDelay` from `EFCoreOptions`.\n\nEvery `DateTimeOffset` is stored as UTC `datetime(6)`; the provider's default `datetime` would drop fractional seconds."
+          },
+          "4": {
+            "title": "Strict mode and migrations",
+            "text": "Keep MySQL's strict mode (`STRICT_TRANS_TABLES`, on by default in MySQL 8): it makes a too-long value fail with `data.tooLong` instead of being cut silently.\n\nMySQL has no schemas, so for migrations only `HistoryTable` matters."
+          }
+        },
+        "sample": {
+          "secure": {
+            "title": "What the connection really uses",
+            "note": "The string asked for no SSL, public key retrieval and latin1; the options overrode all three."
+          },
+          "collation": {
+            "title": "Choose a collation",
+            "note": "Collation is part of the model, so it lives in `OnModelCreating`, not in the connection."
+          }
+        },
+        "type": {
+          "MySqlOptions": "The connection string, character set and the security and retry switches.",
+          "MySqlEx": "Registration and setup."
+        },
+        "member": {
+          "MySqlOptions": {
+            "VerifyServerCertificate": "Also checks the server's certificate and host name (`VerifyFull`). Off by default; turn it on when the server has a proper certificate.",
+            "CharacterSet": "The connection character set. `utf8mb4` by default; must not be empty."
+          },
+          "MySqlEx": {
+            "AddOSMySql": "Registers a context on MySQL. Registers OS.EFCore too when it is not registered yet, so one call is enough; call `AddOSEFCore` as well, before or after, only to change its settings.",
+            "UseOSMySql": "Applies the MySQL setup to a builder."
+          }
+        }
+      },
+      "errors": {
+        "title": "Errors and what was tested",
+        "summary": "How MySQL errors turn into results, and an honest note on testing.",
+        "points": {
+          "1": {
+            "title": "Known numbers",
+            "text": "Common MySQL error numbers map to stable `data.*` codes."
+          },
+          "2": {
+            "title": "Wrong password",
+            "text": "A wrong user or password is `data.error` on purpose."
+          },
+          "3": {
+            "title": "Everything else",
+            "text": "Anything else is `data.error`."
+          },
+          "4": {
+            "title": "Honest note",
+            "text": "Only unit tests so far; no real MySQL server yet."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Recognized numbers",
+            "text": "These MySQL error numbers are recognized (checked against the official MySQL reference): 1062 gives `data.duplicate` with the index, 1048 gives `data.required` with the column, 1452 gives `data.missingRef`, 1451 gives `data.inUse`, 1406 and 1264 give `data.tooLong`.\n\n1213 (deadlock) and 1205 (lock wait timeout) give `data.busy`, and 1040, 1042, 2002, 2003, 2006 and 2013 give `data.offline`."
+          },
+          "2": {
+            "title": "Wrong password",
+            "text": "A wrong user or password (1045) is `data.error` on purpose: it is not temporary, it is not retried, and its message, which contains the user and host, never reaches a result. Anything else is `data.error`."
+          },
+          "3": {
+            "title": "Honest note",
+            "text": "This package has been tested only with unit tests (the error table, the connection settings, the retry strategy, the model and the date storage).\n\nIt has not yet run against a real MySQL server; do that before you rely on it in production."
+          }
+        },
+        "sample": {
+          "save-item": {
+            "title": "Turn a MySQL result into a message",
+            "note": "An out-of-range number (1264) also arrives as `data.tooLong`."
+          }
+        }
+      },
+      "provider": {
+        "title": "Provider and license",
+        "summary": "Which MySQL provider runs today, under which license, and why your code does not care.",
+        "points": {
+          "1": {
+            "title": "Oracle provider",
+            "text": "Today the package runs on Oracle's `MySql.EntityFrameworkCore`."
+          },
+          "2": {
+            "title": "Why",
+            "text": "Pomelo (MIT) has no stable release for EF Core 10 yet."
+          },
+          "3": {
+            "title": "License",
+            "text": "Oracle's packages are GPL-2.0-only with the Universal FOSS Exception."
+          },
+          "4": {
+            "title": "Easy move",
+            "text": "Your code stays as it is when the package moves to Pomelo."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Which provider and why",
+            "text": "Today the package runs on Oracle's `MySql.EntityFrameworkCore`, because the open-source alternative, Pomelo (MIT license), has no stable release for EF Core 10 yet."
+          },
+          "2": {
+            "title": "License and limits",
+            "text": "Oracle's packages are licensed GPL-2.0-only with the Universal FOSS Exception; check this against how you distribute your app before you ship.\n\nOracle's provider supports MySQL only, not MariaDB."
+          },
+          "3": {
+            "title": "Moving later",
+            "text": "Because `AddOSMySql` and `MySqlOptions` expose no provider type, the package can move to Pomelo when it ships for EF Core 10, which also brings MariaDB, and your code stays as it is."
+          }
+        },
+        "sample": {
+          "from-settings": {
+            "title": "Your code only knows our API",
+            "note": "No Oracle or Pomelo type appears here, so a provider switch changes nothing in this code."
+          }
+        }
+      }
+    }
+  }
+}

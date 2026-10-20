@@ -1,0 +1,246 @@
+{
+  "os-web-identity": {
+    "title": "Web identity",
+    "summary": "Identity for web apps on top of OS.Web.API: a middleware that turns a signed-in request into a principal with cached permissions and refuses revoked sessions, the `[Perm]` attribute with clean 401 and 403 answers, the permission gate for API jobs, and a ready sign-in controller with login, second step, renew, logout and sessions.",
+    "gives": {
+      "1": "One registration line: `AddOSIdentityWeb`. The pipeline step plugs itself in between authentication and authorization.",
+      "2": "`[Perm(\"shop:orders:view\")]` on a controller, an action or an endpoint; the answers are `OSResult` bodies a client already understands.",
+      "3": "A sign-in controller you derive from with an empty class: it answers 401, 423 and 429 correctly, issues tokens tied to a session and lets a user end their own sessions."
+    },
+    "sample": {
+      "quick": "Identity for a web API with a login source of your own"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Register once, and a signed-in request gets a principal before authorization runs.",
+        "points": {
+          "1": {
+            "title": "One registration",
+            "text": "`AddOSIdentityWeb` also registers the identity services when you have not."
+          },
+          "2": {
+            "title": "No extra pipeline line",
+            "text": "With `UseOSWebApi` the middleware is added for you, at the right place."
+          },
+          "3": {
+            "title": "Order matters",
+            "text": "The principal must exist before authorization, and after authentication."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering",
+            "text": "`AddOSIdentityWeb(o => ...)` takes the same `IdentityOptions` as `AddOSIdentity` and adds the web parts: `IHttpContextAccessor`, the accessor that finds the current principal on the request, the permission policy provider, handler and result handler, the job gate for `OS.Web.API`, and the pipeline step.\n\nYou also register the things only your app knows: `AddOSPermProvider<T>` for the permission tree and `AddOSLoginSource<T>` for your user table. With a database, `AddOSIdentityData<YourContext>()` stores roles and sessions; without it, sessions live in memory.\n\nRegister `AddOSCaching` as well: without a cache, the permissions of a user are read from storage on every request."
+          },
+          "2": {
+            "title": "The pipeline",
+            "text": "`IdentityPipelineStep` implements the `IApiPipelineStep` of `OS.Web.API`. `UseOSWebApi` runs every registered step after authentication and before authorization, so the call `app.UseOSWebApi()` is all you write.\n\nIf you build your own pipeline without `UseOSWebApi`, call `app.UseOSIdentity()` yourself, between `UseAuthentication()` and `UseAuthorization()`. Calling it twice does no harm but wastes a little work."
+          },
+          "3": {
+            "title": "The session claim",
+            "text": "`IdentityClaims.SessionId` is the claim name `sid`, which carries the session id inside the token. The middleware also accepts the long claim type that some bearer handlers map `sid` to. `IdentityClaims.ItemKey` is the key under which the principal is kept on the request."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register the web parts",
+            "note": "The login source and the permission tree are yours; the rest is one line."
+          },
+          "pipeline": {
+            "title": "Your own pipeline",
+            "note": "Only when you do not use `UseOSWebApi`."
+          }
+        },
+        "type": {
+          "IdentityWebEx": "Registration and the manual pipeline call.",
+          "IdentityPipelineStep": "The pipeline step that adds the principal middleware at the right place.",
+          "IdentityClaims": "The session claim name and the request item key."
+        },
+        "member": {
+          "IdentityWebEx": {
+            "AddOSIdentityWeb": "Registers the identity services if needed, plus the web parts; replaces the principal accessor with the request one.",
+            "UseOSIdentity": "Adds the principal middleware; only for a pipeline built without `UseOSWebApi`."
+          }
+        }
+      },
+      "principal": {
+        "title": "The principal of a request",
+        "summary": "Who is calling, what they may do, and when the answer is a plain 401.",
+        "points": {
+          "1": {
+            "title": "Built once per request",
+            "text": "The user id comes from the token, the permissions from the cache."
+          },
+          "2": {
+            "title": "Revoked sessions stop at once",
+            "text": "A valid token of a revoked session is refused, so a logout is real."
+          },
+          "3": {
+            "title": "Your table can say no",
+            "text": "`IAccountGate` lets your own user table refuse a disabled account."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What the middleware does",
+            "text": "For a request without a signed-in user it does nothing and passes on. For a signed-in user it reads the id from the claims, checks the session in the token (if there is one), asks the optional account gate, reads the permissions from the cache and keeps a `Principal` on the request.\n\nA token whose session is revoked, expired, idle, unknown or not a valid id is refused with 401 and a body of `OSResult` with the code `identity.errors.invalid-login`. The same happens when the account gate says the account is not active. The answer never says which of these it was.\n\nPermissions come from `IPermCache`: resolved once, then served for 60 seconds. Several servers each keep their own copy, so a revoked permission can live for up to a minute on another server."
+          },
+          "2": {
+            "title": "Reading the current user",
+            "text": "`HttpPrincipalAccessor` is the `IPrincipalAccessor` for web apps: it returns the principal kept on the current request, or nothing outside a request. Inject `IPrincipalAccessor` or `IPermChecker` anywhere; a singleton is fine, because the accessor looks at the current request on each call.\n\nThis replaces the static holders old apps wrote by hand."
+          },
+          "3": {
+            "title": "The account gate",
+            "text": "A signed token can outlive a change in your user table: the user may be disabled after it was issued. Implement `IAccountGate.IsActiveAsync(userId)` against your table and register it; the middleware asks it on every request and refuses with 401 when it answers false. Without a gate every valid token passes."
+          }
+        },
+        "sample": {
+          "from-request": {
+            "title": "A principal from a request",
+            "note": "The id and name come from the token, the permission from the cache; an anonymous request has none."
+          },
+          "revoked-session": {
+            "title": "A revoked session stops at once",
+            "note": "The token is still valid, the session is not."
+          }
+        },
+        "type": {
+          "PrincipalMiddleware": "Builds the principal of a request, checks the session and the account, and refuses with 401 when needed.",
+          "HttpPrincipalAccessor": "Finds the current principal on the current request.",
+          "IAccountGate": "Lets your own user table say that an account is not active."
+        }
+      },
+      "perms": {
+        "title": "Guarding with permissions",
+        "summary": "Put `[Perm(\"...\")]` where access must be limited. A missing sign-in is 401, a missing permission is 403.",
+        "points": {
+          "1": {
+            "title": "A normal ASP.NET policy",
+            "text": "`[Perm]` is an `AuthorizeAttribute`, so it works on controllers, actions and minimal API endpoints."
+          },
+          "2": {
+            "title": "Any of several",
+            "text": "`[Perm(\"a\", \"b\")]` passes when the user holds a or b."
+          },
+          "3": {
+            "title": "Bad names fail early",
+            "text": "A malformed name throws when the attribute is created, not on the first request."
+          },
+          "4": {
+            "title": "Clean answers",
+            "text": "The refusals are `OSResult` bodies, with a `WWW-Authenticate: Bearer` header for 401."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Using the attribute",
+            "text": "Write `[Perm(\"shop:orders:view\")]` on a controller or an action, or `.RequirePerm(\"shop:orders:view\")` on a minimal API endpoint. Names are lower-cased and checked against the permission name rules at once. With several names the user needs any one of them.\n\nBehind the scenes the attribute names a policy (`perm:shop:orders:view`). `PermPolicyProvider` builds that policy on first use and keeps it; every other policy name goes to the default provider, so your own policies keep working. The policy needs an authenticated user and one `PermRequirement`."
+          },
+          "2": {
+            "title": "The check",
+            "text": "`PermHandler` asks `IPermChecker` for each name along the current scope chain, from the nearest scope to the app. When your app has scopes (a store, a branch), a permission granted only in store 5 passes only for requests that are in store 5, and a deny in one store beats an allow everywhere. Without scope sources the chain is the app alone.\n\nRoot passes everything. Nothing is checked against a database here: the permissions are already on the principal."
+          },
+          "3": {
+            "title": "The answers",
+            "text": "`AuthResultHandler` writes the refusals: 401 for a caller who is not signed in (with `WWW-Authenticate: Bearer`, the code `identity.errors.invalid-login`) and 403 for a signed-in caller without the permission (the code `identity.errors.perm-denied`). Both are `OSResult` JSON, the same shape as every other error of the API."
+          },
+          "4": {
+            "title": "Jobs",
+            "text": "`PermJobGate` implements the `IJobGate` of `OS.Web.API`: an API job that declares a permission is allowed only for a caller who holds it. It is registered for you; without it, jobs with a permission are refused for everyone."
+          }
+        },
+        "sample": {
+          "guards": {
+            "title": "Four requests, four answers",
+            "note": "Allowed, forbidden, anonymous and root, on endpoints guarded with `RequirePerm`."
+          },
+          "on-a-controller": {
+            "title": "On a controller",
+            "note": "The attribute on a class and on one action; the two together mean both must pass."
+          },
+          "bad-name": {
+            "title": "A bad name stops early",
+            "note": "The error is thrown where the attribute is written."
+          }
+        },
+        "type": {
+          "PermAttribute": "`[Perm(\"a\", \"b\")]`: an authorize attribute for a controller, action or endpoint; any of the names is enough.",
+          "PermRequirement": "The requirement behind the policy: a list of names, any of which satisfies it.",
+          "PermPolicyProvider": "Builds the `perm:` policies on demand and leaves every other policy to the default provider.",
+          "PermHandler": "Checks the names along the current scope chain with the permission checker.",
+          "AuthResultHandler": "Writes 401 and 403 as `OSResult` JSON.",
+          "PermEndpointEx": "`RequirePerm(...)` for minimal API endpoints.",
+          "PermJobGate": "Allows an API job only for a caller who holds the job's permission."
+        }
+      },
+      "login": {
+        "title": "The sign-in controller",
+        "summary": "Derive from `ApiAuthController` with an empty class and get login, second step, renew, logout and sessions.",
+        "points": {
+          "1": {
+            "title": "An empty class",
+            "text": "Your class passes its dependencies to the base and adds nothing; the route is the class name without `Controller`."
+          },
+          "2": {
+            "title": "Tokens tied to a session",
+            "text": "The token carries the session id and never outlives the session."
+          },
+          "3": {
+            "title": "Honest status codes",
+            "text": "401 for a bad login, 423 for a locked one, 429 for the throttle, both with `Retry-After`."
+          },
+          "4": {
+            "title": "Own sessions only",
+            "text": "A user can list and end their own sessions, never someone else's."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Deriving",
+            "text": "Write the class once: `public sealed class AuthController(LoginService login, ITokenService tokens, IPrincipalAccessor principals, ISessionStore sessions, JwtOptions jwt, TimeProvider time) : ApiAuthController(login, tokens, principals, sessions, jwt, time);`. The base is an `ApiController`, so versioned routes and the `OSResult` wire shape come with it. JWT must be enabled in the `OS.Web.API` options.\n\nThe controller never touches your user table. It uses `LoginService`, which uses the `ILoginSource` you registered."
+          },
+          "2": {
+            "title": "Signing in",
+            "text": "`POST login` takes a `LoginBody`: an identifier (a name, an email or a mobile number), a secret and an optional method (`code`, `magic-link`, and so on). It answers 200 with a `LoginResponseModel`: the token, the user and the session id.\n\nWhen the method needs one more step, the answer is 200 with the status `info` and only a challenge id and kind. `POST login/verify` takes a `VerifyBody` with that id and the answer (the code, the link token or the second factor) and finishes the sign-in with the same response.\n\nA wrong password and an unknown name both give 401 with `identity.errors.invalid-login`. A disabled account gives 403, an expired temporary password 401 with `identity.errors.temp-expired`."
+          },
+          "3": {
+            "title": "Locks and the throttle",
+            "text": "A locked login gives 423 with the code `identity.errors.locked`; the throttle gives 429 with `identity.errors.throttled`. Both carry a `RetryModel` with `retryAfterSeconds` in the body and the `Retry-After` header, so a client can show a countdown. The throttle also counts names that do not exist, so a missing name looks like an existing one."
+          },
+          "4": {
+            "title": "After sign-in",
+            "text": "`POST renew` gives a fresh token for the same session, as long as the session is still valid. `POST logout` ends the current session; the same token stops working at once. `POST logout-all` ends every session of the user and answers with how many sessions it ended, in a `SessionCountModel`.\n\n`GET access` returns the caller's permission set for the UI. `GET sessions` lists the caller's active sessions. `DELETE sessions/{id}` ends one of them; an id that is not the caller's answers 404, so nobody can end a session of someone else."
+          }
+        },
+        "sample": {
+          "own-controller": {
+            "title": "The controller of your app",
+            "note": "The whole class: it only passes its services to the base."
+          },
+          "sign-in": {
+            "title": "Sign in and open a protected endpoint",
+            "note": "The token from the login opens `access`; without it the answer is 401."
+          },
+          "throttle": {
+            "title": "Five misses, then 429",
+            "note": "The sixth answer says when to try again."
+          },
+          "logout-ends-the-token": {
+            "title": "Logout is real",
+            "note": "The same token works before logout and fails after it."
+          }
+        },
+        "type": {
+          "ApiAuthController": "The abstract sign-in controller: login, second step, renew, logout, logout-all, access, sessions.",
+          "LoginBody": "The login request: identifier, secret and an optional method.",
+          "VerifyBody": "The second step: the challenge id and the answer.",
+          "LoginResponseModel": "A token with the user and the session, or only a challenge id and kind.",
+          "LoginUserModel": "The signed-in user in a login answer: id, user name, full name.",
+          "RetryModel": "How many seconds to wait; sent with 423 and 429.",
+          "SessionCountModel": "How many sessions an action ended, for logout-all."
+        }
+      }
+    }
+  }
+}

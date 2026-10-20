@@ -1,0 +1,485 @@
+{
+  "os-settings": {
+    "title": "Application settings",
+    "summary": "Settings for your app, declared once in code: typed values with defaults, per-tenant overrides, encrypted secrets, environment overrides and a safe store behind an admin screen.",
+    "gives": {
+      "1": "Declare every setting once, with its type, default and rules, and read it back as a number, a time span, a list or a bound options class.",
+      "2": "Let a tenant or any other scope override a value, and keep secrets encrypted so they never come back out of the store.",
+      "3": "Give an admin screen a safe way to view and save settings, with permission checks, validators, version checks and stable error codes."
+    },
+    "sample": {
+      "register": "Register the settings services",
+      "read": "Read a setting by its key"
+    },
+    "topics": {
+      "setup": {
+        "title": "Quick start",
+        "summary": "Tell the app which settings exist, register the services, and catch mistakes the moment the app starts.",
+        "points": {
+          "1": {
+            "title": "Define once",
+            "text": "You describe each setting once in code, with its type and default."
+          },
+          "2": {
+            "title": "Three steps",
+            "text": "Write a provider, call `AddOSSettings`, then ask for the catalog."
+          },
+          "3": {
+            "title": "Library does the rest",
+            "text": "Reading, caching, overriding and saving are handled for you."
+          },
+          "4": {
+            "title": "Early failure",
+            "text": "Mistakes are caught the moment the app starts, not halfway through."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Why settings",
+            "text": "Every app has values that should not be hard-coded, such as how long a short link is or how many orders a tenant may place. With OS.Settings you describe each of them once in code, with its type and default. Reading, caching, overriding and saving are handled by the library.\n\nExample: a shop called `shop` has a `billing` section. The `billing.limit` key is 100 by default, but each tenant may get its own limit. The `billing.gateway-key` key is a secret that an admin enters later."
+          },
+          "2": {
+            "title": "Steps one and two",
+            "text": "First, write an `ISettingProvider` that returns your sections and their keys. Every key starts with its section code, such as the key `billing.limit` in the `billing` section.\n\nSecond, call `AddOSSettings` with an `AppCode`, which is 1 to 24 lower-case letters, digits or dashes. Then register your provider with `AddOSSettingProvider`.\n\nThis also adds caching, scopes and secrets when they are not there yet. Calling it again only adds to the same options. If you have a secret key, also register an `ISecretKeyRing` with `AddOSSecretKeyRing`."
+          },
+          "3": {
+            "title": "Step three",
+            "text": "Ask for `SettingCatalog` once at start. The catalog checks everything when it is built and throws an `OSException` for any mistake.\n\nThe mistakes are: a bad app code, a key that is not lower-case or does not start with its section code, an unknown kind, a default its own kind rejects, a secret with a default, or a key registered twice.\n\nThat way the app stops at start instead of at the first read."
+          }
+        },
+        "sample": {
+          "provider": {
+            "title": "Describe a section in a provider",
+            "note": "The `billing` section has four keys: a limit each tenant may change (`Scopable`), a currency that can only be usd or eur, a list of people to notify, and a secret with no default because only an admin enters it."
+          },
+          "options": {
+            "title": "Set the app code, scopes and cache time",
+            "note": "The shop first registers a `tenant` scope kind with id 1, then lets it override `billing.limit`. App-wide values stay in the cache for 30 seconds, tenant values for 5 minutes."
+          },
+          "startup-check": {
+            "title": "Catch a catalog mistake at start",
+            "note": "`Shop` has a capital letter, so building the catalog throws and the output is the error message. With `shop` the output would be `ready`."
+          }
+        },
+        "type": {
+          "SettingEx": "Registration helpers for the service collection, and the helper that builds a key from a section and a property name.",
+          "SettingOptions": "The app code, the cache time and which scope kinds may override which keys."
+        },
+        "member": {
+          "SettingEx": {
+            "AddOSSettings": "Registers the settings services once. Safe to call again: a later call only applies its setup to the same options and adds nothing twice.",
+            "AddOSSettingProvider": "Adds a provider of sections. Several providers can be registered.",
+            "AddOSSettingKind": "Adds a custom kind next to the nine built-in ones.",
+            "AddOSSettingGate": "Replaces the default gate, which denies everything.",
+            "AddOSSettingValidator": "Adds a validator that checks a whole section before it is saved.",
+            "AddOSSettingProbe": "Adds a probe that tries the new values, such as a connection, before they are saved.",
+            "AddOSSettingJson": "Uses a JSON file as the source of stored values.",
+            "SyncOSSettingsAsync": "Sends the list of keys to the source now.",
+            "KeyOf": "Builds a key such as links.token-length from a section code and a property name."
+          },
+          "SettingOptions": {
+            "AppCode": "The name of this app in the source. Required: 1 to 24 lower-case letters, digits or dashes.",
+            "EnvironmentSection": "The configuration section that overrides settings. OSSettings by default.",
+            "Fresh": "How long one scope's values are cached. 60 seconds by default.",
+            "AllowScopes": "Lets the scope kinds override a key, or every key under a prefix such as billing.",
+            "Cache": "Sets the cache time for one scope kind.",
+            "FreshOf": "The cache time of a scope kind.",
+            "AllowedFor": "The scope kinds that may override a key."
+          }
+        }
+      },
+      "catalog": {
+        "title": "Catalog and types",
+        "summary": "How a setting is described: its section, its key, its kind (the type of its value) and who may see it.",
+        "points": {
+          "1": {
+            "title": "List of everything",
+            "text": "The catalog lists every setting your app knows, built from your providers."
+          },
+          "2": {
+            "title": "No database needed",
+            "text": "It tells you a key's type and default without touching a database."
+          },
+          "3": {
+            "title": "Nine kinds",
+            "text": "There are nine kinds, and each one cleans up its input."
+          },
+          "4": {
+            "title": "Four access levels",
+            "text": "A setting is public, internal, secret or system."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Catalog example",
+            "text": "The catalog is the list of every setting your app knows. Whenever you need to know what a key is, what type it has and what its default is, the catalog answers, without touching a database.\n\nExample: `links.token-length` is an integer in the `links` section with a default of 6 and a range of 4 to 64. When an admin types `\" 012 \"` it is saved as 12. When they type 100 the form shows `settings.errors.range`."
+          },
+          "2": {
+            "title": "Sections and info",
+            "text": "A `SettingSection` groups keys. It has a `Code`, a title key for translation, the permissions needed to view and edit it, and an optional `BindType`. A `BindType` is an options class you can read the whole section into.\n\nEach `SettingInfo` has four fields. `Key` is the key and `Kind` is its type. `Default` is the default value and `Access` is the access level.\n\n`Scopable` lets a scope such as a tenant have its own value. `Rules` sets a minimum, a maximum, a length or the allowed options."
+          },
+          "3": {
+            "title": "Access levels",
+            "text": "`Public` values can be sent to a browser. `Internal` is the normal case.\n\n`Secret` values are stored encrypted and never come back as text. `System` values come only from code and cannot be changed."
+          },
+          "4": {
+            "title": "Kinds and errors",
+            "text": "There are nine kinds: text, integer, decimal, boolean, url, path, duration, choice and list. A kind cleans up what it is given and, instead of throwing, returns a stable error key that a form can show.\n\nA duration must contain a colon, because a bare number would be read as days.\n\nAsking the catalog for a key it does not have throws an `OSException`. When a section has a `BindType`, every settable property must match a key of a compatible type."
+          }
+        },
+        "sample": {
+          "lookup": {
+            "title": "Look up a key in the catalog",
+            "note": "The catalog is built here straight from `LinksSettings`, with no database behind it. It answers the section (`links`), the kind (`integer`), the default (`6`) and the number of keys (`5`)."
+          },
+          "normalize": {
+            "title": "Normalize a value and check its range",
+            "note": "`\" 012 \"` is inside the 4 to 64 range and becomes `12`. 100 is too big, so the kind returns false with `settings.errors.range` instead of throwing."
+          },
+          "duration": {
+            "title": "Write a duration",
+            "note": "`00:00:30` means 30 seconds and is accepted. A bare `30` is refused with `settings.errors.duration`, because it would mean 30 days."
+          },
+          "list-and-choice": {
+            "title": "Normalize a list and a choice",
+            "note": "The list keeps each allowed item once, spelled as in the rules: `beta,alpha`. The choice fixes the letter case to `alpha`, and `gamma` is refused with `settings.errors.choice`."
+          }
+        },
+        "type": {
+          "ISettingProvider": "Returns the sections of one part of your app.",
+          "SettingSection": "A group of keys with its title, permissions and optional options class.",
+          "SettingInfo": "One setting: key, kind, default, access, scope rule and value rules.",
+          "SettingCatalog": "All sections and keys, checked once when it is built.",
+          "SettingKindRegistry": "The kinds that are registered, found by name."
+        },
+        "member": {
+          "SettingCatalog": {
+            "Sections": "Every section, in view order.",
+            "Items": "Every key, section by section.",
+            "TryGet": "Finds a key without throwing.",
+            "Find": "Finds a key, or throws `OSException`.",
+            "SectionOf": "The section that holds a key.",
+            "DefaultOf": "The default of a key, normalized by its kind.",
+            "ScopesOf": "The scope kinds that can hold a value for a key, nearest first.",
+            "KindOf": "The kind of a key, optionally as a typed kind."
+          },
+          "SettingInfo": {
+            "Access": "Public, Internal, Secret or System.",
+            "Scopable": "True when a scope may override the app-wide value.",
+            "Rules": "Minimum, maximum, length or allowed options."
+          },
+          "SettingKindRegistry": {
+            "Find": "Finds a kind by its name, or throws `OSException`.",
+            "TryGet": "Finds a kind by its name without throwing."
+          }
+        }
+      },
+      "reading": {
+        "title": "Reading values",
+        "summary": "Get a setting's value in code: one key, a whole section as a class, or only the values that are safe to send to a browser.",
+        "points": {
+          "1": {
+            "title": "Source-independent",
+            "text": "Call `ISettingReader`; it never needs to know where a value came from."
+          },
+          "2": {
+            "title": "Lookup order",
+            "text": "Environment first, then the stored value, then the default in code."
+          },
+          "3": {
+            "title": "Cheap reads",
+            "text": "Values stay in the cache, so reading is cheap."
+          },
+          "4": {
+            "title": "Safe failures",
+            "text": "A broken source or a bad value does not break reading."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading example",
+            "text": "`ISettingReader` is what your code calls to get a value, and it never needs to know where the value came from.\n\nExample: the link service asks for `links.token-length` as a `long` and gets 6, the default in code, until an admin saves 20. After that it gets 20.\n\nTenant 7 asks for `billing.limit` and gets its own 500, while every other tenant still gets 100."
+          },
+          "2": {
+            "title": "Lookup order",
+            "text": "A value is looked up in this order and the first one found wins. First the environment. Then the stored value of the nearest scope that may hold the key, for example the tenant and then the whole app. Last, the default in code.\n\nA `System` key never looks at stored values."
+          },
+          "3": {
+            "title": "Read methods",
+            "text": "`GetAsync<T>` returns the type that the key's kind produces: long for integer, decimal, bool, TimeSpan for duration, `IReadOnlyList<string>` for list and string for the rest. Asking for another type throws an `OSException`.\n\n`SectionAsync<T>` fills the section's options class, matching each property to a key by name. For example `TokenLength` matches the key `token-length`.\n\n`PublicAsync` returns only the `Public` keys, ready for a browser."
+          },
+          "4": {
+            "title": "Cache and failures",
+            "text": "The values of each scope stay in the cache for the `Fresh` time, so reads are cheap. `InvalidateAsync` drops one scope's cache.\n\nA broken source or a bad value does not break reading. A stored value its kind rejects is ignored and reported.\n\nWhen the source fails you get the defaults and the failure is reported once. The source is not asked again for five seconds."
+          }
+        },
+        "sample": {
+          "get": {
+            "title": "Read two typed values",
+            "note": "With nothing stored, the result is the defaults from `LinksSettings`: `6 characters, 00:00:30 timeout`. Asking for `links.timeout` as anything other than `TimeSpan` would throw."
+          },
+          "section": {
+            "title": "Read a whole section as an options class",
+            "note": "`TokenLength`, `BaseUrl`, `Timeout` and `Enabled` are filled from their keys in one call. The class must be the section's `BindType`."
+          },
+          "tenant": {
+            "title": "Read with a scope chain",
+            "note": "The chain is: this tenant first, then the whole app. If the tenant saved its own `billing.limit`, that wins; otherwise the app value or the default of 100 is used. This works only because `billing.limit` is `Scopable`."
+          },
+          "public-values": {
+            "title": "Collect the values safe for a browser",
+            "note": "Only `links.token-length` and `links.base-url` are `Public`, so the result has just those two. Timeout, enabled and the secret token stay on the server."
+          },
+          "refresh": {
+            "title": "Drop the cached values of a scope",
+            "note": "The store already clears the cache after every save. Call this yourself only when you change stored values another way, for example by editing the file by hand."
+          }
+        },
+        "type": {
+          "ISettingReader": "Reads values, sections and public values for a scope chain.",
+          "SettingDraft": "The values a section would have after a save. Validators and probes read it."
+        },
+        "member": {
+          "ISettingReader": {
+            "GetAsync": "Reads one key as a type, for the current scopes or for a chain you pass.",
+            "SectionAsync": "Fills a section's options class.",
+            "PublicAsync": "The values of the Public keys, as text.",
+            "InvalidateAsync": "Drops the cached values of a scope and forgets a remembered failure."
+          },
+          "SettingDraft": {
+            "Section": "The code of the section being saved.",
+            "Scope": "The scope being saved.",
+            "Get": "Reads one value of the draft as a type.",
+            "Bind": "Fills an options class from the draft."
+          }
+        }
+      },
+      "store": {
+        "title": "Storing and management",
+        "summary": "What an admin settings screen needs: list the sections, show the values and save changes safely.",
+        "points": {
+          "1": {
+            "title": "Admin back end",
+            "text": "`ISettingStore` is the back end of the admin settings page."
+          },
+          "2": {
+            "title": "Conflict safety",
+            "text": "If a colleague saved a moment earlier, the answer is `Conflict`."
+          },
+          "3": {
+            "title": "Four steps",
+            "text": "A save is checked, validated, probed and only then written."
+          },
+          "4": {
+            "title": "Nothing throws",
+            "text": "The answer is always an `OSResult` with a status and a stable error code."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Admin example",
+            "text": "`ISettingStore` is the back end of an admin settings page. Your code reads values with `ISettingReader`; an admin views and changes them through the store.\n\nExample: an admin opens the Links page. Token length is 6 with origin `Default`, and timeout is 45 seconds with origin `Own`, meaning saved earlier.\n\nThey change token length to 20, reset timeout to its default and press Save. If a colleague saved the same page a moment earlier, the answer is `Conflict` and the colleague's work is not silently overwritten."
+          },
+          "2": {
+            "title": "Methods and access",
+            "text": "`GetSectionsAsync` lists the sections the admin may see. `GetSectionAsync` returns one section with each item's value, its `Version` and whether it can be edited. `SaveAsync` applies a list of changes.\n\nThe origin of a value is one of four: `Default`, `Inherited`, `Own` or `Environment`.\n\nEvery call first asks your `ISettingGate` whether the user holds the section's permission in that scope. The default gate says no to everything, so register your own."
+          },
+          "3": {
+            "title": "Save steps",
+            "text": "A save goes through four steps in order. First each key and value is checked. Then the section's validators run, which are your own rules for the section.\n\nThen its probes run, a real try such as calling a URL. Only after all that are the values written and the cache cleared."
+          },
+          "4": {
+            "title": "Results and secrets",
+            "text": "Nothing throws. The answer is an `OSResult` with a status and a stable error code. `Invalid` comes with field errors. The other statuses are `Forbidden`, `NotFound` and `Conflict`.\n\nEach change either sets a value or resets the key to its default, and carries the `Version` it was read with.\n\nA secret is encrypted before it is saved and is never sent back. The item only says `HasSecret`."
+          }
+        },
+        "sample": {
+          "gate": {
+            "title": "Allow the permissions of an admin",
+            "note": "This gate allows `settings.view` and `settings.edit` in every scope, which is all the `links` section needs. In a real app, check the current user's roles here; with no gate at all, every call answers `Forbidden`."
+          },
+          "validator": {
+            "title": "Check a whole section before it saves",
+            "note": "A rule of your own: timeout must not be more than 5 minutes. The draft holds the new values next to the unchanged ones, so the rule always sees the whole section as it would be saved."
+          },
+          "probe": {
+            "title": "Try the new values before they are saved",
+            "note": "Before saving, the probe calls the new `links.base-url`. If the site does not answer, the save stops and the admin gets `links.errors.unreachable`."
+          },
+          "register": {
+            "title": "Register the gate, validator and probe",
+            "note": "The validator and the probe both say `Section => \"links\"`, so they run only when the `links` section is saved."
+          },
+          "edit": {
+            "title": "Change one value and reset another",
+            "note": "Read the section first to get each item's `Version`, then set token length to 20 and reset timeout to its default in one save. The result is `Ok`, or `Conflict` if someone changed one of these rows after you read them."
+          }
+        },
+        "type": {
+          "ISettingStore": "Lists, reads and saves sections for a scope, returning results.",
+          "ISettingGate": "Decides whether a permission is allowed in a scope.",
+          "ISettingSectionValidator": "Checks the draft of one section and returns field errors.",
+          "ISettingProbe": "Tries the draft of one section, for example by connecting."
+        },
+        "member": {
+          "ISettingStore": {
+            "GetSectionsAsync": "The sections the caller can view in a scope.",
+            "GetSectionAsync": "One section with its items. NotFound, Forbidden or Invalid on failure.",
+            "SaveAsync": "Applies the changes and returns the section as it is afterwards."
+          },
+          "ISettingGate": {
+            "CanAsync": "True when the current user holds the permission in the scope."
+          },
+          "ISettingSectionValidator": {
+            "Section": "The section this validator checks.",
+            "ValidateAsync": "Returns an error for each field that is not acceptable."
+          },
+          "ISettingProbe": {
+            "Section": "The section this probe checks.",
+            "ProbeAsync": "Returns a failed result to stop the save."
+          }
+        }
+      },
+      "sources": {
+        "title": "Sources and sync",
+        "summary": "Where saved values are kept: a JSON file out of the box, or a source you write yourself, such as a database.",
+        "points": {
+          "1": {
+            "title": "Where values live",
+            "text": "Everything an admin saves goes to the source."
+          },
+          "2": {
+            "title": "JSON by default",
+            "text": "The default source is a JSON file; a database can replace it later."
+          },
+          "3": {
+            "title": "All or nothing",
+            "text": "Several writes are saved together or not at all."
+          },
+          "4": {
+            "title": "Version control",
+            "text": "A change without the right version is refused."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What a source is",
+            "text": "A source is where saved values live: the defaults are in your providers, but everything an admin saves goes to the source.\n\nOut of the box that is one JSON file. Later you can put a database in its place by implementing `ISettingSource`. You rarely call a source yourself, because the store does it for you.\n\nExample: during development the shop keeps its saved settings in `data/settings.json`. When the admin saves a token length of 20, a row with that value and a new `Version` appears in the file."
+          },
+          "2": {
+            "title": "The contracts",
+            "text": "An `ISettingSource` loads the rows of one scope, saves several writes together (all of them or none) and receives the list of keys.\n\nA `SettingRow` holds a key, a value or an encrypted secret, a `Version` and the time it changed. A `SettingWrite` sets a value, sets a secret or resets the key. It carries the version it was read with."
+          },
+          "3": {
+            "title": "The JSON source",
+            "text": "`JsonSettingSource` keeps every app and scope in one file, writes it atomically and lets in one writer at a time.\n\nIts version is the time of the last change, so a change to an existing key is refused without the right version. The answer is `Invalid` when the version is missing and `Conflict` when it is out of date.\n\nA file that cannot be read throws and is never overwritten."
+          },
+          "4": {
+            "title": "Sync",
+            "text": "`SyncOSSettingsAsync` sends the catalog's keys to the source so that a database source can keep its key table up to date.\n\nThe store does this once before the first save, and the JSON source ignores it."
+          }
+        },
+        "sample": {
+          "json": {
+            "title": "Store values in a JSON file",
+            "note": "One line is enough: saved values go to `data/settings.json`, and the folder is created on the first save."
+          },
+          "save-and-load": {
+            "title": "Save a value and load it back",
+            "note": "This saves a token length of 20 for the whole app and loads it back. The `Version` it returns is what the next change to this key must send. The store usually does this for you; here the source is used directly."
+          },
+          "update": {
+            "title": "Change a stored value safely",
+            "note": "Load the row and send its `Version` back with the new value 30. The result is `Ok`, or `Conflict` if someone saved this key after you loaded it."
+          },
+          "sync": {
+            "title": "Send the key list to the source",
+            "note": "Needed only when your source keeps its own table of keys, such as a database. Call it at start; with the JSON file it does nothing."
+          }
+        },
+        "type": {
+          "ISettingSource": "Loads and saves the rows of a scope.",
+          "ISettingSync": "Sends the catalog's keys to the source.",
+          "JsonSettingSource": "A source that keeps the rows in one JSON file.",
+          "SettingRow": "One stored row.",
+          "SettingWrite": "One change to a row: a value, a secret or a reset.",
+          "SettingKeyRow": "One key of the catalog, as sent to the source."
+        },
+        "member": {
+          "ISettingSource": {
+            "LoadAsync": "The rows of an app in one scope.",
+            "SaveAsync": "Applies the writes together, or none of them.",
+            "SyncKeysAsync": "Receives the keys of the catalog."
+          },
+          "JsonSettingSource": {
+            "LoadAsync": "Reads the rows of one scope. A missing or empty file gives no rows.",
+            "SaveAsync": "Checks every version first, then writes the file atomically.",
+            "SyncKeysAsync": "Does nothing; a file has no key table."
+          },
+          "SettingRow": {
+            "Version": "Changes with every save. Send it back with the next change.",
+            "Secret": "The sealed bytes of a secret, never plain text."
+          },
+          "SettingWrite": {
+            "Reset": "Removes the stored row so the default or the parent scope applies again.",
+            "Version": "The version this change was based on. Empty for a new key."
+          }
+        }
+      },
+      "environment": {
+        "title": "Environment variables and errors",
+        "summary": "Override any setting from appsettings or an environment variable, and understand the error codes you get back.",
+        "points": {
+          "1": {
+            "title": "From outside the app",
+            "text": "An environment value or appsettings wins over the stored value."
+          },
+          "2": {
+            "title": "Two key forms",
+            "text": "Write the key as itself or in a form every shell accepts."
+          },
+          "3": {
+            "title": "Problem reports",
+            "text": "With an `IErrorSink`, background problems are reported."
+          },
+          "4": {
+            "title": "Stable codes",
+            "text": "Error codes never change, so your UI can translate them."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Environment override",
+            "text": "Sometimes a value must come from outside the app rather than from the admin screen: a different link length on the test server, or the payment gateway key from an environment variable in production. Anything under the `OSSettings` configuration section wins over the stored value.\n\nExample: on the staging server you set the environment variable `OSSettings__links__token_length=9`. From then on every read returns 9. The admin page shows the key as `Environment` and refuses to change it with `settings.errors.environment`."
+          },
+          "2": {
+            "title": "Writing the key",
+            "text": "A key can be written in two forms. The first is `OSSettings:links.token-length`. The second, which every shell accepts, is `OSSettings:links:token_length`. In the second form dots become colons and dashes become underscores. It is the environment variable `OSSettings__links__token_length`.\n\nAn environment value is checked by its kind. An invalid one is ignored and reported. It overrides secrets too and is used as it is."
+          },
+          "3": {
+            "title": "Reporting problems",
+            "text": "When an `IErrorSink` is registered, background problems are reported to it. The source name is one of four.\n\n`settings:source` means the source failed. `settings:value` means a stored value is invalid or a secret cannot be opened. `settings:environment` means an environment value is invalid. `settings:store` means an unexpected error while saving."
+          },
+          "4": {
+            "title": "Error codes",
+            "text": "The errors a caller sees are the codes in `SettingCodes.Error`. Examples are `settings.errors.range` and `settings.errors.conflict`.\n\nThey never change, so your UI can translate them."
+          }
+        },
+        "sample": {
+          "names": {
+            "title": "Name a setting in configuration",
+            "note": "`KeyOf` turns the property `TokenLength` into the key `links.token-length`. The output has three lines: the key, the same key under `OSSettings`, and the form to use for an environment variable."
+          },
+          "override": {
+            "title": "Override a setting in a test",
+            "note": "In a test, put the value in memory under `OSSettings`; from then on every read of `links.token-length` returns 9. The same name works in appsettings.json, user secrets and environment variables."
+          },
+          "check-error": {
+            "title": "Read the error code of a failed save",
+            "note": "Turns a failed save into something you can show: the field and its code, such as `links.token-length: settings.errors.range`, or just the general code, such as `settings.errors.conflict`. Show your own translated text for the code; the message is not meant for users."
+          }
+        }
+      }
+    }
+  }
+}

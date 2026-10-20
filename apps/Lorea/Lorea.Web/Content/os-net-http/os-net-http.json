@@ -1,0 +1,56 @@
+{
+  "slug": "os-net-http",
+  "name": "OS.Net.Http",
+  "version": "1.0.0",
+  "group": "net",
+  "uses": [
+    "os-core",
+    "os-io",
+    "os-net"
+  ],
+  "topics": [
+    {
+      "slug": "clients",
+      "namespaces": [
+        "OS.Net.Http"
+      ],
+      "types": [
+        "ApiConfig",
+        "ApiHeader",
+        "ApiHeaderType",
+        "HttpClientEx"
+      ]
+    },
+    {
+      "slug": "calls",
+      "namespaces": [
+        "OS.Net.Http"
+      ],
+      "types": [
+        "IOSHttp",
+        "OSHttp",
+        "IApiService",
+        "ApiService",
+        "ApiFetch",
+        "ApiRequest",
+        "HttpCodes"
+      ]
+    },
+    {
+      "slug": "safety",
+      "namespaces": [
+        "OS.Net.Http"
+      ],
+      "types": [
+        "AddressRules"
+      ]
+    },
+    {
+      "slug": "resilience",
+      "namespaces": [
+        "OS.Net.Http"
+      ],
+      "types": []
+    }
+  ]
+}

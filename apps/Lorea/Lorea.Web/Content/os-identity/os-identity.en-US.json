@@ -1,0 +1,464 @@
+{
+  "os-identity": {
+    "title": "Identity",
+    "summary": "The rules of signing in and being allowed: a validated permission catalog and checker, PBKDF2 password hashing with an upgrade path from old hashes, lockout and login throttling, sessions with hashed keys and a security log. With no database package it runs in memory, so a desktop app or a test needs nothing else.",
+    "gives": {
+      "1": "Passwords stored with PBKDF2-SHA512 in a text that carries its own cost, so a stronger setting upgrades old rows at the next sign-in.",
+      "2": "Brute force slowed from two sides: an exponential lock on the account and an in-memory throttle by name and address.",
+      "3": "A permission catalog that fails at startup on a duplicate or malformed name, and a checker that follows the current principal."
+    },
+    "sample": {
+      "quick": "Identity for an app with its own permission tree",
+      "signed-in-user": "Tell the checker who the current user is"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "One registration gives you the hasher, the lock rules, the catalog, the checker and in-memory sessions.",
+        "points": {
+          "1": {
+            "title": "One registration",
+            "text": "`AddOSIdentity` registers everything; a second call changes the same options."
+          },
+          "2": {
+            "title": "Works without a database",
+            "text": "Sessions and the security log live in memory until the data package replaces them."
+          },
+          "3": {
+            "title": "Bad options stop the app",
+            "text": "Policies are validated at registration, not on the first sign-in."
+          },
+          "4": {
+            "title": "Startup sync",
+            "text": "`SyncOSIdentityAsync` writes the app and its permissions to the database."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering",
+            "text": "`AddOSIdentity(o => ...)` takes an `IdentityOptions`: the `App` (an `AppIdentity` with at least a code), the `Session`, `Lock` and `Password` policies, how long a resolved permission set stays fresh (`PermFresh`, 60 seconds), how long the security log is kept (`SecLogRetentionDays`, 365) and an optional `Principal` delegate.\n\nThen add one `IPermProvider` per module with `AddOSPermProvider<T>`. If you do not set the `Principal` delegate, register your own `IPrincipalAccessor` with `AddOSPrincipalAccessor<T>`.\n\nA module can also be registered through `IdentityModule`, whose code is `idn`, so other modules can list it in their `Requires`."
+          },
+          "2": {
+            "title": "Options are checked early",
+            "text": "`IdentityOptions` checks itself when you register: a lock threshold of zero, a negative decay time, an iteration count outside 10,000 to 2,000,000, a maximum password length below the minimum or an app code longer than 24 characters throws at once.\n\nWithout this check, a threshold of zero would lock an account on the first typo, and you would find out in production."
+          },
+          "3": {
+            "title": "Sync and upkeep",
+            "text": "`IIdentitySync.SyncAsync` makes the database know your app and its permission tree. Call `SyncOSIdentityAsync` once at startup. `IIdentityMaintenance.PurgeAsync` removes old sessions and old security log rows; run it from a background job.\n\nBoth have no implementation in this package, because both need a database. The data package provides them. Calling the sync without it fails with a clear error."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register with your own policies",
+            "note": "Idle time of eight hours and a lock after three misses; the permission tree comes from `ShopPerms`."
+          },
+          "own-principal-source": {
+            "title": "Say who the current user is",
+            "note": "A delegate that returns the principal of the current request or window."
+          },
+          "sync-at-startup": {
+            "title": "Sync once at startup",
+            "note": "Needs the data package; it writes the app row and the permission tree."
+          },
+          "check-apermission": {
+            "title": "Check a permission",
+            "note": "`Require` returns nothing when allowed and a Forbidden result otherwise."
+          },
+          "bad-options": {
+            "title": "A bad option stops the registration",
+            "note": "The error names the option, so the fix is obvious."
+          }
+        },
+        "type": {
+          "IdentityEx": "Registration and the startup sync.",
+          "IdentityModule": "The identity module (`idn`) for `AddOSModules`.",
+          "IdentityOptions": "The app, the policies, the cache time and the log retention.",
+          "IIdentitySync": "Writes the app row and the permission tree to the database.",
+          "IIdentityMaintenance": "Removes old sessions and old security log rows."
+        },
+        "member": {
+          "IdentityEx": {
+            "AddOSIdentity": "Registers the identity services and validates the options at once. A second call changes the same options and registers nothing twice.",
+            "AddOSPermProvider": "Adds a permission provider; each module adds its own.",
+            "AddOSLoginSource": "Registers your `ILoginSource`, the one class an app writes to let the library find users.",
+            "AddOSLoginMethod": "Adds one more way to sign in; the password method is always there.",
+            "AddOSPrincipalAccessor": "Replaces the accessor that tells the checker who the current user is.",
+            "SyncOSIdentityAsync": "Runs the sync in its own scope. Call it once at startup."
+          }
+        }
+      },
+      "passwords": {
+        "title": "Passwords",
+        "summary": "Hash, verify and upgrade passwords. The stored text says how it was made, so old rows keep working.",
+        "points": {
+          "1": {
+            "title": "PBKDF2-SHA512",
+            "text": "A random 32-byte salt, 220,000 iterations by default, a 64-byte hash."
+          },
+          "2": {
+            "title": "Upgrades itself",
+            "text": "A hash with a lower cost or an old algorithm is rewritten at the next good sign-in."
+          },
+          "3": {
+            "title": "Bad input is false, not a crash",
+            "text": "A damaged hash text or a huge password makes `Verify` return false."
+          },
+          "4": {
+            "title": "No timing leak for unknown users",
+            "text": "`Burn` spends the same time as a real check."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Hash and verify",
+            "text": "`IPasswordHasher.Hash` makes a text like `pbkdf2-sha512$220000$salt$hash`: the algorithm, the iteration count, the salt and the hash, the last two in base64. `Verify(password, stored)` recomputes with the stored salt and cost and compares in constant time.\n\nIt returns false, never throws, for a null or empty password, a password over 1,024 bytes, and a stored text that is damaged: wrong number of parts, zero or negative iterations, an iteration count above two million, bad base64 or a hash of the wrong length. A damaged row therefore means a refused sign-in, not a server error and not a CPU bomb."
+          },
+          "2": {
+            "title": "Upgrading old hashes",
+            "text": "`NeedsRehash(stored)` is true when the text is damaged, when it uses the old `hmac-sha512` algorithm, or when its iteration count is lower than the policy. After a successful `Verify`, call `Hash` again and save the new text; `LockGuard.Check` does this for you.\n\n`FromLegacy(salt, hash)` wraps an old salted HMAC-SHA512 value in the same text format, so you can import those rows without asking anyone for a new password. The old algorithm is accepted only for verifying and is always rewritten after a good sign-in."
+          },
+          "3": {
+            "title": "Policy and temporary passwords",
+            "text": "`PasswordPolicy` has `Iterations` (default 220,000, allowed 10,000 to 2,000,000), `MinLength` (8), `MaxLength` (128) and `TempHours` (72). The length rules apply when a user sets a password through `LockGuard.SetSecret`.\n\n`NewTemp` makes a random temporary password with the cryptographic generator. The alphabet leaves out look-alike letters such as `l`, `I`, `O`, `0` and `1`, so it can be read over the phone. No Unicode normalization is applied to passwords: it would invalidate every stored hash.\n\nThe class `PasswordHash` is the parsed form of the stored text; you rarely need it directly."
+          }
+        },
+        "sample": {
+          "hash-and-verify": {
+            "title": "Hash and verify",
+            "note": "The algorithm name leads the stored text. The right password passes and a wrong one does not."
+          },
+          "stored-text": {
+            "title": "What the stored text holds",
+            "note": "Four parts: algorithm, cost, salt and hash."
+          },
+          "upgrade": {
+            "title": "A lower cost asks for a rehash",
+            "note": "A hash made with 50,000 iterations is old for a 220,000 policy; a new hash is not."
+          },
+          "legacy-hash": {
+            "title": "Import an old HMAC hash",
+            "note": "It verifies, and it always asks to be rewritten."
+          },
+          "damaged": {
+            "title": "Damaged text is just false",
+            "note": "No exception, so a broken row cannot crash the sign-in."
+          },
+          "temporary-password": {
+            "title": "A readable temporary password",
+            "note": "Ten characters, none of them easy to mistake."
+          }
+        },
+        "type": {
+          "IPasswordHasher": "Hash, verify, check for rehash, import a legacy hash and make a temporary password.",
+          "PasswordHasher": "PBKDF2-SHA512 with a random salt and a cost from the policy.",
+          "PasswordHash": "The parsed form of a stored hash text; parsing rejects anything out of range.",
+          "PasswordPolicy": "Iterations, length limits and temporary password hours."
+        },
+        "member": {
+          "IPasswordHasher": {
+            "Burn": "Does the work of a real check and discards it. Call it when the user was not found.",
+            "FromLegacy": "Wraps an old salted HMAC-SHA512 value in the stored text format."
+          }
+        }
+      },
+      "lockout": {
+        "title": "Lockout and throttling",
+        "summary": "Slow a guessing attack from two sides: lock the account after repeated misses, and slow the name and address that keep missing.",
+        "points": {
+          "1": {
+            "title": "Lock grows each time",
+            "text": "Five minutes at the fifth miss, ten at the sixth, up to an hour."
+          },
+          "2": {
+            "title": "Old misses are forgiven",
+            "text": "After 30 quiet minutes the counter starts again."
+          },
+          "3": {
+            "title": "A throttle in front",
+            "text": "`LoginThrottle` counts by name and by address in memory, so parallel requests cannot hide."
+          },
+          "4": {
+            "title": "Time is injected",
+            "text": "Everything uses `TimeProvider`, so the rules are tested with a fake clock."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The account lock",
+            "text": "`LockGuard` works on any `ILockable`. `RegisterFailure` adds one miss and returns the lock time. Below the threshold (5 by default) there is no lock. From the threshold on, the lock is `BaseLockMinutes` (5) doubled for each extra miss, up to `MaxLockMinutes` (60). A miss older than `DecayMinutes` (30), counted from the last miss or the end of the last lock, starts the count again.\n\n`IsLocked`, `Remaining` and `Clear` read and reset the three lock fields. `Backoff.Delay(failures, free, first, max)` is the one formula both the account lock and the throttle use."
+          },
+          "2": {
+            "title": "Checking a login",
+            "text": "`Check(login, account, password)` runs the whole decision in order: locked, wrong password (which counts a miss), account or login disabled, temporary password expired. On success it clears the misses, rewrites an old hash and returns `Ok` with `NeedsSave`, which means you must save the row. A wrong password also returns `NeedsSave`, because the miss count changed.\n\nWhen no user is found, return `CheckMissing()`: it burns the time of one hash so a missing name costs the same as a wrong password.\n\n`SetSecret` checks the password length policy and returns a result with a field error when it does not fit. `SetTempSecret` stores a temporary password with an expiry; `IsTempSecretExpired` tells when it ended."
+          },
+          "3": {
+            "title": "The throttle",
+            "text": "The lock lives in the user row, and parallel requests can read the same miss count before any of them saves. `LoginThrottle` closes that gap: it keeps a count per lower-cased name and per address in memory. From the fifth miss it asks the caller to wait 30 seconds, doubling up to 15 minutes. Ask `RetryAfter(name, address)` before you check a password; call `Failed` on a miss. `Succeeded(name)` clears the name only, so a person who signs in to their own account cannot wipe the count of an address that keeps failing. A count also fades after a long quiet time.\n\nIt is bounded: it holds at most 10,000 entries and drops the oldest when full. It lives in one process, so behind several servers keep a rate limiter in front too."
+          }
+        },
+        "sample": {
+          "lock-after-five": {
+            "title": "The lock grows with each miss",
+            "note": "Nothing for four misses, then 5, 10 and 20 minutes."
+          },
+          "check-alogin": {
+            "title": "Check a login",
+            "note": "A wrong password counts a miss; the right one clears it and asks you to save."
+          },
+          "lock-expires": {
+            "title": "A lock ends by itself",
+            "note": "The clock is a fake one, so the sample moves time forward."
+          },
+          "backoff-table": {
+            "title": "The shared formula",
+            "note": "Failures below five cost nothing; then the wait doubles up to the maximum."
+          },
+          "throttle": {
+            "title": "Slow a name and an address",
+            "note": "The name is slowed from any address, and the address from any name, but an unrelated pair is free."
+          },
+          "unknown-user": {
+            "title": "A name that does not exist",
+            "note": "It looks like any wrong password, and costs the same time."
+          }
+        },
+        "type": {
+          "LockGuard": "Lock rules, the full login check and the secret setters, on any `ILogin`.",
+          "LockPolicy": "Threshold, decay time, first lock and maximum lock.",
+          "LoginThrottle": "An in-memory slow-down by name and by address; bounded and thread safe.",
+          "Backoff": "The doubling wait used by the lock and the throttle."
+        },
+        "member": {
+          "LockGuard": {
+            "Check": "Locked, wrong password, disabled, temporary password expired, or success; `NeedsSave` says the row changed and must be saved.",
+            "CheckMissing": "Use it when the user was not found: same cost, same answer as a wrong password."
+          }
+        }
+      },
+      "perms": {
+        "title": "The permission catalog and checker",
+        "summary": "Collect every module's tree, check it once, expand wildcards, and answer \"may this user do that?\".",
+        "points": {
+          "1": {
+            "title": "Fails at startup",
+            "text": "A duplicate name, a malformed name or a foreign app prefix throws when the catalog is built."
+          },
+          "2": {
+            "title": "Wildcards expand once",
+            "text": "`shop:orders:*` becomes a fixed list of names, cached per pattern."
+          },
+          "3": {
+            "title": "Cache with a short life",
+            "text": "A resolved set stays fresh for 60 seconds; an edit can clear it at once on this server."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The catalog",
+            "text": "`PermCatalog` is built from every registered `IPermProvider`. Names must be lower case segments joined by `:` (letters, digits, `.`, `_`, `-`), at most 128 characters, with the app code as the first segment. A name declared twice is an error, and so is a tree deeper than 32 levels. The error is an `OSException` at startup, not a surprise on the first request.\n\n`Find(name)`, `ForApp(code)`, `Flat`, `Roots` and `Names` read it. `Expand(pattern)` returns the names a pattern covers; a plain name returns itself, even when it is not in the catalog. `IsLive` tells whether a pattern matches anything now, which is how an editor finds orphan patterns. `Uncovered(checker, patterns)` lists the known names the current user does not hold; it is the basis of the ceiling rule that stops people granting more than they have."
+          },
+          "2": {
+            "title": "Patterns and the checker",
+            "text": "`PermPattern` owns the wildcard syntax in one place: `*` covers everything, `a:b:*` covers every name that starts with `a:b:`, and any other text covers only itself. `Covers`, `IsWildcard`, `IsValidName` and `Normalize` are public so your own screens use the same rules.\n\n`PermChecker` reads the current user from the `IPrincipalAccessor` on every call. No user means no permission. Names are lower-cased before the check. `IsGranted(name, chain)` follows a scope chain, with the nearest scope winning.\n\n`PermGrantBuilder` turns the catalog into the trees an editor shows: `ToRoleGrants` for a role with its patterns, and `ToGrant` for a user with the role access and the overrides."
+          },
+          "3": {
+            "title": "Resolving and caching",
+            "text": "`IPermResolver.ResolveAsync(userId)` builds a user's `PermSet`; the data package provides it. `IPermCache` sits in front: `GetAsync` returns the set from `HybridCache` for `PermFresh` (60 seconds) and `InvalidateAsync` clears one user. Without `HybridCache` registered it passes straight through. Register `AddOSCaching` to turn it on.\n\nOn several servers a clear reaches only the current server; the others keep the old set until it expires, so a revoked permission can live for up to 60 seconds there.\n\nThree accessors are ready: `DelegatePrincipalAccessor` wraps a function, `AmbientPrincipalAccessor` keeps the principal per async flow with `Set`, and you can register your own class."
+          }
+        },
+        "sample": {
+          "catalog": {
+            "title": "Read the catalog",
+            "note": "Five names, the parent of a child, and the names a wildcard covers."
+          },
+          "wildcard-rules": {
+            "title": "The wildcard rules",
+            "note": "A trailing `:*` covers a branch, a plain name covers itself, and a name with a space is not valid."
+          },
+          "duplicate-name": {
+            "title": "A duplicate stops startup",
+            "note": "Two providers declare the same names."
+          },
+          "scoped-deny": {
+            "title": "A deny in one store",
+            "note": "Allowed everywhere, denied in store 5, so store 6 still allows it."
+          },
+          "role-tree": {
+            "title": "The tree an editor shows",
+            "note": "A role that holds `shop:orders:*` has access to the group and to each child."
+          },
+          "what-the-caller-lacks": {
+            "title": "The ceiling rule",
+            "note": "What a caller cannot hand out, because they do not hold it themselves."
+          }
+        },
+        "type": {
+          "PermCatalog": "The checked, read-only list and tree of every permission; expands wildcards.",
+          "PermPattern": "The one place that knows wildcard syntax and valid names.",
+          "PermChecker": "Answers permission questions for the current principal.",
+          "PermGrantBuilder": "Builds the grant trees that role and user screens show.",
+          "IPermResolver": "Builds a user's permission set from storage.",
+          "IPermCache": "Keeps a resolved set for a short time; one user can be cleared.",
+          "PermCache": "The `HybridCache` version; passes through when no cache is registered.",
+          "DelegatePrincipalAccessor": "An accessor that calls your function.",
+          "AmbientPrincipalAccessor": "An accessor that holds the principal for the current async flow."
+        }
+      },
+      "sessions": {
+        "title": "Sessions and the security log",
+        "summary": "Open a session with a secret key that is stored only as a hash, touch it, revoke it, and record what happened.",
+        "points": {
+          "1": {
+            "title": "Only a hash is stored",
+            "text": "The key is 32 random bytes; a stolen table cannot be used to sign in."
+          },
+          "2": {
+            "title": "Three ways to end",
+            "text": "A session can be revoked, expire after 30 days, or go idle after 4 hours."
+          },
+          "3": {
+            "title": "Touch is throttled",
+            "text": "`LastSeenDate` is written at most once a minute per session."
+          },
+          "4": {
+            "title": "The log never blocks sign-in",
+            "text": "A failed log write returns false; it does not throw into the login."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The store",
+            "text": "`ISessionStore` has eight calls. `CheckAsync(id)` reads the state of a session without its key, for a signed token that already proves who holds it. `OpenAsync(userId, client)` returns an `OpenedSession`: the id, the key and the expiry; the client texts are clamped first. `TouchAsync(id, key)` checks the key against the hash in constant time and returns a `SessionState`. `ListAsync` returns a user's sessions for a screen. `RevokeAsync` and `RevokeUserAsync` end one session or all of a user's, optionally keeping the current one, and record the reason and who did it. `IsFreshClientAsync` tells whether this device has never signed in before. `PurgeAsync` removes sessions long past their end.\n\n`MemorySessionStore` is the default: it keeps sessions in memory, which is right for one desktop app or for tests. The data package replaces it with a database store."
+          },
+          "2": {
+            "title": "Keys and rules",
+            "text": "`SessionKeys.New` makes the random key, `Hash` makes the SHA-256 text that is stored and `Matches` compares them without leaking time. `SessionRules.Check` decides the state from the dates and the policy: revoked first, then expired, then idle. `ShouldTouch` says whether the last-seen date is old enough to write again.\n\n`SessionPolicy` has `AbsoluteDays` (30), `IdleHours` (4), `RetentionDays` (30) and `TouchSeconds` (60). A web app that wants shorter sessions sets its own values; the defaults are not tied to any app type."
+          },
+          "3": {
+            "title": "The security log",
+            "text": "`ISecLog.WriteAsync(entry)` records a `SecLogEntry` and returns whether it was written. It fills the app code and the date when they are empty, clamps every text and masks a suspicious target.\n\n`MemorySecLog` keeps the last 1,000 entries in memory and shows them in `Recent`. With the data package the log goes to a table through its own database context, so writing a log line never saves anything else you had pending, and a failure is reported to the error sink instead of being swallowed."
+          }
+        },
+        "sample": {
+          "open-and-touch": {
+            "title": "Open and touch a session",
+            "note": "The key is shown once; only the right key is valid."
+          },
+          "idle": {
+            "title": "An idle session",
+            "note": "Five hours without a touch is past the four-hour limit."
+          },
+          "revoke": {
+            "title": "Revoke with a reason and a person",
+            "note": "The reason is a code and the actor is a user id."
+          },
+          "keys-are-hashed": {
+            "title": "What is stored",
+            "note": "A 44-character hash, never the key."
+          },
+          "long-user-agent": {
+            "title": "A long client name",
+            "note": "Cut to 128 characters before it is stored."
+          },
+          "security-log": {
+            "title": "Two log lines",
+            "note": "A name is kept; text that looks like a password is replaced by a short hash."
+          }
+        },
+        "type": {
+          "ISessionStore": "Open, touch, list, revoke, check for a fresh device and purge sessions.",
+          "MemorySessionStore": "The in-memory store; the data package replaces it with a database store.",
+          "SessionKeys": "Makes, hashes and compares session keys.",
+          "SessionRules": "Decides the state of a session from its dates, and when to write the last-seen date.",
+          "SessionPolicy": "Absolute lifetime, idle time, retention and touch interval.",
+          "ISecLog": "Writes one security log entry and says whether it worked.",
+          "MemorySecLog": "Keeps the last 1,000 entries in memory."
+        }
+      },
+      "login": {
+        "title": "Signing in",
+        "summary": "One service runs a sign-in: the throttle, the chosen method, the lock, the session and the log. A method decides what proves who you are.",
+        "points": {
+          "1": {
+            "title": "Not only passwords",
+            "text": "A password, a code sent to a phone or mail, a safe link, a passkey and a second factor are all methods behind one interface."
+          },
+          "2": {
+            "title": "You write one class",
+            "text": "`ILoginSource` finds users in your table and saves the lock fields; the library does the rest."
+          },
+          "3": {
+            "title": "A step can be asked for",
+            "text": "A method can answer with a challenge, and the answer finishes the sign-in later."
+          },
+          "4": {
+            "title": "Everything is logged",
+            "text": "Each try, lock, challenge and session leaves a security log line."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The flow",
+            "text": "`StartAsync(request)` does this in order: refuses an empty or very long name; asks `LoginThrottle` whether this name or address must wait (the answer is `Throttled` with the wait time, and nothing is verified); finds the method named in the request, or the password method; asks the method; saves the user row when the method says it changed; then acts on the answer.\n\nOn success it clears the throttle for the name, opens a session and logs `LoginTried` and `SessionOpened`. On a failure it counts the miss for the name and the address, logs it with a short reason code, and returns the state: `InvalidCred`, `Locked` (with the time left), `Disabled`, `TempPassExpired` or `Throttled`. A name that does not exist counts and fails exactly like a wrong password, so the answer never says which part was wrong.\n\n`LoginOutcome` carries the state, the opened session (with its one-time key), the subject, the lock time, the retry time and, for a challenge, its id and kind."
+          },
+          "2": {
+            "title": "Your user table: ILoginSource",
+            "text": "`ILoginSource` has three calls: `FindAsync(identifier)` (a name, an email or a mobile number, your choice), `FindByIdAsync(id)` and `SaveAsync(subject)`. They return and save a `LoginSubject`: the user id, the user name, the full name, the `ILogin` and `IAccount` of the user, and a `State` object of your own that you get back unchanged.\n\nThe library never sees your table. It changes the lock fields through the interfaces and tells you when to save."
+          },
+          "3": {
+            "title": "Ways to sign in: ILoginMethod",
+            "text": "A method has a `Provider` name (`password`, or `code`, `magic-link`, `passkey` and so on) and one call, `VerifyAsync(request, source)`. It answers with a `MethodResult`: `Signed(subject)`, `Failed(state, reason)` or `Challenge(subject, kind, answer)`.\n\n`PasswordMethod` is built in. It finds the user, burns the time of a hash when there is none, and runs the lock rules of `LockGuard`. Add your own with `AddOSLoginMethod<T>()`; the request chooses it by name. The library does not send codes or mails; your method does, and hands the expected answer to the library, which stores only a hash of it."
+          },
+          "4": {
+            "title": "Challenges",
+            "text": "When a method answers `Challenge`, `StartAsync` stores the expected answer, hashed with a random salt, and returns a `ChallengeId`. `ContinueAsync(id, answer, client)` finishes the sign-in later with the answer the user typed or the token from a link. The usual cases are a code to a phone, a safe link in a mail, or a second factor after a password.\n\nA challenge lives 10 minutes, allows 5 tries, and can be used once. A wrong answer says how many tries are left; a used, expired or unknown challenge simply fails. `ILoginChallenges` is the store; `MemoryLoginChallenges` keeps them in this process, so behind several servers register a shared implementation. The account is checked again at the end, so a user disabled in the meantime cannot finish."
+          },
+          "5": {
+            "title": "Signing out",
+            "text": "`LogoutAsync(sessionId, userId)` ends one session and logs `SessionClosed`. `LogoutAllAsync(userId, keep)` ends all the user's sessions, optionally keeping the current one, and logs `SessionRevoked`. Both give the actor and the reason to the session store."
+          }
+        },
+        "sample": {
+          "own-method": {
+            "title": "Write your own method",
+            "note": "A code by mail: it sends the code and gives the expected answer to the library."
+          },
+          "register": {
+            "title": "Register the source and a method",
+            "note": "The password method is already there."
+          },
+          "sign-in": {
+            "title": "A wrong and a right password",
+            "note": "Both are logged; the right one returns a session with its key."
+          },
+          "throttled": {
+            "title": "A name that does not exist",
+            "note": "Five misses slow the name and the address, and the real name from the same address waits too."
+          },
+          "second-factor": {
+            "title": "A code as a second step",
+            "note": "The first call asks for a challenge; a wrong code costs a try, the right one signs in, and it works once."
+          },
+          "logout": {
+            "title": "Sign out",
+            "note": "One session first, then all the others."
+          }
+        },
+        "type": {
+          "LoginService": "Runs a sign-in: throttle, method, lock, session, challenge and log; also signs out.",
+          "LoginRequest": "What a client sends: a name or other identifier, a secret, the client details and the method.",
+          "LoginOutcome": "The result of a sign-in step: state, session, subject, lock or retry time and challenge.",
+          "LoginSubject": "A user as the library sees them: ids, names, the login and the account.",
+          "ILoginSource": "The one class an app writes: find a user by identifier or id, and save the lock fields.",
+          "ILoginMethod": "One way to sign in; answers signed, failed or challenge.",
+          "MethodResult": "What a method answers: signed, failed with a state and a reason, or a challenge with its expected answer.",
+          "PasswordMethod": "The built-in method: finds the user and applies the lock rules.",
+          "ILoginChallenges": "Creates and checks one-time challenges.",
+          "MemoryLoginChallenges": "Keeps challenges in this process, hashed, with expiry and a try limit.",
+          "ChallengeCheck": "The answer to a challenge check: state, user, kind and tries left.",
+          "ChallengeState": "Ok, wrong, expired, unknown or out of tries."
+        }
+      }
+    }
+  }
+}

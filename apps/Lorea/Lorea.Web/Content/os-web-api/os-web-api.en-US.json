@@ -1,0 +1,473 @@
+{
+  "os-web-api": {
+    "title": "API host",
+    "summary": "The common base of an ASP.NET Core API: validated settings, one answer shape for every result, JWT tokens, central error handling, request language, versioned routes with OpenAPI and Scalar, CORS, rate limiting, background jobs and a secret key ring.",
+    "gives": {
+      "1": "Two calls, `AddOSWebApi` and `UseOSWebApi`, set up the whole API pipeline from one configuration section that is checked at startup.",
+      "2": "Every answer has the same shape (`OSResult`), and an unhandled error becomes a safe 500 with a trace id while the details go to the error sink.",
+      "3": "The parts an API usually needs are ready: JWT, versioned routes, docs, CORS, rate limit, long-running jobs with progress, and keys for secrets."
+    },
+    "sample": {
+      "quick": "A working API host in a few lines",
+      "secured": "The same host with a key ring for secrets"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Register the host, add the middleware, and see what the pipeline does.",
+        "points": {
+          "1": {
+            "title": "One registration",
+            "text": "`AddOSWebApi` registers the API host from your configuration."
+          },
+          "2": {
+            "title": "Fixed order",
+            "text": "`UseOSWebApi` adds the middleware in a fixed order."
+          },
+          "3": {
+            "title": "Fail at startup",
+            "text": "A wrong value throws an `OSException` at startup."
+          },
+          "4": {
+            "title": "Secret keys",
+            "text": "`AddOSSecretKeys` keeps the keys of `ISecretBox` in a folder."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering the host",
+            "text": "`AddOSWebApi` reads the configuration section `os-api` into `WebApiOptions` and checks it. Then it registers controllers, versioning, OpenAPI, authentication, the error handler, CORS and the rate limiter according to those options.\n\nA wrong value throws an `OSException` at startup, so a broken configuration never reaches a request. There is no callback to change options in code: apps and tests override values through configuration."
+          },
+          "2": {
+            "title": "Middleware order",
+            "text": "`UseOSWebApi` adds the middleware in a fixed order: forwarded headers, the error handler, HSTS (outside Development), HTTPS redirection, static files, request localization, CORS, rate limit, authentication, authorization and the controllers.\n\nThe docs endpoints are added when they are enabled."
+          },
+          "3": {
+            "title": "Request language",
+            "text": "The request language needs the registry of `OS.Locale`, so call `AddOSLocale` once before.\n\nThe language is taken from the query string first. The names `culture`, `cult` and `lang` work, and short names such as `en` work too. Then it uses the usual headers, and falls back to the configured or default culture."
+          },
+          "4": {
+            "title": "Secret keys",
+            "text": "For secrets, `AddOSSecretKeys` keeps the keys of `ISecretBox` in a folder. They are encrypted with a certificate or, on Windows, with DPAPI.\n\nOn other systems it logs a warning that the files are not encrypted. So restrict the folder to the app's identity."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register and run",
+            "note": "`AddOSWebApi` also returns the options it read, in case the app needs a value."
+          },
+          "first-request": {
+            "title": "The first request",
+            "note": "A controller answers on the versioned route and the answer has the common shape."
+          },
+          "language": {
+            "title": "The request language",
+            "note": "The default is the first registered culture; `?lang=en` switches the answer to English."
+          },
+          "key-ring": {
+            "title": "The key ring on disk",
+            "note": "A key is created on first use and read again later; the file holds only protected bytes. This sample uses a throwaway provider; the real one comes from `AddOSSecretKeys`."
+          }
+        },
+        "type": {
+          "WebApiEx": "Registration and middleware for the API host.",
+          "SecretKeysEx": "Registers the key ring that `ISecretBox` uses.",
+          "SecretKeysOptions": "How the key files are protected: certificate or DPAPI.",
+          "DataProtectionKeyRing": "A key ring that stores each key in its own protected file.",
+          "IApiPipelineStep": "A step that another package adds to the request pipeline, run after authentication and before authorization; `UseOSWebApi` calls every registered step."
+        },
+        "member": {
+          "WebApiEx": {
+            "AddOSWebApi": "Reads and checks the `os-api` section and registers the host. Throws `OSException` for a wrong value.",
+            "UseOSWebApi": "Adds the middleware in the documented order and maps the controllers.",
+            "UseOSWebApiDocs": "Adds the OpenAPI and Scalar endpoints even outside Development; calling it twice is harmless.",
+            "AddOSJob": "Registers a background job and the runner that executes it."
+          },
+          "SecretKeysEx": {
+            "AddOSSecretKeys": "Stores secret keys in the given folder and registers `ISecretBox` on top of them."
+          }
+        }
+      },
+      "options": {
+        "title": "Settings",
+        "summary": "Every key of the `os-api` section, its default, and what is refused at startup.",
+        "points": {
+          "1": {
+            "title": "One section",
+            "text": "All settings live in the `os-api` section and are validated together."
+          },
+          "2": {
+            "title": "Required value",
+            "text": "`app-code` is required."
+          },
+          "3": {
+            "title": "Safe defaults",
+            "text": "`rate-limit` is off, and the docs exist only in Development."
+          },
+          "4": {
+            "title": "Secret key",
+            "text": "Keep `jwt:key` in user secrets or the environment, never in the repository."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading the settings",
+            "text": "All settings live in one section, `os-api`, and are read with `ReadOSConfig`. So they are validated together before the app starts.\n\n`app-code` is required. Keys use kebab-case in configuration files. The rest of the list is `max-upload-bytes`, `static-files`, `forwarded-headers` and `hsts`."
+          },
+          "2": {
+            "title": "CORS origins",
+            "text": "`origins` lists the sites allowed by CORS. Each one must be an absolute http or https origin without a path.\n\nA trailing slash is ignored."
+          },
+          "3": {
+            "title": "JWT",
+            "text": "`jwt` turns on token authentication. When it is enabled, the key must be at least 32 bytes, and the issuer and audience are required.\n\n`previous-keys` keep old tokens valid while a key is rotated. The secret `jwt:key` belongs in user secrets or the environment, never in the repository."
+          },
+          "4": {
+            "title": "Versions and docs",
+            "text": "`api-version` sets the default version, the list of versions and the route prefix. `rate-limit` is off by default.\n\n`docs` is empty by default, which means the docs endpoints exist only in Development. Set it to true or false to decide explicitly."
+          }
+        },
+        "sample": {
+          "defaults": {
+            "title": "The defaults",
+            "note": "JWT and rate limit are off, the version is 1.0 and docs follow the environment."
+          },
+          "from-configuration": {
+            "title": "Read from configuration",
+            "note": "The origin loses its trailing slash; any key you do not set keeps its default."
+          },
+          "bad-origin": {
+            "title": "An origin with a path",
+            "note": "Rejected at startup, before the first request."
+          },
+          "short-key": {
+            "title": "A JWT key that is too short",
+            "note": "A short key would be easy to guess, so the app refuses to start."
+          },
+          "bad-version": {
+            "title": "A version that is not a number",
+            "note": "Versions look like 1 or 1.0."
+          }
+        },
+        "type": {
+          "WebApiOptions": "The `os-api` section.",
+          "JwtOptions": "Token authentication.",
+          "ApiVersionOptions": "Versions and the route prefix.",
+          "RateLimitOptions": "A fixed window per user or IP.",
+          "WebApiCodes": "Names the package uses: section, policy and the error codes it returns."
+        }
+      },
+      "controllers": {
+        "title": "Controllers and answers",
+        "summary": "Base controllers that answer with one shape, and helpers for claims and uploads.",
+        "points": {
+          "1": {
+            "title": "Base controller",
+            "text": "Derive from `ApiController` and return its helpers."
+          },
+          "2": {
+            "title": "One answer shape",
+            "text": "The HTTP status comes from the result and the body is always the same."
+          },
+          "3": {
+            "title": "Lowercase routes",
+            "text": "Routes sit under `api/v{version}` in lowercase."
+          },
+          "4": {
+            "title": "Signed-in user",
+            "text": "`GetUserId` and `GetUsername` read the signed-in user."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Helpers and answer shape",
+            "text": "Derive from `ApiController` and return the helpers it offers: `ApiOk`, `ApiNotFound` and `ApiInvalid`. `ApiResult` works for any `OSResult`.\n\nThe HTTP status comes from the result's status and the body is always the same. It holds `succeeded`, `status`, `code`, `message`, `traceId`, `errors` and `data`, with the trace id filled in for you."
+          },
+          "2": {
+            "title": "Routes",
+            "text": "Routes are lowercase and sit under `api/v{version}`. So `OrdersController` answers on `/api/v1/orders`.\n\n`ApiAuthorizedController` is the same controller with `[Authorize]`."
+          },
+          "3": {
+            "title": "User and files",
+            "text": "Inside a controller, `GetUserId`, `GetUsername` and `IsAuthenticated` read the signed-in user.\n\n`HttpEx` adds the same to `ClaimsPrincipal` for other code. It also has a way to read the trace id of a request.\n\n`ToBytesAsync` is for an uploaded file with a size limit. When the file is too large, it answers `Invalid` with a clear code instead of reading it."
+          }
+        },
+        "sample": {
+          "orders": {
+            "title": "A controller",
+            "note": "Found, not found and invalid input all use the same answer shape."
+          },
+          "reply": {
+            "title": "What the client receives",
+            "note": "The trace id lets a user report a problem that you can find in the logs."
+          },
+          "status-codes": {
+            "title": "Status to HTTP code",
+            "note": "The mapping is fixed, so clients can rely on it."
+          },
+          "user-from-token": {
+            "title": "The user of a request",
+            "note": "The id comes from the `sub` or name identifier claim; a bad value gives none."
+          },
+          "upload": {
+            "title": "An upload with a limit",
+            "note": "The size is checked before the file is read."
+          }
+        },
+        "type": {
+          "ApiController": "Base of API controllers: versioned route, JSON, answer helpers.",
+          "ApiAuthorizedController": "The same, for signed-in users only.",
+          "HttpEx": "Claims, trace id and uploaded file helpers."
+        }
+      },
+      "auth": {
+        "title": "Tokens (JWT)",
+        "summary": "Turn on bearer tokens with configuration and create them with `ITokenService`.",
+        "points": {
+          "1": {
+            "title": "Token check",
+            "text": "`jwt:enabled` makes every bearer token fully validated."
+          },
+          "2": {
+            "title": "Creating tokens",
+            "text": "`ITokenService.Create` signs a token with a unique id."
+          },
+          "3": {
+            "title": "Key rotation",
+            "text": "The old key moves to `previous-keys`, and old tokens stay valid until they expire."
+          },
+          "4": {
+            "title": "Login is yours",
+            "text": "Login itself is up to the app."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Checking tokens",
+            "text": "Set `jwt:enabled` and the pipeline validates the issuer, the audience, the signature and the lifetime of every bearer token, with two minutes of clock tolerance.\n\nThe docs get a Bearer scheme and the protected operations are marked."
+          },
+          "2": {
+            "title": "Creating a token",
+            "text": "`ITokenService.Create` signs a token with the claims you give. It adds a unique id called `jti` and returns a `TokenModel` with the token, its expiry and the scheme.\n\nThe lifetime is `exp-days` unless you pass one.\n\nWhen JWT is disabled, it answers `Unavailable` with the code `web.jwt_disabled`. A missing key answers `web.jwt_key_missing`. Nothing throws."
+          },
+          "3": {
+            "title": "Key rotation and login",
+            "text": "To rotate the signing key, put the new key in `key` and move the old one to `previous-keys`. New tokens use the new key and old tokens stay valid until they expire.\n\nLogin itself, meaning how you find the user, is up to the app (or the Identity package)."
+          }
+        },
+        "sample": {
+          "configure": {
+            "title": "Configuration",
+            "note": "The key comes from user secrets or the environment, not from code."
+          },
+          "login": {
+            "title": "A login endpoint",
+            "note": "The token model is the `data` of the answer."
+          },
+          "create": {
+            "title": "Create a token",
+            "note": "The expiry is counted from the clock in `TimeProvider`, which a test can replace."
+          },
+          "disabled": {
+            "title": "JWT disabled",
+            "note": "A normal answer instead of an exception."
+          },
+          "short-lifetime": {
+            "title": "A short lifetime",
+            "note": "For a one-time link, ask for minutes instead of days."
+          }
+        },
+        "type": {
+          "ITokenService": "Creates signed tokens.",
+          "TokenService": "The default implementation, HMAC-SHA256.",
+          "TokenModel": "A token, when it expires and its scheme."
+        }
+      },
+      "errors": {
+        "title": "Handling errors",
+        "summary": "An unhandled exception becomes a safe 500 and a report, and the client never sees the details.",
+        "points": {
+          "1": {
+            "title": "Safe 500",
+            "text": "The client gets a 500 with a generic message and the trace id."
+          },
+          "2": {
+            "title": "Error report",
+            "text": "A registered `IErrorSink` receives the exception."
+          },
+          "3": {
+            "title": "Closed connection",
+            "text": "If the client closes the connection, nothing is reported."
+          },
+          "4": {
+            "title": "Results, not exceptions",
+            "text": "Return an `OSResult` for expected failures, not an exception."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What the client sees",
+            "text": "`ApiExceptionHandler` catches every exception that no controller handled.\n\nThe client gets a 500 with the common answer shape. The code is `web.unhandled`, with a generic message and the trace id. The message and the stack trace are not in the response."
+          },
+          "2": {
+            "title": "Logging and reporting",
+            "text": "The same exception is logged. When an `IErrorSink` is registered, for example from OS.Diagnostics, it is reported there with the trace id, method, route, status and user. So a report and a user's complaint can be matched.\n\nA failing sink never breaks the answer."
+          },
+          "3": {
+            "title": "Closed connection and expected failures",
+            "text": "If the client closed the connection, the request ends with 499 and nothing is reported, because that is not an error.\n\nValidation problems and expected failures should not be exceptions. Return an `OSResult` from the controller instead."
+          }
+        },
+        "sample": {
+          "sink": {
+            "title": "A sink of your own",
+            "note": "Any class that takes an `ErrorReport` will do; OS.Diagnostics provides a ready one."
+          },
+          "register": {
+            "title": "Register the sink",
+            "note": "The handler picks it up on its own."
+          },
+          "reply": {
+            "title": "What the client sees",
+            "note": "A code and a trace id, and no detail about the cause."
+          },
+          "report": {
+            "title": "What the sink gets",
+            "note": "The full report stays on the server side."
+          }
+        },
+        "type": {
+          "ApiExceptionHandler": "The central handler for unhandled exceptions."
+        }
+      },
+      "docs": {
+        "title": "Docs and versions",
+        "summary": "OpenAPI documents per version, the Scalar page, and how versions are written.",
+        "points": {
+          "1": {
+            "title": "Document per version",
+            "text": "A separate OpenAPI document is published for each version."
+          },
+          "2": {
+            "title": "Scalar page",
+            "text": "The Scalar page is at `/scalar`, with a redirect from `/`."
+          },
+          "3": {
+            "title": "Development only",
+            "text": "By default the docs exist only in Development."
+          },
+          "4": {
+            "title": "Bearer mark",
+            "text": "Protected operations are marked with the Bearer scheme."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Documents and Scalar",
+            "text": "Routes live under `api/v{version}`, and the version is read from the URL.\n\nA document is published for each version in `api-version:items`, at `/openapi/v1.json`, `/openapi/v2.json` and so on. The Scalar page is at `/scalar`, with a redirect to it from `/`."
+          },
+          "2": {
+            "title": "Opening and closing the docs",
+            "text": "By default the docs exist only in Development.\n\nSet `docs` to true to open them elsewhere or to false to close them. You can also call `UseOSWebApiDocs` yourself."
+          },
+          "3": {
+            "title": "What the documents show",
+            "text": "The documents mark protected operations with the Bearer scheme and show `ResultStatus` as text.\n\nNumeric enums such as `JobState` are shown as numbers with their names, which is exactly how they are sent. `ApiVersionText` reads version texts such as `1`, `1.0` and `2.1` and builds the document names."
+          }
+        },
+        "sample": {
+          "document-names": {
+            "title": "One document per version",
+            "note": "A version without a minor number has a short name; the default version comes first."
+          },
+          "versions": {
+            "title": "Reading version texts",
+            "note": "Anything that is not a number is refused."
+          },
+          "off-by-default": {
+            "title": "Closed outside Development",
+            "note": "The endpoint does not exist unless you turn the docs on."
+          },
+          "enums": {
+            "title": "Enums as they are sent",
+            "note": "The schema matches the real JSON, so generated clients agree with the server."
+          }
+        },
+        "type": {
+          "ApiVersionText": "Parses versions such as `2.1` and names their documents."
+        }
+      },
+      "jobs": {
+        "title": "Background jobs",
+        "summary": "Start a long task, watch its progress, cancel it, and keep its failures private.",
+        "points": {
+          "1": {
+            "title": "Job class",
+            "text": "A job is a class that implements `IApiJob`."
+          },
+          "2": {
+            "title": "Four endpoints",
+            "text": "`ApiJobController` gives preview, start, progress and cancel."
+          },
+          "3": {
+            "title": "One run at a time",
+            "text": "Only one run of each kind is allowed at a time."
+          },
+          "4": {
+            "title": "Closed by default",
+            "text": "A job with a permission runs only when a gate allows it."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Writing a job",
+            "text": "A job is a class that implements `IApiJob`. It has a `Kind`, the phases it goes through, a plan and the work itself. The plan shows what it would do without changing anything.\n\nRegister it with `AddOSJob` and add a controller that derives from `ApiJobController`. It then offers a preview on `GET {kind}/plan`, start on `POST {kind}`, progress on `GET {kind}` and cancel on `DELETE {kind}`. All of them are for signed-in users."
+          },
+          "2": {
+            "title": "Running",
+            "text": "`JobRunner` allows one run of a kind at a time. A second start while it runs answers `Conflict` with the current status.\n\nWhile it runs, the job reports phases, counts and a note through `JobProgress`, and the status includes the elapsed and remaining time.\n\nCancelling, or stopping the app, ends the run through its cancellation token."
+          },
+          "3": {
+            "title": "Failures and permission",
+            "text": "If the job throws, the client only sees the code `web.job_failed`. The exception is logged and reported to the error sink.\n\nA job with a `Perm` runs only when an `IJobGate` allows it. With no gate registered the answer is `Forbidden`, which fails closed.\n\n`JobState` is sent as a number, so clients such as OS.Blazor read it directly."
+          }
+        },
+        "sample": {
+          "job": {
+            "title": "A job",
+            "note": "Two phases; the loop reports progress and respects cancellation."
+          },
+          "controller": {
+            "title": "The controller",
+            "note": "Nothing to write: the base class has the four endpoints."
+          },
+          "gate": {
+            "title": "Who may run it",
+            "note": "Your own rule; the package does not know about roles or permissions."
+          },
+          "register": {
+            "title": "Register",
+            "note": "The job, the gate and the accessor the gate uses."
+          },
+          "run": {
+            "title": "Run a job",
+            "note": "The result is kept in the status after the run ends."
+          },
+          "failure": {
+            "title": "A job that fails",
+            "note": "The client sees only the code; the message with the cause stays on the server."
+          }
+        },
+        "type": {
+          "ApiJobController": "Plan, start, status and cancel endpoints for registered jobs.",
+          "IApiJob": "A background job: kind, phases, plan and run.",
+          "IJobGate": "Decides whether the caller may use a job that needs a permission.",
+          "JobProgress": "How a job reports phases, counts and notes.",
+          "JobRunner": "Runs one job of each kind at a time.",
+          "JobStatus": "A snapshot of a run: state, progress, times and result.",
+          "JobState": "Idle, running, done, failed or cancelled, sent as a number."
+        }
+      }
+    }
+  }
+}

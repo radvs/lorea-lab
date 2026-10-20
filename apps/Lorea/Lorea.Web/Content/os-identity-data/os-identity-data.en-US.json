@@ -1,0 +1,279 @@
+{
+  "os-identity-data": {
+    "title": "Identity store",
+    "summary": "The database behind OS.Identity: apps, permissions, roles, user grants, sessions and the security log as tables of your own context, a resolver that builds a user's permissions, stores for roles and sessions, and the startup sync. It works on SQLite, SQL Server, PostgreSQL and MySQL through OS.EFCore.",
+    "gives": {
+      "1": "Tables for the whole identity model with one line in `OnModelCreating`, in the schema and with the prefix you choose.",
+      "2": "A resolver that applies roles, scoped grants and user overrides, ignores roles of other apps, and gives root only to an app-wide root link.",
+      "3": "Sessions stored as hashes, a security log written through its own context, and a purge that works in small batches."
+    },
+    "sample": {
+      "quick": "Identity tables in the same SQLite file as the app",
+      "own-tables": "A schema and a prefix of your own"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Add the model to your own context, register the stores, create the tables and sync once at startup.",
+        "points": {
+          "1": {
+            "title": "Your context",
+            "text": "The tables live in the same context as your user table, so one save can change both."
+          },
+          "2": {
+            "title": "One registration",
+            "text": "`AddOSIdentityData<TContext>` also registers `AddOSIdentity` when you have not."
+          },
+          "3": {
+            "title": "Tables are not created",
+            "text": "Create them with `EnsureCreated` or with migrations."
+          },
+          "4": {
+            "title": "Sync at startup",
+            "text": "The sync adds the app row and your permission tree; a mistyped app code stops with an error."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Model and registration",
+            "text": "Your context derives from `OSDbContext`. In `OnModelCreating` call `modelBuilder.ApplyIdentity()`; it adds all eight entities in three groups that you can also apply one by one: `ApplyIdentityPerms` (apps, permissions, roles, role grants, user roles, user grants), `ApplyIdentitySession` and `ApplyIdentitySecLog`. An app that keeps its own session table, for example, skips the session group.\n\nThen register the provider and the stores: `AddOSIdentityData<YourContext>()`. It replaces the in-memory session store and security log with the database ones, and adds the resolver, the sync, the maintenance, the role store and the data actor for OS.EFCore auditing."
+          },
+          "2": {
+            "title": "Creating the tables",
+            "text": "The tables are not created for you. Call `Database.EnsureCreated` once, or add migrations to your own context as usual.\n\nThe role table has a version column, and the session table has a `RevokedBy` column. They are the only additions to the old layout; names, schema `sec`, text-stored enums and index names are unchanged, so an existing database opens as it is.\n\nRole, role grant, user role and user grant changes are audited through OS.EFCore. That needs `modelBuilder.ApplyAudit()` in the same context; set the option `Audit` to false to skip it."
+          },
+          "3": {
+            "title": "The startup sync",
+            "text": "`SyncOSIdentityAsync` runs once at startup. If the app row is missing and the database has no other app, it creates it from the `AppIdentity`. If the database has other apps but not yours, it stops with an error that lists them: your app code is most likely mistyped, and every stored permission would stop matching.\n\nThen it writes the permission tree: new names are added with a first-seen date, changed titles, orders and parents are updated, and a name that left the catalog is marked inactive, never deleted. A second run with nothing changed does nothing."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register everything",
+            "note": "The provider registers OS.EFCore itself, and `AddOSIdentityData` registers the identity services in case you did not."
+          },
+          "model-building": {
+            "title": "Add the model to your context",
+            "note": "Inside `OnModelCreating`; the audit table is needed because roles and grants are audited."
+          },
+          "sync-at-startup": {
+            "title": "Sync once at startup",
+            "note": "Run it after the tables exist and before the app serves requests."
+          },
+          "first-sync": {
+            "title": "The first and the second sync",
+            "note": "The first run writes the app and five permissions; the second finds nothing to do."
+          },
+          "unknown-app-code": {
+            "title": "A mistyped app code",
+            "note": "The database already has another app, so the sync refuses to guess."
+          }
+        },
+        "type": {
+          "IdentityDataEx": "Registration, the app lookup and the helper that stages a session in your unit of work.",
+          "IdentityModel": "Adds the identity tables to your model, all at once or in three groups."
+        },
+        "member": {
+          "IdentityDataEx": {
+            "AddOSIdentityData": "Registers the database stores, replacing the in-memory ones, and validates the options at once. It also adds the identity services when they are missing.",
+            "OpenSession": "Adds a session to your context without saving, so it commits together with your other changes; it returns the id and the key.",
+            "FindAppIdAsync": "The database id of an app code, or zero."
+          }
+        }
+      },
+      "entities": {
+        "title": "What is stored",
+        "summary": "Eight tables: the app, its permissions, roles with their grants, what each user has, sessions and the log.",
+        "points": {
+          "1": {
+            "title": "No user table",
+            "text": "User ids are plain numbers; your own table is the owner."
+          },
+          "2": {
+            "title": "Text for enums",
+            "text": "Statuses and kinds are stored by name, so the numbers can never drift."
+          },
+          "3": {
+            "title": "Hashes and masks",
+            "text": "The session table holds a key hash and the log holds a masked target."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Apps, permissions and roles",
+            "text": "`IdentityApp` is one row per app, with a unique code, a title, a kind and a status. `IdentityPerm` is one row per permission name with its parent, title, order, an active flag and the date it was first seen; the first-seen date lets a role screen show a \"new\" mark.\n\n`IdentityRole` belongs to one app, or to none when it is app-wide. Its code is unique per app, it has a title, a description, a system flag and a status, and a version column that refuses a stale edit. `RolePerm` is one stored pattern of a role."
+          },
+          "2": {
+            "title": "What a user has",
+            "text": "`UserRole` links a user id to a role, optionally for one scope (kind and id) and until a date. `UserPerm` is a per-user allow or deny of one permission name, also optionally for one scope and until a date. Both are unique per user, name and scope.\n\nThere is no foreign key to a user table, because the user table is yours. If you delete users for good, delete their rows here too; if you only mark them deleted, nothing is left behind."
+          },
+          "3": {
+            "title": "Sessions and the log",
+            "text": "`UserSession` has the id, the user, the app code, the key hash (unique), the client kind, name and address, the metadata as short JSON, the dates, the revoke reason and `RevokedBy`. The key itself is never stored.\n\n`SecLog` is one row per event, with indexes on the date, the user, the address and the target, so an investigation by user, address or name is fast. Retention is 365 days by default; the maintenance call removes older rows."
+          }
+        },
+        "sample": {
+          "tables-and-columns": {
+            "title": "Table names",
+            "note": "The default schema is `sec`; a prefix goes in front of every table name."
+          },
+          "session-row": {
+            "title": "A session row",
+            "note": "The client gets the key; the table holds only its hash."
+          }
+        },
+        "type": {
+          "IdentityApp": "One row per app: code, title, kind and status.",
+          "IdentityPerm": "One row per permission name, with its parent, order and first-seen date.",
+          "IdentityRole": "A role of one app, or an app-wide one; the code is unique per app.",
+          "RolePerm": "One stored pattern of a role.",
+          "UserRole": "A user's role, optionally for one scope and until a date.",
+          "UserPerm": "A user's own allow or deny of one permission, optionally scoped and timed.",
+          "UserSession": "A session: key hash, client, dates and revoke details.",
+          "SecLog": "One security log row."
+        }
+      },
+      "stores": {
+        "title": "Sessions, resolver and upkeep",
+        "summary": "The database versions of the session store, the log and the resolver, plus the sync and the purge.",
+        "points": {
+          "1": {
+            "title": "Own contexts",
+            "text": "Sessions and the log open a short context per call, so they never save your pending changes."
+          },
+          "2": {
+            "title": "Resolver rules",
+            "text": "Roles of other apps, inactive roles and expired links are ignored."
+          },
+          "3": {
+            "title": "Small batches",
+            "text": "The purge removes log rows 1,000 at a time."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Sessions and the log",
+            "text": "`DbSessionStore<TContext>` implements `ISessionStore` over `UserSession`. Each call opens a short context, so a session can be opened or revoked while your own unit of work is still pending. Touch updates the last-seen date with a single update statement, and only when the interval has passed. When you want the session saved together with your user row, use the `OpenSession` extension on your context instead: it only adds the row and returns the key.\n\n`DbSecLog<TContext>` writes through its own context too. A failed write returns false and is reported to the error sink when one is registered; it is never swallowed silently, and it never breaks the sign-in."
+          },
+          "2": {
+            "title": "The resolver",
+            "text": "`DbPermResolver<TContext>` builds the `PermSet` of a user. It takes the user's role links that have not expired, keeps only active roles of this app or app-wide roles, expands each stored pattern against the catalog, and adds the names for the scope of the link. Then it applies the user's own overrides: allows first, denies last, so a deny always wins.\n\nA user is root only when an app-wide link points to the role with code `root`. A root role given for one scope gives that scope's grants and nothing more. With a root user the resolver returns at once, because root passes every check."
+          },
+          "3": {
+            "title": "Sync, purge and the actor",
+            "text": "`DbIdentitySync<TContext>` is the startup sync from the first topic. `IdentityMaintenance<TContext>` purges old sessions and then log rows older than `SecLogRetentionDays`: it reads a thousand ids, deletes them, and repeats, up to a hundred rounds per run, so a huge backlog never locks the table in one statement. Call it from a background job.\n\n`PrincipalDataActor` tells OS.EFCore auditing who made a change: the id, the name and the session id of the current principal."
+          }
+        },
+        "sample": {
+          "open-touch-revoke": {
+            "title": "Open, touch, revoke",
+            "note": "After the revoke the same key gives `Revoked`."
+          },
+          "security-log-own-context": {
+            "title": "The log does not save your changes",
+            "note": "A pending app row stays pending after a log line is written."
+          },
+          "purge": {
+            "title": "Purge what is old",
+            "note": "Two months later the session is past retention and is removed."
+          }
+        },
+        "type": {
+          "DbSessionStore{TContext}": "The database session store; opens a short context for every call.",
+          "DbSecLog{TContext}": "Writes the security log through its own context and reports failures.",
+          "DbPermResolver{TContext}": "Builds a user's permission set from roles, scoped links and overrides.",
+          "DbIdentitySync{TContext}": "Writes the app row and the permission tree at startup.",
+          "IdentityMaintenance{TContext}": "Purges old sessions and old log rows in batches.",
+          "PrincipalDataActor": "Tells OS.EFCore auditing who made a change, from the current principal."
+        }
+      },
+      "roles": {
+        "title": "Roles and grants",
+        "summary": "Create and edit roles with checked input, and change what a user has inside your own unit of work.",
+        "points": {
+          "1": {
+            "title": "Results with codes",
+            "text": "`RoleStore` answers with `OSResult` and stable codes, not with exceptions."
+          },
+          "2": {
+            "title": "Guard rails",
+            "text": "System roles, app-wide roles and roles in use cannot be deleted."
+          },
+          "3": {
+            "title": "Grants stay in your unit of work",
+            "text": "The grant helpers change your context and do not save; you save once with your user row."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The role store",
+            "text": "`RoleStore<TContext>` has `ListAsync`, `GetAsync(id, patterns)`, `UpsertAsync(request)` and `DeleteAsync(id)`. `GetAsync` returns the role with its stored patterns, the patterns that match nothing now and the tree with access filled in; with id `0` and a list of patterns it returns an unsaved draft for a new role.\n\n`UpsertAsync` checks the input and answers with a result. A missing title or a code that is not lower-case letters, digits and dashes (or is `root`) is `Invalid` with a field error. A pattern outside your app's prefix is `Invalid`. A code already used in the app is `Conflict` with `identity.errors.role-code-taken`. An unknown role is `NotFound`, an app-wide role is `Forbidden` (it is read-only here), and a concurrent edit is a `Conflict` with `identity.errors.role-changed`.\n\n`DeleteAsync` refuses a system role (`Forbidden`), an app-wide role (`Forbidden`) and a role that still has users (`Conflict`, with the user count in the message)."
+          },
+          "2": {
+            "title": "User grants in your unit of work",
+            "text": "`GrantStore` is a set of extension methods on your context. `SyncUserRolesAsync(userId, roleIds)` and `SyncUserPermsAsync(userId, overrides)` make the stored rows match the wanted list: they add, change and remove, skip expired overrides and return the number of changes. `SyncRolePermsAsync` does the same for the patterns of a role. None of them saves, so you call `SaveChangesAsync` once together with your user row.\n\n`ToGrantMapAsync` builds the `AppPerm` a user screen needs: role access with the role title as the source, and the user's overrides."
+          },
+          "3": {
+            "title": "The ceiling rule",
+            "text": "A person who edits roles should not be able to give more than they hold. `FindOverCeilingAsync` takes the caller's checker and returns the titles of the roles and the permission names that the caller may not hand out: a new role whose patterns the caller does not fully hold, a `root` role, or an allow override the caller lacks. `FindRoleOverCeilingAsync` does the same for the new patterns of one role. A root caller is never limited.\n\nCall them before you save, and refuse the request when the list is not empty."
+          }
+        },
+        "sample": {
+          "create-and-resolve": {
+            "title": "Create a role and resolve a user",
+            "note": "The role holds `shop:orders:*`, so the user can view orders but not users."
+          },
+          "bad-role": {
+            "title": "Refused input",
+            "note": "The result carries the code of each field error, ready for translation."
+          },
+          "user-override": {
+            "title": "A user deny beats the role",
+            "note": "The role allows editing, the user's own deny removes it."
+          }
+        },
+        "type": {
+          "RoleStore{TContext}": "List, read, create, change and delete roles; answers with results and codes.",
+          "GrantStore": "Extension methods that sync user roles, user overrides and role patterns in your own unit of work, and check the ceiling."
+        }
+      },
+      "options": {
+        "title": "Options",
+        "summary": "The schema, a table prefix and whether role changes are audited.",
+        "points": {
+          "1": {
+            "title": "Schema",
+            "text": "The default is `sec`."
+          },
+          "2": {
+            "title": "Prefix",
+            "text": "A prefix goes in front of every table name."
+          },
+          "3": {
+            "title": "Names are checked",
+            "text": "A schema or prefix with anything but letters, digits and `_` is refused."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The three options",
+            "text": "`Schema` is the database schema of the eight tables, `sec` by default. `Prefix` is empty by default; with `Id_` the roles table is `Id_Roles`. `Audit` is true by default: roles, role grants, user roles and user grants are written to the OS.EFCore audit table. Set it to false when your context has no audit table.\n\nA schema or prefix must start with a letter and use only letters, digits and `_`, at most 64 characters. Anything else is an `OSException` when you register, because these names go into the model and must never carry SQL."
+          }
+        },
+        "sample": {
+          "defaults": {
+            "title": "The defaults",
+            "note": "Schema `sec`, no prefix, audit on."
+          },
+          "bad-schema": {
+            "title": "A bad name is refused",
+            "note": "It stops at registration, not at the first query."
+          }
+        },
+        "type": {
+          "IdentityDataOptions": "Schema, table prefix and the audit switch."
+        }
+      }
+    }
+  }
+}

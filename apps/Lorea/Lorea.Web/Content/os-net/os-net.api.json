@@ -1,0 +1,477 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Net",
+      "key": "MailEx",
+      "signature": "static class MailEx",
+      "members": [
+        {
+          "name": "Normalize",
+          "signatures": [
+            "static OSResult<MailNormalized> Normalize(string? email, MailOptions? options = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "MailNormalized",
+      "signature": "sealed record MailNormalized",
+      "members": [
+        {
+          "name": "MailNormalized",
+          "signatures": [
+            "MailNormalized(string Input, string Key, string User, string Host, string Masked, MailType Type)"
+          ]
+        },
+        {
+          "name": "Input",
+          "signatures": [
+            "string Input { get; init; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "User",
+          "signatures": [
+            "string User { get; init; }"
+          ]
+        },
+        {
+          "name": "Host",
+          "signatures": [
+            "string Host { get; init; }"
+          ]
+        },
+        {
+          "name": "Masked",
+          "signatures": [
+            "string Masked { get; init; }"
+          ]
+        },
+        {
+          "name": "Type",
+          "signatures": [
+            "MailType Type { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "MailOptions",
+      "signature": "sealed record MailOptions",
+      "members": [
+        {
+          "name": "RemoveDots",
+          "signatures": [
+            "bool RemoveDots { get; init; }"
+          ]
+        },
+        {
+          "name": "RemoveTags",
+          "signatures": [
+            "bool RemoveTags { get; init; }"
+          ]
+        },
+        {
+          "name": "LowerCase",
+          "signatures": [
+            "bool LowerCase { get; init; }"
+          ]
+        },
+        {
+          "name": "NormHost",
+          "signatures": [
+            "bool NormHost { get; init; }"
+          ]
+        },
+        {
+          "name": "ExtraTempHosts",
+          "signatures": [
+            "IReadOnlyCollection<string>? ExtraTempHosts { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "MailType",
+      "signature": "enum MailType",
+      "members": [
+        {
+          "name": "Personal",
+          "signatures": [
+            "Personal = 0"
+          ]
+        },
+        {
+          "name": "Corporate",
+          "signatures": [
+            "Corporate = 1"
+          ]
+        },
+        {
+          "name": "Temporary",
+          "signatures": [
+            "Temporary = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "NetCodes",
+      "signature": "static class NetCodes",
+      "members": [
+        {
+          "name": "MailInvalid",
+          "signatures": [
+            "const string MailInvalid = \"net.mail.invalid\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "UrlEx",
+      "signature": "static class UrlEx",
+      "members": [
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "const int MaxLength = 2048"
+          ]
+        },
+        {
+          "name": "TrackingKeys",
+          "signatures": [
+            "static readonly FrozenSet<string> TrackingKeys"
+          ]
+        },
+        {
+          "name": "IsUrl",
+          "signatures": [
+            "static bool IsUrl(string? input)"
+          ]
+        },
+        {
+          "name": "TryNormalize",
+          "signatures": [
+            "static bool TryNormalize(string? input, out string? url)"
+          ]
+        },
+        {
+          "name": "IsHost",
+          "signatures": [
+            "static bool IsHost(Uri? uri, string? host)",
+            "static bool IsHost(string? value, string? host)"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "static string Key(string? url)"
+          ]
+        },
+        {
+          "name": "WithQuery",
+          "signatures": [
+            "static string WithQuery(string url, IEnumerable<KeyValuePair<string, string?>> values)"
+          ]
+        },
+        {
+          "name": "WithoutQuery",
+          "signatures": [
+            "static string WithoutQuery(string url, IEnumerable<string> keys)"
+          ]
+        },
+        {
+          "name": "StatusOf",
+          "signatures": [
+            "static UrlStatus StatusOf(HttpStatusCode code)"
+          ]
+        },
+        {
+          "name": "Readable",
+          "signatures": [
+            "static string Readable(string? url)"
+          ]
+        },
+        {
+          "name": "AreSame",
+          "signatures": [
+            "static bool AreSame(string? first, string? second)"
+          ]
+        },
+        {
+          "name": "TryGetFileName",
+          "signatures": [
+            "static bool TryGetFileName(string? url, bool includeExtension, out string? name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "UrlInfo",
+      "signature": "sealed record UrlInfo",
+      "members": [
+        {
+          "name": "UrlInfo",
+          "signatures": [
+            "UrlInfo(string Url, string Host, string Path, string Query, string Key)"
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "string Url { get; init; }"
+          ]
+        },
+        {
+          "name": "Host",
+          "signatures": [
+            "string Host { get; init; }"
+          ]
+        },
+        {
+          "name": "Path",
+          "signatures": [
+            "string Path { get; init; }"
+          ]
+        },
+        {
+          "name": "Query",
+          "signatures": [
+            "string Query { get; init; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "TryParse",
+          "signatures": [
+            "static bool TryParse(string? input, out UrlInfo? info)"
+          ]
+        },
+        {
+          "name": "IsHost",
+          "signatures": [
+            "bool IsHost(string? host)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "UrlPlatform",
+      "signature": "static class UrlPlatform",
+      "members": [
+        {
+          "name": "Defaults",
+          "signatures": [
+            "static readonly FrozenDictionary<string, string> Defaults"
+          ]
+        },
+        {
+          "name": "Detect",
+          "signatures": [
+            "static string? Detect(string? url, IReadOnlyDictionary<string, string>? hosts = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "UrlStatus",
+      "signature": "enum UrlStatus",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "Ok",
+          "signatures": [
+            "Ok = 200"
+          ]
+        },
+        {
+          "name": "Redirected",
+          "signatures": [
+            "Redirected = 301"
+          ]
+        },
+        {
+          "name": "BadRequest",
+          "signatures": [
+            "BadRequest = 400"
+          ]
+        },
+        {
+          "name": "Unauthorized",
+          "signatures": [
+            "Unauthorized = 401"
+          ]
+        },
+        {
+          "name": "NotFound",
+          "signatures": [
+            "NotFound = 404"
+          ]
+        },
+        {
+          "name": "NotAcceptable",
+          "signatures": [
+            "NotAcceptable = 406"
+          ]
+        },
+        {
+          "name": "NotSupported",
+          "signatures": [
+            "NotSupported = 415"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 500"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net",
+      "key": "UrlToken",
+      "signature": "static class UrlToken",
+      "members": [
+        {
+          "name": "Reserved",
+          "signatures": [
+            "static readonly FrozenSet<string> Reserved"
+          ]
+        },
+        {
+          "name": "Normalize",
+          "signatures": [
+            "static string? Normalize(string? token)"
+          ]
+        },
+        {
+          "name": "IsWellFormed",
+          "signatures": [
+            "static bool IsWellFormed(string? token)"
+          ]
+        },
+        {
+          "name": "IsReserved",
+          "signatures": [
+            "static bool IsReserved(string? token, IEnumerable<string>? extra = null)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "normalize",
+      "code": "var result = MailEx.Normalize(\"John.Doe+news@GoogleMail.com\");",
+      "topic": "mail",
+      "output": "True\njohndoe@gmail.com\ngmail.com\nPersonal"
+    },
+    {
+      "key": "options",
+      "code": "var tagged = MailEx.Normalize(\"A.B+x@outlook.com\", new MailOptions { RemoveTags = false });\nvar plain = MailEx.Normalize(\"A.B+x@outlook.com\");",
+      "topic": "mail",
+      "output": "a.b+x@outlook.com\na.b@outlook.com"
+    },
+    {
+      "key": "mask",
+      "code": "var result = MailEx.Normalize(\"radman@mail-corp.example\");",
+      "topic": "mail",
+      "output": "r****n@mail-corp.example\nCorporate"
+    },
+    {
+      "key": "invalid",
+      "code": "var result = MailEx.Normalize(\"not-an-email\");",
+      "topic": "mail",
+      "output": "False\nInvalid\nnet.mail.invalid"
+    },
+    {
+      "key": "link-key",
+      "code": "var same = UrlEx.AreSame(\"https://www.Example.com/shop/?utm_source=ad\", \"example.com/shop\");",
+      "output": "True"
+    },
+    {
+      "key": "mail-key",
+      "code": "var key = MailEx.Normalize(\"John.Doe+news@googlemail.com\").Data!.Key;",
+      "output": "johndoe@gmail.com"
+    },
+    {
+      "key": "check",
+      "code": "var plain = UrlEx.IsUrl(\"https://example.com/a\");\nvar ftp = UrlEx.IsUrl(\"ftp://example.com\");\nvar withLogin = UrlEx.IsUrl(\"https://user:pw@example.com\");",
+      "topic": "urls",
+      "output": "True\nFalse\nFalse"
+    },
+    {
+      "key": "normalize",
+      "code": "var typed = UrlEx.TryNormalize(\"  example.com/page \", out var url);\nvar script = UrlEx.TryNormalize(\"javascript://alert(1)\", out _);",
+      "topic": "urls",
+      "output": "True\nhttps://example.com/page\nFalse"
+    },
+    {
+      "key": "query",
+      "code": "var added = UrlEx.WithQuery(\"https://shop.example/p?id=7#reviews\", [new(\"page\", \"2\"), new(\"q\", \"a&b=c\")]);\nvar cleaned = UrlEx.WithoutQuery(\"https://shop.example/p?utm_source=ad&id=7\", UrlEx.TrackingKeys);",
+      "topic": "urls",
+      "output": "https://shop.example/p?id=7&page=2&q=a%26b%3Dc#reviews\nhttps://shop.example/p?id=7"
+    },
+    {
+      "key": "parse",
+      "code": "UrlInfo.TryParse(\"Shop.Example.com/p?id=7&utm_source=ad\", out var info);",
+      "topic": "urls",
+      "output": "https://shop.example.com/p?id=7&utm_source=ad\nshop.example.com\n/p\nid=7&utm_source=ad\n64"
+    },
+    {
+      "key": "same-link",
+      "code": "var same = UrlEx.AreSame(\"https://www.Example.com/Shop/?utm_source=ad\", \"example.com/shop\");\nvar key = UrlEx.Key(\"https://example.com/shop\");",
+      "topic": "urls",
+      "output": "True\n64"
+    },
+    {
+      "key": "readable",
+      "code": "var shown = UrlEx.Readable(\"https://example.com/%D8%B3%D9%84%D8%A7%D9%85?q=a%20b\");\nUrlEx.TryGetFileName(\"https://example.com/files/report%20final.pdf\", includeExtension: false, out var name);",
+      "topic": "urls",
+      "output": "https://example.com/سلام?q=a%20b\nreport final"
+    },
+    {
+      "key": "token",
+      "code": "var token = UrlToken.Normalize(\"  My1 \");\nvar wellFormed = UrlToken.IsWellFormed(\"my-1\");\nvar reserved = UrlToken.IsReserved(\"API\");\nvar custom = UrlToken.IsReserved(\"shop\", [\"shop\"]);",
+      "topic": "urls",
+      "output": "my1\nFalse\nTrue\nTrue"
+    },
+    {
+      "key": "platform",
+      "code": "var video = UrlPlatform.Detect(\"https://www.youtube.com/watch?v=1\");\nvar unknown = UrlPlatform.Detect(\"https://example.com\");\nvar own = UrlPlatform.Detect(\"https://shop.example/x\", new Dictionary<string, string> { [\"shop.example\"] = \"shop\" });",
+      "topic": "urls",
+      "output": "youtube\nnull\nshop"
+    },
+    {
+      "key": "status",
+      "code": "var missing = UrlEx.StatusOf(HttpStatusCode.NotFound);\nvar gone = UrlEx.StatusOf(HttpStatusCode.Gone);\nvar moved = UrlEx.StatusOf(HttpStatusCode.MovedPermanently);\nvar down = UrlEx.StatusOf(HttpStatusCode.ServiceUnavailable);",
+      "topic": "urls",
+      "output": "NotFound\nNotFound\nRedirected\nFailed"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+@layer os.base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        min-inline-size: 20rem;
+        scroll-behavior: smooth;
+        scroll-padding-block-start: 4.5rem;
+        background: var(--lorea-bg);
+    }
+
+    body {
+        min-inline-size: 20rem;
+        margin: 0;
+        color: var(--lorea-ink);
+        background: var(--lorea-bg);
+        font-family: system-ui, "Segoe UI", Tahoma, sans-serif;
+        -webkit-tap-highlight-color: color-mix(in srgb, var(--lorea-accent) 16%, transparent);
+        touch-action: manipulation;
+    }
+
+    a {
+        color: inherit;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    [tabindex="0"]:focus-visible {
+        outline: 2px solid var(--lorea-accent);
+        outline-offset: 2px;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    button {
+        color: inherit;
+    }
+
+    code,
+    pre,
+    samp {
+        font-family: var(--lorea-code-font);
+    }
+
+    ::selection {
+        color: #fff;
+        background: var(--lorea-accent);
+    }
+}
+
+@layer lorea.base {
+    .lorea {
+        --os-btn-key-bg: var(--lorea-accent);
+        --os-btn-key-fg: #fff;
+        --os-icon-btn-size: 2.25rem;
+        --os-icon-btn-hover: var(--lorea-hover);
+        --os-icon-btn-press: var(--lorea-selected);
+        --os-btn-radius: 2px;
+        --os-btn-pad: 0.7rem 1.1rem;
+        min-block-size: 100vh;
+    }
+
+    .lorea[lang="fa"] {
+        font-family: var(--lorea-font-fa);
+    }
+
+    .lorea[lang="en"] {
+        font-family: var(--lorea-font-en);
+    }
+
+    .lorea :lang(en):not(code):not(pre):not(samp) {
+        font-family: var(--lorea-font-en);
+    }
+
+    .lorea :lang(fa):not(code):not(pre):not(samp) {
+        font-family: var(--lorea-font-fa);
+    }
+
+    .lorea .os-icon-btn {
+        border-radius: 2px;
+        color: var(--lorea-ink);
+    }
+
+    .lorea .os-icon-btn[data-on="true"] {
+        background: var(--lorea-selected);
+        box-shadow: inset 0 2px 0 var(--lorea-accent);
+    }
+
+    .lorea .os-btn[data-kind="key"] {
+        font-weight: 600;
+        transition: background-color 150ms ease-out;
+    }
+
+    .lorea .os-btn[data-kind="key"]:hover {
+        --os-btn-key-bg: var(--lorea-accent-hover);
+    }
+
+    .lorea-skip-link {
+        position: absolute;
+        z-index: 20;
+        inset-block-start: 0.5rem;
+        inset-inline-start: -100vw;
+        padding: 0.65rem 1rem;
+        color: var(--lorea-bg);
+        background: var(--lorea-heading);
+    }
+
+    .lorea-skip-link:focus {
+        inset-inline-start: 0.75rem;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        overflow: hidden;
+        inline-size: 1px;
+        block-size: 1px;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+
+    .lorea[lang="fa"] :is(
+        .home-intro h1,
+        .map-heading h2,
+        .package-head .os-head-title,
+        .not-found-page h1
+    ) {
+        letter-spacing: normal;
+        line-height: 1.45;
+    }
+
+    code {
+        color: var(--lorea-accent);
+    }
+}

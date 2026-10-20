@@ -1,0 +1,18 @@
+@page "/"
+@inject IStringLocalizer<Home> Text
+
+<PageTitle>@Text["home.title"]</PageTitle>
+
+<div class="home">
+    <section class="home-intro" aria-labelledby="home-title">
+        <h1 id="home-title">@Text["home.heading"]</h1>
+        <p class="home-description">@Text["home.description"]</p>
+        <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
+    </section>
+
+    <StackMap />
+</div>
+
+@code {
+    [CascadingParameter] public ICultureProfile Profile { get; set; } = default!;
+}

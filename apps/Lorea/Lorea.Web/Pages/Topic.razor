@@ -1,0 +1,226 @@
+@page "/packages/{Slug}/{TopicSlug}"
+
+@if (Entry is null || Current is null)
+{
+    <PageTitle>@Text["notFound.title"]</PageTitle>
+
+    <section class="not-found-page">
+        <h1>@Text["topic.missingTitle"]</h1>
+        <p>@Text["topic.missingText"]</p>
+        @if (Entry is null)
+        {
+            <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["package.back"]</a>
+        }
+        else
+        {
+            <a class="return-link" href="@PackageUrl">@Text["topic.back"]</a>
+        }
+        <h2>@Text["notFound.packages"]</h2>
+        <PackageLinks Items="LibraryCatalog.Entries" />
+    </section>
+}
+else
+{
+    <PageTitle>@PageTitle</PageTitle>
+
+    <article class="package-page">
+        <nav class="package-crumbs" aria-label="@Text["package.crumbsLabel"]">
+            <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
+            <span aria-hidden="true">/</span>
+            <a href="@($"{Navigation.BaseUri}#packages")">@Text["package.packages"]</a>
+            <span aria-hidden="true">/</span>
+            <a href="@PackageUrl">@Text[Entry.TextKey("title")]</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">@Title</span>
+        </nav>
+
+        <OSPageHead Class="package-head" Title="@Title" Subtitle="@Text[Key("summary")]">
+            <Details>
+                <OSHeadItem Label="@Text["package.name"]">
+                    <code>@Entry.Name</code>
+                </OSHeadItem>
+                @if (ShowNamespaces)
+                {
+                    <OSHeadItem Label="@Text["topic.namespaces"]">
+                        <code dir="ltr">@(string.Join(", ", Current.Namespaces))</code>
+                    </OSHeadItem>
+                }
+            </Details>
+        </OSPageHead>
+
+        <div class="package-layout topic-layout">
+            <div class="package-main">
+                @if (Points.Count > 0)
+                {
+                    <section class="package-section" aria-labelledby="glance-title">
+                        <h2 id="glance-title">@Text["topic.glance"]</h2>
+                        <div class="topic-points">
+                            @foreach (var point in Points)
+                            {
+                                <div class="topic-point">
+                                    <b>@point.Title</b>
+                                    <span><OSInlineText Text="@point.Text" /></span>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+                else if (Note("about") is { } about)
+                {
+                    <section class="package-section" aria-labelledby="about-title">
+                        <h2 id="about-title">@Text["topic.about"]</h2>
+                        <p><OSInlineText Text="@about" /></p>
+                    </section>
+                }
+
+                <section class="package-section" aria-labelledby="samples-title">
+                    <h2 id="samples-title">@Text["topic.samples"]</h2>
+                    @foreach (var sample in Entry.SamplesOf(Current))
+                    {
+                        <h3 class="sample-title">@Text[Key($"sample.{sample.Key}.title")]</h3>
+                        @if (Note($"sample.{sample.Key}.note") is { } note)
+                        {
+                            <p class="topic-note"><OSInlineText Text="@note" /></p>
+                        }
+                        <OSCodeBlock Code="@sample.Code" Language="@sample.Language" Output="@sample.Output" CopyLabel="@Text["code.copy"]" CopiedLabel="@Text["code.copied"]" OutputLabel="@Text["code.output"]" />
+                    }
+                </section>
+
+                @if (Parts.Count > 0)
+                {
+                    <section class="package-section" aria-labelledby="details-title">
+                        <h2 id="details-title">@Text["topic.details"]</h2>
+                        <OSAccordion Class="topic-parts" Multiple="true" OpenId="part-1">
+                            @for (var i = 0; i < Parts.Count; i++)
+                            {
+                                var part = Parts[i];
+                                <OSAccordionItem Id="@($"part-{i + 1}")" Title="@part.Title">
+                                    <ChildContent>
+                                        @foreach (var paragraph in part.Text.Split("\n\n"))
+                                        {
+                                            <p><OSInlineText Text="@paragraph" /></p>
+                                        }
+                                    </ChildContent>
+                                </OSAccordionItem>
+                            }
+                        </OSAccordion>
+                    </section>
+                }
+
+                @if (Types.Count > 0)
+                {
+                    <section class="package-section" aria-labelledby="api-title">
+                        <h2 id="api-title">@Text["topic.api"]</h2>
+                        <OSAccordion Class="api-list">
+                            @foreach (var type in Types)
+                            {
+                                var noted = type.Members.Any(member => MemberNote(type, member) is not null || member.Obsolete is not null);
+                                <OSAccordionItem Id="@($"api-{type.Key}")" Padded="false">
+                                    <TitleContent>
+                                        <code class="api-signature" dir="ltr">@type.Signature</code>
+                                        @if (Note($"type.{type.Key}") is { } typeNote)
+                                        {
+                                            <span class="api-type-note"><OSInlineText Text="@typeNote" /></span>
+                                        }
+                                    </TitleContent>
+                                    <ChildContent>
+                                        @if (type.Obsolete is not null)
+                                        {
+                                            <p class="api-obsolete">@Text["topic.obsolete"] <bdi dir="auto">@type.Obsolete</bdi></p>
+                                        }
+                                        @if (type.Members.Count > 0)
+                                        {
+                                            <table class="api-reference" data-noted="@(noted ? "true" : "false")">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">@Text["topic.columnMember"]</th>
+                                                        @if (noted)
+                                                        {
+                                                            <th scope="col">@Text["topic.columnText"]</th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var member in type.Members)
+                                                    {
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @foreach (var signature in member.Signatures)
+                                                                {
+                                                                    <code dir="ltr">@signature</code>
+                                                                }
+                                                            </th>
+                                                            @if (noted)
+                                                            {
+                                                                <td>
+                                                                    <OSInlineText Text="@MemberNote(type, member)" />
+                                                                    @if (member.Obsolete is not null)
+                                                                    {
+                                                                        <span class="api-obsolete">@Text["topic.obsolete"] <bdi dir="auto">@member.Obsolete</bdi></span>
+                                                                    }
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </ChildContent>
+                                </OSAccordionItem>
+                            }
+                        </OSAccordion>
+                    </section>
+                }
+
+                <nav class="topic-steps" aria-label="@Text["topic.stepsLabel"]">
+                    @if (Previous is not null)
+                    {
+                        <a class="topic-step" rel="prev" href="@($"{Navigation.BaseUri}{Entry.TopicRoute(Previous)}")">
+                            <span>@Text["topic.previous"]</span>
+                            <b>@Text[Entry.TopicKey(Previous, "title")]</b>
+                        </a>
+                    }
+                    @if (Next is not null)
+                    {
+                        <a class="topic-step topic-step-next" rel="next" href="@($"{Navigation.BaseUri}{Entry.TopicRoute(Next)}")">
+                            <span>@Text["topic.next"]</span>
+                            <b>@Text[Entry.TopicKey(Next, "title")]</b>
+                        </a>
+                    }
+                </nav>
+
+                <div class="topic-related">
+                    <RelatedPackages Entry="Entry" />
+                </div>
+            </div>
+
+            <aside class="package-aside topic-aside">
+                <section class="package-section topic-nav" aria-labelledby="topics-title">
+                    <h2 id="topics-title">@Text["topic.list"]</h2>
+                    <nav class="topic-list" aria-labelledby="topics-title">
+                        @foreach (var topic in Entry.Topics)
+                        {
+                            <OSAccordionLeaf Title="@Text[Entry.TopicKey(topic, "title")]" Href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")" Active="@(topic == Current)" />
+                        }
+                    </nav>
+                </section>
+
+                <section class="package-section topic-links">
+                    <a class="return-link" href="@($"{PackageUrl}#api")">@Text["topic.apiLink"]</a>
+                    <a class="return-link" href="@PackageUrl">@Text["topic.back"]</a>
+                </section>
+            </aside>
+
+            <nav class="topic-toc" aria-labelledby="onpage-title">
+                <h2 id="onpage-title">@Text["package.onPage"]</h2>
+                <ul class="package-toc">
+                    @if (Points.Count > 0) { <li><a href="@($"{PageUrl}#glance-title")">@Text["topic.glance"]</a></li> }
+                    else if (Note("about") is not null) { <li><a href="@($"{PageUrl}#about-title")">@Text["topic.about"]</a></li> }
+                    <li><a href="@($"{PageUrl}#samples-title")">@Text["topic.samples"]</a></li>
+                    @if (Parts.Count > 0) { <li><a href="@($"{PageUrl}#details-title")">@Text["topic.details"]</a></li> }
+                    @if (Types.Count > 0) { <li><a href="@($"{PageUrl}#api-title")">@Text["topic.api"]</a></li> }
+                </ul>
+            </nav>
+        </div>
+    </article>
+}

@@ -1,0 +1,972 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "DbIdentitySync{TContext}",
+      "signature": "sealed class DbIdentitySync<TContext> : IIdentitySync where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "DbIdentitySync",
+          "signatures": [
+            "DbIdentitySync(IDbFactory<TContext> factory, PermCatalog catalog, IdentityOptions options, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "SyncAsync",
+          "signatures": [
+            "Task<int> SyncAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "DbPermResolver{TContext}",
+      "signature": "sealed class DbPermResolver<TContext> : IPermResolver where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "DbPermResolver",
+          "signatures": [
+            "DbPermResolver(IDbFactory<TContext> factory, PermCatalog catalog, IdentityOptions options, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "ResolveAsync",
+          "signatures": [
+            "ValueTask<PermSet> ResolveAsync(int userId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "DbSecLog{TContext}",
+      "signature": "sealed class DbSecLog<TContext> : ISecLog where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "DbSecLog",
+          "signatures": [
+            "DbSecLog(IDbFactory<TContext> factory, IdentityOptions options, TimeProvider time, IErrorSink? sink = null)"
+          ]
+        },
+        {
+          "name": "WriteAsync",
+          "signatures": [
+            "Task<bool> WriteAsync(SecLogEntry entry, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "DbSessionStore{TContext}",
+      "signature": "sealed class DbSessionStore<TContext> : ISessionStore where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "DbSessionStore",
+          "signatures": [
+            "DbSessionStore(IDbFactory<TContext> factory, IdentityOptions options, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "OpenAsync",
+          "signatures": [
+            "Task<OpenedSession> OpenAsync(int userId, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "CheckAsync",
+          "signatures": [
+            "Task<SessionState> CheckAsync(Guid sessionId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "TouchAsync",
+          "signatures": [
+            "Task<SessionState> TouchAsync(Guid sessionId, string sessionKey, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ListAsync",
+          "signatures": [
+            "Task<IReadOnlyList<SessionInfo>> ListAsync(int userId, bool activeOnly = true, int take = 50, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeAsync",
+          "signatures": [
+            "Task<bool> RevokeAsync(Guid sessionId, string reason, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeUserAsync",
+          "signatures": [
+            "Task<int> RevokeUserAsync(int userId, string reason, Guid? keep = null, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "IsFreshClientAsync",
+          "signatures": [
+            "Task<bool> IsFreshClientAsync(int userId, SessionClient client, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PurgeAsync",
+          "signatures": [
+            "Task<int> PurgeAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "GrantStore",
+      "signature": "static class GrantStore",
+      "members": [
+        {
+          "name": "SyncUserRolesAsync",
+          "signatures": [
+            "static Task<int> SyncUserRolesAsync(this OSDbContext context, int userId, IEnumerable<int>? roleIds, TimeProvider? time = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SyncRolePermsAsync",
+          "signatures": [
+            "static Task<int> SyncRolePermsAsync(this OSDbContext context, int roleId, IEnumerable<string>? permNames, TimeProvider? time = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SyncUserPermsAsync",
+          "signatures": [
+            "static Task<int> SyncUserPermsAsync(this OSDbContext context, int userId, IEnumerable<PermOverride>? overrides, TimeProvider? time = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ToGrantMapAsync",
+          "signatures": [
+            "static Task<AppPerm> ToGrantMapAsync(this OSDbContext context, int userId, PermCatalog catalog, IEnumerable<int>? roleIds = null, IEnumerable<PermOverride>? overrides = null, TimeProvider? time = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FindOverCeilingAsync",
+          "signatures": [
+            "static Task<List<string>> FindOverCeilingAsync(this OSDbContext context, int userId, IPermChecker? caller, PermCatalog catalog, IEnumerable<int>? roleIds, IEnumerable<PermOverride>? overrides, TimeProvider? time = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FindRoleOverCeilingAsync",
+          "signatures": [
+            "static Task<List<string>> FindRoleOverCeilingAsync(this OSDbContext context, int roleId, IPermChecker? caller, PermCatalog catalog, IEnumerable<string>? patterns, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityApp",
+      "signature": "class IdentityApp",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "AppKind Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "AppStatus Status { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "Perms",
+          "signatures": [
+            "ICollection<IdentityPerm> Perms { get; set; }"
+          ]
+        },
+        {
+          "name": "Roles",
+          "signatures": [
+            "ICollection<IdentityRole> Roles { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityDataEx",
+      "signature": "static class IdentityDataEx",
+      "members": [
+        {
+          "name": "AddOSIdentityData",
+          "signatures": [
+            "static IServiceCollection AddOSIdentityData<TContext>(this IServiceCollection services, Action<IdentityDataOptions>? configure = null) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "FindAppIdAsync",
+          "signatures": [
+            "static Task<int> FindAppIdAsync(this OSDbContext context, string? appCode, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "OpenSession",
+          "signatures": [
+            "static OpenedSession OpenSession(this OSDbContext context, int userId, SessionClient? client, IdentityOptions options, TimeProvider? time = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityDataOptions",
+      "signature": "sealed class IdentityDataOptions",
+      "members": [
+        {
+          "name": "Schema",
+          "signatures": [
+            "string Schema { get; set; }"
+          ]
+        },
+        {
+          "name": "Prefix",
+          "signatures": [
+            "string Prefix { get; set; }"
+          ]
+        },
+        {
+          "name": "Audit",
+          "signatures": [
+            "bool Audit { get; set; }"
+          ]
+        },
+        {
+          "name": "Table",
+          "signatures": [
+            "string Table(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityMaintenance{TContext}",
+      "signature": "sealed class IdentityMaintenance<TContext> : IIdentityMaintenance where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "IdentityMaintenance",
+          "signatures": [
+            "IdentityMaintenance(IDbFactory<TContext> factory, IdentityOptions options, TimeProvider time, ISessionStore sessions)"
+          ]
+        },
+        {
+          "name": "PurgeAsync",
+          "signatures": [
+            "Task<int> PurgeAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityModel",
+      "signature": "static class IdentityModel",
+      "members": [
+        {
+          "name": "ApplyIdentity",
+          "signatures": [
+            "static ModelBuilder ApplyIdentity(this ModelBuilder builder, IdentityDataOptions? options = null)"
+          ]
+        },
+        {
+          "name": "ApplyIdentityPerms",
+          "signatures": [
+            "static ModelBuilder ApplyIdentityPerms(this ModelBuilder builder, IdentityDataOptions? options = null)"
+          ]
+        },
+        {
+          "name": "ApplyIdentitySession",
+          "signatures": [
+            "static ModelBuilder ApplyIdentitySession(this ModelBuilder builder, IdentityDataOptions? options = null)"
+          ]
+        },
+        {
+          "name": "ApplyIdentitySecLog",
+          "signatures": [
+            "static ModelBuilder ApplyIdentitySecLog(this ModelBuilder builder, IdentityDataOptions? options = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityPerm",
+      "signature": "class IdentityPerm",
+      "members": [
+        {
+          "name": "AppId",
+          "signatures": [
+            "int AppId { get; set; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "ParentName",
+          "signatures": [
+            "string? ParentName { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Order",
+          "signatures": [
+            "int Order { get; set; }"
+          ]
+        },
+        {
+          "name": "IsActive",
+          "signatures": [
+            "bool IsActive { get; set; }"
+          ]
+        },
+        {
+          "name": "SyncDate",
+          "signatures": [
+            "DateTimeOffset SyncDate { get; set; }"
+          ]
+        },
+        {
+          "name": "FirstSeenDate",
+          "signatures": [
+            "DateTimeOffset? FirstSeenDate { get; set; }"
+          ]
+        },
+        {
+          "name": "App",
+          "signatures": [
+            "IdentityApp? App { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "IdentityRole",
+      "signature": "class IdentityRole",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "AppId",
+          "signatures": [
+            "int? AppId { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "string? Description { get; set; }"
+          ]
+        },
+        {
+          "name": "IsSystem",
+          "signatures": [
+            "bool IsSystem { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "RoleStatus Status { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "App",
+          "signatures": [
+            "IdentityApp? App { get; set; }"
+          ]
+        },
+        {
+          "name": "Perms",
+          "signatures": [
+            "ICollection<RolePerm> Perms { get; set; }"
+          ]
+        },
+        {
+          "name": "Users",
+          "signatures": [
+            "ICollection<UserRole> Users { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "PrincipalDataActor",
+      "signature": "sealed class PrincipalDataActor : IDataActor",
+      "members": [
+        {
+          "name": "PrincipalDataActor",
+          "signatures": [
+            "PrincipalDataActor(IPrincipalAccessor accessor)"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "string? Id { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "string? SessionId { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "RolePerm",
+      "signature": "class RolePerm",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "RoleId",
+          "signatures": [
+            "int RoleId { get; set; }"
+          ]
+        },
+        {
+          "name": "PermName",
+          "signatures": [
+            "string PermName { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "Role",
+          "signatures": [
+            "IdentityRole? Role { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "RoleStore{TContext}",
+      "signature": "sealed class RoleStore<TContext> where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "RoleStore",
+          "signatures": [
+            "RoleStore(IDbFactory<TContext> factory, PermCatalog catalog, IdentityOptions options, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "ListAsync",
+          "signatures": [
+            "Task<IReadOnlyList<RoleInfo>> ListAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "Task<RoleDetail?> GetAsync(int roleId, IEnumerable<string>? patterns = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "UpsertAsync",
+          "signatures": [
+            "Task<OSResult<RoleInfo>> UpsertAsync(RoleUpsert request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "DeleteAsync",
+          "signatures": [
+            "Task<OSResult> DeleteAsync(int roleId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "SecLog",
+      "signature": "class SecLog",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Event",
+          "signatures": [
+            "SecEvent Event { get; set; }"
+          ]
+        },
+        {
+          "name": "Result",
+          "signatures": [
+            "SecResult Result { get; set; }"
+          ]
+        },
+        {
+          "name": "Reason",
+          "signatures": [
+            "string? Reason { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string? AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int? UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "LoginId",
+          "signatures": [
+            "int? LoginId { get; set; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "Guid? SessionId { get; set; }"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "string? Provider { get; set; }"
+          ]
+        },
+        {
+          "name": "Target",
+          "signatures": [
+            "string? Target { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientKind",
+          "signatures": [
+            "ClientKind ClientKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientName",
+          "signatures": [
+            "string? ClientName { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "UserPerm",
+      "signature": "class UserPerm",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "PermName",
+          "signatures": [
+            "string PermName { get; set; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "PermAccess Access { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeKind",
+          "signatures": [
+            "byte ScopeKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeId",
+          "signatures": [
+            "int ScopeId { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset? ExpireDate { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "UserRole",
+      "signature": "class UserRole",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "RoleId",
+          "signatures": [
+            "int RoleId { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeKind",
+          "signatures": [
+            "byte ScopeKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeId",
+          "signatures": [
+            "int ScopeId { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset? ExpireDate { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "Role",
+          "signatures": [
+            "IdentityRole? Role { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity.Data",
+      "key": "UserSession",
+      "signature": "class UserSession",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "Guid Id { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "KeyHash",
+          "signatures": [
+            "string KeyHash { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientKind",
+          "signatures": [
+            "ClientKind ClientKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ClientName",
+          "signatures": [
+            "string? ClientName { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "Metadata",
+          "signatures": [
+            "SessionMeta Metadata { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "LastSeenDate",
+          "signatures": [
+            "DateTimeOffset LastSeenDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpireDate",
+          "signatures": [
+            "DateTimeOffset ExpireDate { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokedDate",
+          "signatures": [
+            "DateTimeOffset? RevokedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokeReason",
+          "signatures": [
+            "string? RevokeReason { get; set; }"
+          ]
+        },
+        {
+          "name": "RevokedBy",
+          "signatures": [
+            "int? RevokedBy { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "tables-and-columns",
+      "code": "var options = new IdentityDataOptions();",
+      "topic": "entities",
+      "output": "schema: sec\nRoles\nUserSessions\nSecLogs"
+    },
+    {
+      "key": "session-row",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var opened = await demo.InScope(services => services.GetRequiredService<ISessionStore>().OpenAsync(7));\n\n    var row = await demo.InScope(services => Task.FromResult(services.GetRequiredService<ShopDb>().Entity<UserSession>().Single()));\n\n    return [$\"key sent to the client: {opened.Key.Length} characters\", $\"hash stored: {row.KeyHash.Length} characters\", $\"same text: {row.KeyHash == opened.Key}\"];\n});",
+      "topic": "entities",
+      "output": "key sent to the client: 44 characters\nhash stored: 44 characters\nsame text: False"
+    },
+    {
+      "key": "defaults",
+      "code": "var options = new IdentityDataOptions();",
+      "topic": "options",
+      "output": "sec\n(no prefix)\nTrue"
+    },
+    {
+      "key": "bad-schema",
+      "code": "try\n{\n    new ServiceCollection().AddOSIdentityData<ShopDb>(o => o.Schema = \"sec; drop\");\n    return \"accepted\";\n}\ncatch (OSException error)\n{\n    return error.Message;\n}",
+      "topic": "options",
+      "output": "Schema must start with a letter and use only letters, digits and '_' (at most 64)."
+    },
+    {
+      "key": "quick",
+      "code": "services.AddOSSqlite<ShopDb>(o => o.Path = \"data/shop.db\");\nservices.AddOSIdentity(o => o.App = new AppIdentity { Code = \"shop\", Title = \"Shop\" });\nservices.AddOSPermProvider<ShopPerms>();\nservices.AddOSIdentityData<ShopDb>();"
+    },
+    {
+      "key": "own-tables",
+      "code": "services.AddOSIdentityData<ShopDb>(o =>\n{\n    o.Schema = \"auth\";\n    o.Prefix = \"Id_\";\n});"
+    },
+    {
+      "key": "create-and-resolve",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SyncAsync();\n    await using var scope = demo.Scope();\n    var roles = scope.ServiceProvider.GetRequiredService<RoleStore<ShopDb>>();\n\n    var created = await roles.UpsertAsync(new RoleUpsert { Code = \"clerk\", Title = \"Clerk\", Patterns = [\"shop:orders:*\"] });\n\n    var db = scope.ServiceProvider.GetRequiredService<ShopDb>();\n    await db.SyncUserRolesAsync(7, [created.Data!.Id]);\n    await db.SaveChangesAsync();\n\n    var set = await scope.ServiceProvider.GetRequiredService<IPermResolver>().ResolveAsync(7);\n\n    return [created.Status, $\"view orders: {set.Has(\"shop:orders:view\")}\", $\"view users: {set.Has(\"shop:users:view\")}\"];\n});",
+      "topic": "roles",
+      "output": "Ok\nview orders: True\nview users: False"
+    },
+    {
+      "key": "bad-role",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SyncAsync();\n    await using var scope = demo.Scope();\n    var roles = scope.ServiceProvider.GetRequiredService<RoleStore<ShopDb>>();\n\n    var noTitle = await roles.UpsertAsync(new RoleUpsert { Code = \"a\", Title = \" \" });\n    var rootCode = await roles.UpsertAsync(new RoleUpsert { Code = \"root\", Title = \"Root\" });\n\n    return [noTitle.Errors![0].Code!, rootCode.Errors![0].Code!];\n});",
+      "topic": "roles",
+      "output": "identity.errors.role-title-required\nidentity.errors.role-code-invalid"
+    },
+    {
+      "key": "user-override",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SyncAsync();\n    await using var scope = demo.Scope();\n    var roles = scope.ServiceProvider.GetRequiredService<RoleStore<ShopDb>>();\n    var db = scope.ServiceProvider.GetRequiredService<ShopDb>();\n\n    var role = await roles.UpsertAsync(new RoleUpsert { Code = \"clerk\", Title = \"Clerk\", Patterns = [\"shop:orders:*\"] });\n    await db.SyncUserRolesAsync(7, [role.Data!.Id]);\n    await db.SyncUserPermsAsync(7, [new PermOverride { Name = \"shop:orders:edit\", Access = PermAccess.Deny }]);\n    await db.SaveChangesAsync();\n\n    var set = await scope.ServiceProvider.GetRequiredService<IPermResolver>().ResolveAsync(7);\n\n    return [$\"view: {set.Has(\"shop:orders:view\")}\", $\"edit: {set.Has(\"shop:orders:edit\")}\"];\n});",
+      "topic": "roles",
+      "output": "view: True\nedit: False"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSSqlite<ShopDb>(o => o.Path = \"data/shop.db\");\nservices.AddOSIdentity(o => o.App = new AppIdentity { Code = \"shop\", Title = \"Shop\" });\nservices.AddOSPermProvider<ShopPerms>();\nservices.AddOSIdentityData<ShopDb>();",
+      "topic": "start"
+    },
+    {
+      "key": "model-building",
+      "code": "modelBuilder.ApplyIdentity();\nmodelBuilder.ApplyAudit();",
+      "topic": "start"
+    },
+    {
+      "key": "sync-at-startup",
+      "code": "services.SyncOSIdentityAsync(token);",
+      "topic": "start"
+    },
+    {
+      "key": "first-sync",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var first = await demo.SyncAsync();\n    var second = await demo.SyncAsync();\n\n    return [$\"first run: {first} changes\", $\"second run: {second} changes\"];\n});",
+      "topic": "start",
+      "output": "first run: 6 changes\nsecond run: 0 changes"
+    },
+    {
+      "key": "unknown-app-code",
+      "code": "Demo.Run<string>(async demo =>\n{\n    await demo.InScope(async services =>\n    {\n        var db = services.GetRequiredService<ShopDb>();\n        db.Entity<IdentityApp>().Add(new IdentityApp { Code = \"other\", Title = \"Other\", CreateDate = Demo.Now });\n        await db.SaveChangesAsync();\n        return 0;\n    });\n\n    try\n    {\n        await demo.SyncAsync();\n        return \"accepted\";\n    }\n    catch (OSException error)\n    {\n        return error.Message;\n    }\n});",
+      "topic": "start",
+      "output": "App code 'shop' is not registered, but other apps exist (other). If the code is right, add its row by hand; otherwise the app code is mistyped and every stored permission would stop matching."
+    },
+    {
+      "key": "open-touch-revoke",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await using var scope = demo.Scope();\n    var sessions = scope.ServiceProvider.GetRequiredService<ISessionStore>();\n\n    var opened = await sessions.OpenAsync(7, new SessionClient { Kind = ClientKind.Web, Name = \"Firefox\" });\n    var touched = await sessions.TouchAsync(opened.Id, opened.Key);\n    var revoked = await sessions.RevokeAsync(opened.Id, IdentityCodes.SessionReason.AdminRevoked, byUserId: 99);\n    var after = await sessions.TouchAsync(opened.Id, opened.Key);\n\n    return [touched, revoked, after];\n});",
+      "topic": "stores",
+      "output": "Valid\nTrue\nRevoked"
+    },
+    {
+      "key": "security-log-own-context",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await using var scope = demo.Scope();\n    var db = scope.ServiceProvider.GetRequiredService<ShopDb>();\n    db.Entity<IdentityApp>().Add(new IdentityApp { Code = \"pending\", Title = \"Pending\", CreateDate = Demo.Now });\n\n    var written = await scope.ServiceProvider.GetRequiredService<ISecLog>().WriteAsync(new SecLogEntry\n    {\n        Event = SecEvent.LoginTried,\n        Result = SecResult.Failed,\n        Target = \"radman\"\n    });\n\n    return [$\"log written: {written}\", $\"the pending app is still unsaved: {db.ChangeTracker.HasChanges()}\"];\n});",
+      "topic": "stores",
+      "output": "log written: True\nthe pending app is still unsaved: True"
+    },
+    {
+      "key": "purge",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await using var scope = demo.Scope();\n    var sessions = scope.ServiceProvider.GetRequiredService<ISessionStore>();\n\n    await sessions.OpenAsync(7);\n    demo.Clock.Advance(TimeSpan.FromDays(61));\n\n    var purged = await scope.ServiceProvider.GetRequiredService<IIdentityMaintenance>().PurgeAsync();\n\n    return [$\"rows removed: {purged}\"];\n});",
+      "topic": "stores",
+      "output": "rows removed: 1"
+    }
+  ]
+}

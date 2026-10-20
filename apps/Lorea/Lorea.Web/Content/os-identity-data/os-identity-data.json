@@ -1,0 +1,71 @@
+{
+  "slug": "os-identity-data",
+  "name": "OS.Identity.Data",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-identity",
+    "os-efcore"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [
+        "OS.Identity.Data"
+      ],
+      "types": [
+        "IdentityDataEx",
+        "IdentityModel"
+      ]
+    },
+    {
+      "slug": "entities",
+      "namespaces": [
+        "OS.Identity.Data"
+      ],
+      "types": [
+        "IdentityApp",
+        "IdentityPerm",
+        "IdentityRole",
+        "RolePerm",
+        "UserRole",
+        "UserPerm",
+        "UserSession",
+        "SecLog"
+      ]
+    },
+    {
+      "slug": "stores",
+      "namespaces": [
+        "OS.Identity.Data"
+      ],
+      "types": [
+        "DbSessionStore{TContext}",
+        "DbSecLog{TContext}",
+        "DbPermResolver{TContext}",
+        "DbIdentitySync{TContext}",
+        "IdentityMaintenance{TContext}",
+        "PrincipalDataActor"
+      ]
+    },
+    {
+      "slug": "roles",
+      "namespaces": [
+        "OS.Identity.Data"
+      ],
+      "types": [
+        "RoleStore{TContext}",
+        "GrantStore"
+      ]
+    },
+    {
+      "slug": "options",
+      "namespaces": [
+        "OS.Identity.Data"
+      ],
+      "types": [
+        "IdentityDataOptions"
+      ]
+    }
+  ]
+}

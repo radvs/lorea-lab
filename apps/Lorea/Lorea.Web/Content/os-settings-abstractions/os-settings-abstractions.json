@@ -1,0 +1,58 @@
+{
+  "slug": "os-settings-abstractions",
+  "name": "OS.Settings.Abstractions",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "kinds",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "ISettingKind",
+        "ISettingKind{T}",
+        "SettingKind{T}",
+        "TextSettingKind",
+        "IntegerSettingKind",
+        "DecimalSettingKind",
+        "BooleanSettingKind",
+        "UrlSettingKind",
+        "PathSettingKind",
+        "DurationSettingKind",
+        "ChoiceSettingKind",
+        "ListSettingKind",
+        "SettingRules"
+      ]
+    },
+    {
+      "slug": "models",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "SettingAccess",
+        "SettingOrigin",
+        "SettingChange",
+        "SettingItemModel",
+        "SettingSaveModel",
+        "SettingSectionHead",
+        "SettingSectionModel"
+      ]
+    },
+    {
+      "slug": "codes",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "SettingCodes",
+        "SettingCodes.Kind",
+        "SettingCodes.Error"
+      ]
+    }
+  ]
+}

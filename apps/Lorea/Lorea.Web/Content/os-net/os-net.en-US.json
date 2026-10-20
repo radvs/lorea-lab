@@ -1,0 +1,221 @@
+{
+  "os-net": {
+    "title": "Links and email",
+    "summary": "Check and clean links, edit their query safely, tell whether two links are the same page, and turn an email into a stable comparison key.",
+    "gives": {
+      "1": "Accept only plain http and https links, with no login in them, and fix a link someone typed without its scheme.",
+      "2": "Add or remove query parameters without letting a value inject new ones, and drop tracking parameters.",
+      "3": "Compare links and emails by a key, so the same page or mailbox written two ways is found as one."
+    },
+    "sample": {
+      "link-key": "Recognize the same link written two ways",
+      "mail-key": "Turn an email into a comparison key"
+    },
+    "topics": {
+      "urls": {
+        "title": "Links",
+        "summary": "Validate, clean, edit and compare links.",
+        "points": {
+          "1": {
+            "title": "Safe links",
+            "text": "`UrlEx.IsUrl` accepts only absolute `http` and `https` links with no login in them."
+          },
+          "2": {
+            "title": "Fix a link",
+            "text": "`TryNormalize` adds `https://` when the scheme is missing."
+          },
+          "3": {
+            "title": "Compare links",
+            "text": "`Key` and `AreSame` ignore tracking parameters, `www.` and case."
+          },
+          "4": {
+            "title": "Safe query edits",
+            "text": "Values you add with `WithQuery` are escaped."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Checking and fixing",
+            "text": "`UrlEx.IsUrl` accepts only absolute `http` and `https` links of at most 2048 characters with no user name or password in them.\n\n`TryNormalize` also adds `https://` when the scheme is missing and returns the canonical form."
+          },
+          "2": {
+            "title": "Editing the query",
+            "text": "`WithQuery` and `WithoutQuery` edit the query string without decoding what is already there. Every value you add is escaped, so a value such as `a&admin=1` stays one value.\n\n`TrackingKeys` lists the standard `utm_` parameters."
+          },
+          "3": {
+            "title": "Comparing and showing",
+            "text": "`Key` turns a link into a SHA-256 key. The key ignores the scheme, `www.`, case, a trailing slash and tracking parameters. `AreSame` compares two links by that key.\n\n`Readable` decodes UTF-8 escapes such as Persian letters for display. It leaves characters like `%2F` encoded."
+          },
+          "4": {
+            "title": "Short code, site and status",
+            "text": "`UrlToken` checks the short codes used in short links.\n\n`UrlPlatform` names the site a link belongs to, using a host table you can replace.\n\n`StatusOf` folds an HTTP status into a `UrlStatus`."
+          }
+        },
+        "sample": {
+          "check": {
+            "title": "Check that a text is a safe link",
+            "note": "Only http and https pass, and a link with a login in it is refused."
+          },
+          "normalize": {
+            "title": "Fix a link typed without its scheme",
+            "note": "Other schemes such as javascript are refused."
+          },
+          "query": {
+            "title": "Add and remove query parameters",
+            "note": "The value a&b=c stays one value, and the fragment is kept."
+          },
+          "same-link": {
+            "title": "Compare two links by their key",
+            "note": "The key is 64 hex characters, so it is safe to store and index."
+          },
+          "readable": {
+            "title": "Show a link in a readable form",
+            "note": "Escaped UTF-8 text is decoded; a space stays %20."
+          },
+          "token": {
+            "title": "Check the short code of a link",
+            "note": "Codes may only use a to z and 0 to 9, and a set of words such as api and admin is reserved. Pass your own words as the second argument."
+          },
+          "platform": {
+            "title": "Name the site a link belongs to",
+            "note": "The default table knows a few common sites. Pass your own table to teach it more."
+          },
+          "status": {
+            "title": "Turn an HTTP status into a link status",
+            "note": "Any 2xx is Ok, any 3xx is Redirected, 404 and 410 are NotFound, other 4xx are BadRequest and 5xx is Failed."
+          },
+          "parse": {
+            "title": "Parse a link into its parts",
+            "note": "The link is normalized first, and the key ignores tracking parameters."
+          }
+        },
+        "type": {
+          "UrlEx": "Link helpers: validation, normalization, query editing, comparison keys, host matching and status mapping.",
+          "UrlToken": "Rules for the short code of a link: allowed characters and reserved words.",
+          "UrlPlatform": "Names the site a link belongs to from a table of hosts.",
+          "UrlStatus": "The state of a link, after checking it.",
+          "UrlInfo": "A link split into its parts: the normalized address, host, path, query and comparison key."
+        },
+        "member": {
+          "UrlEx": {
+            "MaxLength": "The longest link that is accepted, 2048 characters.",
+            "TrackingKeys": "The standard utm_ parameters, compared without regard to case.",
+            "IsUrl": "True for an absolute http or https link with no login in it.",
+            "TryNormalize": "Trims the text, adds https:// when there is no scheme, and returns the canonical link.",
+            "IsHost": "True when a host equals the given host or is a subdomain of it.",
+            "WithQuery": "Adds or replaces query parameters. Values are escaped and existing text is not decoded.",
+            "WithoutQuery": "Removes the given query parameters.",
+            "Key": "A SHA-256 key of the link that ignores scheme, www, case, trailing slash and tracking parameters.",
+            "AreSame": "True when two links have the same key.",
+            "Readable": "Decodes UTF-8 escapes for display. ASCII escapes stay encoded.",
+            "TryGetFileName": "Reads the file name from the path of a link.",
+            "StatusOf": "Maps an HTTP status code to a UrlStatus."
+          },
+          "UrlToken": {
+            "Reserved": "Words that can't be used as a short code.",
+            "Normalize": "Trims and lowercases a code. Empty text gives null.",
+            "IsWellFormed": "True when the code has only a to z and 0 to 9.",
+            "IsReserved": "True for a reserved word or one of the extra words you pass."
+          },
+          "UrlPlatform": {
+            "Defaults": "The built-in table of hosts and the names they map to.",
+            "Detect": "The name for the link's host, or null. Pass a table to replace the default one."
+          },
+          "UrlInfo": {
+            "TryParse": "Normalizes the text and splits it, or returns false.",
+            "Url": "The normalized address.",
+            "Host": "The host in lowercase.",
+            "Path": "The path, starting with /.",
+            "Query": "The query without the question mark.",
+            "Key": "The comparison key of UrlEx.Key.",
+            "IsHost": "True when the host equals the given host or is a subdomain of it."
+          }
+        }
+      },
+      "mail": {
+        "title": "Email",
+        "summary": "Check an email address and build a key that makes two spellings of one mailbox equal.",
+        "points": {
+          "1": {
+            "title": "One check",
+            "text": "The address is first checked with `RegexEx.IsEmail` from OS.Core."
+          },
+          "2": {
+            "title": "Comparison key",
+            "text": "`Key` makes spellings of the same mailbox equal."
+          },
+          "3": {
+            "title": "Masked form",
+            "text": "A `Masked` form is built for screens and logs."
+          },
+          "4": {
+            "title": "No exception",
+            "text": "A bad address gives the `Invalid` status, not an exception."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Check and result",
+            "text": "`MailEx.Normalize` first checks the address with `RegexEx.IsEmail` from OS.Core, so there is one email check in the whole stack.\n\nWhen the address is valid, the result carries a `MailNormalized`. It has a comparison `Key`, the `User` and `Host` it was built from, a `Masked` form for screens and logs, and a `MailType`."
+          },
+          "2": {
+            "title": "Building the key",
+            "text": "The key is meant for finding duplicates, not for sending mail.\n\nIt lowercases the name and maps `googlemail.com` to `gmail.com`. It removes dots for Gmail. It cuts the `+tag` part for providers known to support tags."
+          },
+          "3": {
+            "title": "Keeping and tuning",
+            "text": "Keep the address the person typed and store the key beside it. Each rule can be switched off with `MailOptions`.\n\nA bad address returns the `Invalid` status with the code `net.mail.invalid`. No exception is thrown."
+          }
+        },
+        "sample": {
+          "normalize": {
+            "title": "Build the comparison key of an address",
+            "note": "GoogleMail and Gmail are the same mailbox, dots do not count in Gmail and +news is a tag."
+          },
+          "options": {
+            "title": "Switch a rule off",
+            "note": "Outlook ignores the part after +, but the dots in its names count."
+          },
+          "mask": {
+            "title": "Show an address without exposing it",
+            "note": "The mask keeps the first and last letters of the name. A company domain is marked Corporate."
+          },
+          "invalid": {
+            "title": "Handle an invalid address",
+            "note": "Check the code, not a message; the code never changes."
+          }
+        },
+        "type": {
+          "MailEx": "Email normalization.",
+          "MailOptions": "Which normalization rules to apply. All are on by default.",
+          "MailNormalized": "The result of a successful normalization.",
+          "MailType": "Whether the address belongs to a personal provider, a company or a throwaway service.",
+          "NetCodes": "The error codes of this package."
+        },
+        "member": {
+          "MailEx": {
+            "Normalize": "Validates the address and returns its key, parts, mask and type, or an Invalid result."
+          },
+          "MailOptions": {
+            "RemoveDots": "Remove dots from the name for Gmail. On by default.",
+            "RemoveTags": "Cut the +tag part for providers that support it. On by default.",
+            "LowerCase": "Lowercase the name. On by default.",
+            "NormHost": "Map alternative hosts such as googlemail.com to the main one. On by default.",
+            "ExtraTempHosts": "More hosts to treat as temporary, added to the built-in list. Compared without regard to case."
+          },
+          "MailNormalized": {
+            "Input": "The address as given, trimmed.",
+            "Key": "The comparison key. Don't use it as the address to send to.",
+            "User": "The name part after normalization.",
+            "Host": "The host after normalization.",
+            "Masked": "The address with the middle of the name hidden.",
+            "Type": "Personal, Corporate or Temporary."
+          },
+          "NetCodes": {
+            "MailInvalid": "The address is not a valid email."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Lorea | OriginStack Documentation</title>
+
+    <meta name="description"
+        content="Lorea — OriginStack framework documentation, guides, architecture references, and developer resources." />
+
+    <meta name="theme-color" content="#F8F8F8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#181818" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Lorea" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <meta name="application-name" content="Lorea" />
+    <meta name="author" content="OriginStack" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lorea" />
+    <meta property="og:title" content="Lorea | OriginStack Documentation" />
+    <meta property="og:description" content="Documentation and developer resources for the OriginStack framework." />
+    <meta property="og:url" content="https://radvs.github.io/Lorea/" />
+    <meta property="og:image" content="https://radvs.github.io/Lorea/imgs/brand/lorea-icon-512.png" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Lorea | OriginStack Documentation" />
+    <meta name="twitter:description" content="Documentation and developer resources for the OriginStack framework." />
+
+    <script src="_content/OS.Blazor/js/os-boot.js" data-key="lorea.theme" data-dark="dark" data-light="light"></script>
+    <script src="js/lorea-culture.js"></script>
+    <link rel="icon" type="image/svg+xml" href="imgs/brand/lorea-favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="imgs/brand/lorea-icon-96.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="imgs/brand/lorea-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="imgs/brand/lorea-icon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="imgs/brand/lorea-apple-icon.png" />
+    <link rel="shortcut icon" href="imgs/brand/lorea-icon.ico" />
+    <link rel="manifest" href="pwa/manifest.json" />
+
+    <link rel="stylesheet" href="css/lorea.css" />
+
+    <link rel="preload" id="webassembly" />
+    <script type="importmap"></script>
+</head>
+
+<body>
+    <noscript>
+        <p class="no-script">Lorea needs JavaScript to run. · برای اجرای لورا جاوااسکریپت لازم است.</p>
+    </noscript>
+
+    <div id="app">
+        <div class="loading" role="status">
+            <img class="loading-mark" src="imgs/brand/lorea-favicon.svg" alt="" width="72" height="72" />
+            <div class="loading-bar"><span></span></div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" role="alert">
+        <div class="error-body">
+            <p class="error-text">
+                <span lang="en">Something went wrong.</span>
+                <span lang="fa">مشکلی پیش آمد.</span>
+            </p>
+            <a href="." class="reload">
+                <span lang="en">Reload</span>
+                <span lang="fa">بارگذاری دوباره</span>
+            </a>
+            <button type="button" class="dismiss">
+                <span aria-hidden="true">×</span>
+                <span lang="en" class="visually-hidden">Dismiss</span>
+                <span lang="fa" class="visually-hidden">بستن</span>
+            </button>
+        </div>
+    </div>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+</body>
+
+</html>

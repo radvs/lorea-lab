@@ -1,0 +1,1050 @@
+{
+  "types": [
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiAuthorizedController",
+      "signature": "abstract class ApiAuthorizedController : ApiController",
+      "members": []
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiController",
+      "signature": "abstract class ApiController : ControllerBase",
+      "members": []
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiExceptionHandler",
+      "signature": "sealed class ApiExceptionHandler : IExceptionHandler",
+      "members": [
+        {
+          "name": "ApiExceptionHandler",
+          "signatures": [
+            "ApiExceptionHandler(ILogger<ApiExceptionHandler> log, TimeProvider time, IErrorSink? sink = null)"
+          ]
+        },
+        {
+          "name": "TryHandleAsync",
+          "signatures": [
+            "ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken token)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiJobController",
+      "signature": "abstract class ApiJobController : ApiAuthorizedController",
+      "members": [
+        {
+          "name": "Plan",
+          "signatures": [
+            "Task<IActionResult> Plan(string kind, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Start",
+          "signatures": [
+            "Task<IActionResult> Start(string kind, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "Task<IActionResult> Status(string kind, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Cancel",
+          "signatures": [
+            "Task<IActionResult> Cancel(string kind, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiVersionOptions",
+      "signature": "sealed class ApiVersionOptions : IValidatableObject",
+      "members": [
+        {
+          "name": "Enabled",
+          "signatures": [
+            "bool Enabled { get; set; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "string Default { get; set; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "string[] Items { get; set; }"
+          ]
+        },
+        {
+          "name": "Prefix",
+          "signatures": [
+            "string Prefix { get; set; }"
+          ]
+        },
+        {
+          "name": "Assume",
+          "signatures": [
+            "bool Assume { get; set; }"
+          ]
+        },
+        {
+          "name": "Report",
+          "signatures": [
+            "bool Report { get; set; }"
+          ]
+        },
+        {
+          "name": "Validate",
+          "signatures": [
+            "IEnumerable<ValidationResult> Validate(ValidationContext validationContext)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ApiVersionText",
+      "signature": "static class ApiVersionText",
+      "members": [
+        {
+          "name": "TryParse",
+          "signatures": [
+            "static bool TryParse(string? text, out ApiVersion version)"
+          ]
+        },
+        {
+          "name": "Parse",
+          "signatures": [
+            "static ApiVersion Parse(string? text)"
+          ]
+        },
+        {
+          "name": "DocName",
+          "signatures": [
+            "static string DocName(string? text)"
+          ]
+        },
+        {
+          "name": "DocNames",
+          "signatures": [
+            "static IReadOnlyList<string> DocNames(ApiVersionOptions options)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "DataProtectionKeyRing",
+      "signature": "sealed class DataProtectionKeyRing : ISecretKeyRing",
+      "members": [
+        {
+          "name": "DataProtectionKeyRing",
+          "signatures": [
+            "DataProtectionKeyRing(IDataProtectionProvider provider, string keysPath, TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "CurrentKeyId",
+          "signatures": [
+            "string CurrentKeyId { get; }"
+          ]
+        },
+        {
+          "name": "TryGetKey",
+          "signatures": [
+            "bool TryGetKey(string keyId, out byte[]? key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "HttpEx",
+      "signature": "static class HttpEx",
+      "members": [
+        {
+          "name": "GetUserId",
+          "signatures": [
+            "static int? GetUserId(this ClaimsPrincipal? user)"
+          ]
+        },
+        {
+          "name": "GetUserName",
+          "signatures": [
+            "static string? GetUserName(this ClaimsPrincipal? user)"
+          ]
+        },
+        {
+          "name": "GetTraceId",
+          "signatures": [
+            "static string GetTraceId(this HttpContext context)"
+          ]
+        },
+        {
+          "name": "ToBytesAsync",
+          "signatures": [
+            "static Task<OSResult<byte[]>> ToBytesAsync(this IFormFile? file, long maxBytes, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "IApiJob",
+      "signature": "interface IApiJob",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; }"
+          ]
+        },
+        {
+          "name": "Perm",
+          "signatures": [
+            "string? Perm { get; }"
+          ]
+        },
+        {
+          "name": "Phases",
+          "signatures": [
+            "IReadOnlyList<string> Phases { get; }"
+          ]
+        },
+        {
+          "name": "PlanAsync",
+          "signatures": [
+            "Task<OSResult<object>> PlanAsync(CancellationToken token)"
+          ]
+        },
+        {
+          "name": "RunAsync",
+          "signatures": [
+            "Task<OSResult<object>> RunAsync(JobProgress progress, CancellationToken token)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "IApiPipelineStep",
+      "signature": "interface IApiPipelineStep",
+      "members": [
+        {
+          "name": "Configure",
+          "signatures": [
+            "void Configure(IApplicationBuilder app)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "IJobGate",
+      "signature": "interface IJobGate",
+      "members": [
+        {
+          "name": "CanAsync",
+          "signatures": [
+            "ValueTask<bool> CanAsync(string permission, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "ITokenService",
+      "signature": "interface ITokenService",
+      "members": [
+        {
+          "name": "Create",
+          "signatures": [
+            "OSResult<TokenModel> Create(IEnumerable<Claim> claims)",
+            "OSResult<TokenModel> Create(IEnumerable<Claim> claims, TimeSpan lifetime)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "JobProgress",
+      "signature": "sealed class JobProgress",
+      "members": [
+        {
+          "name": "Phase",
+          "signatures": [
+            "void Phase(int index, int total)"
+          ]
+        },
+        {
+          "name": "Step",
+          "signatures": [
+            "void Step(int done)"
+          ]
+        },
+        {
+          "name": "Advance",
+          "signatures": [
+            "void Advance(int count = 1)"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "void Note(string? message)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "JobRunner",
+      "signature": "sealed class JobRunner",
+      "members": [
+        {
+          "name": "JobRunner",
+          "signatures": [
+            "JobRunner(IServiceScopeFactory scopes, IHostApplicationLifetime lifetime, TimeProvider time, ILogger<JobRunner> log, IErrorSink? sink = null)"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "JobStatus Status(string kind)"
+          ]
+        },
+        {
+          "name": "TryStart",
+          "signatures": [
+            "bool TryStart(IApiJob job, out JobStatus status)"
+          ]
+        },
+        {
+          "name": "Cancel",
+          "signatures": [
+            "bool Cancel(string kind)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "JobState",
+      "signature": "enum JobState",
+      "members": [
+        {
+          "name": "Idle",
+          "signatures": [
+            "Idle = 0"
+          ]
+        },
+        {
+          "name": "Running",
+          "signatures": [
+            "Running = 1"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "Done = 2"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 3"
+          ]
+        },
+        {
+          "name": "Cancelled",
+          "signatures": [
+            "Cancelled = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "JobStatus",
+      "signature": "sealed class JobStatus",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "JobState State { get; init; }"
+          ]
+        },
+        {
+          "name": "Phase",
+          "signatures": [
+            "int Phase { get; init; }"
+          ]
+        },
+        {
+          "name": "PhaseCount",
+          "signatures": [
+            "int PhaseCount { get; init; }"
+          ]
+        },
+        {
+          "name": "PhaseName",
+          "signatures": [
+            "string? PhaseName { get; init; }"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "int Done { get; init; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int Total { get; init; }"
+          ]
+        },
+        {
+          "name": "Note",
+          "signatures": [
+            "string? Note { get; init; }"
+          ]
+        },
+        {
+          "name": "StartedAt",
+          "signatures": [
+            "DateTimeOffset? StartedAt { get; init; }"
+          ]
+        },
+        {
+          "name": "EndedAt",
+          "signatures": [
+            "DateTimeOffset? EndedAt { get; init; }"
+          ]
+        },
+        {
+          "name": "Elapsed",
+          "signatures": [
+            "double Elapsed { get; init; }"
+          ]
+        },
+        {
+          "name": "Remaining",
+          "signatures": [
+            "double? Remaining { get; init; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; init; }"
+          ]
+        },
+        {
+          "name": "Result",
+          "signatures": [
+            "object? Result { get; init; }"
+          ]
+        },
+        {
+          "name": "Idle",
+          "signatures": [
+            "static JobStatus Idle(string kind)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "JwtOptions",
+      "signature": "sealed class JwtOptions : IValidatableObject",
+      "members": [
+        {
+          "name": "MinKeyBytes",
+          "signatures": [
+            "const int MinKeyBytes = 32"
+          ]
+        },
+        {
+          "name": "Enabled",
+          "signatures": [
+            "bool Enabled { get; set; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "PreviousKeys",
+          "signatures": [
+            "string[] PreviousKeys { get; set; }"
+          ]
+        },
+        {
+          "name": "Issuer",
+          "signatures": [
+            "string Issuer { get; set; }"
+          ]
+        },
+        {
+          "name": "Audience",
+          "signatures": [
+            "string Audience { get; set; }"
+          ]
+        },
+        {
+          "name": "ExpDays",
+          "signatures": [
+            "int ExpDays { get; set; }"
+          ]
+        },
+        {
+          "name": "Validate",
+          "signatures": [
+            "IEnumerable<ValidationResult> Validate(ValidationContext validationContext)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "RateLimitOptions",
+      "signature": "sealed class RateLimitOptions",
+      "members": [
+        {
+          "name": "Enabled",
+          "signatures": [
+            "bool Enabled { get; set; }"
+          ]
+        },
+        {
+          "name": "PermitLimit",
+          "signatures": [
+            "int PermitLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "WindowSeconds",
+          "signatures": [
+            "int WindowSeconds { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "SecretKeysEx",
+      "signature": "static class SecretKeysEx",
+      "members": [
+        {
+          "name": "AddOSSecretKeys",
+          "signatures": [
+            "static IServiceCollection AddOSSecretKeys(this IServiceCollection services, string keysPath, string appName, Action<SecretKeysOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "SecretKeysOptions",
+      "signature": "sealed class SecretKeysOptions",
+      "members": [
+        {
+          "name": "CertificateThumbprint",
+          "signatures": [
+            "string? CertificateThumbprint { get; set; }"
+          ]
+        },
+        {
+          "name": "CertificateFile",
+          "signatures": [
+            "string? CertificateFile { get; set; }"
+          ]
+        },
+        {
+          "name": "CertificatePassword",
+          "signatures": [
+            "string? CertificatePassword { get; set; }"
+          ]
+        },
+        {
+          "name": "MachineScope",
+          "signatures": [
+            "bool MachineScope { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "TokenModel",
+      "signature": "sealed class TokenModel",
+      "members": [
+        {
+          "name": "Token",
+          "signatures": [
+            "string Token { get; init; }"
+          ]
+        },
+        {
+          "name": "ExpiresAt",
+          "signatures": [
+            "DateTimeOffset ExpiresAt { get; init; }"
+          ]
+        },
+        {
+          "name": "Scheme",
+          "signatures": [
+            "string Scheme { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "TokenService",
+      "signature": "sealed class TokenService : ITokenService",
+      "members": [
+        {
+          "name": "TokenService",
+          "signatures": [
+            "TokenService(JwtOptions jwt, TimeProvider time)"
+          ]
+        },
+        {
+          "name": "Create",
+          "signatures": [
+            "OSResult<TokenModel> Create(IEnumerable<Claim> claims)",
+            "OSResult<TokenModel> Create(IEnumerable<Claim> claims, TimeSpan lifetime)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "WebApiCodes",
+      "signature": "static class WebApiCodes",
+      "members": [
+        {
+          "name": "ConfigSection",
+          "signatures": [
+            "const string ConfigSection = \"os-api\""
+          ]
+        },
+        {
+          "name": "CorsPolicy",
+          "signatures": [
+            "const string CorsPolicy = \"OS.Api.Cors\""
+          ]
+        },
+        {
+          "name": "OpenApiPattern",
+          "signatures": [
+            "const string OpenApiPattern = \"/openapi/{documentName}.json\""
+          ]
+        },
+        {
+          "name": "ScalarEndpoint",
+          "signatures": [
+            "const string ScalarEndpoint = \"/scalar\""
+          ]
+        },
+        {
+          "name": "DefaultVersion",
+          "signatures": [
+            "const string DefaultVersion = \"1.0\""
+          ]
+        },
+        {
+          "name": "DefaultPrefix",
+          "signatures": [
+            "const string DefaultPrefix = \"api/v{version:apiVersion}\""
+          ]
+        },
+        {
+          "name": "Unhandled",
+          "signatures": [
+            "const string Unhandled = \"web.unhandled\""
+          ]
+        },
+        {
+          "name": "RateLimited",
+          "signatures": [
+            "const string RateLimited = \"web.rate_limited\""
+          ]
+        },
+        {
+          "name": "UploadTooLarge",
+          "signatures": [
+            "const string UploadTooLarge = \"web.upload_too_large\""
+          ]
+        },
+        {
+          "name": "JwtDisabled",
+          "signatures": [
+            "const string JwtDisabled = \"web.jwt_disabled\""
+          ]
+        },
+        {
+          "name": "JwtKeyMissing",
+          "signatures": [
+            "const string JwtKeyMissing = \"web.jwt_key_missing\""
+          ]
+        },
+        {
+          "name": "JobUnknown",
+          "signatures": [
+            "const string JobUnknown = \"web.job_unknown\""
+          ]
+        },
+        {
+          "name": "JobForbidden",
+          "signatures": [
+            "const string JobForbidden = \"web.job_forbidden\""
+          ]
+        },
+        {
+          "name": "JobRunning",
+          "signatures": [
+            "const string JobRunning = \"web.job_running\""
+          ]
+        },
+        {
+          "name": "JobFailed",
+          "signatures": [
+            "const string JobFailed = \"web.job_failed\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "WebApiEx",
+      "signature": "static class WebApiEx",
+      "members": [
+        {
+          "name": "AddOSWebApi",
+          "signatures": [
+            "static WebApiOptions AddOSWebApi(this WebApplicationBuilder builder, string section = \"os-api\")",
+            "static IServiceCollection AddOSWebApi(this IServiceCollection services, WebApiOptions options)"
+          ]
+        },
+        {
+          "name": "AddOSJob",
+          "signatures": [
+            "static IServiceCollection AddOSJob<TJob>(this IServiceCollection services) where TJob : class, IApiJob"
+          ]
+        },
+        {
+          "name": "UseOSWebApi",
+          "signatures": [
+            "static WebApplication UseOSWebApi(this WebApplication app)"
+          ]
+        },
+        {
+          "name": "UseOSWebApiDocs",
+          "signatures": [
+            "static WebApplication UseOSWebApiDocs(this WebApplication app)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.WebApi",
+      "key": "WebApiOptions",
+      "signature": "sealed class WebApiOptions : AppConfigBase",
+      "members": [
+        {
+          "name": "Origins",
+          "signatures": [
+            "string[] Origins { get; set; }"
+          ]
+        },
+        {
+          "name": "Jwt",
+          "signatures": [
+            "JwtOptions Jwt { get; set; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "ApiVersionOptions Version { get; set; }"
+          ]
+        },
+        {
+          "name": "RateLimit",
+          "signatures": [
+            "RateLimitOptions RateLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "Docs",
+          "signatures": [
+            "bool? Docs { get; set; }"
+          ]
+        },
+        {
+          "name": "StaticFiles",
+          "signatures": [
+            "bool StaticFiles { get; set; }"
+          ]
+        },
+        {
+          "name": "ForwardedHeaders",
+          "signatures": [
+            "bool ForwardedHeaders { get; set; }"
+          ]
+        },
+        {
+          "name": "Hsts",
+          "signatures": [
+            "bool Hsts { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxUploadBytes",
+          "signatures": [
+            "long MaxUploadBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "NormalizedOrigins",
+          "signatures": [
+            "string[] NormalizedOrigins { get; }"
+          ]
+        },
+        {
+          "name": "Validate",
+          "signatures": [
+            "IEnumerable<ValidationResult> Validate(ValidationContext validationContext)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "configure",
+      "code": "var values = new Dictionary<string, string?>\n{\n    [\"os-api:app-code\"] = \"shop\",\n    [\"os-api:jwt:enabled\"] = \"true\",\n    [\"os-api:jwt:key\"] = \"read-this-from-user-secrets-not-code\",\n    [\"os-api:jwt:issuer\"] = \"shop\",\n    [\"os-api:jwt:audience\"] = \"shop-app\",\n    [\"os-api:jwt:exp-days\"] = \"7\"\n};",
+      "topic": "auth"
+    },
+    {
+      "key": "login",
+      "code": "[Route(\"[controller]\")]\nprivate sealed class LoginController(ITokenService tokens) : ApiController\n{\n    [HttpPost]\n    public IActionResult Post(int userId) =>\n        ApiResult(tokens.Create([new Claim(ClaimTypes.NameIdentifier, userId.ToString())]));\n}",
+      "topic": "auth"
+    },
+    {
+      "key": "create",
+      "code": "var now = new DateTimeOffset(2026, 3, 1, 9, 30, 0, TimeSpan.Zero);\nvar jwt = new JwtOptions { Enabled = true, Key = \"a-long-secret-key-that-is-at-least-32-bytes\", Issuer = \"shop\", Audience = \"shop-app\", ExpDays = 7 };\n\nvar result = new TokenService(jwt, new FakeTimeProvider(now)).Create([new Claim(ClaimTypes.NameIdentifier, \"42\")]);",
+      "topic": "auth",
+      "output": "Bearer\nexpires 2026-03-08 09:30 UTC\ntoken has 3 parts"
+    },
+    {
+      "key": "disabled",
+      "code": "var result = new TokenService(new JwtOptions(), TimeProvider.System).Create([]);",
+      "topic": "auth",
+      "output": "False\nUnavailable\nweb.jwt_disabled"
+    },
+    {
+      "key": "short-lifetime",
+      "code": "var jwt = new JwtOptions { Enabled = true, Key = \"a-long-secret-key-that-is-at-least-32-bytes\", Issuer = \"shop\", Audience = \"shop-app\" };\nvar now = new DateTimeOffset(2026, 3, 1, 9, 30, 0, TimeSpan.Zero);\n\nvar result = new TokenService(jwt, new FakeTimeProvider(now)).Create([], TimeSpan.FromMinutes(15));",
+      "topic": "auth",
+      "output": "expires 09:45 UTC"
+    },
+    {
+      "key": "orders",
+      "code": "[Route(\"[controller]\")]\nprivate sealed class OrdersController : ApiAuthorizedController\n{\n    [HttpGet(\"{id:int}\")]\n    public IActionResult Get(int id) =>\n        id == 7 ? ApiOk(new { id, owner = GetUserId() }) : ApiNotFound(\"Order not found.\", \"orders.missing\");\n\n    [HttpPost]\n    public IActionResult Create(string title) =>\n        TextEx.IsNull(title) ? ApiInvalid(\"title\", \"Title is required.\") : ApiOk(new { title }, \"Created.\");\n}",
+      "topic": "controllers"
+    },
+    {
+      "key": "reply",
+      "code": "Demo.Run(async app =>\n{\n    var (status, body) = await Demo.GetAsync(app, \"/api/v1/ping\");\n\n    return new object[]\n    {\n        (int)status,\n        $\"succeeded: {body.GetProperty(\"succeeded\").GetBoolean()}\",\n        $\"status: {body.GetProperty(\"status\").GetString()}\",\n        $\"message: {body.GetProperty(\"message\").GetString()}\",\n        $\"has traceId: {body.TryGetProperty(\"traceId\", out _)}\"\n    };\n});",
+      "topic": "controllers",
+      "output": "200\nsucceeded: True\nstatus: ok\nmessage: pong\nhas traceId: True"
+    },
+    {
+      "key": "status-codes",
+      "code": "[.. new[] { ResultStatus.Ok, ResultStatus.Invalid, ResultStatus.NotFound, ResultStatus.Forbidden, ResultStatus.Conflict, ResultStatus.Error }\n    .Select(status => (object)$\"{status} = {status.ToHttpStatus()}\")];",
+      "topic": "controllers",
+      "output": "Ok = 200\nInvalid = 400\nNotFound = 404\nForbidden = 403\nConflict = 409\nError = 500"
+    },
+    {
+      "key": "user-from-token",
+      "code": "var user = new ClaimsPrincipal(new ClaimsIdentity([new Claim(\"sub\", \"42\"), new Claim(ClaimTypes.Name, \"sara\")], \"Bearer\"));",
+      "topic": "controllers",
+      "output": "42\nsara"
+    },
+    {
+      "key": "upload",
+      "code": "var bytes = new byte[2048];\nvar file = new FormFile(new MemoryStream(bytes), 0, bytes.Length, \"file\", \"photo.png\");\n\nvar small = file.ToBytesAsync(4096).GetAwaiter().GetResult();\nvar large = file.ToBytesAsync(1024).GetAwaiter().GetResult();",
+      "topic": "controllers",
+      "output": "within limit: True, 2048 bytes\nover limit: Invalid (web.upload_too_large)"
+    },
+    {
+      "key": "document-names",
+      "code": "[.. ApiVersionText.DocNames(new ApiVersionOptions { Default = \"1.0\", Items = [\"1.0\", \"2\", \"2.1\"] })];",
+      "topic": "docs",
+      "output": "v1\nv2\nv2.1"
+    },
+    {
+      "key": "versions",
+      "code": "[.. new[] { \"1\", \"2.3\", \" 1.0 \", \"latest\", \"0\" }.Select(text => (object)(ApiVersionText.TryParse(text, out var version) ? $\"\\\"{text}\\\" = {version}\" : $\"\\\"{text}\\\" is not a version\"))];",
+      "topic": "docs",
+      "output": "\"1\" = 1.0\n\"2.3\" = 2.3\n\" 1.0 \" = 1.0\n\"latest\" is not a version\n\"0\" is not a version"
+    },
+    {
+      "key": "off-by-default",
+      "code": "Demo.Run(async app =>\n{\n    var (status, _) = await Demo.GetAsync(app, \"/openapi/v1.json\");\n\n    return new object[] { $\"/openapi/v1.json answers {(int)status} outside Development\" };\n});",
+      "topic": "docs",
+      "output": "/openapi/v1.json answers 404 outside Development"
+    },
+    {
+      "key": "enums",
+      "code": "Demo.Run(async app =>\n{\n    var text = await app.Client.GetStringAsync(\"/openapi/v1.json\");\n    var schemas = JsonDocument.Parse(text).RootElement.GetProperty(\"components\").GetProperty(\"schemas\");\n\n    return new object[]\n    {\n        $\"ResultStatus is {Kind(schemas.GetProperty(\"ResultStatus\"))}\",\n        $\"JobState is {Kind(schemas.GetProperty(\"JobState\"))}\"\n    };\n}, (\"docs\", \"true\"));",
+      "topic": "docs",
+      "output": "ResultStatus is string\nJobState is integer"
+    },
+    {
+      "key": "sink",
+      "code": "private sealed class FileSink : IErrorSink\n{\n    public bool TryReport(ErrorReport report)\n    {\n        File.AppendAllText(\"errors.log\", $\"{report.OccurredAt:u} {report.TraceId} {report.ErrorType}{Environment.NewLine}\");\n        return true;\n    }\n}",
+      "topic": "errors"
+    },
+    {
+      "key": "register",
+      "code": "services.AddSingleton<IErrorSink, FileSink>();",
+      "topic": "errors"
+    },
+    {
+      "key": "reply",
+      "code": "Demo.Run(async app =>\n{\n    var (status, body) = await Demo.GetAsync(app, \"/api/v1/ping/boom\");\n\n    return new object[]\n    {\n        (int)status,\n        body.GetProperty(\"code\").GetString()!,\n        body.GetProperty(\"message\").GetString()!,\n        $\"has traceId: {body.TryGetProperty(\"traceId\", out _)}\"\n    };\n});",
+      "topic": "errors",
+      "output": "500\nweb.unhandled\nA technical error occurred. Contact support if it continues.\nhas traceId: True"
+    },
+    {
+      "key": "report",
+      "code": "Demo.Run(async app =>\n{\n    await Demo.GetAsync(app, \"/api/v1/ping/boom\");\n\n    var report = app.Sink.Reports.Single();\n\n    return new object[] { report.ErrorType, report.Method!, report.StatusCode, \"the message and stack trace go to the report, never to the response\" };\n});",
+      "topic": "errors",
+      "output": "System.InvalidOperationException\nGET\n500\nthe message and stack trace go to the report, never to the response"
+    },
+    {
+      "key": "job",
+      "code": "private sealed class RebuildJob : IApiJob\n{\n    public string Kind => \"rebuild\";\n    public string? Perm => \"jobs.rebuild\";\n    public IReadOnlyList<string> Phases => [\"Read\", \"Write\"];\n\n    public Task<OSResult<object>> PlanAsync(CancellationToken token) =>\n        Task.FromResult(OSResult<object>.Ok(new { rows = 3 }));\n\n    public Task<OSResult<object>> RunAsync(JobProgress progress, CancellationToken token)\n    {\n        progress.Phase(0, 3);\n\n        for (var i = 0; i < 3; i++)\n        {\n            token.ThrowIfCancellationRequested();\n            progress.Advance();\n        }\n\n        progress.Phase(1, 1);\n        progress.Note(\"writing\");\n        progress.Advance();\n\n        return Task.FromResult(OSResult<object>.Ok(new { rows = 3 }));\n    }\n}",
+      "topic": "jobs"
+    },
+    {
+      "key": "controller",
+      "code": "[Route(\"[controller]\")]\nprivate sealed class RebuildController(JobRunner runner, IEnumerable<IApiJob> jobs) : ApiJobController(runner, jobs);",
+      "topic": "jobs"
+    },
+    {
+      "key": "gate",
+      "code": "private sealed class AdminGate(IHttpContextAccessor http) : IJobGate\n{\n    public ValueTask<bool> CanAsync(string permission, CancellationToken token = default) =>\n        ValueTask.FromResult(http.HttpContext?.User.IsInRole(\"admin\") == true);\n}",
+      "topic": "jobs"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSJob<RebuildJob>();\nservices.AddHttpContextAccessor();\nservices.AddSingleton<IJobGate, AdminGate>();",
+      "topic": "jobs"
+    },
+    {
+      "key": "run",
+      "code": "var runner = Create<RebuildJob>();\n\nvar started = runner.TryStart(new RebuildJob(), out var first);\nvar status = Wait(runner, \"rebuild\");\nvar again = runner.TryStart(new RebuildJob(), out _);",
+      "topic": "jobs",
+      "output": "started: True\nstate right after start: Running\nfinal state: Done\nphases: 2\nresult: {\"rows\":3}\nstart again after the end: True"
+    },
+    {
+      "key": "failure",
+      "code": "var runner = Create<BrokenJob>();\n\nrunner.TryStart(new BrokenJob(), out _);\nvar status = Wait(runner, \"broken\");",
+      "topic": "jobs",
+      "output": "Failed\nweb.job_failed\nmessage hidden: True"
+    },
+    {
+      "key": "defaults",
+      "code": "var options = new WebApiOptions();",
+      "topic": "options",
+      "output": "os-api\n1.0\nFalse\nFalse\n10485760\n(only in Development)"
+    },
+    {
+      "key": "from-configuration",
+      "code": "var configuration = new ConfigurationBuilder()\n    .AddInMemoryCollection(new Dictionary<string, string?>\n    {\n        [\"os-api:app-code\"] = \"shop\",\n        [\"os-api:origins:0\"] = \"https://shop.example.com/\",\n        [\"os-api:rate-limit:enabled\"] = \"true\",\n        [\"os-api:rate-limit:permit-limit\"] = \"30\"\n    })\n    .Build();\n\nvar options = configuration.ReadOSConfig<WebApiOptions>(WebApiCodes.ConfigSection);",
+      "topic": "options",
+      "output": "shop\nhttps://shop.example.com\nTrue\n30"
+    },
+    {
+      "key": "bad-origin",
+      "code": "Read(\"os-api:origins:0\", \"https://shop.example.com/admin\");",
+      "topic": "options",
+      "output": "Configuration section 'os-api' is not valid: origins[0] must be an absolute http or https origin without a path."
+    },
+    {
+      "key": "short-key",
+      "code": "Read(\"os-api:jwt:key\", \"too-short\", (\"os-api:jwt:enabled\", \"true\"), (\"os-api:jwt:issuer\", \"shop\"), (\"os-api:jwt:audience\", \"shop-app\"));",
+      "topic": "options",
+      "output": "Configuration section 'os-api' is not valid: jwt.key must be at least 32 bytes when jwt.enabled is true."
+    },
+    {
+      "key": "bad-version",
+      "code": "Read(\"os-api:api-version:default\", \"latest\");",
+      "topic": "options",
+      "output": "Configuration section 'os-api' is not valid: api-version.default must look like 1 or 1.0."
+    },
+    {
+      "key": "quick",
+      "code": "var builder = WebApplication.CreateBuilder(args);\n\nbuilder.Services.AddOSLocale();\nbuilder.AddOSWebApi();\n\nvar app = builder.Build();\n\napp.UseOSWebApi();\napp.Run();"
+    },
+    {
+      "key": "secured",
+      "code": "var builder = WebApplication.CreateBuilder(args);\n\nbuilder.Services.AddOSLocale();\nbuilder.Services.AddOSSecretKeys(\"keys\", \"shop\");\nbuilder.AddOSWebApi();\n\nvar app = builder.Build();\n\napp.UseOSWebApi();\napp.Run();"
+    },
+    {
+      "key": "register",
+      "code": "var builder = WebApplication.CreateBuilder(args);\n\nbuilder.Services.AddOSLocale();\nvar options = builder.AddOSWebApi();\n\nvar app = builder.Build();\n\napp.UseOSWebApi();\napp.Run();",
+      "topic": "start"
+    },
+    {
+      "key": "first-request",
+      "code": "Demo.Run(async app =>\n{\n    var (status, body) = await Demo.GetAsync(app, \"/api/v1/ping\");\n\n    return new object[] { (int)status, body.GetProperty(\"status\").GetString()!, body.GetProperty(\"message\").GetString()! };\n});",
+      "topic": "start",
+      "output": "200\nok\npong"
+    },
+    {
+      "key": "language",
+      "code": "Demo.Run(async app =>\n{\n    var fallback = await app.Client.GetAsync(\"/api/v1/ping\");\n    var english = await app.Client.GetAsync(\"/api/v1/ping?lang=en\");\n\n    return new object[] { fallback.Content.Headers.ContentLanguage.Single(), english.Content.Headers.ContentLanguage.Single() };\n});",
+      "topic": "start",
+      "output": "fa-IR\nen-US"
+    },
+    {
+      "key": "key-ring",
+      "code": "var folder = Path.Combine(Path.GetTempPath(), $\"lorea-keys-{Guid.NewGuid():N}\");\n\ntry\n{\n    var provider = new Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider();\n    var first = new DataProtectionKeyRing(provider, folder);\n    var id = first.CurrentKeyId;\n    var reopened = new DataProtectionKeyRing(provider, folder);\n\n    return [$\"key id has {id.Length} characters\", $\"same key after reopening: {reopened.CurrentKeyId == id}\", $\"files on disk: {Directory.GetFiles(folder).Length}\"];\n}\nfinally\n{\n    if (Directory.Exists(folder))\n        Directory.Delete(folder, recursive: true);\n}",
+      "topic": "start",
+      "output": "key id has 22 characters\nsame key after reopening: True\nfiles on disk: 1"
+    }
+  ]
+}

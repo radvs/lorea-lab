@@ -1,0 +1,15 @@
+@layer os.tokens, os.base, os.ctrls, os.util, lorea.base, lorea.parts;
+
+@import url("../_content/OS.Blazor/css/os-web.css");
+@import url("./layers/lorea.tokens.css");
+@import url("./os-font.css");
+@import url("./layers/lorea.base.css");
+@import url("./layers/parts/lorea.layout.css");
+@import url("./layers/parts/lorea.home.css");
+@import url("./layers/parts/lorea.map.css");
+@import url("./layers/parts/lorea.package.css");
+@import url("./layers/parts/lorea.topic.css");
+@import url("./layers/parts/lorea.code.css");
+@import url("./layers/parts/lorea.path.css");
+@import url("./layers/parts/lorea.loading.css");
+@import url("./layers/parts/lorea.motion.css");

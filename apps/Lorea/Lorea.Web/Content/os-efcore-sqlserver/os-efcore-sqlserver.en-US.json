@@ -1,0 +1,122 @@
+{
+  "os-efcore-sqlserver": {
+    "title": "SQL Server",
+    "summary": "SQL Server and Azure SQL with a safe setup out of the box: an encrypted connection with a checked certificate, SQL Server's own retries, and its error numbers turned into clear results.",
+    "gives": {
+      "1": "The connection is encrypted and the server certificate is checked, even if the connection string says otherwise.",
+      "2": "Temporary failures such as deadlocks and dropped connections are retried by SQL Server's own strategy, and `TranAsync` stays safe under it.",
+      "3": "A duplicate value, a missing reference or a too-long text comes back with the field name, never with the server's message."
+    },
+    "sample": {
+      "register": "A context on SQL Server",
+      "local-db": "LocalDB on your own machine"
+    },
+    "topics": {
+      "connection": {
+        "title": "Connecting safely",
+        "summary": "Give a connection string; encryption, certificate checking and retries are set for you.",
+        "points": {
+          "1": {
+            "title": "Encrypted connection",
+            "text": "The server certificate is checked, even if the connection string asks otherwise."
+          },
+          "2": {
+            "title": "Automatic retries",
+            "text": "Deadlocks and dropped connections are retried for you."
+          },
+          "3": {
+            "title": "Exact dates",
+            "text": "`DateTimeOffset` is stored as `datetimeoffset`."
+          },
+          "4": {
+            "title": "Concurrent edits",
+            "text": "`Versioned()` catches two people editing at the same time."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Encryption and certificate",
+            "text": "A connection string copied from an old project may say `Encrypt=False` or `TrustServerCertificate=True`, which sends data in clear text or accepts any certificate. Here the options always win: the connection is encrypted (`Mandatory`) and the certificate is checked.\n\nRelax this only through the options and only where it is safe, for example `TrustServerCertificate = true` for LocalDB on your own machine."
+          },
+          "2": {
+            "title": "Retries",
+            "text": "With `RetryOnFailure` on (the default), temporary failures are retried by SQL Server's retrying strategy, using `RetryCount` and `RetryDelay` from `EFCoreOptions`. Set `RetryCount` to 0 to turn retries off.\n\nThe command timeout, the migrations history table and start-up migration also come from `EFCoreOptions`."
+          },
+          "3": {
+            "title": "Dates and concurrent edits",
+            "text": "`DateTimeOffset` is stored as `datetimeoffset`, and edits by two people are caught by the core `Versioned()` token, so the same model works on every database."
+          },
+          "4": {
+            "title": "A very busy database",
+            "text": "Turning on `READ_COMMITTED_SNAPSHOT` on the database itself reduces blocking between readers and writers. This package does not change database settings."
+          }
+        },
+        "sample": {
+          "secure": {
+            "title": "What the connection really uses",
+            "note": "The string asked for no encryption and a trusted certificate; the options overrode both."
+          },
+          "retries": {
+            "title": "Retries and command timeout",
+            "note": "The context retries temporary failures and gives each command 30 seconds."
+          }
+        },
+        "type": {
+          "SqlServerOptions": "The connection string and the security and retry switches.",
+          "SqlServerEx": "Registration and setup."
+        },
+        "member": {
+          "SqlServerOptions": {
+            "TrustServerCertificate": "Accepts any server certificate. Off by default; turn it on only for LocalDB or a development server."
+          },
+          "SqlServerEx": {
+            "AddOSSqlServer": "Registers a context on SQL Server. Registers OS.EFCore too when it is not registered yet, so one call is enough; call `AddOSEFCore` as well, before or after, only to change its settings.",
+            "UseOSSqlServer": "Applies the SQL Server setup to a builder."
+          }
+        }
+      },
+      "errors": {
+        "title": "Errors and what was tested",
+        "summary": "How SQL Server errors turn into results, and an honest note on testing.",
+        "points": {
+          "1": {
+            "title": "Known numbers",
+            "text": "SQL Server error numbers map to stable `data.*` codes."
+          },
+          "2": {
+            "title": "Only real constraints",
+            "text": "547 counts only for FOREIGN KEY or REFERENCE; a CHECK is `data.error`."
+          },
+          "3": {
+            "title": "Private messages",
+            "text": "The server's message is read only to find the field."
+          },
+          "4": {
+            "title": "What was tested",
+            "text": "Real-server tests ran on LocalDB; the rest only as unit tests."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Recognized numbers",
+            "text": "These SQL Server error numbers are recognized (checked on Microsoft Learn): 2627 and 2601 give `data.duplicate` with the field; 515 gives `data.required`; 547 gives `data.missingRef`, or `data.inUse` when deleting, but only for a FOREIGN KEY or REFERENCE constraint; 2628 and 8152 give `data.tooLong`.\n\n1205 (deadlock), 1222 (lock timeout), ‎-2 (timeout) and 40501 (service busy) give `data.busy`; and 53, ‎-1, 10053, 10054, 10060, 40613 and 40197 give `data.offline`."
+          },
+          "2": {
+            "title": "Everything else",
+            "text": "Anything else, including a CHECK constraint, is `data.error`. The server's message is read only to find the field; it never reaches a result."
+          },
+          "3": {
+            "title": "What was tested",
+            "text": "Tests against a real server ran on LocalDB: duplicate, required, too long, missing reference and in use errors, transactions under the retrying strategy, the version token and dates.\n\nDeadlocks, lock timeouts, network and Azure errors and a commit that fails half-way were tested only with unit tests and the core's simulated failures."
+          }
+        },
+        "sample": {
+          "save-item": {
+            "title": "Turn a SQL Server result into a message",
+            "note": "The same codes as every other database, so this code does not change if the database does."
+          }
+        }
+      }
+    }
+  }
+}

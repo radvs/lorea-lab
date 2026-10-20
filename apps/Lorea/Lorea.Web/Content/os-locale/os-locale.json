@@ -1,0 +1,77 @@
+{
+  "slug": "os-locale",
+  "name": "OS.Locale",
+  "version": "1.0.0",
+  "group": "locale",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "setup",
+      "namespaces": [
+        "OS.Locale"
+      ],
+      "types": [
+        "LocaleEx",
+        "LocaleOptions",
+        "ILocaleRegistry",
+        "LocaleRegistry",
+        "CultureNames"
+      ]
+    },
+    {
+      "slug": "culture",
+      "namespaces": [
+        "OS.Locale"
+      ],
+      "types": [
+        "ICultureProfile",
+        "CultureProfile",
+        "PersianCultureProfile",
+        "EnglishCultureProfile",
+        "DateStyle"
+      ]
+    },
+    {
+      "slug": "region",
+      "namespaces": [
+        "OS.Locale"
+      ],
+      "types": [
+        "IRegionProfile",
+        "RegionProfile",
+        "IranRegionProfile",
+        "NamedItem",
+        "Division",
+        "CurrencyUnit"
+      ]
+    },
+    {
+      "slug": "text",
+      "namespaces": [
+        "OS.Locale"
+      ],
+      "types": [
+        "Digits",
+        "Mask",
+        "Bidi",
+        "TextLocaleOptions",
+        "TextLocalizer",
+        "TextLocalizerFactory"
+      ]
+    },
+    {
+      "slug": "templates",
+      "namespaces": [
+        "OS.Locale"
+      ],
+      "types": [
+        "ITemplateRenderer",
+        "TextTemplateOptions",
+        "ITemplateFilter",
+        "TemplateContext"
+      ]
+    }
+  ]
+}

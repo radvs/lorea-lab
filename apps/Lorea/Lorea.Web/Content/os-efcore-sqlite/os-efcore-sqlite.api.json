@@ -1,0 +1,257 @@
+{
+  "types": [
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "ISqliteVault",
+      "signature": "interface ISqliteVault",
+      "members": [
+        {
+          "name": "Probe",
+          "signatures": [
+            "SqliteFileState Probe(string path)"
+          ]
+        },
+        {
+          "name": "CanOpenAsync",
+          "signatures": [
+            "Task<bool> CanOpenAsync(string path, string key, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "EncryptAsync",
+          "signatures": [
+            "Task<OSResult> EncryptAsync(string path, string key, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ChangeKeyAsync",
+          "signatures": [
+            "Task<OSResult> ChangeKeyAsync(string path, string currentKey, string newKey, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Close",
+          "signatures": [
+            "void Close()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "SqliteCodes",
+      "signature": "static class SqliteCodes",
+      "members": [
+        {
+          "name": "KeyTooShort",
+          "signatures": [
+            "const string KeyTooShort = \"sqlite.keyTooShort\""
+          ]
+        },
+        {
+          "name": "KeyRejected",
+          "signatures": [
+            "const string KeyRejected = \"sqlite.keyRejected\""
+          ]
+        },
+        {
+          "name": "NotPlain",
+          "signatures": [
+            "const string NotPlain = \"sqlite.notPlain\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "SqliteEx",
+      "signature": "static class SqliteEx",
+      "members": [
+        {
+          "name": "NowTicksSql",
+          "signatures": [
+            "const string NowTicksSql = \"CAST((julianday('now') - 1721425.5) * 864000000000 AS INTEGER)\""
+          ]
+        },
+        {
+          "name": "AddOSSqlite",
+          "signatures": [
+            "static IServiceCollection AddOSSqlite<TContext>(this IServiceCollection services, Action<SqliteOptions> configure, bool pooled = true) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "UseOSSqlite",
+          "signatures": [
+            "static DbContextOptionsBuilder UseOSSqlite(this DbContextOptionsBuilder builder, SqliteOptions options)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "SqliteFileState",
+      "signature": "enum SqliteFileState",
+      "members": [
+        {
+          "name": "Missing",
+          "signatures": [
+            "Missing = 0"
+          ]
+        },
+        {
+          "name": "Plain",
+          "signatures": [
+            "Plain = 1"
+          ]
+        },
+        {
+          "name": "Encrypted",
+          "signatures": [
+            "Encrypted = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "SqliteOptions",
+      "signature": "sealed class SqliteOptions",
+      "members": [
+        {
+          "name": "Path",
+          "signatures": [
+            "string? Path { get; set; }"
+          ]
+        },
+        {
+          "name": "InMemory",
+          "signatures": [
+            "bool InMemory { get; set; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "Func<string?>? Key { get; set; }"
+          ]
+        },
+        {
+          "name": "BusyTimeout",
+          "signatures": [
+            "TimeSpan BusyTimeout { get; set; }"
+          ]
+        },
+        {
+          "name": "WriteAheadLog",
+          "signatures": [
+            "bool WriteAheadLog { get; set; }"
+          ]
+        },
+        {
+          "name": "Synchronous",
+          "signatures": [
+            "SqliteSynchronous Synchronous { get; set; }"
+          ]
+        },
+        {
+          "name": "Pooling",
+          "signatures": [
+            "bool Pooling { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Sqlite",
+      "key": "SqliteSynchronous",
+      "signature": "enum SqliteSynchronous",
+      "members": [
+        {
+          "name": "Off",
+          "signatures": [
+            "Off = 0"
+          ]
+        },
+        {
+          "name": "Normal",
+          "signatures": [
+            "Normal = 1"
+          ]
+        },
+        {
+          "name": "Full",
+          "signatures": [
+            "Full = 2"
+          ]
+        },
+        {
+          "name": "Extra",
+          "signatures": [
+            "Extra = 3"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "tune",
+      "code": "services.AddOSEFCore(o => o.CommandTimeout = TimeSpan.FromSeconds(10));\nservices.AddOSSqlite<Store>(o =>\n{\n    o.Path = \"data/shop.db\";\n    o.BusyTimeout = TimeSpan.FromSeconds(3);\n    o.Synchronous = SqliteSynchronous.Full;\n});",
+      "topic": "connection"
+    },
+    {
+      "key": "manual",
+      "code": "builder.UseOSSqlite(new SqliteOptions { Path = \"data/tools.db\", WriteAheadLog = false }).UseOS(services);",
+      "topic": "connection"
+    },
+    {
+      "key": "key-stays-out",
+      "code": "var path = Path.Combine(Path.GetTempPath(), $\"lorea-{Guid.NewGuid():N}.db\");\nvar services = new ServiceCollection();\nservices.AddOSSqlite<Store>(o =>\n{\n    o.Path = path;\n    o.Key = () => \"correct-horse-battery\";\n}, pooled: false);\n\nusing var provider = services.BuildServiceProvider();\nvar vault = provider.GetRequiredService<ISqliteVault>();\n\nusing (var scope = provider.CreateScope())\n{\n    var db = scope.ServiceProvider.GetRequiredService<Store>();\n    db.Database.EnsureCreated();\n\n    var connection = db.Database.GetConnectionString()!;\n    var state = vault.Probe(path);\n    vault.Close();\n    File.Delete(path);\n\n    return [connection.Contains(\"correct-horse\", StringComparison.Ordinal), state];\n}",
+      "topic": "encryption",
+      "output": "False\nEncrypted"
+    },
+    {
+      "key": "encrypt",
+      "code": "if (vault.Probe(path) != SqliteFileState.Plain)\n    return OSResult.Ok();\n\nvar result = await vault.EncryptAsync(path, key, token);",
+      "topic": "encryption"
+    },
+    {
+      "key": "change-key",
+      "code": "var result = await vault.ChangeKeyAsync(path, oldKey, newKey, token);",
+      "topic": "encryption"
+    },
+    {
+      "key": "sign-in",
+      "code": "var opens = await vault.CanOpenAsync(path, key, token);",
+      "topic": "encryption"
+    },
+    {
+      "key": "sign-out",
+      "code": "vault.Close();",
+      "topic": "encryption"
+    },
+    {
+      "key": "date-storage",
+      "code": "var path = Path.Combine(Path.GetTempPath(), $\"lorea-{Guid.NewGuid():N}.db\");\nvar services = new ServiceCollection();\nservices.AddOSSqlite<Store>(o => o.Path = path, pooled: false);\n\nusing (var provider = services.BuildServiceProvider())\nusing (var scope = provider.CreateScope())\n{\n    var db = scope.ServiceProvider.GetRequiredService<Store>();\n    db.Database.EnsureCreated();\n    db.Add(new Item { Name = \"pen\" });\n    db.Save();\n\n    var item = db.Entity<Item>().Single();\n    var kind = db.Database.SqlQueryRaw<string>(\"SELECT typeof(CreateDate) AS Value FROM Item\").Single();\n    SqliteConnection.ClearAllPools();\n    File.Delete(path);\n\n    return [kind, item.CreateDate.Offset];\n}",
+      "topic": "notes",
+      "output": "integer\n00:00:00"
+    },
+    {
+      "key": "hide-debug-paths",
+      "code": "logging.AddFilter(\"Microsoft.EntityFrameworkCore.Database.Connection\", LogLevel.Information);",
+      "topic": "notes"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSSqlite<Store>(o => o.Path = \"data/shop.db\");"
+    },
+    {
+      "key": "encrypted",
+      "code": "services.AddOSSqlite<Store>(o =>\n{\n    o.Path = \"data/shop.db\";\n    o.Key = keyFromSession;\n});"
+    },
+    {
+      "key": "in-memory",
+      "code": "services.AddOSSqlite<Store>(o => o.InMemory = true);"
+    }
+  ]
+}

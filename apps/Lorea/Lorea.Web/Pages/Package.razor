@@ -1,0 +1,133 @@
+@page "/packages/{Slug}"
+
+@if (Entry is null)
+{
+    <PageTitle>@Text["notFound.title"]</PageTitle>
+
+    <section class="not-found-page">
+        <h1>@Text["package.missingTitle"]</h1>
+        <p>@Text["package.missingText"]</p>
+        <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["package.back"]</a>
+        <h2>@Text["notFound.packages"]</h2>
+        <PackageLinks Items="LibraryCatalog.Entries" />
+    </section>
+}
+else
+{
+    <PageTitle>@PageTitle</PageTitle>
+
+    <article class="package-page">
+        <nav class="package-crumbs" aria-label="@Text["package.crumbsLabel"]">
+            <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
+            <span aria-hidden="true">/</span>
+            <a href="@($"{Navigation.BaseUri}#packages")">@Text["package.packages"]</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">@Text[Entry.TextKey("title")]</span>
+        </nav>
+
+        <OSPageHead Class="package-head" Title="@Text[Entry.TextKey("title")]">
+            <SubtitleContent>
+                <OSInlineText Text="@Text[Entry.TextKey("summary")]" />
+            </SubtitleContent>
+            <Details>
+                <OSHeadItem Label="@Text["package.name"]">
+                    <code>@Entry.Name</code>
+                </OSHeadItem>
+            </Details>
+        </OSPageHead>
+
+        <div class="package-layout">
+            <div class="package-main">
+                <section id="overview" class="package-section" aria-labelledby="overview-title">
+                    <h2 id="overview-title">@Text["package.sections.overview"]</h2>
+                    <ul class="package-gives">
+                        @for (var i = 1; i <= 3; i++)
+                        {
+                            <li><OSInlineText Text="@Text[Entry.TextKey($"gives.{i}")]" /></li>
+                        }
+                    </ul>
+                </section>
+
+                <section id="install" class="package-section" aria-labelledby="install-title">
+                    <h2 id="install-title">@Text["package.sections.install"]</h2>
+                    <div class="install-box" dir="ltr">
+                        <code>@InstallCommand</code>
+                        <OSTooltip Text="@Text["code.copyCommand"]" Side="TooltipSide.Bottom">
+                            <OSCopyButton Text="@InstallCommand" Label="@Text["code.copyCommand"]" DoneLabel="@Text["code.copied"]" />
+                        </OSTooltip>
+                    </div>
+                    <p class="package-note">@Text["package.installNote"]</p>
+                    <h3 class="sample-title">@Text["package.path"]</h3>
+                    <DependencyPath Steps="Chain" />
+                </section>
+
+                <section id="quick-start" class="package-section" aria-labelledby="quick-start-title">
+                    <h2 id="quick-start-title">@Text["package.sections.quickStart"]</h2>
+                    @foreach (var sample in Entry.Samples)
+                    {
+                        <h3 class="sample-title">@Text[Entry.TextKey($"sample.{sample.Key}")]</h3>
+                        <OSCodeBlock Code="@sample.Code" Language="@sample.Language" Output="@sample.Output" CopyLabel="@Text["code.copy"]" CopiedLabel="@Text["code.copied"]" OutputLabel="@Text["code.output"]" />
+                    }
+
+                    @if (!Entry.Samples.Any())
+                    {
+                        <p class="package-note">@Text["package.quickStartNone"]</p>
+                    }
+                </section>
+
+                <section id="guides" class="package-section" aria-labelledby="guides-title">
+                    <h2 id="guides-title">@Text["package.sections.guides"]</h2>
+                    @if (Entry.Topics.Count == 0)
+                    {
+                        <p class="package-note">@Text["package.guidesNone"]</p>
+                    }
+                    else
+                    {
+                        <nav class="topic-cards" aria-labelledby="guides-title">
+                            @foreach (var topic in Entry.Topics)
+                            {
+                                <OSAccordionLeaf Title="@Text[Entry.TopicKey(topic, "title")]" Caption="@Text[Entry.TopicKey(topic, "summary")]" Href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")" />
+                            }
+                        </nav>
+                    }
+                </section>
+
+                <section id="api" class="package-section" aria-labelledby="api-title">
+                    <h2 id="api-title">@Text["package.sections.api"]</h2>
+                    @if (ApiGroups.Count == 0)
+                    {
+                        <p class="package-note">@Text["package.apiNone"]</p>
+                    }
+                    else
+                    {
+                        <p class="package-note">@Text["package.apiNote"]</p>
+                        @foreach (var (topic, types) in ApiGroups)
+                        {
+                            <h3 class="sample-title">@Text[Entry.TopicKey(topic, "title")]</h3>
+                            <div class="api-types">
+                                @foreach (var type in types)
+                                {
+                                    <a href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")"><code>@type.Key.Replace('{', '<').Replace('}', '>')</code></a>
+                                }
+                            </div>
+                        }
+                    }
+                </section>
+            </div>
+
+            <aside class="package-aside">
+                <nav class="package-section" aria-labelledby="onpage-title">
+                    <h2 id="onpage-title">@Text["package.onPage"]</h2>
+                    <ul class="package-toc">
+                        @foreach (var (id, key) in Sections)
+                        {
+                            <li><a href="@($"{PageUrl}#{id}")">@Text[key]</a></li>
+                        }
+                    </ul>
+                </nav>
+
+                <RelatedPackages Entry="Entry" />
+            </aside>
+        </div>
+    </article>
+}

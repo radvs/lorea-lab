@@ -1,0 +1,24 @@
+/* The lang-based fonts in lorea.base would win over the library's code font. */
+
+@layer lorea.parts {
+    .lorea {
+        --os-code-font: var(--lorea-code-font);
+        --os-code-bg: var(--lorea-chrome);
+        --os-code-border: var(--lorea-rule);
+        --os-code-accent: var(--lorea-accent);
+    }
+
+    .os-code-box pre :is(span, code),
+    .os-inline-code {
+        font-family: var(--os-code-font) !important;
+    }
+
+    .os-code-box code {
+        color: var(--lorea-ink);
+    }
+
+    .os-code-output samp {
+        color: var(--lorea-heading);
+        font-family: var(--lorea-font-en) !important;
+    }
+}

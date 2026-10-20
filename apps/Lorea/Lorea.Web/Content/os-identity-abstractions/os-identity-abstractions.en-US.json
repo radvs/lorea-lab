@@ -1,0 +1,269 @@
+{
+  "os-identity-abstractions": {
+    "title": "Identity models",
+    "summary": "The shared shapes of identity: the signed-in principal, permission sets and grants, roles, sessions, status enums, the interfaces your user entity implements, and the fixed codes a UI can translate. It needs only OS.Core, so a browser or desktop client can use it without any server code.",
+    "gives": {
+      "1": "One copy of the principal, permission and role models for the server, the web client and the desktop app.",
+      "2": "A permission set that answers \"may this user do this here?\" with the nearest scope winning, so a deny in one store beats an allow everywhere.",
+      "3": "Small interfaces (`IUser`, `IAccount`, `ILogin`, `ILockable`) that your own user entity implements, so the library never owns your user table."
+    },
+    "topics": {
+      "principal": {
+        "title": "The signed-in user",
+        "summary": "`Principal` is who is calling and what they may do. `PermSet` is the answer to the second half.",
+        "points": {
+          "1": {
+            "title": "One object per request",
+            "text": "The principal holds the user id, name, roles and a `PermSet`."
+          },
+          "2": {
+            "title": "Nearest scope wins",
+            "text": "A deny at a scope beats an allow that is app-wide."
+          },
+          "3": {
+            "title": "No session key inside",
+            "text": "The principal carries the session id only; the secret key never rides along."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The principal",
+            "text": "`Principal` has the user id, a stable `Uid`, the session id, the user name, the full name, mobile, birth date, avatar, role titles, an `IsTempPass` flag and its `Perms`. `IsAuthenticated` is true when the id is above zero.\n\n`AgeOn` takes today's date as a parameter, so the model never reads a clock by itself.\n\nThe session key is not part of it. It is returned once, when a session is opened, and only its hash is stored."
+          },
+          "2": {
+            "title": "Who is the current user",
+            "text": "`IPrincipalAccessor` has one property, `Current`. The permission checker reads it on every check, so the same checker works in a web request, a desktop window or a test.\n\nThe next package gives three ready accessors: one from a delegate, one ambient per async flow, and your own class."
+          },
+          "3": {
+            "title": "Asking a PermSet",
+            "text": "`PermSet.Has(name)` checks the app-wide set. `Has(name, chain)` walks a `ScopeChain` from the nearest scope to the app: the first scope that allows or denies the name decides, and the app-wide set is the last stop. `IsRoot` allows everything.\n\nEach scope has a `ScopedPerms` entry with an `Allow` set and a `Deny` set. The wire shape is a list of `{kind, id, allow, deny}`, so it serializes without special keys.\n\n`Add` and `Remove` change the set the way the resolver does: an app-wide `Remove` takes the name away everywhere, and a scoped `Remove` writes a deny for that scope only."
+          }
+        },
+        "type": {
+          "Principal": "The signed-in user: ids, names, roles and the permission set.",
+          "IPrincipalAccessor": "Where the checker finds the current principal; one property.",
+          "PermSet": "What a user may do: app-wide names, per-scope allows and denies, and a root flag.",
+          "ScopedPerms": "The allows and denies of one scope inside a `PermSet`."
+        },
+        "member": {
+          "PermSet": {
+            "Has": "Asks whether a name is allowed: app-wide, in one scope, or along a scope chain with the nearest scope winning.",
+            "Remove": "An app-wide remove clears the name everywhere; a scoped remove writes a deny for that scope."
+          }
+        }
+      },
+      "perms": {
+        "title": "Permissions",
+        "summary": "A permission is a name like `shop:orders:view`. Your app declares them as a tree; users get them through roles and overrides.",
+        "points": {
+          "1": {
+            "title": "Names with segments",
+            "text": "Names are lower case segments joined by a colon; the first segment is the app code."
+          },
+          "2": {
+            "title": "A tree you declare",
+            "text": "An `IPermProvider` returns the tree; the catalog checks it at startup."
+          },
+          "3": {
+            "title": "Models for editors",
+            "text": "`PermGrant` is one node of the tree an admin screen shows, with its state and where the access comes from."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Declaring permissions",
+            "text": "`PermInfo` is one node: a name, a title, an order, a description and children. A group like `shop:orders` holds `shop:orders:view` and `shop:orders:edit` as children. The name is trimmed and lower-cased when the node is created, and `AppCode` is its first segment.\n\n`IPermProvider.GetPerms` returns the root nodes. Register one provider per module; the catalog in the next package merges them.\n\nThe titles you put here are your own texts; the library has no display text of its own."
+          },
+          "2": {
+            "title": "Checking a permission",
+            "text": "`IPermChecker` answers `IsGranted(name)` for the app, `IsGranted(name, chain)` along a scope chain, and `IsGranted(perm)` for a node. `IsRoot` tells whether the user is a root.\n\n`Require(name)` returns `null` when allowed and a ready `Forbidden` result with the code `identity.errors.perm-denied` when not. That is the shape a service returns, so a guard is one line."
+          },
+          "3": {
+            "title": "Models for admin screens",
+            "text": "`PermGrant` is a node as the editor shows it: `HasAccess`, the `State` (`Inherit`, `Allow` or `Deny`), `Source` (the role title that gave it), `RoleAccess`, `Via` (the wildcard that covers it), `IsNew` and the child nodes.\n\n`PermOverride` is one user override with `Allow` or `Deny` and an optional expiry. `AppPerm` collects what a user has from roles and from overrides for one screen. `PermChange` and `PermTarget` name an edit and who it targets, for audit screens."
+          }
+        },
+        "type": {
+          "PermInfo": "One permission node: name, title, order and children.",
+          "PermGrant": "One node of the tree an admin screen shows, with its state and source.",
+          "PermOverride": "A per-user allow or deny with an optional expiry.",
+          "AppPerm": "What one user has from roles and from overrides, for one screen.",
+          "PermState": "How a node is set for a user: inherit from roles, allow, or deny.",
+          "PermAccess": "An override is either `Allow` or `Deny`.",
+          "PermChange": "What happened to a permission in an edit: added, removed or changed.",
+          "PermTarget": "Whom an edit targets: a user or a role.",
+          "IPermProvider": "Returns the permission tree of a module.",
+          "IPermChecker": "Answers whether the current user holds a permission; `Require` returns a ready Forbidden result."
+        }
+      },
+      "roles": {
+        "title": "Roles",
+        "summary": "A role is a named bundle of permission patterns. These are the shapes a role screen sends and receives.",
+        "points": {
+          "1": {
+            "title": "Patterns, not copies",
+            "text": "A role stores patterns such as `shop:orders:*`, so new permissions under it are covered at once."
+          },
+          "2": {
+            "title": "List and detail",
+            "text": "`RoleInfo` is a row of the list; `RoleDetail` adds the patterns and the tree."
+          },
+          "3": {
+            "title": "One upsert model",
+            "text": "`RoleUpsert` creates a role when the id is zero and edits it otherwise."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What a role holds",
+            "text": "`RoleInfo` has the id, a code, a title, a description, `IsSystem`, `IsAppWide`, the `Status` and two counts: users and grants. A system role cannot be deleted or deactivated. An app-wide role belongs to no single app and is read-only inside one.\n\n`RoleStatus` is `IsActive` or `InActive`. An inactive role gives nothing to its users."
+          },
+          "2": {
+            "title": "The editor models",
+            "text": "`RoleDetail` extends `RoleInfo` with `Patterns` (what is stored), `Orphans` (patterns that match nothing in the current catalog) and `Grants` (the tree with `HasAccess` and `Via` filled in).\n\n`RoleUpsert` has the id, the code (used only when creating), the title, the description, the status and the patterns. The store in the data package checks it and answers with a result."
+          }
+        },
+        "type": {
+          "RoleInfo": "A role as a list row: code, title, flags and counts.",
+          "RoleDetail": "A role with its stored patterns, orphan patterns and the permission tree.",
+          "RoleUpsert": "What an edit screen sends to create or change a role.",
+          "RoleStatus": "A role is active or inactive."
+        }
+      },
+      "accounts": {
+        "title": "Users, logins and the app",
+        "summary": "Four small interfaces your user entity implements, the statuses around them, and the identity of the app itself.",
+        "points": {
+          "1": {
+            "title": "Your table, our rules",
+            "text": "The library never creates a user table; your entity implements the interfaces."
+          },
+          "2": {
+            "title": "Lock fields",
+            "text": "`ILockable` is three fields; lockout rules work on any entity that has them."
+          },
+          "3": {
+            "title": "The app has a code",
+            "text": "`AppIdentity.Code` is the first segment of every permission name."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The four interfaces",
+            "text": "`IUser` has an `Id` and a `Uid`. `IAccount` has an `Id` and a `Status` (`UserStatus`). `ILogin` is one way to sign in: a `Provider`, the stored `Secret`, `IsTempSecret`, `TempExpireDate` and a `Status` (`LoginStatus`). `ILogin` extends `ILockable`: `FailedAccessNo`, `FailedAccessDate` and `LockedUntil`.\n\nOne entity can implement all four, with the explicit syntax when two property names meet. The login rules in the next package take an `ILogin` and an `IAccount`; they never see your table."
+          },
+          "2": {
+            "title": "Statuses and results",
+            "text": "`UserStatus` is `Unknown`, `IsActive`, `InActive` or `Deleted`. `LoginStatus` is `Unknown`, `Active` or `Disabled`. `Gender` is `Unknown`, `Female` or `Male`. The default value of each is a safe one, so a new row is never accidentally active.\n\n`LoginState` is the outcome of a check: `Ok`, `InvalidCred`, `Locked`, `Disabled`, `TempPassExpired`, `Throttled` or `ChallengeRequired` (one more step is needed, such as a code). `LoginCheck` pairs a state with a `NeedsSave` flag and the lock time that remains. The enum names are stored as text by the data package, so they never change."
+          },
+          "3": {
+            "title": "The identity of the app",
+            "text": "`AppIdentity` has the `Code` (at most 24 characters), a `Title` and an `AppKind` (`WebApi`, `WebApp`, `WinApp`, `WPFApp` or `Unknown`). `PermName(\"orders\", \"view\")` builds `shop:orders:view` for the app `shop`.\n\n`AppStatus` is `IsActive` or `InActive`; it is stored on the app row."
+          }
+        },
+        "type": {
+          "IUser": "A user row: an id and a stable uid.",
+          "IAccount": "The account side of a user: id and status.",
+          "ILogin": "One way to sign in: provider, stored secret, temporary-secret fields, status and the lock fields.",
+          "ILockable": "Three fields that let lockout rules work on any entity.",
+          "UserStatus": "Unknown, active, inactive or deleted.",
+          "LoginStatus": "A login is active or disabled.",
+          "Gender": "Unknown, female or male.",
+          "LoginState": "The outcome of a login check.",
+          "LoginCheck": "A login state with a needs-save flag and the remaining lock time.",
+          "AppIdentity": "The code, title and kind of your app; the code starts every permission name.",
+          "AppKind": "What kind of app this is: web API, web app, Windows app or WPF app.",
+          "AppStatus": "An app row is active or inactive."
+        }
+      },
+      "sessions": {
+        "title": "Sessions and the security log",
+        "summary": "What a session looks like to a client, who opened it, and the entry written to the security log for every sign-in event.",
+        "points": {
+          "1": {
+            "title": "A key and an id",
+            "text": "Opening a session returns an id and a secret key; the key is shown once."
+          },
+          "2": {
+            "title": "Client details are clamped",
+            "text": "Long names and user agents are cut to the column size before they are stored."
+          },
+          "3": {
+            "title": "Log entries hide what must hide",
+            "text": "A target that looks like a password is stored as a short hash, not as typed."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "A session from the outside",
+            "text": "`OpenedSession` is what opening a session returns: the `Id`, the `Key` and the `ExpireDate`. Give the key to the client; the library keeps only a hash.\n\n`SessionInfo` is a stored session for a list screen: client kind and name, address, dates, the revoke reason and who revoked it, and a computed `State` of `Valid`, `Unknown`, `Expired`, `Idle` or `Revoked`."
+          },
+          "2": {
+            "title": "Describing the client",
+            "text": "`SessionClient` is what you pass in: a `ClientKind` (`Desktop`, `Web`, `Mobile`, `Api` or `Unknown`), a name, an address and a `SessionMeta` with device, OS, app version, user agent and culture. `Clamp` cuts every text to its limit, and the store calls it for you, so a very long `User-Agent` header can no longer break a sign-in.\n\n`SameAs` compares kind, name and address; it is how the store tells a fresh device from a known one."
+          },
+          "3": {
+            "title": "The security log entry",
+            "text": "`SecLogEntry` has an event (`SecEvent`: login tried, session opened, closed or revoked, secret changed, login locked or unlocked and others), a result (`SecResult`: `Success`, `Failed` or `Blocked`), a short reason code, the app, the user, the session, the client and a date.\n\n`Target` is the name that was typed. People sometimes type their password into the name field, so `MaskTarget` keeps the text only when it looks like an identifier and otherwise stores `h:` followed by twelve hex characters of a hash. `Clamp` applies the column limits."
+          }
+        },
+        "type": {
+          "SessionInfo": "A stored session for a list screen, with its computed state.",
+          "SessionClient": "Who is signing in from where: kind, name, address and details; it clamps itself.",
+          "SessionMeta": "Device, OS, app version, user agent and culture of a client.",
+          "ClientKind": "Desktop, web, mobile, API or unknown.",
+          "SessionState": "Valid, unknown, expired, idle or revoked.",
+          "OpenedSession": "The id, the secret key (shown once) and the expiry of a new session.",
+          "SecEvent": "What happened: a login try, a session change, a secret change, a lock and so on.",
+          "SecResult": "Success, failed or blocked.",
+          "SecLogEntry": "One security log line; it clamps its texts and masks a target that looks like a password."
+        },
+        "member": {
+          "SecLogEntry": {
+            "MaskTarget": "Keeps a short identifier as it is; anything with spaces, control characters or too long becomes `h:` plus a hash prefix."
+          },
+          "SessionClient": {
+            "Clamp": "Cuts the name, address and every meta text to its column limit."
+          }
+        }
+      },
+      "codes": {
+        "title": "Codes and limits",
+        "summary": "Names, sizes and keys that never change, so a database, a UI and a translation file can rely on them.",
+        "points": {
+          "1": {
+            "title": "Fixed limits",
+            "text": "Column sizes and password limits are constants, not magic numbers."
+          },
+          "2": {
+            "title": "Reason codes",
+            "text": "Security log and session reasons are short fixed codes, never sentences."
+          },
+          "3": {
+            "title": "Translation keys",
+            "text": "Error codes are keys like `identity.errors.role-in-use` for your own localization."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Names and sizes",
+            "text": "`IdentityCodes` has the module code `idn`, the default schema `sec`, the provider name `password`, the root role code `root`, the permission separator `:` and the wildcards `*` and `:*`.\n\n`IdentityCodes.Size` has the column sizes: app code 24, role code 32, permission name 128, reason 64, address 45 and so on. `IdentityCodes.Limit` has the session key size, the password byte limit (1,024), the default password length range (8 to 128), the temporary password hours and length, and the alphabet of temporary passwords, which leaves out look-alike letters."
+          },
+          "2": {
+            "title": "Reasons and errors",
+            "text": "`IdentityCodes.SecReason` has the reasons the log stores: `no-user`, `bad-secret`, `locked`, `throttled`, `disabled`, `deleted`, `temp-expired` and more. `IdentityCodes.SessionReason` has `logged-out`, `password-changed`, `signed-out-everywhere`, `account-disabled`, `admin-revoked` and `idle-timeout`.\n\n`IdentityCodes.Challenge` names the kinds of one-time challenge: `otp`, `magic-link` and `second-factor`.\n\n`IdentityCodes.Error` has the keys results carry, such as `identity.errors.role-not-found`, `role-code-taken`, `role-in-use`, `password-length`, `invalid-login`, `locked` and `throttled`. They are keys for your own translation files, not texts for people. `TextKey(group, member)` builds the key of an enum member, for example `identity.session-states.idle`."
+          }
+        },
+        "type": {
+          "IdentityCodes": "Module code, schema, provider name, root role, separators and wildcards.",
+          "IdentityCodes.Size": "Column sizes: app code, role code, permission name, reason, address and more.",
+          "IdentityCodes.Limit": "Session key size, password limits, temporary password rules.",
+          "IdentityCodes.SecReason": "The short reason codes the security log stores.",
+          "IdentityCodes.SessionReason": "The reason codes written when a session is revoked.",
+          "IdentityCodes.Challenge": "The kinds of one-time challenge: code, magic link and second factor.",
+          "IdentityCodes.Error": "The error keys that results and field errors carry."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "os-caching": {
+    "title": "Caching",
+    "summary": "One cache API for memory and an optional shared store such as Redis, with protection against loading the same data twice.",
+    "gives": {
+      "1": "Cache any value with one call: the loader runs on a miss, and callers that arrive at the same time wait for that one run.",
+      "2": "Start with memory only and add Redis later, without changing the code that reads the cache.",
+      "3": "Safe defaults: an expiration on every entry, a size limit per entry, and no size limit forced on the app's shared memory cache."
+    },
+    "sample": {
+      "quick": "Cache a value for five minutes"
+    },
+    "topics": {
+      "setup": {
+        "title": "Setup",
+        "summary": "Register the cache once and choose its defaults.",
+        "points": {
+          "1": {
+            "title": "Defaults",
+            "text": "`AddOSCaching` registers Microsoft's `HybridCache` with its own defaults."
+          },
+          "2": {
+            "title": "Limits",
+            "text": "Entries live 10 minutes, up to 1 MiB, with keys up to 1024 characters."
+          },
+          "3": {
+            "title": "Second level",
+            "text": "A registered `IDistributedCache` such as Redis becomes the second level."
+          },
+          "4": {
+            "title": "Shared memory cache",
+            "text": "The app's shared `IMemoryCache` gets no size limit."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Defaults",
+            "text": "`AddOSCaching` registers Microsoft's `HybridCache` with these defaults: entries live for 10 minutes and one entry can be up to 1 MiB.\n\nA key can be up to 1024 characters. Calling `AddOSCaching` again changes nothing."
+          },
+          "2": {
+            "title": "Oversized values",
+            "text": "A value over a limit is not cached, and the call still returns it."
+          },
+          "3": {
+            "title": "Distributed cache",
+            "text": "When an `IDistributedCache` such as Redis is registered, `HybridCache` uses it as a second level behind memory, so every server sees the same data.\n\nWithout one, it caches in memory only."
+          },
+          "4": {
+            "title": "Shared memory cache",
+            "text": "The app's shared `IMemoryCache` gets no size limit.\n\nA limit there would break any other code that uses it without giving a size."
+          }
+        },
+        "sample": {
+          "defaults": {
+            "title": "Register with the defaults",
+            "note": "The values are the expiration, the payload limit in bytes and the key length limit."
+          },
+          "configure": {
+            "title": "Choose your own defaults",
+            "note": "The memory copy expires after 5 minutes, so a server picks up a change from Redis sooner than the full hour."
+          }
+        },
+        "type": {
+          "CacheOptions": "The defaults `AddOSCaching` applies. They are checked at startup, so a wrong value fails early."
+        },
+        "member": {
+          "CacheOptions": {
+            "Expiration": "How long an entry lives. The default is 10 minutes.",
+            "LocalExpiration": "How long the in-memory copy lives. It defaults to Expiration and can't be longer.",
+            "MaxPayloadBytes": "The largest value that is cached, in bytes. The default is 1 MiB.",
+            "MaxKeyLength": "The longest key that is cached. The default is 1024 characters."
+          }
+        }
+      },
+      "usage": {
+        "title": "Using the cache",
+        "summary": "Read through the cache, store values, and remove them when the data changes.",
+        "points": {
+          "1": {
+            "title": "Read through",
+            "text": "Inject `HybridCache` and call `GetOrCreateAsync`."
+          },
+          "2": {
+            "title": "Run once",
+            "text": "On a miss the loader runs once, even for concurrent requests."
+          },
+          "3": {
+            "title": "Removing",
+            "text": "Remove a key with `RemoveAsync`, or a tagged group with `RemoveByTagAsync`."
+          },
+          "4": {
+            "title": "Key shape",
+            "text": "Build keys like `area:type:id` and add the tenant or user when needed."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading through the cache",
+            "text": "Inject `HybridCache` and call `GetOrCreateAsync` with a key, a loader and an expiration.\n\nOn a miss the loader runs once, even when many requests ask for the same key at the same time. Every caller gets its result."
+          },
+          "2": {
+            "title": "Values and errors",
+            "text": "A cached 0, false or empty value counts as found.\n\nErrors from the loader are not hidden; they reach the caller."
+          },
+          "3": {
+            "title": "Removing entries",
+            "text": "When the data behind a key changes, remove the key with `RemoveAsync`.\n\nTo clear a group of entries together, give them a tag and call `RemoveByTagAsync`."
+          },
+          "4": {
+            "title": "Building keys",
+            "text": "Build keys like `area:type:id`.\n\nAdd the tenant or user to the key whenever the value depends on who is asking."
+          }
+        },
+        "sample": {
+          "get-or-create": {
+            "title": "Read through the cache",
+            "note": "The store is called only on a miss. The token cancels the loader only when every waiting caller has cancelled."
+          },
+          "set": {
+            "title": "Store a value directly",
+            "note": "Use it when you already have fresh data, for example right after saving it."
+          },
+          "remove": {
+            "title": "Remove a key after the data changes",
+            "note": "Save first, then remove, so the next read loads the new data."
+          },
+          "tags": {
+            "title": "Clear a group of entries",
+            "note": "A tag removal marks older entries as stale; they are reloaded on their next read."
+          }
+        },
+        "type": {
+          "CacheEx": "Registration and the `HybridCache` overloads that take the expiration as a TimeSpan."
+        },
+        "member": {
+          "CacheEx": {
+            "AddOSCaching": "Registers `HybridCache` with the defaults from `CacheOptions`.",
+            "GetOrCreateAsync": "Returns the cached value, or runs the loader once and caches its result for the given time.",
+            "SetAsync": "Stores a value for the given time, replacing any older one."
+          }
+        }
+      }
+    }
+  }
+}

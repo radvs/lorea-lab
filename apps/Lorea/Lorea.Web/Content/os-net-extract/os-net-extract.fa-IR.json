@@ -1,0 +1,344 @@
+{
+  "os-net-extract": {
+    "title": "استخراج داده",
+    "summary": "فیلدهایی مثل عنوان، قیمت یا تصویر را از یک صفحه‌ی وب یا یک جواب JSON بخوانید، با قاعده‌هایی که در تنظیمات نوشته می‌شود، نه در کد.",
+    "gives": {
+      "1": "هر سایت را یک بار، به‌صورت selector و مسیر JSON با جایگزین، توصیف کنید و همان فیلدها را از همه‌ی صفحه‌هایش بخوانید.",
+      "2": "صفحه‌ها را امن بگیرید: آدرس خصوصی رد می‌شود، بدنه سقف اندازه دارد و جواب بد به‌جای exception یک وضعیت می‌شود.",
+      "3": "موتور HTML پشت یک interface است، پس parser را می‌شود عوض کرد بی‌آنکه کدی که از آن استفاده می‌کند تغییر کند."
+    },
+    "sample": {
+      "quick": "خواندن عنوان یک صفحه از روی هاستش"
+    },
+    "topics": {
+      "providers": {
+        "title": "Provider و فیلد",
+        "summary": "آنچه باید از هر سایت خوانده شود را در تنظیمات بنویسید.",
+        "points": {
+          "1": {
+            "title": "قاعده در تنظیمات",
+            "text": "هر سایت با یک `ExtractProvider` توصیف می‌شود، نه با کد."
+          },
+          "2": {
+            "title": "فیلدها",
+            "text": "هر `ExtractField` می‌گوید مقدار را از کجا بخوانیم."
+          },
+          "3": {
+            "title": "ثبت ساده",
+            "text": "`AddOSExtract` برای هر provider یک کلاینت HTTP امن ثبت می‌کند."
+          },
+          "4": {
+            "title": "همیشه امن",
+            "text": "آدرس خصوصی رد می‌شود و بدنه‌ی بزرگ خوانده نمی‌شود."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "توصیف یک منبع",
+            "text": "`ExtractProvider` یک منبع را توصیف می‌کند. `Name` نام آن است و `Host` هاستی که به آن خدمت می‌دهد. `BaseUrl` اختیاری است.\n\n`Format` شکل منبع را می‌گوید و مقدارش `Html` یا `Json` است. `Timeout` به ثانیه است. `Priority` اولویت را می‌گوید و `Fields` فهرست فیلدهاست."
+          },
+          "2": {
+            "title": "فیلدها",
+            "text": "`ExtractField` یک `Name` دارد و جاهایی که باید دنبال مقدار گشت.\n\nبرای HTML، `Selectors` به ترتیب امتحان می‌شوند. یک `Attribute` به‌جای متن خوانده می‌شود، و چند attribute را هم می‌شود در `Attributes` گذاشت. `Index` شماره‌ی مورد انتخابی را می‌گوید و `Absolute` لینک نسبی را به لینک کامل تبدیل می‌کند.\n\nبرای JSON، `Paths` به ترتیب امتحان می‌شوند. وقتی JSON داخل صفحه است، یک `Script` اختیاری هم می‌گذارید."
+          },
+          "3": {
+            "title": "ثبت و امنیت",
+            "text": "`AddOSExtract` یک `ExtractConfig` یا یک بخش `IConfiguration` به نام `os-extract` می‌گیرد. برای هر provider یک کلاینت HTTP امن و همچنین factory را ثبت می‌کند. صدا زدن دوباره‌اش منبع‌های تازه را merge می‌کند و اگر نامی تکراری باشد خطا می‌دهد.\n\nهمه‌ی کلاینت‌ها در حالت امن‌اند؛ پس آدرس خصوصی رد می‌شود. صفحه‌ای بزرگ‌تر از سقف `MaxBytes` هم خوانده نمی‌شود، که به‌طور پیش‌فرض ۵ مگابایت است."
+          }
+        },
+        "sample": {
+          "config": {
+            "title": "توصیف یک provider در JSON",
+            "note": "همین نام‌ها در فایل config زیر os-extract هم کار می‌کنند. فیلدی که چند selector دارد، با اولین selectorی که جور شود تمام می‌شود."
+          },
+          "register": {
+            "title": "ثبت providerها",
+            "note": "نام بخش os-extract است."
+          },
+          "merge": {
+            "title": "ثبت provider در چند جا",
+            "note": "نام تکراری یک InvalidOperationException می‌دهد."
+          }
+        },
+        "type": {
+          "ExtractConfig": "user agent، سقف اندازه‌ی بدنه و فهرست providerها.",
+          "ExtractProvider": "یک منبع داده: کجاست، چه قالبی دارد و چه فیلدهایی.",
+          "ExtractField": "یک مقدار که باید خوانده شود و جاهایی که باید دنبالش گشت.",
+          "ExtractFormat": "اینکه جواب یک provider از نوع HTML است یا JSON."
+        },
+        "member": {
+          "ExtractConfig": {
+            "Section": "نام بخش config: os-extract.",
+            "Probe": "نام کلاینت داخلی که برای هاست‌های بدون provider به کار می‌رود.",
+            "UserAgent": "هدر User-Agent که همه‌ی کلاینت‌ها می‌فرستند.",
+            "MaxBytes": "بزرگ‌ترین صفحه‌ای که خوانده می‌شود، به‌طور پیش‌فرض ۵ مگابایت.",
+            "Providers": "providerهای تنظیم‌شده."
+          },
+          "ExtractProvider": {
+            "Name": "نام یکتا. نام کلاینت HTTP هم همین است.",
+            "Host": "هاستی که این provider به آن خدمت می‌دهد، برای پیدا کردنش از روی لینک.",
+            "BaseUrl": "آدرسی که لینک‌های نسبی به آن اضافه می‌شوند.",
+            "Format": "Html یا Json.",
+            "Timeout": "ثانیه برای یک تلاش.",
+            "Priority": "عدد کوچک‌تر در فهرست factory جلوتر می‌آید.",
+            "Fields": "مقدارهایی که باید خوانده شوند.",
+            "MaxParallel": "چند درخواست از SendBulkAsync هم‌زمان اجرا شود. پیش‌فرض ۴ است."
+          },
+          "ExtractField": {
+            "Name": "کلید مقدار در نتیجه.",
+            "Selectors": "selectorهای CSS که به ترتیب امتحان می‌شوند.",
+            "Attribute": "attributeی که به‌جای متن خوانده می‌شود.",
+            "Attributes": "attributeهای بیشتر که بعد از Attribute امتحان می‌شوند.",
+            "Index": "کدام مورد برداشته شود، از ۰ شروع می‌شود.",
+            "Absolute": "لینک نسبی را با آدرس صفحه به لینک کامل تبدیل می‌کند.",
+            "Paths": "مسیرهای JSON که به ترتیب امتحان می‌شوند.",
+            "Script": "selector عنصری که JSON را در خود دارد، وقتی JSON داخل صفحه است."
+          }
+        }
+      },
+      "html": {
+        "title": "خواندن HTML",
+        "summary": "متن و attribute را با selector های CSS از یک صفحه بخوانید.",
+        "points": {
+          "1": {
+            "title": "از HTML به سند",
+            "text": "موتور HTML را به یک `IExtractDoc` تبدیل می‌کند."
+          },
+          "2": {
+            "title": "خواندن فیلد",
+            "text": "`ExtractEx.Read` هر selector را به ترتیب امتحان می‌کند و اولین مورد را برمی‌گرداند."
+          },
+          "3": {
+            "title": "فیلد گم‌شده",
+            "text": "فیلد پیدا نشده `NotFound` با کد `extract.miss` می‌دهد."
+          },
+          "4": {
+            "title": "بدون اجرای اسکریپت",
+            "text": "اسکریپت اجرا نمی‌شود و فایل دیگری هم بارگذاری نمی‌شود."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "خواندن یک فیلد",
+            "text": "موتور HTML را به یک `IExtractDoc` تبدیل می‌کند و `ExtractEx.Read` یک `ExtractField` را روی آن اعمال می‌کند. هر selector را به ترتیب امتحان می‌کند و متن یا attribute را می‌خواند. اولین مورد را به‌صورت `OSResult<ExtractValue>` برمی‌گرداند.\n\nفیلدی که پیدا نشود نتیجه‌ی `NotFound` می‌دهد. `Data` آن یک miss است و کدش `extract.miss` است."
+          },
+          "2": {
+            "title": "خواندن چند فیلد",
+            "text": "`ReadAll` فهرستی از فیلدها را در یک dictionary می‌خواند و موردهای ناموجود را رد می‌کند.\n\n`Text` و `Attribute` و `TextWithFallback` و `AttributeWithFallback` و `Texts` همان کارند، یک پله پایین‌تر، برای کدی که provider ندارد."
+          },
+          "3": {
+            "title": "موتور پشت صحنه",
+            "text": "parser، AngleSharp است ولی پشت `IExtractEngine` و `IExtractDoc` پنهان شده. `IExtractEngine` را از container بگیرید و `Parse` را صدا بزنید.\n\nاین موتور اسکریپت اجرا نمی‌کند و فایل دیگری هم بارگذاری نمی‌کند."
+          }
+        },
+        "sample": {
+          "read": {
+            "title": "خواندن یک متن و یک لینک",
+            "note": "Absolute لینک نسبی را با آدرس صفحه‌ای که می‌دهید به آدرس کامل تبدیل می‌کند."
+          },
+          "fallback": {
+            "title": "امتحان چند selector",
+            "note": "selectorی که جور شده در مقدار نگه داشته می‌شود."
+          },
+          "texts": {
+            "title": "خواندن یک فهرست و برداشتن یکی از آیتم‌ها",
+            "note": "Index از ۰ شروع می‌شود، پس ۱ آیتم دوم است."
+          },
+          "miss": {
+            "title": "برخورد با فیلدی که در صفحه نیست",
+            "note": "فیلد ناموجود یک نتیجه‌ی NotFound با کد است، نه exception."
+          }
+        },
+        "type": {
+          "ExtractEx": "ابزار خواندن فیلد از HTML و JSON.",
+          "ExtractValue": "مقداری که خوانده شده، یا یک miss، همراه با selector یا مسیری که به کار رفت.",
+          "IExtractDoc": "صفحه‌ای parse شده که می‌شود از آن پرس‌وجو کرد.",
+          "IExtractEngine": "متن HTML را به یک `IExtractDoc` تبدیل می‌کند."
+        },
+        "member": {
+          "ExtractEx": {
+            "Read": "یک فیلد را می‌خواند و selectorهایش را به ترتیب امتحان می‌کند.",
+            "ReadAll": "چند فیلد را در یک dictionary می‌خواند و موردهای ناموجود را رد می‌کند.",
+            "Text": "متن اولین عنصری که جور شود.",
+            "Attribute": "attributeی از اولین عنصری که جور شود.",
+            "TextWithFallback": "متن از اولین selectorی که جور شود.",
+            "AttributeWithFallback": "attribute از اولین selectorی که جور شود.",
+            "Texts": "متن همه‌ی عنصرهایی که جور شوند.",
+            "AddOSExtract": "providerها، برای هر کدام یک کلاینت HTTP امن، موتور و factory را ثبت می‌کند.",
+            "ReadJson": "یک فیلد را از یک عنصر JSON می‌خواند و مسیرهایش را به ترتیب امتحان می‌کند.",
+            "Navigate": "یک مسیر را می‌رود و عنصر JSON را برمی‌گرداند، یا NotFound.",
+            "FromScriptTag": "متن یک تگ script مثل application/ld+json را برمی‌گرداند.",
+            "FromJson": "یک بدنه‌ی JSON را با پیش‌فرض‌های امن OS.IO در یک نوع می‌خواند.",
+            "FromHeader": "مقدار یک header را از یک dictionary می‌خواند."
+          },
+          "ExtractValue": {
+            "Found": "وقتی چیزی خوانده شده باشد، true است.",
+            "Value": "متنی که خوانده شد.",
+            "Selector": "selector یا مسیری که مقدار را داد."
+          },
+          "IExtractDoc": {
+            "Text": "متن عنصر جورشده.",
+            "Attr": "attributeی از عنصر جورشده.",
+            "Texts": "متن همه‌ی عنصرهای جورشده."
+          },
+          "IExtractEngine": {
+            "Parse": "HTML را parse می‌کند. متن خالی نتیجه‌ی Invalid می‌دهد."
+          }
+        }
+      },
+      "json": {
+        "title": "خواندن JSON",
+        "summary": "مقدارها را با مسیرهای ساده از یک جواب JSON یا از JSON داخل یک صفحه بخوانید.",
+        "points": {
+          "1": {
+            "title": "مسیر ساده",
+            "text": "مسیر نام‌هایی است با نقطه، و اندیس آرایه داخل کروشه."
+          },
+          "2": {
+            "title": "به ترتیب",
+            "text": "`ExtractEx.ReadJson` مسیرها را امتحان می‌کند و اولین مقدار غیر null را برمی‌گرداند."
+          },
+          "3": {
+            "title": "JSON داخل صفحه",
+            "text": "`FromScriptTag` متن تگ script را برمی‌گرداند."
+          },
+          "4": {
+            "title": "JSON بد",
+            "text": "JSON نامعتبر کد `extract.json.invalid` و وضعیت `Refused` می‌دهد."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "مسیر و خواندن",
+            "text": "مسیر فهرستی از نام‌هاست که با نقطه جدا می‌شوند و برای آرایه‌ها اندیس داخل کروشه می‌آید. نمونه‌اش `data.items[1].price` است.\n\n`ExtractEx.ReadJson` مسیرهای `Paths` یک فیلد را به ترتیب امتحان می‌کند. اولین مقدار غیر null را به‌صورت متن برمی‌گرداند. عددها و مقدارهای boolean به شکل متن JSON خودشان برمی‌گردند.\n\n`Navigate` برای یک مسیر راه می‌رود و عنصر را برمی‌گرداند. وقتی نام یا اندیسی وجود نداشته باشد، `NotFound` برمی‌گرداند."
+          },
+          "2": {
+            "title": "JSON داخل صفحه",
+            "text": "بسیاری از صفحه‌ها داده‌شان را در یک تگ script می‌گذارند. نوع رایجش `application/ld+json` است و `FromScriptTag` متن آن را برمی‌گرداند.\n\nدر یک provider، selector `Script` فیلد همین کار را پیش از خواندن مسیرها می‌کند."
+          },
+          "3": {
+            "title": "ابزارهای دیگر و خطا",
+            "text": "`FromJson<T>` کل یک بدنه را با پیش‌فرض‌های امن OS.IO در یک نوع می‌خواند. `FromHeader` یک مقدار را از dictionary هدرها می‌خواند.\n\nJSON بد کد `extract.json.invalid` و وضعیت `Refused` می‌دهد."
+          }
+        },
+        "sample": {
+          "path": {
+            "title": "خواندن مقدارها با مسیر",
+            "note": "فیلد دوم وقتی مسیر اول نباشد به مسیر بعدی می‌رود."
+          },
+          "script-tag": {
+            "title": "خواندن JSON که داخل صفحه است",
+            "note": "قیمت در JSON اغلب رشته است؛ مقدار به‌صورت متن برمی‌گردد."
+          }
+        },
+        "type": {},
+        "member": {}
+      },
+      "service": {
+        "title": "گرفتن صفحه و نتیجه",
+        "summary": "یک provider پیدا کنید، صفحه را بگیرید و فیلدها را همراه وضعیت گرفتن صفحه بخوانید.",
+        "points": {
+          "1": {
+            "title": "پیدا کردن provider",
+            "text": "`IExtractFactory` provider را با نام یا هاست پیدا می‌کند."
+          },
+          "2": {
+            "title": "هاست ناشناخته",
+            "text": "برای هاستی که کسی تنظیم نکرده، سرویس probe بدون فیلد می‌رسد."
+          },
+          "3": {
+            "title": "نتیجه با وضعیت",
+            "text": "`ExtractResult` فیلدها را همراه `State` و status HTTP می‌دهد."
+          },
+          "4": {
+            "title": "وضعیت، نه خطا",
+            "text": "صفحه‌ی ناخوانده یک وضعیت است، نه exception."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "پیدا کردن سرویس",
+            "text": "`IExtractFactory` یک provider را با نام یا هاست پیدا می‌کند و برایش `IExtractService` می‌دهد.\n\n`GetServiceByHost` برای هاستی که کسی تنظیم نکرده به یک سرویس probe بدون فیلد می‌رسد. این سرویس صفحه را می‌گیرد و وضعیت را گزارش می‌کند، بی‌آنکه فیلدی بخواند."
+          },
+          "2": {
+            "title": "درخواست و نتیجه",
+            "text": "`SendAsync` یک `ExtractRequest` با `Url` می‌گیرد. اگر خودتان صفحه را دارید، `Html` اختیاری را هم بدهید.\n\nنتیجه یک `ExtractResult` است با فیلدها و `State` و `Status` HTTP و `FinalUrl` بعد از تغییر مسیرها. `State` یکی از چهار مقدار است. `Fetched` یعنی صفحه گرفته شد. `Missing` برای ۴۰۴ است. `Refused` برای هر status دیگر یا نوع رسانه‌ی نادرست یا بدنه‌ی بیش از سقف است. `Unreachable` برای مشکل شبکه است."
+          },
+          "3": {
+            "title": "وضعیت و ارسال گروهی",
+            "text": "صفحه‌ای که خوانده نشود یک وضعیت است، نه exception. `OSResult` تا وقتی خودِ گرفتن صفحه تمام شده باشد `Ok` است.\n\n`Code` وضعیت را توضیح می‌دهد، مثلاً `extract.status` یا `extract.no-fields` و مانند آن. `SendBulkAsync` فهرستی از درخواست‌ها را پشت سر هم می‌فرستد و برای هر کدام یک نتیجه برمی‌گرداند."
+          }
+        },
+        "sample": {
+          "send": {
+            "title": "گرفتن یک صفحه و خواندن فیلدهایش",
+            "note": "قبل از فیلدها State را بررسی کنید؛ صفحه‌ی ناموجود یک وضعیت است، نه خطا."
+          },
+          "bulk": {
+            "title": "گرفتن چند صفحه",
+            "note": "نتیجه‌ها به ترتیب درخواست‌ها برمی‌گردند."
+          },
+          "by-host": {
+            "title": "پیدا کردن provider از روی لینک",
+            "note": "وقتی Html داده شده باشد چیزی گرفته نمی‌شود؛ همان فیلدها از صفحه‌ای که می‌دهید خوانده می‌شوند."
+          }
+        },
+        "type": {
+          "IExtractFactory": "providerها را پیدا می‌کند و برایشان سرویس می‌سازد.",
+          "ExtractFactory": "factory پیش‌فرض.",
+          "IExtractService": "صفحه‌ها را برای یک provider می‌گیرد و می‌خواند.",
+          "ExtractService": "سرویس پیش‌فرض برای providerهای HTML و JSON.",
+          "ExtractRequest": "چه چیزی گرفته شود: provider، آدرس و در صورت نیاز خود صفحه.",
+          "ExtractResult": "فیلدهایی که خوانده شدند و وضعیت گرفتن صفحه.",
+          "ExtractState": "گرفتن صفحه چطور تمام شد.",
+          "ExtractCodes": "کدهای این بسته."
+        },
+        "member": {
+          "IExtractFactory": {
+            "Providers": "همه‌ی providerها، به ترتیب Priority.",
+            "GetProvider": "یک provider را با نام پیدا می‌کند.",
+            "GetProviderByHost": "یک provider را از روی هاستی که به آن خدمت می‌دهد پیدا می‌کند.",
+            "GetService": "سرویس یک provider را می‌سازد.",
+            "GetServiceByHost": "سرویس یک هاست را می‌سازد، یا اگر provider نباشد سرویس probe را."
+          },
+          "IExtractService": {
+            "Provider": "providerی که این سرویس می‌خواند.",
+            "SendAsync": "یک صفحه را می‌گیرد و فیلدهایش را می‌خواند.",
+            "SendBulkAsync": "همین کار را برای فهرستی از درخواست‌ها می‌کند."
+          },
+          "ExtractRequest": {
+            "Provider": "نام provider.",
+            "Url": "آدرس صفحه. الزامی است.",
+            "Html": "خود صفحه، وقتی از قبل دارید. آن‌وقت چیزی گرفته نمی‌شود."
+          },
+          "ExtractResult": {
+            "Fields": "مقدارهای خوانده‌شده، با نام فیلد.",
+            "State": "Pending، Fetched، Missing، Refused یا Unreachable.",
+            "Status": "status HTTP، یا ۰ اگر نبوده.",
+            "FinalUrl": "آدرس بعد از redirectها.",
+            "IsRedirected": "وقتی آدرس نهایی با آدرس خواسته‌شده فرق کند، true است.",
+            "Code": "چرا وضعیت همین است.",
+            "Field": "مقدار یک فیلد، یا متن خالی.",
+            "Has": "وقتی فیلد مقدار داشته باشد، true است."
+          },
+          "ExtractCodes": {
+            "ProviderRequired": "نام provider داده نشده.",
+            "ProviderNotFound": "هیچ providerی با این نام یا هاست نیست.",
+            "HostRequired": "هاست داده نشده.",
+            "UrlRequired": "درخواست آدرس ندارد.",
+            "HtmlEmpty": "متن صفحه خالی است.",
+            "Unreachable": "به سرور نشد وصل شد.",
+            "Refused": "آدرس، نوع رسانه یا اندازه رد شد.",
+            "Status": "سرور با statusی غیر از ۲xx جواب داد.",
+            "NoFields": "صفحه خوانده شد ولی هیچ فیلدی جور نشد.",
+            "NoRequests": "فهرست درخواست‌ها خالی است.",
+            "NoSelectors": "فیلد selector ندارد.",
+            "NoPaths": "فیلد مسیر ندارد.",
+            "Miss": "selector یا مسیر چیزی پیدا نکرد.",
+            "JsonInvalid": "JSON معتبر نیست."
+          }
+        }
+      }
+    }
+  }
+}

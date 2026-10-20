@@ -1,0 +1,277 @@
+@layer lorea.parts {
+    .package-page .os-inline-code {
+        color: var(--lorea-heading);
+    }
+
+    .topic-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        gap: 0.75rem;
+    }
+
+    .topic-cards .os-acc-leaf {
+        align-items: stretch;
+        border: 1px solid var(--lorea-rule) !important;
+    }
+
+    .topic-cards .os-acc-leaf:hover {
+        border-color: var(--lorea-accent) !important;
+    }
+
+    .topic-cards .os-acc-leaf-main {
+        align-items: start;
+        padding: 0.75rem 1rem;
+    }
+
+    .topic-cards .os-acc-leaf-title {
+        color: var(--lorea-link);
+        font-weight: 650;
+        white-space: normal;
+    }
+
+    .topic-cards .os-acc-leaf-caption {
+        margin-block-start: 0.2rem;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        white-space: normal;
+    }
+
+    .topic-list {
+        display: grid;
+    }
+
+    .topic-list .os-acc-leaf {
+        border: 0 !important;
+        border-inline-start: 2px solid transparent !important;
+    }
+
+    .topic-list .os-acc-leaf[data-active="true"] {
+        border-inline-start-color: var(--lorea-accent) !important;
+        font-weight: 650;
+        background: var(--lorea-selected);
+    }
+
+    .topic-list .os-acc-leaf-main {
+        min-block-size: 2.1rem;
+        padding: 0.3rem 0.75rem;
+        font-size: 0.92rem;
+    }
+
+    .topic-aside h2 {
+        font-size: 0.8rem !important;
+        color: var(--lorea-muted) !important;
+    }
+
+    @media (max-width: 63.99rem) {
+        .topic-aside > :first-child {
+            order: -1;
+        }
+
+        .topic-aside h2 {
+            display: none;
+        }
+
+        .topic-list {
+            display: flex;
+            gap: 0.4rem;
+            overflow-x: auto;
+            padding-block-end: 0.25rem;
+        }
+
+        .topic-list .os-acc-leaf {
+            flex: none;
+            border: 1px solid var(--lorea-rule) !important;
+        }
+
+        .topic-list .os-acc-leaf[data-active="true"] {
+            border-color: var(--lorea-accent) !important;
+        }
+    }
+
+    .package-section > .topic-note {
+        margin-block: 0 0.75rem;
+        font-size: 0.88rem;
+    }
+
+    .topic-points {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 0.75rem;
+    }
+
+    .topic-point {
+        display: grid;
+        align-content: start;
+        gap: 0.3rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--lorea-rule);
+        background: var(--lorea-chrome);
+    }
+
+    .topic-point b {
+        color: var(--lorea-heading);
+        font-weight: 650;
+    }
+
+    .topic-point span {
+        color: var(--lorea-muted);
+        font-size: 0.9rem;
+        line-height: 1.8;
+    }
+
+    .topic-parts {
+        --os-acc-gap: 0;
+    }
+
+    .topic-parts .os-acc-item {
+        border: 0;
+        border-block-start: 1px solid var(--lorea-rule);
+    }
+
+    .topic-parts .os-acc-item:last-child {
+        border-block-end: 1px solid var(--lorea-rule);
+    }
+
+    .topic-parts .os-acc-title {
+        color: var(--lorea-heading);
+        font-weight: 600;
+        white-space: normal;
+    }
+
+    .topic-parts p {
+        max-inline-size: 46rem;
+        margin: 0 0 0.75rem;
+        line-height: 1.9;
+    }
+
+    .topic-related {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: 0 2rem;
+        margin-block-start: 2rem;
+        padding-block-start: 0.5rem;
+        border-block-start: 1px solid var(--lorea-rule);
+    }
+
+    .topic-related .package-section h2 {
+        color: var(--lorea-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .topic-related .package-used li {
+        display: grid;
+        grid-template-columns: minmax(10rem, max-content) 1fr;
+        gap: 0.2rem 1rem;
+    }
+
+    .api-list {
+        --os-acc-gap: 0.4rem;
+    }
+
+    .api-list .os-acc-item {
+        border: 1px solid var(--lorea-rule);
+    }
+
+    .api-list .os-acc-toggle {
+        min-block-size: 2.5rem;
+        padding: 0.45rem 0.75rem;
+    }
+
+    .api-list .os-acc-title {
+        display: grid;
+        gap: 0.15rem;
+        font-weight: 400;
+        white-space: normal;
+    }
+
+    .api-signature {
+        color: var(--os-tk-type);
+        font-family: var(--lorea-code-font) !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        justify-self: start;
+    }
+
+    .api-type-note {
+        color: var(--lorea-muted);
+        font-size: 0.85rem;
+        line-height: 1.7;
+    }
+
+    .api-list .api-obsolete {
+        margin: 0;
+        padding: 0.5rem 0.85rem;
+    }
+
+    .api-list .api-reference[data-noted="true"] thead th:first-child {
+        inline-size: 48%;
+    }
+
+    .api-reference th code + code {
+        margin-block-start: 0.35rem;
+    }
+
+    .api-obsolete {
+        color: var(--lorea-muted);
+        font-size: 0.8rem;
+    }
+
+    .api-reference {
+        inline-size: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        text-align: start;
+    }
+
+    .api-reference th,
+    .api-reference td {
+        vertical-align: top;
+        padding: 0.45rem 0.6rem;
+        border-block-start: 1px solid var(--lorea-rule);
+        font-size: 0.85rem;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+        text-align: start;
+    }
+
+    .api-reference thead th {
+        color: var(--lorea-muted);
+        font-weight: 600;
+        background: var(--lorea-chrome);
+    }
+
+    .api-reference tbody th {
+        color: var(--lorea-heading);
+        font-weight: 600;
+    }
+
+    .api-reference tbody tr:hover {
+        background: var(--lorea-hover);
+    }
+
+    .api-reference code {
+        display: block;
+        color: var(--os-tk-method);
+        font-family: var(--lorea-code-font) !important;
+        font-size: 0.78rem;
+        text-align: left;
+    }
+
+    .api-reference bdi {
+        font-family: var(--lorea-font-en) !important;
+    }
+
+    @media (max-width: 620px) {
+            .api-reference th,
+            .api-reference td {
+                padding-inline: 0.35rem;
+                font-size: 0.75rem;
+            }
+
+            .api-reference code {
+                font-size: 0.68rem;
+            }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "foundation": "Foundation",
+    "locale": "Culture and region",
+    "infra": "Infrastructure",
+    "net": "Network",
+    "data": "Data",
+    "interface": "User interface"
+  }
+}

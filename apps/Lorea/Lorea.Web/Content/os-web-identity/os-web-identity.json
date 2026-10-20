@@ -1,0 +1,64 @@
+{
+  "slug": "os-web-identity",
+  "name": "OS.Web.Identity",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-identity",
+    "os-web-api"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [
+        "OS.Web.Identity"
+      ],
+      "types": [
+        "IdentityWebEx",
+        "IdentityPipelineStep",
+        "IdentityClaims"
+      ]
+    },
+    {
+      "slug": "principal",
+      "namespaces": [
+        "OS.Web.Identity"
+      ],
+      "types": [
+        "PrincipalMiddleware",
+        "HttpPrincipalAccessor",
+        "IAccountGate"
+      ]
+    },
+    {
+      "slug": "perms",
+      "namespaces": [
+        "OS.Web.Identity"
+      ],
+      "types": [
+        "PermAttribute",
+        "PermRequirement",
+        "PermPolicyProvider",
+        "PermHandler",
+        "AuthResultHandler",
+        "PermEndpointEx",
+        "PermJobGate"
+      ]
+    },
+    {
+      "slug": "login",
+      "namespaces": [
+        "OS.Web.Identity"
+      ],
+      "types": [
+        "ApiAuthController",
+        "LoginBody",
+        "VerifyBody",
+        "LoginResponseModel",
+        "LoginUserModel",
+        "RetryModel",
+        "SessionCountModel"
+      ]
+    }
+  ]
+}

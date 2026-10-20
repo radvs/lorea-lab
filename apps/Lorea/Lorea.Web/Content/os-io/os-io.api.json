@@ -1,0 +1,1067 @@
+{
+  "types": [
+    {
+      "namespace": "OS.IO.Files",
+      "key": "AppPaths",
+      "signature": "static class AppPaths",
+      "members": [
+        {
+          "name": "Root",
+          "signatures": [
+            "static string Root(string? appName = null)"
+          ]
+        },
+        {
+          "name": "Temp",
+          "signatures": [
+            "static string Temp(string? appName = null)"
+          ]
+        },
+        {
+          "name": "Config",
+          "signatures": [
+            "static string Config(string? appName = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "ArchiveEx",
+      "signature": "static class ArchiveEx",
+      "members": [
+        {
+          "name": "DefaultMaxEntries",
+          "signatures": [
+            "const int DefaultMaxEntries = 10000"
+          ]
+        },
+        {
+          "name": "DefaultMaxBytes",
+          "signatures": [
+            "const long DefaultMaxBytes = 1073741824"
+          ]
+        },
+        {
+          "name": "Zip",
+          "signatures": [
+            "static void Zip(string sourceFile, string destZip)"
+          ]
+        },
+        {
+          "name": "Unzip",
+          "signatures": [
+            "static void Unzip(string sourceZip, string destDir, int maxEntries = 10000, long maxBytes = 1073741824)"
+          ]
+        },
+        {
+          "name": "GZip",
+          "signatures": [
+            "static void GZip(string sourceFile, string destFile)"
+          ]
+        },
+        {
+          "name": "GZipAsync",
+          "signatures": [
+            "static Task GZipAsync(string sourceFile, string destFile, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GUnzip",
+          "signatures": [
+            "static void GUnzip(string sourceFile, string destFile, long maxBytes = 1073741824)"
+          ]
+        },
+        {
+          "name": "GUnzipAsync",
+          "signatures": [
+            "static Task GUnzipAsync(string sourceFile, string destFile, long maxBytes = 1073741824, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "DirEx",
+      "signature": "static class DirEx",
+      "members": [
+        {
+          "name": "Exists",
+          "signatures": [
+            "static bool Exists(string? dir)"
+          ]
+        },
+        {
+          "name": "NotExists",
+          "signatures": [
+            "static bool NotExists(string? dir)"
+          ]
+        },
+        {
+          "name": "Ensure",
+          "signatures": [
+            "static string Ensure(string dirPath)"
+          ]
+        },
+        {
+          "name": "EnsureFor",
+          "signatures": [
+            "static string? EnsureFor(string filePath)"
+          ]
+        },
+        {
+          "name": "Delete",
+          "signatures": [
+            "static bool Delete(string dirPath, string root, bool recursive = false)"
+          ]
+        },
+        {
+          "name": "GetFilePaths",
+          "signatures": [
+            "static IReadOnlyList<string> GetFilePaths(string? dir)"
+          ]
+        },
+        {
+          "name": "GetFiles",
+          "signatures": [
+            "static IReadOnlyList<FileSpec> GetFiles(string? dir)",
+            "static IReadOnlyList<FileSpec> GetFiles(string? sourceDir, string? destDir)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "EnvFile",
+      "signature": "static class EnvFile",
+      "members": [
+        {
+          "name": "FileName",
+          "signatures": [
+            "const string FileName = \".env\""
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "static string? Find(string? startDir = null, string? stopAt = null)"
+          ]
+        },
+        {
+          "name": "Load",
+          "signatures": [
+            "static int Load(string path, bool overwrite = false)"
+          ]
+        },
+        {
+          "name": "FindAndLoad",
+          "signatures": [
+            "static string? FindAndLoad(string? startDir = null, bool overwrite = false, string? stopAt = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "FileEx",
+      "signature": "static class FileEx",
+      "members": [
+        {
+          "name": "Copy",
+          "signatures": [
+            "static void Copy(string source, string dest, bool overwrite = true)",
+            "static void Copy(FileSpec file, string destDir, bool overwrite = true)"
+          ]
+        },
+        {
+          "name": "CopyAsync",
+          "signatures": [
+            "static Task CopyAsync(string source, string dest, bool overwrite = true, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Move",
+          "signatures": [
+            "static void Move(string source, string dest, bool overwrite = true)"
+          ]
+        },
+        {
+          "name": "Exists",
+          "signatures": [
+            "static bool Exists(string? path)"
+          ]
+        },
+        {
+          "name": "NotExists",
+          "signatures": [
+            "static bool NotExists(string? path)"
+          ]
+        },
+        {
+          "name": "IsLocked",
+          "signatures": [
+            "static bool IsLocked(string path)"
+          ]
+        },
+        {
+          "name": "CanWrite",
+          "signatures": [
+            "static bool CanWrite(string? path)"
+          ]
+        },
+        {
+          "name": "IsValidSize",
+          "signatures": [
+            "static bool IsValidSize(string? path, long maxBytes = 104857600)"
+          ]
+        },
+        {
+          "name": "SafeName",
+          "signatures": [
+            "static string SafeName(string? name)"
+          ]
+        },
+        {
+          "name": "IsValidName",
+          "signatures": [
+            "static bool IsValidName(string? name)"
+          ]
+        },
+        {
+          "name": "Delete",
+          "signatures": [
+            "static bool Delete(string path)"
+          ]
+        },
+        {
+          "name": "DeleteAsync",
+          "signatures": [
+            "static Task<bool> DeleteAsync(string path, int retries = 3, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Sha256",
+          "signatures": [
+            "static string Sha256(string path)"
+          ]
+        },
+        {
+          "name": "Sha256Async",
+          "signatures": [
+            "static Task<string> Sha256Async(string path, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ReadText",
+          "signatures": [
+            "static string ReadText(string path, Encoding? encoding = null)"
+          ]
+        },
+        {
+          "name": "ReadTextAsync",
+          "signatures": [
+            "static Task<string> ReadTextAsync(string path, Encoding? encoding = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ReadBytes",
+          "signatures": [
+            "static byte[] ReadBytes(string path)"
+          ]
+        },
+        {
+          "name": "ReadBytesAsync",
+          "signatures": [
+            "static Task<byte[]> ReadBytesAsync(string path, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "static void Write(string path, string content, bool atomic = false, Encoding? encoding = null)",
+            "static void Write(string path, IEnumerable<string?> lines, bool atomic = false, Encoding? encoding = null)",
+            "static void Write(string path, ReadOnlyMemory<byte> data, bool atomic = false)"
+          ]
+        },
+        {
+          "name": "WriteAsync",
+          "signatures": [
+            "static Task WriteAsync(string path, string content, bool atomic = false, Encoding? encoding = null, CancellationToken token = default)",
+            "static Task WriteAsync(string path, IEnumerable<string?> lines, bool atomic = false, Encoding? encoding = null, CancellationToken token = default)",
+            "static Task WriteAsync(string path, ReadOnlyMemory<byte> data, bool atomic = false, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "FileSpec",
+      "signature": "sealed record FileSpec",
+      "members": [
+        {
+          "name": "Path",
+          "signatures": [
+            "required string Path { get; init; }"
+          ]
+        },
+        {
+          "name": "FullName",
+          "signatures": [
+            "required string FullName { get; init; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "required string Name { get; init; }"
+          ]
+        },
+        {
+          "name": "Extension",
+          "signatures": [
+            "required string Extension { get; init; }"
+          ]
+        },
+        {
+          "name": "Type",
+          "signatures": [
+            "FileType Type { get; init; }"
+          ]
+        },
+        {
+          "name": "MimeType",
+          "signatures": [
+            "string MimeType { get; init; }"
+          ]
+        },
+        {
+          "name": "Size",
+          "signatures": [
+            "long Size { get; init; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTime CreateDate { get; init; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTime ModifiedDate { get; init; }"
+          ]
+        },
+        {
+          "name": "From",
+          "signatures": [
+            "static FileSpec From(FileInfo file)"
+          ]
+        },
+        {
+          "name": "TryRead",
+          "signatures": [
+            "static bool TryRead(string? path, out FileSpec? spec)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "FileType",
+      "signature": "enum FileType",
+      "members": [
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 0"
+          ]
+        },
+        {
+          "name": "Video",
+          "signatures": [
+            "Video = 1"
+          ]
+        },
+        {
+          "name": "Audio",
+          "signatures": [
+            "Audio = 2"
+          ]
+        },
+        {
+          "name": "Subtitle",
+          "signatures": [
+            "Subtitle = 3"
+          ]
+        },
+        {
+          "name": "Lyric",
+          "signatures": [
+            "Lyric = 4"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "Text = 5"
+          ]
+        },
+        {
+          "name": "Image",
+          "signatures": [
+            "Image = 6"
+          ]
+        },
+        {
+          "name": "Article",
+          "signatures": [
+            "Article = 7"
+          ]
+        },
+        {
+          "name": "Sql",
+          "signatures": [
+            "Sql = 8"
+          ]
+        },
+        {
+          "name": "Json",
+          "signatures": [
+            "Json = 9"
+          ]
+        },
+        {
+          "name": "Zip",
+          "signatures": [
+            "Zip = 10"
+          ]
+        },
+        {
+          "name": "Document",
+          "signatures": [
+            "Document = 11"
+          ]
+        },
+        {
+          "name": "Archive",
+          "signatures": [
+            "Archive = 12"
+          ]
+        },
+        {
+          "name": "Executable",
+          "signatures": [
+            "Executable = 13"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "Code = 14"
+          ]
+        },
+        {
+          "name": "Config",
+          "signatures": [
+            "Config = 15"
+          ]
+        },
+        {
+          "name": "Excel",
+          "signatures": [
+            "Excel = 16"
+          ]
+        },
+        {
+          "name": "Csv",
+          "signatures": [
+            "Csv = 17"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "FileTypeEx",
+      "signature": "static class FileTypeEx",
+      "members": [
+        {
+          "name": "ToFileType",
+          "signatures": [
+            "static FileType ToFileType(this string? extensionOrPath)"
+          ]
+        },
+        {
+          "name": "ToExtensions",
+          "signatures": [
+            "static IReadOnlyList<string> ToExtensions(this FileType type)"
+          ]
+        },
+        {
+          "name": "ToExtension",
+          "signatures": [
+            "static string ToExtension(this FileType type)"
+          ]
+        },
+        {
+          "name": "IsImage",
+          "signatures": [
+            "static bool IsImage(string? path)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "IOCodes",
+      "signature": "static class IOCodes",
+      "members": [
+        {
+          "name": "PathOutside",
+          "signatures": [
+            "const string PathOutside = \"io.path.outside\""
+          ]
+        },
+        {
+          "name": "DirRoot",
+          "signatures": [
+            "const string DirRoot = \"io.dir.root\""
+          ]
+        },
+        {
+          "name": "JsonSize",
+          "signatures": [
+            "const string JsonSize = \"io.json.size\""
+          ]
+        },
+        {
+          "name": "ArchiveEntries",
+          "signatures": [
+            "const string ArchiveEntries = \"io.archive.entries\""
+          ]
+        },
+        {
+          "name": "ArchiveSize",
+          "signatures": [
+            "const string ArchiveSize = \"io.archive.size\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "ImageEncoding",
+      "signature": "enum ImageEncoding",
+      "members": [
+        {
+          "name": "Png",
+          "signatures": [
+            "Png = 0"
+          ]
+        },
+        {
+          "name": "Jpeg",
+          "signatures": [
+            "Jpeg = 1"
+          ]
+        },
+        {
+          "name": "Bmp",
+          "signatures": [
+            "Bmp = 2"
+          ]
+        },
+        {
+          "name": "Gif",
+          "signatures": [
+            "Gif = 3"
+          ]
+        },
+        {
+          "name": "Webp",
+          "signatures": [
+            "Webp = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "MimeEx",
+      "signature": "static class MimeEx",
+      "members": [
+        {
+          "name": "Default",
+          "signatures": [
+            "const string Default = \"application/octet-stream\""
+          ]
+        },
+        {
+          "name": "GetMimeType",
+          "signatures": [
+            "static string GetMimeType(this string? fileName)"
+          ]
+        },
+        {
+          "name": "TryGetMimeType",
+          "signatures": [
+            "static bool TryGetMimeType(string? value, out string? mimeType)"
+          ]
+        },
+        {
+          "name": "GetMimeTypeFromUrl",
+          "signatures": [
+            "static string GetMimeTypeFromUrl(this string? url)"
+          ]
+        },
+        {
+          "name": "GetExtension",
+          "signatures": [
+            "static string GetExtension(this string? mimeType)"
+          ]
+        },
+        {
+          "name": "GetExtensions",
+          "signatures": [
+            "static IReadOnlyList<string> GetExtensions(this string? mimeType)"
+          ]
+        },
+        {
+          "name": "Sniff",
+          "signatures": [
+            "static string Sniff(ReadOnlySpan<byte> content)",
+            "static string Sniff(Stream stream)"
+          ]
+        },
+        {
+          "name": "TryGetEncoding",
+          "signatures": [
+            "static bool TryGetEncoding(ReadOnlySpan<byte> content, out ImageEncoding encoding)"
+          ]
+        },
+        {
+          "name": "ToMimeType",
+          "signatures": [
+            "static string ToMimeType(this ImageEncoding encoding)"
+          ]
+        },
+        {
+          "name": "ToExtension",
+          "signatures": [
+            "static string ToExtension(this ImageEncoding encoding)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "PathEx",
+      "signature": "static class PathEx",
+      "members": [
+        {
+          "name": "Combine",
+          "signatures": [
+            "static string Combine(params string[] parts)"
+          ]
+        },
+        {
+          "name": "Normalize",
+          "signatures": [
+            "static string Normalize(string path)"
+          ]
+        },
+        {
+          "name": "IsRooted",
+          "signatures": [
+            "static bool IsRooted(string? path)"
+          ]
+        },
+        {
+          "name": "IsAbsolute",
+          "signatures": [
+            "static bool IsAbsolute(string? path)"
+          ]
+        },
+        {
+          "name": "IsRelative",
+          "signatures": [
+            "static bool IsRelative(string? path)"
+          ]
+        },
+        {
+          "name": "IsUnder",
+          "signatures": [
+            "static bool IsUnder(string? path, string? root)"
+          ]
+        },
+        {
+          "name": "Resolve",
+          "signatures": [
+            "static string Resolve(string root, string relative)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "SizeEx",
+      "signature": "static class SizeEx",
+      "members": [
+        {
+          "name": "ToSizeUnit",
+          "signatures": [
+            "static SizeUnit ToSizeUnit(this long length)"
+          ]
+        },
+        {
+          "name": "ToSize",
+          "signatures": [
+            "static decimal ToSize(this long length, SizeUnit unit, int decimals = 2)"
+          ]
+        },
+        {
+          "name": "ToReadableSize",
+          "signatures": [
+            "static string ToReadableSize(this long length, int decimals = 2)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Files",
+      "key": "SizeUnit",
+      "signature": "enum SizeUnit",
+      "members": [
+        {
+          "name": "Byte",
+          "signatures": [
+            "Byte = 0"
+          ]
+        },
+        {
+          "name": "KB",
+          "signatures": [
+            "KB = 1"
+          ]
+        },
+        {
+          "name": "MB",
+          "signatures": [
+            "MB = 2"
+          ]
+        },
+        {
+          "name": "GB",
+          "signatures": [
+            "GB = 3"
+          ]
+        },
+        {
+          "name": "TB",
+          "signatures": [
+            "TB = 4"
+          ]
+        },
+        {
+          "name": "PB",
+          "signatures": [
+            "PB = 5"
+          ]
+        },
+        {
+          "name": "EB",
+          "signatures": [
+            "EB = 6"
+          ]
+        },
+        {
+          "name": "ZB",
+          "signatures": [
+            "ZB = 7"
+          ]
+        },
+        {
+          "name": "YB",
+          "signatures": [
+            "YB = 8"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Json",
+      "key": "JsonEx",
+      "signature": "static class JsonEx",
+      "members": [
+        {
+          "name": "Options",
+          "signatures": [
+            "static JsonSerializerOptions Options(OSJsonOptions? options = null)"
+          ]
+        },
+        {
+          "name": "FromJson",
+          "signatures": [
+            "static T FromJson<T>(ReadOnlySpan<char> json, OSJsonOptions? options = null)",
+            "static T? FromJson<T>(ReadOnlySpan<char> json, JsonTypeInfo<T?> typeInfo, OSJsonOptions? options = null)"
+          ]
+        },
+        {
+          "name": "FromBytes",
+          "signatures": [
+            "static T FromBytes<T>(ReadOnlySpan<byte> utf8, OSJsonOptions? options = null)",
+            "static T? FromBytes<T>(ReadOnlySpan<byte> utf8, JsonTypeInfo<T?> typeInfo, OSJsonOptions? options = null)"
+          ]
+        },
+        {
+          "name": "FromJsonAsync",
+          "signatures": [
+            "static ValueTask<T> FromJsonAsync<T>(Stream stream, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static ValueTask<T?> FromJsonAsync<T>(Stream stream, JsonTypeInfo<T?> typeInfo, OSJsonOptions? options = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "static T? Read<T>(string path, OSJsonOptions? options = null)",
+            "static T? Read<T>(string path, JsonTypeInfo<T?> typeInfo, OSJsonOptions? options = null)"
+          ]
+        },
+        {
+          "name": "ReadAsync",
+          "signatures": [
+            "static ValueTask<T> ReadAsync<T>(string path, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static ValueTask<T?> ReadAsync<T>(string path, JsonTypeInfo<T?> typeInfo, OSJsonOptions? options = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ToJson",
+          "signatures": [
+            "static string ToJson<T>(T? value, OSJsonOptions? options = null)",
+            "static string ToJson<T>(T? value, JsonTypeInfo<T?> typeInfo)"
+          ]
+        },
+        {
+          "name": "ToBytes",
+          "signatures": [
+            "static byte[] ToBytes<T>(T? value, OSJsonOptions? options = null)",
+            "static byte[] ToBytes<T>(T? value, JsonTypeInfo<T?> typeInfo)"
+          ]
+        },
+        {
+          "name": "ToJsonAsync",
+          "signatures": [
+            "static Task ToJsonAsync<T>(Stream stream, T? value, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static Task ToJsonAsync<T>(Stream stream, T? value, JsonTypeInfo<T?> typeInfo, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Save",
+          "signatures": [
+            "static void Save<T>(string path, T? value, OSJsonOptions? options = null)",
+            "static void Save<T>(string path, T? value, JsonTypeInfo<T?> typeInfo)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "static Task SaveAsync<T>(string path, T? value, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static Task SaveAsync<T>(string path, T? value, JsonTypeInfo<T?> typeInfo, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAtomic",
+          "signatures": [
+            "static void SaveAtomic<T>(string path, T? value, OSJsonOptions? options = null)",
+            "static void SaveAtomic<T>(string path, T? value, JsonTypeInfo<T?> typeInfo)"
+          ]
+        },
+        {
+          "name": "SaveAtomicAsync",
+          "signatures": [
+            "static Task SaveAtomicAsync<T>(string path, T? value, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static Task SaveAtomicAsync<T>(string path, T? value, JsonTypeInfo<T?> typeInfo, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Append",
+          "signatures": [
+            "static void Append<T>(string path, T? item, OSJsonOptions? options = null)",
+            "static void Append<T>(string path, T? item, JsonTypeInfo<List<T?>> listInfo, OSJsonOptions? options = null)"
+          ]
+        },
+        {
+          "name": "AppendAsync",
+          "signatures": [
+            "static Task AppendAsync<T>(string path, T? item, OSJsonOptions? options = null, CancellationToken token = default)",
+            "static Task AppendAsync<T>(string path, T? item, JsonTypeInfo<List<T?>> listInfo, OSJsonOptions? options = null, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.IO.Json",
+      "key": "OSJsonOptions",
+      "signature": "sealed record OSJsonOptions",
+      "members": [
+        {
+          "name": "DefaultMaxBytes",
+          "signatures": [
+            "const int DefaultMaxBytes = 10485760"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "static OSJsonOptions Default { get; }"
+          ]
+        },
+        {
+          "name": "MaxBytes",
+          "signatures": [
+            "int MaxBytes { get; init; }"
+          ]
+        },
+        {
+          "name": "Pretty",
+          "signatures": [
+            "bool Pretty { get; init; }"
+          ]
+        },
+        {
+          "name": "RelaxedEscaping",
+          "signatures": [
+            "bool RelaxedEscaping { get; init; }"
+          ]
+        },
+        {
+          "name": "Converters",
+          "signatures": [
+            "IReadOnlyList<JsonConverter> Converters { get; init; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "zip-and-unzip",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar report = Path.Combine(folder, \"report.txt\");\nvar zip = Path.Combine(folder, \"out\", \"report.zip\");\nFileEx.Write(report, \"Q1 sales\");\n\nArchiveEx.Zip(report, zip);\nArchiveEx.Unzip(zip, Path.Combine(folder, \"extracted\"), maxEntries: 100, maxBytes: 10 * 1024 * 1024);\n\nvar text = FileEx.ReadText(Path.Combine(folder, \"extracted\", \"report.txt\"));\nvar kind = MimeEx.Sniff(FileEx.ReadBytes(zip));\nDirectory.Delete(folder, recursive: true);",
+      "topic": "archives",
+      "output": "Q1 sales\napplication/zip"
+    },
+    {
+      "key": "zip-slip",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar zip = Path.Combine(folder, \"upload.zip\");\nusing (var archive = ZipFile.Open(zip, ZipArchiveMode.Create))\n    archive.CreateEntry(\"../../evil.txt\");\n\nstring result;\ntry\n{\n    ArchiveEx.Unzip(zip, Path.Combine(folder, \"extracted\"));\n    result = \"extracted\";\n}\ncatch (OSException ex)\n{\n    result = $\"{ex.Code}: {ex.Message}\";\n}\n\nDirectory.Delete(folder, recursive: true);",
+      "topic": "archives",
+      "output": "io.path.outside: The path resolves outside its root."
+    },
+    {
+      "key": "load",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar file = Path.Combine(folder, EnvFile.FileName);\nFileEx.Write(file, new[] { \"# local settings\", \"SAMPLE_DB_HOST=localhost\", \"SAMPLE_GREETING='hello world'\" });\nEnvironment.SetEnvironmentVariable(\"SAMPLE_DB_HOST\", \"db.internal\");\n\nvar applied = EnvFile.Load(file);\nvar host = Environment.GetEnvironmentVariable(\"SAMPLE_DB_HOST\");\nvar greeting = Environment.GetEnvironmentVariable(\"SAMPLE_GREETING\");\n\nDirectory.Delete(folder, recursive: true);",
+      "topic": "env",
+      "output": "1\ndb.internal\nhello world"
+    },
+    {
+      "key": "atomic-write",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar path = Path.Combine(folder, \"settings\", \"app.txt\");\n\nFileEx.Write(path, \"theme=dark\", atomic: true);\nvar text = FileEx.ReadText(path);\n\nDirectory.Delete(folder, recursive: true);",
+      "topic": "files",
+      "output": "theme=dark"
+    },
+    {
+      "key": "safe-name",
+      "code": "var upload = FileEx.SafeName(\"report: Q1/Q2?.pdf\");\nvar reserved = FileEx.SafeName(\"CON.txt\");\nvar valid = FileEx.IsValidName(\"report: Q1.pdf\");",
+      "topic": "files",
+      "output": "report Q1Q2.pdf\n_CON.txt\nFalse"
+    },
+    {
+      "key": "sync",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar photos = Path.Combine(folder, \"photos\");\nvar backup = Path.Combine(folder, \"backup\");\nFileEx.Write(Path.Combine(photos, \"a.jpg\"), \"a\");\nFileEx.Write(Path.Combine(photos, \"b.jpg\"), \"b\");\nFileEx.Copy(Path.Combine(photos, \"a.jpg\"), Path.Combine(backup, \"a.jpg\"));\n\nvar missing = DirEx.GetFiles(photos, backup);\nforeach (var file in missing)\n    FileEx.Copy(file, backup);\n\nvar copied = missing.Select(file => file.FullName).ToArray();\nDirectory.Delete(folder, recursive: true);",
+      "topic": "files",
+      "output": "b.jpg"
+    },
+    {
+      "key": "size",
+      "code": "var photo = 2_345_678L.ToReadableSize();\nvar note = 512L.ToReadableSize();\nvar unit = 5_000_000_000L.ToSizeUnit();",
+      "topic": "files",
+      "output": "2.23 MB\n512 Byte\nGB"
+    },
+    {
+      "key": "round-trip",
+      "code": "var json = JsonEx.ToJson(new Account(\"Sara\", Plan.ProTeam));\nvar back = JsonEx.FromJson<Account>(json);",
+      "topic": "json",
+      "output": "{\"name\":\"Sara\",\"plan\":\"proTeam\"}\nProTeam"
+    },
+    {
+      "key": "persian",
+      "code": "var account = new Account(\"سارا\", Plan.Free);\n\nvar safe = JsonEx.ToJson(account);\nvar readable = JsonEx.ToJson(account, new OSJsonOptions { RelaxedEscaping = true });",
+      "topic": "json",
+      "output": "{\"name\":\"\\u0633\\u0627\\u0631\\u0627\",\"plan\":\"free\"}\n{\"name\":\"سارا\",\"plan\":\"free\"}"
+    },
+    {
+      "key": "limit",
+      "code": "var options = new OSJsonOptions { MaxBytes = 32 };\nvar json = JsonEx.ToJson(new Account(new string('x', 100), Plan.Free));\n\nstring result;\ntry\n{\n    JsonEx.FromJson<Account>(json, options);\n    result = \"read\";\n}\ncatch (OSException ex) when (ex.Code == IOCodes.JsonSize)\n{\n    result = $\"{ex.Code}: {ex.Message}\";\n}",
+      "topic": "json",
+      "output": "io.json.size: The JSON input is larger than 32 bytes."
+    },
+    {
+      "key": "append",
+      "code": "var folder = Directory.CreateTempSubdirectory().FullName;\nvar log = Path.Combine(folder, \"signups.json\");\n\nJsonEx.Append(log, new Account(\"Sara\", Plan.Free));\nJsonEx.Append(log, new Account(\"Omid\", Plan.ProTeam));\nvar count = JsonEx.Read<List<Account>>(log).Count;\n\nDirectory.Delete(folder, recursive: true);",
+      "topic": "json",
+      "output": "2"
+    },
+    {
+      "key": "source-gen",
+      "code": "var info = AccountJson.Default.Account;\n\nvar json = JsonEx.ToJson(new Account(\"Sara\", Plan.Free), info);\nvar back = JsonEx.FromJson(json, info, new OSJsonOptions { MaxBytes = 1024 });",
+      "topic": "json",
+      "output": "{\"name\":\"Sara\",\"plan\":\"Free\",\"note\":null}\nSara"
+    },
+    {
+      "key": "safe-path",
+      "code": "var uploads = Path.Combine(Path.GetTempPath(), \"uploads\");\nvar allowed = PathEx.IsUnder(\"../app.config\", uploads);",
+      "output": "False"
+    },
+    {
+      "key": "kind",
+      "code": "var mimeType = MimeEx.Sniff(\"%PDF-1.7\"u8);",
+      "output": "application/pdf"
+    },
+    {
+      "key": "contain",
+      "code": "var root = Path.Combine(Path.GetTempPath(), \"uploads\");\n\nvar inside = PathEx.IsUnder(Path.Combine(root, \"photos\", \"a.png\"), root);\nvar escape = PathEx.IsUnder(Path.Combine(root, \"..\", \"secrets.txt\"), root);\nvar sibling = PathEx.IsUnder(root + \"-old\", root);",
+      "topic": "paths",
+      "output": "True\nFalse\nFalse"
+    },
+    {
+      "key": "resolve",
+      "code": "var root = Path.Combine(Path.GetTempPath(), \"uploads\");\nvar photo = PathEx.Resolve(root, \"photos/a.png\");\n\nstring result;\ntry\n{\n    PathEx.Resolve(root, \"../secrets.txt\");\n    result = \"resolved\";\n}\ncatch (OSException ex) when (ex.Code == IOCodes.PathOutside)\n{\n    result = $\"{ex.Code}: {ex.Message}\";\n}",
+      "topic": "paths",
+      "output": "a.png\nio.path.outside: The path resolves outside its root."
+    },
+    {
+      "key": "app-folders",
+      "code": "var root = AppPaths.Root(\"Notes\");\nvar config = AppPaths.Config(\"Notes\");\nvar temp = AppPaths.Temp(\"Notes\");",
+      "topic": "paths",
+      "output": ".Notes\nconfigs\nNotes"
+    },
+    {
+      "key": "by-extension",
+      "code": "var type = \"holiday.JPG\".ToFileType();\nvar mimeType = \"report.pdf\".GetMimeType();\nvar unknown = \"notes.xyz\".GetMimeType();",
+      "topic": "types",
+      "output": "Image\napplication/pdf\napplication/octet-stream"
+    },
+    {
+      "key": "reverse",
+      "code": "var extension = \"image/jpeg\".GetExtension();\nvar all = \"image/jpeg\".GetExtensions();",
+      "topic": "types",
+      "output": ".jpg\n.jpg, .jfif, .jpe, .jpeg"
+    },
+    {
+      "key": "sniff",
+      "code": "byte[] upload = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];\n\nvar claimed = \"avatar.jpg\".GetMimeType();\nvar actual = MimeEx.Sniff(upload);\nvar isImage = MimeEx.TryGetEncoding(upload, out var encoding);",
+      "topic": "types",
+      "output": "image/jpeg\nimage/png\nTrue\nPng"
+    }
+  ]
+}

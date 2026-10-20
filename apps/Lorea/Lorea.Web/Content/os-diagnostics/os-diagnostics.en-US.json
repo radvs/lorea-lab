@@ -1,0 +1,274 @@
+{
+  "os-diagnostics": {
+    "title": "Diagnostics",
+    "summary": "An error inbox for your app: the same problem is grouped under one id, a flood of one error is limited, and reports are written to your store in the background.",
+    "gives": {
+      "1": "Report any exception with one call; the app never waits for the store.",
+      "2": "The same problem always gets the same id, even after a new deploy, so you count problems instead of reports.",
+      "3": "A flood of one error can't hide the others: each problem is limited per minute, and nothing is lost silently."
+    },
+    "sample": {
+      "quick": "Report an exception"
+    },
+    "topics": {
+      "setup": {
+        "title": "Setup",
+        "summary": "Register the ledger once and give it a store.",
+        "points": {
+          "1": {
+            "title": "Register the ledger",
+            "text": "`AddOSDiagnostics` registers the error ledger as the app's `IErrorSink`."
+          },
+          "2": {
+            "title": "Name and store",
+            "text": "You need a short `AppCode` and an `IErrorStore`."
+          },
+          "3": {
+            "title": "Queue and limits",
+            "text": "Reports wait in a queue and are written in batches."
+          },
+          "4": {
+            "title": "No self-reporting",
+            "text": "The ledger writes its own failures to `ILogger` only."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registration and store",
+            "text": "`AddOSDiagnostics` registers the error ledger as the app's `IErrorSink` and starts a background writer.\n\nGive your app a short name in `AppCode`, up to 16 characters. Also register an `IErrorStore` that saves the records. If no store is registered, the app stops at startup with a clear message."
+          },
+          "2": {
+            "title": "Queue and limits",
+            "text": "Reports wait in a queue of 512 and are written every 2 seconds, up to 50 at a time.\n\nThe same problem is accepted 5 times a minute, and a stack trace is cut at 8192 characters."
+          },
+          "3": {
+            "title": "Calling it again",
+            "text": "Calling `AddOSDiagnostics` again only changes the options you set and registers nothing twice.\n\n`AddOSDiagnosticsData` registers this setup for you if it is missing, so the two calls work in either order. But `AppCode` must be set by one of them or the app stops at startup.\n\nThe ledger writes its own failures to `ILogger` only; it never reports itself."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register the ledger and a store",
+            "note": "`MemoryStore` stands for your own `IErrorStore`; see the Store page."
+          },
+          "configure": {
+            "title": "Choose your own limits",
+            "note": "Two reports of the same problem per minute, a save every 5 seconds and a stack of 4096 characters."
+          },
+          "defaults": {
+            "title": "The defaults",
+            "note": "In order: the queue size, the batch size, the flush time, the limit per problem per minute and the longest stack in characters."
+          }
+        },
+        "type": {
+          "DiagnosticsEx": "Registration: `AddOSDiagnostics`.",
+          "DiagnosticsOptions": "The settings of the ledger. They are checked at startup, so a wrong value fails early."
+        },
+        "member": {
+          "DiagnosticsEx": {
+            "AddOSDiagnostics": "Registers the ledger as `IErrorSink` and starts the background writer. Needs an `AppCode` and, at startup, an `IErrorStore`."
+          },
+          "DiagnosticsOptions": {
+            "AppCode": "Your app's short name, up to 16 characters. It is saved with every record. Required.",
+            "QueueSize": "How many reports can wait for the writer. The default is 512.",
+            "BatchSize": "How many records go to the store in one call. The default is 50.",
+            "FlushEvery": "How long the writer waits before saving what has arrived. The default is 2 seconds.",
+            "PerFingerprintPerMinute": "How many reports of the same problem are accepted each minute. The default is 5.",
+            "MaxStack": "The longest stack trace kept, in characters. The default is 8192."
+          }
+        }
+      },
+      "report": {
+        "title": "Reporting errors",
+        "summary": "Send an exception to the ledger, from your own code or from a failing hook.",
+        "points": {
+          "1": {
+            "title": "One path",
+            "text": "Everything reports errors through `IErrorSink`, and the ledger is the sink."
+          },
+          "2": {
+            "title": "Building a report",
+            "text": "`ErrorReport.From` turns an exception into a report."
+          },
+          "3": {
+            "title": "Never throws",
+            "text": "`TryReport` never throws."
+          },
+          "4": {
+            "title": "Only real problems",
+            "text": "Use the ledger for problems someone should look at."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The reporting path",
+            "text": "Everything that wants to report an error talks to `IErrorSink` from OS.Core, and the ledger is the sink behind it. So there is one path for errors.\n\n`ErrorReport.From` turns an exception into a report with a trace id, type, message and stack. With `with` you add what only you know: the method, the route, the status code and the user.\n\n`TryReport` never throws and tells you whether the report was accepted."
+          },
+          "2": {
+            "title": "Hooks and logs",
+            "text": "Hooks that fail with `HookFailure.Log` reach the ledger by themselves. Their source looks like `hook:OrderPlaced/AuditHook` in practice.\n\nLogs stay in `ILogger`. Use the ledger for the problems someone should look at, not for every message."
+          },
+          "3": {
+            "title": "Secrets in messages",
+            "text": "Don't put secrets in exception messages, because the message is saved."
+          }
+        },
+        "sample": {
+          "from-exception": {
+            "title": "Build a report from an exception",
+            "note": "The trace id comes from the current activity, or a new id is made when there is none. You add the method and the route."
+          },
+          "send": {
+            "title": "Send it to the sink",
+            "note": "`sink` is the injected `IErrorSink`. The result is false when the problem reached its limit or the queue is full."
+          },
+          "hook": {
+            "title": "A hook that reports its failure",
+            "note": "With `OnFailure` set to Log, a failing hook is saved in the ledger and the next hook still runs."
+          },
+          "register-hook": {
+            "title": "Register the ledger with the hook",
+            "note": "The ledger is the registered `IErrorSink`, so no other code is needed."
+          }
+        }
+      },
+      "ledger": {
+        "title": "The ledger",
+        "summary": "How reports are grouped, limited and queued.",
+        "points": {
+          "1": {
+            "title": "Fingerprint",
+            "text": "Every report gets a 16-character fingerprint."
+          },
+          "2": {
+            "title": "Stable id",
+            "text": "Line numbers and file paths are ignored, so the id stays stable."
+          },
+          "3": {
+            "title": "Repeat cap",
+            "text": "A problem is accepted a few times a minute and the rest are counted."
+          },
+          "4": {
+            "title": "Fixed queue",
+            "text": "When the queue is full, the report is refused."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The fingerprint",
+            "text": "Every report gets a fingerprint: a 16-character id made from the error type and the first line of your own code in the stack trace.\n\nLine numbers, file paths and the numbers the compiler adds to async methods and lambdas are ignored. So the same problem keeps its id after a new deploy."
+          },
+          "2": {
+            "title": "Counting repeats",
+            "text": "A problem is accepted a few times each minute, 5 by default. The rest are counted and saved with the next accepted report, so you can see how often it really happened."
+          },
+          "3": {
+            "title": "Queue and cutting",
+            "text": "Accepted reports wait in a queue of fixed size. When the queue is full the report is refused and `Dropped` goes up. The reports counted for a problem that stopped coming are added to the `Dropped` count too.\n\nLong fields are cut to the sizes in `ErrorLimits` before saving."
+          }
+        },
+        "sample": {
+          "fingerprint": {
+            "title": "Same problem, same id",
+            "note": "A different line number gives the same id; a different error type gives another one."
+          },
+          "rate-limit": {
+            "title": "Limit a repeating problem",
+            "note": "With a limit of 2, the third report in a minute is refused. A minute later the same problem is accepted again, and its record carries the number of reports that were refused."
+          },
+          "dropped": {
+            "title": "Count the reports that were lost",
+            "note": "The queue holds one report, so the second is refused. `Dropped` tells you how many were lost."
+          }
+        },
+        "type": {
+          "ErrorLedger": "The sink behind `IErrorSink`: limits, trims and queues reports for the writer.",
+          "ErrorFingerprint": "Makes the stable id of a problem.",
+          "ErrorLimits": "The longest size of each saved field. A store should use the same sizes for its columns."
+        },
+        "member": {
+          "ErrorLedger": {
+            "TryReport": "Accepts the report and returns true, or returns false when the problem reached its limit, the queue is full or the report is null. Never throws.",
+            "Dropped": "How many reports were lost because of a full queue or an expired limit window."
+          },
+          "ErrorFingerprint": {
+            "Of": "Returns the 16-character id of the problem in a report."
+          }
+        }
+      },
+      "store": {
+        "title": "Stores and reading",
+        "summary": "Where records are saved and how they are read back.",
+        "points": {
+          "1": {
+            "title": "Where records go",
+            "text": "The ledger doesn't know where records go."
+          },
+          "2": {
+            "title": "One method",
+            "text": "`IErrorStore` has one method and receives a batch of records."
+          },
+          "3": {
+            "title": "The app keeps running",
+            "text": "If a write throws, the error is logged and the app continues."
+          },
+          "4": {
+            "title": "Reading for admins",
+            "text": "For an admin page, a store also implements `IErrorReader`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Writing",
+            "text": "The ledger doesn't know where records go. Implement `IErrorStore`, which has one method and receives a batch of `ErrorRecord`. The method is named `WriteAsync`.\n\nThe writer calls it from the background. When it throws, the error is logged, the batch is not retried and the app keeps running.\n\nAt shutdown the writer saves what is still queued, for up to 5 seconds."
+          },
+          "2": {
+            "title": "Reading",
+            "text": "To show the problems in an admin page, a store also implements `IErrorReader`. It does these things: the problems of the last hours, one problem with its samples, finding a problem by trace id, a summary and the list of error types.\n\nResults come as `OSResult`."
+          },
+          "3": {
+            "title": "A database store",
+            "text": "A database store with all of this is planned as OS.Diagnostics.Data."
+          }
+        },
+        "sample": {
+          "write-batch": {
+            "title": "A minimal store",
+            "note": "`MemoryStore` only keeps the records in a list; a real store saves them to a database or a file."
+          },
+          "last-day": {
+            "title": "Read the problems of the last day",
+            "note": "Each issue is one fingerprint with its count, first and last time, number of users and counts you can draw as a chart."
+          },
+          "open": {
+            "title": "Find a problem by trace id",
+            "note": "Give the trace id a user reports and get the fingerprint of the problem it belongs to."
+          }
+        },
+        "type": {
+          "IErrorStore": "Saves a batch of records; implement it for your database or file.",
+          "ErrorRecord": "One saved report with the app code, its fingerprint and the number of reports that were refused before it.",
+          "IErrorReader": "Reads the saved problems for an admin page.",
+          "ErrorFilter": "The window in hours (24 by default) and an optional error type.",
+          "ErrorIssue": "One problem: its fingerprint, count, first and last time, users and counts over time.",
+          "ErrorIssueDetail": "One problem with its latest message, an optional stack trace and recent samples.",
+          "ErrorSample": "One report of a problem: its time, trace id and user.",
+          "ErrorFound": "The fingerprint that holds a trace id.",
+          "ErrorSummary": "The error count, the number of problems, the most frequent type and the last time."
+        },
+        "member": {
+          "IErrorStore": {
+            "WriteAsync": "Saves a batch of records."
+          },
+          "IErrorReader": {
+            "IssuesAsync": "The problems seen in the filter's window, latest first.",
+            "GetIssueAsync": "One problem. The stack trace is returned only when `withStack` is true.",
+            "FindAsync": "Finds the problem that holds a trace id.",
+            "SummaryAsync": "The totals since the given time.",
+            "TypesAsync": "The distinct error types, for a filter."
+          }
+        }
+      }
+    }
+  }
+}

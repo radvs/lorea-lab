@@ -1,0 +1,29 @@
+@layer lorea.parts {
+    .home {
+        padding-block-end: clamp(2rem, 4vw, 3rem);
+    }
+
+    .home-intro {
+        max-inline-size: 46rem;
+        padding-block: clamp(1rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
+    }
+
+    .home-intro h1 {
+        margin: 0;
+        color: var(--lorea-heading);
+        font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        text-wrap: balance;
+    }
+
+    .home-description {
+        max-inline-size: 40rem;
+        margin: 1.1rem 0 1.75rem;
+        color: var(--lorea-muted);
+        font-size: clamp(1rem, 1.4vw, 1.12rem);
+        line-height: 1.85;
+        text-wrap: pretty;
+    }
+}

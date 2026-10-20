@@ -1,0 +1,407 @@
+{
+  "os-io": {
+    "title": "Files and JSON",
+    "summary": "Safe paths, everyday file work, file types and JSON with size limits, all in one package with no outside dependencies.",
+    "gives": {
+      "1": "Keep every path inside the folder you own, even when a user, a zip file or a config supplies the name.",
+      "2": "Write files atomically, copy, sync and delete them, and tell what a file really is from its name or its first bytes.",
+      "3": "Read and write JSON with safe defaults, a byte limit on every read and source-generated overloads."
+    },
+    "sample": {
+      "safe-path": "Refuse a path that escapes its folder",
+      "kind": "Tell a file's type from its first bytes"
+    },
+    "topics": {
+      "paths": {
+        "title": "Safe paths",
+        "summary": "Check that a path stays inside its root, and find the app's own folders.",
+        "points": {
+          "1": {
+            "title": "Outside names",
+            "text": "A name from outside can hold `..` and point anywhere on the disk."
+          },
+          "2": {
+            "title": "Root check",
+            "text": "`PathEx.IsUnder` answers whether a path stays inside a root."
+          },
+          "3": {
+            "title": "Full path",
+            "text": "`PathEx.Resolve` turns a relative name into a full path under the root."
+          },
+          "4": {
+            "title": "App folders",
+            "text": "`AppPaths` gives the app's data, config and temp folders."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The risk",
+            "text": "Any name that comes from outside, such as an upload, a zip entry or a setting, can hold `..` and point anywhere on the disk."
+          },
+          "2": {
+            "title": "Check and resolve",
+            "text": "`PathEx.IsUnder` answers whether a path stays inside a root.\n\n`PathEx.Resolve` turns a relative name into a full path under that root or throws an `OSException` with the code `io.path.outside`."
+          },
+          "3": {
+            "title": "Path rules",
+            "text": "Relative names are resolved against the root, not the current folder.\n\nA folder that only shares the root's prefix does not count as inside."
+          },
+          "4": {
+            "title": "Folders and codes",
+            "text": "`AppPaths` gives the app's data, config and temp folders, named after the app.\n\n`IOCodes` lists every error code this package uses."
+          }
+        },
+        "sample": {
+          "contain": {
+            "title": "Check whether a path stays inside a folder",
+            "note": "A sibling folder whose name starts the same way, like uploads-old, is still outside."
+          },
+          "resolve": {
+            "title": "Turn a user-supplied name into a safe path",
+            "note": "Check the error by its code, not its message; the codes never change."
+          },
+          "app-folders": {
+            "title": "Find the app's own folders",
+            "note": "Without a name, the folders are named after the running app."
+          }
+        },
+        "type": {
+          "PathEx": "Path helpers: containment checks and normalizing.",
+          "AppPaths": "The app's data, config and temp folders. Nothing is created until you ask for it.",
+          "IOCodes": "The error codes of this package, for checking an `OSException` by its `Code`."
+        },
+        "member": {
+          "PathEx": {
+            "IsUnder": "True when the path is the root itself or inside it. Relative paths are resolved against the root.",
+            "Resolve": "Returns the full path under the root, or throws `OSException` with `io.path.outside`.",
+            "Normalize": "The full path without a trailing separator."
+          },
+          "AppPaths": {
+            "Root": "The app's data folder under the user's local app data.",
+            "Config": "The configs folder inside Root.",
+            "Temp": "The app's folder inside the system temp folder."
+          }
+        }
+      },
+      "files": {
+        "title": "Files and folders",
+        "summary": "Write, read, copy, sync and delete files without leaving half-written results behind.",
+        "points": {
+          "1": {
+            "title": "Safe writes",
+            "text": "`FileEx.Write` creates the folder it needs."
+          },
+          "2": {
+            "title": "Atomic writes",
+            "text": "With `atomic: true` it writes a temp file first, then swaps it in."
+          },
+          "3": {
+            "title": "Folders",
+            "text": "`DirEx` deletes a folder only when it is inside the root you pass."
+          },
+          "4": {
+            "title": "Names and sizes",
+            "text": "`SafeName` cleans file names and `SizeEx` writes sizes the same everywhere."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Writing files",
+            "text": "`FileEx.Write` creates the folder it needs and, with `atomic: true`, writes to a temp file first and swaps it in at the end.\n\nSo a crash never leaves half a file. Text is written as UTF-8 without a byte order mark."
+          },
+          "2": {
+            "title": "Folders",
+            "text": "`DirEx` makes sure folders exist and lists files as `FileSpec` records.\n\nIt deletes a folder only when it is inside the root you pass."
+          },
+          "3": {
+            "title": "Names and sizes",
+            "text": "`SafeName` cleans a name from user input so it is valid on every system.\n\n`SizeEx` writes sizes such as 2.23 MB the same way in every culture."
+          }
+        },
+        "sample": {
+          "atomic-write": {
+            "title": "Write a file atomically",
+            "note": "The settings folder is created on the way."
+          },
+          "safe-name": {
+            "title": "Clean a file name from user input",
+            "note": "Names Windows reserves, like CON, get an underscore in front."
+          },
+          "sync": {
+            "title": "Copy only the files a backup is missing",
+            "note": "Files are compared by name, size and last change, so a changed file is copied again."
+          },
+          "size": {
+            "title": "Show a size people can read",
+            "note": "The value is cut, not rounded up, and always uses a dot."
+          }
+        },
+        "type": {
+          "FileSpec": "A snapshot of one file: name, extension, type, MIME type, size and dates. It never reads the disk on its own.",
+          "SizeUnit": "Byte, KB, MB and the larger units, each 1024 times the one before."
+        },
+        "member": {
+          "FileEx": {
+            "Write": "Writes text, lines or bytes and creates the folder. With `atomic: true` the file is swapped in only when complete.",
+            "ReadText": "Reads the whole file as text. A missing file throws `FileNotFoundException`.",
+            "Copy": "Copies a file and creates the target folder. Pass a `FileSpec` to copy it into a folder.",
+            "DeleteAsync": "Deletes a file, waiting a moment and trying again while another program holds it.",
+            "SafeName": "Removes characters no system allows, trims trailing dots and keeps the name to 100 characters.",
+            "CanWrite": "Tries to open the file for writing, the same way on every system.",
+            "Sha256": "The file's SHA-256 hash as lowercase hex."
+          },
+          "DirEx": {
+            "EnsureFor": "Creates the folder a file path needs. Use it when you hold a file path, and `Ensure` when you hold a folder path.",
+            "Delete": "Deletes a folder inside the root you pass. It never deletes the root itself or the folders above it.",
+            "GetFiles": "Lists the files of a folder. With two folders, lists the files the second one is missing or holds in an older version."
+          },
+          "SizeEx": {
+            "ToReadableSize": "A size with its unit, like 2.23 MB.",
+            "ToSize": "The size in a unit you choose, as a number."
+          }
+        }
+      },
+      "types": {
+        "title": "File types",
+        "summary": "Tell what a file is from its name, a URL or its first bytes.",
+        "points": {
+          "1": {
+            "title": "File type",
+            "text": "`FileTypeEx` maps an extension or a path to a `FileType`."
+          },
+          "2": {
+            "title": "MIME types",
+            "text": "`MimeEx` maps file names and URLs to MIME types and back."
+          },
+          "3": {
+            "title": "IANA table",
+            "text": "The MIME table follows the IANA registry."
+          },
+          "4": {
+            "title": "Real type",
+            "text": "`MimeEx.Sniff` reads the first bytes to find an upload's real type."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "File type",
+            "text": "`FileTypeEx` maps an extension or a path to a `FileType` from one table, in any letter case."
+          },
+          "2": {
+            "title": "MIME type",
+            "text": "`MimeEx` maps file names and URLs to MIME types and back.\n\nThe table follows the IANA registry."
+          },
+          "3": {
+            "title": "Real type",
+            "text": "A name only says what a file claims to be.\n\nSo `MimeEx.Sniff` reads the first bytes to find the real type of an upload: common images, PDF, ZIP, RAR and GZip."
+          }
+        },
+        "sample": {
+          "by-extension": {
+            "title": "Find the type and MIME type from a name",
+            "note": "Unknown extensions give application/octet-stream, the safe default for downloads."
+          },
+          "reverse": {
+            "title": "Find the extension for a MIME type",
+            "note": "The most common extension comes first."
+          },
+          "sniff": {
+            "title": "Check an upload's real type",
+            "note": "This upload is named like a JPEG but its bytes are a PNG."
+          }
+        },
+        "type": {
+          "FileType": "The broad kind of a file, such as Image, Video, Document or Archive.",
+          "ImageEncoding": "The image formats `Sniff` recognizes."
+        },
+        "member": {
+          "FileTypeEx": {
+            "ToFileType": "Accepts an extension with or without the dot, or a whole path.",
+            "ToExtensions": "Every extension of a type."
+          },
+          "MimeEx": {
+            "GetMimeType": "The MIME type for a file name, or application/octet-stream.",
+            "GetMimeTypeFromUrl": "Works with full and relative URLs and ignores the query.",
+            "GetExtension": "The preferred extension for a MIME type. Parameters such as charset are ignored.",
+            "Sniff": "The MIME type found in the first 12 bytes. A seekable stream is put back where it was."
+          }
+        }
+      },
+      "archives": {
+        "title": "Archives",
+        "summary": "Zip and unzip with limits, and compress single files with GZip.",
+        "points": {
+          "1": {
+            "title": "Risky archives",
+            "text": "An archive from outside can fill a disk or write outside its folder."
+          },
+          "2": {
+            "title": "Checks first",
+            "text": "`ArchiveEx.Unzip` checks entry count and total size before writing."
+          },
+          "3": {
+            "title": "Outside entries",
+            "text": "Any entry that would land outside the target folder is refused."
+          },
+          "4": {
+            "title": "GZip",
+            "text": "`GZip` and `GUnzip` compress one file."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The risk",
+            "text": "An archive from outside can be built to fill a disk or to write outside its folder."
+          },
+          "2": {
+            "title": "Safe unzip",
+            "text": "`ArchiveEx.Unzip` checks the number of entries and the total size before it writes anything.\n\nIt counts the bytes it actually writes and refuses any entry that would land outside the target folder."
+          },
+          "3": {
+            "title": "Single-file GZip",
+            "text": "`GZip` and `GUnzip` compress one file.\n\n`GUnzip` has the same size limit and removes its output if the limit is hit."
+          }
+        },
+        "sample": {
+          "zip-and-unzip": {
+            "title": "Zip a file and unzip it with limits",
+            "note": "The defaults are 10,000 entries and 1 GiB; pass smaller limits for user uploads."
+          },
+          "zip-slip": {
+            "title": "Refuse an entry that escapes the folder",
+            "note": "This attack is known as zip slip."
+          }
+        },
+        "member": {
+          "ArchiveEx": {
+            "Zip": "Adds a file to a zip, creating it when needed. A file with the same name is replaced.",
+            "Unzip": "Extracts into a folder within the entry and size limits you pass.",
+            "GUnzip": "Decompresses a GZip file, up to a byte limit."
+          }
+        }
+      },
+      "env": {
+        "title": ".env files",
+        "summary": "Load local settings from a .env file into environment variables.",
+        "points": {
+          "1": {
+            "title": "Reading the file",
+            "text": "`EnvFile.Load` reads `KEY=value` lines."
+          },
+          "2": {
+            "title": "Skipped lines",
+            "text": "It skips comments and blank lines."
+          },
+          "3": {
+            "title": "Environment wins",
+            "text": "A variable that is already set wins unless you pass `overwrite: true`."
+          },
+          "4": {
+            "title": "Finding the file",
+            "text": "`Find` also looks in each folder above."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Reading the file",
+            "text": "`EnvFile.Load` reads `KEY=value` lines, skips comments and blank lines, and removes one pair of matching quotes."
+          },
+          "2": {
+            "title": "Which value wins",
+            "text": "A variable that is already set wins unless you pass `overwrite: true`.\n\nSo real environment settings beat the file."
+          },
+          "3": {
+            "title": "Finding the file",
+            "text": "`Find` looks for the file in the given folder and then in each folder above it."
+          }
+        },
+        "sample": {
+          "load": {
+            "title": "Load a .env file",
+            "note": "SAMPLE_DB_HOST was already set, so only one line was applied."
+          }
+        },
+        "member": {
+          "EnvFile": {
+            "Load": "Applies the file and returns how many variables it set.",
+            "FindAndLoad": "Finds the nearest .env, loads it and returns its folder, or null."
+          }
+        }
+      },
+      "json": {
+        "title": "JSON",
+        "summary": "Read and write JSON with safe defaults and a size limit on every read.",
+        "points": {
+          "1": {
+            "title": "Defaults",
+            "text": "`JsonEx` uses camelCase names, enum names and leaves out null values."
+          },
+          "2": {
+            "title": "Lenient reading",
+            "text": "It reads comments and trailing commas and ignores letter case in names."
+          },
+          "3": {
+            "title": "Size limit",
+            "text": "Input past `MaxBytes` stops with `io.json.size`."
+          },
+          "4": {
+            "title": "AOT ready",
+            "text": "Each method also takes a source-generated `JsonTypeInfo<T>`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Writing",
+            "text": "`JsonEx` uses camelCase names and enum names instead of numbers.\n\nIt leaves out null values."
+          },
+          "2": {
+            "title": "Reading",
+            "text": "It reads comments and trailing commas, and ignores letter case in names."
+          },
+          "3": {
+            "title": "Size limit",
+            "text": "Every read, from text, bytes, a stream or a file, stops with `io.json.size` once the input passes `MaxBytes` (10 MB by default)."
+          },
+          "4": {
+            "title": "Escaping and AOT",
+            "text": "The default encoder escapes HTML and non-ASCII text so the output is safe inside a web page. Turn on `RelaxedEscaping` for files people read, such as Persian settings.\n\nEach method also takes a source-generated `JsonTypeInfo<T>` for trimmed and AOT apps."
+          }
+        },
+        "sample": {
+          "round-trip": {
+            "title": "Write and read JSON",
+            "note": "The empty Note is left out."
+          },
+          "persian": {
+            "title": "Keep Persian text readable",
+            "note": "Use relaxed escaping only for files, never for JSON placed inside HTML."
+          },
+          "limit": {
+            "title": "Stop at a size limit",
+            "note": "The limit counts bytes, so Persian text reaches it sooner than its character count suggests."
+          },
+          "append": {
+            "title": "Add an item to a JSON list file",
+            "note": "A broken file stops the call instead of being replaced, and each save is atomic."
+          },
+          "source-gen": {
+            "title": "Use a source-generated context",
+            "note": "With a context, only MaxBytes is taken from OSJsonOptions; everything else comes from the context."
+          }
+        },
+        "type": {
+          "OSJsonOptions": "Per-call settings: MaxBytes, Pretty, RelaxedEscaping and extra converters."
+        },
+        "member": {
+          "JsonEx": {
+            "Options": "The shared serializer options for a setting. They are cached and read-only.",
+            "FromJson": "Reads text within the byte limit. A JSON null throws `JsonException`.",
+            "ReadAsync": "Reads a file through a size-limited stream.",
+            "SaveAtomic": "Writes the JSON to a temp file and swaps it in.",
+            "Append": "Adds an item to a JSON array file. It is not locked, so keep to one writer at a time."
+          }
+        }
+      }
+    }
+  }
+}

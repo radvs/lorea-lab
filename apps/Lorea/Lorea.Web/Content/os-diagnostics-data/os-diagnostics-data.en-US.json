@@ -1,0 +1,316 @@
+{
+  "os-diagnostics-data": {
+    "title": "Diagnostics store",
+    "summary": "The database behind OS.Diagnostics: errors go into their own `DiagnosticsDb` on any OS.EFCore provider, secrets and personal data are masked before they are written, old rows are removed every day, and an `IErrorReader` gives you everything an error inbox page needs.",
+    "gives": {
+      "1": "Its own small database, so a broken main database never stops you from seeing why it broke. A separate SQLite file is enough, and it can be encrypted.",
+      "2": "Passwords, bearer tokens, emails, card numbers and national IDs are masked before a row is written, with check digits so ordinary numbers stay readable.",
+      "3": "A failing store never reports into itself, so a full disk or a dropped server cannot start an endless loop of errors about errors."
+    },
+    "sample": {
+      "quick": "Errors in a SQLite file next to the app",
+      "encrypted": "An encrypted error file with two weeks of history"
+    },
+    "topics": {
+      "start": {
+        "title": "Getting started",
+        "summary": "Register the store, give `DiagnosticsDb` a provider and create its table once.",
+        "points": {
+          "1": {
+            "title": "Database store",
+            "text": "This package is the database `IErrorStore`."
+          },
+          "2": {
+            "title": "One call",
+            "text": "`AddOSDiagnosticsData` also registers the reader and a daily cleanup."
+          },
+          "3": {
+            "title": "Separate context",
+            "text": "Errors live in `DiagnosticsDb`, apart from the main database."
+          },
+          "4": {
+            "title": "Tables not created",
+            "text": "The table is not created for you."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering",
+            "text": "OS.Diagnostics collects errors through `IErrorSink` and hands them in batches to an `IErrorStore`. This package is that store.\n\n`AddOSDiagnosticsData` registers it, together with the `IErrorReader` and a daily retention job, and each call replaces the previous one. If `AddOSDiagnostics` has not been called yet, it registers that too, so one call is enough.\n\nOnly `AppCode` still has to be set with `AddOSDiagnostics(o => o.AppCode = \"shop\")`, in either order."
+          },
+          "2": {
+            "title": "Context and why separate",
+            "text": "The rows live in `DiagnosticsDb`, a context of the package's own. You register it with any OS.EFCore provider exactly as you would your own context, for example with `AddOSSqlite<DiagnosticsDb>(o => o.Path = \"data/errors.db\")` in your setup.\n\nKeeping errors in a separate database is deliberate. When the main database is down, that is exactly when you need to read the errors, and a small SQLite file next to the app keeps working."
+          },
+          "3": {
+            "title": "Creating the table",
+            "text": "The table is not created for you. Call `EnsureCreatedAsync` once at startup. If you use migrations, add them with the option `--context DiagnosticsDb` in your command."
+          },
+          "4": {
+            "title": "Writing batches",
+            "text": "Each batch is written with a plain `SaveChangesAsync` on purpose, and `SaveAsync` is not used. The reason is that `SaveAsync` reports busy and offline databases to `IErrorSink`. Doing that from the store itself would feed its own failures back into the queue.\n\nA failed batch is logged by the writer and dropped. Every date is stored in UTC."
+          }
+        },
+        "sample": {
+          "register": {
+            "title": "Register everything",
+            "note": "`AddOSDiagnostics` collects, `AddOSDiagnosticsData` stores, in either order; the provider call registers OS.EFCore itself."
+          },
+          "create-table": {
+            "title": "Create the table at startup",
+            "note": "Run this once before the app starts serving; with migrations, use `MigrateAsync` instead."
+          },
+          "round-trip": {
+            "title": "What one row holds",
+            "note": "The id, app code, fingerprint, type, request, user and the time, which comes back in UTC."
+          }
+        },
+        "type": {
+          "DiagnosticsDataEx": "Registration.",
+          "DiagnosticsDb": "The package's own context. Register it with a provider; it holds one table of errors.",
+          "ErrorEntry": "One stored error: one row per report that passed the rate limit."
+        },
+        "member": {
+          "DiagnosticsDataEx": {
+            "AddOSDiagnosticsData": "Registers the store, the reader and the retention job, and validates the options at once. A second call replaces the first."
+          },
+          "DiagnosticsDb": {
+            "DiagnosticsDb": "Created by the provider registration; you do not create it yourself.",
+            "PurgeErrorsAsync": "Removes rows older than the given time in batches of 1000 and returns how many were removed (`data.notFound` when there were none). The retention job uses it; you can call it from an admin page too."
+          },
+          "ErrorEntry": {
+            "Id": "Database key, growing with every row.",
+            "AppCode": "Which app wrote the row, from `DiagnosticsOptions.AppCode`.",
+            "TraceId": "The request's trace id, the one the user sees on the error page. Indexed, so a trace is found at once.",
+            "ErrorType": "Full name of the exception type.",
+            "Fingerprint": "16 characters that identify the problem: same type and same place in your code give the same fingerprint.",
+            "Source": "Where the error came from, for example `efcore:save` or a hook's name.",
+            "Message": "The exception message after masking, at most 500 characters. Stored exactly, without text normalization.",
+            "StackTrace": "The stack after masking, cut by `DiagnosticsOptions.MaxStack`. Stored exactly.",
+            "Method": "HTTP method of the request, if there was one.",
+            "Route": "Route of the request after masking, at most 256 characters.",
+            "StatusCode": "HTTP status that was returned, or 0.",
+            "UserId": "Id of the signed-in user, if any; used to count affected users.",
+            "Suppressed": "How many reports of the same problem the rate limit held back just before this one. Counts include them.",
+            "OccurredAt": "When the error happened, always in UTC."
+          }
+        }
+      },
+      "inbox": {
+        "title": "Reading the inbox",
+        "summary": "Issues, one issue in detail, a trace, a summary and the error types, all as `OSResult` values.",
+        "points": {
+          "1": {
+            "title": "Rows to issues",
+            "text": "Rows with the same fingerprint count as one issue."
+          },
+          "2": {
+            "title": "Issue list",
+            "text": "`IssuesAsync` returns the issues of the last hours, newest first."
+          },
+          "3": {
+            "title": "Find by trace",
+            "text": "`FindAsync` turns a support ticket's trace id into its issue."
+          },
+          "4": {
+            "title": "No exceptions",
+            "text": "When the database cannot be read, the answer is `Unavailable`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The issue list",
+            "text": "The reader turns rows into issues: rows with the same fingerprint are one issue.\n\n`IssuesAsync` looks at the last `Hours`, 24 by default and never longer than the retention. It reads at most `ScanLimit` of the newest rows in that window and returns at most `MaxIssues` issues.\n\nIssues come newest first. Each has its count (suppressed reports included), affected users, first and last time and 24 bars for a small chart."
+          },
+          "2": {
+            "title": "New and details",
+            "text": "`FirstDate` is the first time ever, not only in the window. So an issue is `IsNew` only when it really started within `NewHours`.\n\n`GetIssueAsync` gives one issue with its latest message and the `SampleLimit` newest occurrences. Pass a trace to jump to that occurrence, which is then put first and returned as `Found`.\n\nThe stack is only read when you pass `withStack: true`, so you can show it to admins only."
+          },
+          "3": {
+            "title": "Search and summary",
+            "text": "`FindAsync` turns a trace id from a support ticket into its issue. Spaces and line breaks around a pasted trace are ignored.\n\n`SummaryAsync` and `TypesAsync` feed a dashboard tile and a type filter."
+          },
+          "4": {
+            "title": "When the database fails",
+            "text": "When the database cannot be read, every method returns `Unavailable` with the code `diagnostics.unavailable` instead of throwing. The reader never reports to `IErrorSink`."
+          }
+        },
+        "sample": {
+          "issues": {
+            "title": "The issue list",
+            "note": "The occurrence from three days ago is outside the window, so the count is 2, but it still makes the issue not new."
+          },
+          "detail": {
+            "title": "One issue, jumping to a trace",
+            "note": "The stack is hidden and the wanted trace is in the samples."
+          },
+          "find-and-summary": {
+            "title": "Find a trace, then summarize",
+            "note": "The pasted trace had spaces around it; they do not matter."
+          },
+          "admin-page": {
+            "title": "Show the stack to admins only",
+            "note": "A stack trace can reveal paths and internals, so `withStack` follows the user's role."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Secrets and personal data",
+        "summary": "What is masked before a row is written, what is left alone on purpose, and how to add your own patterns.",
+        "points": {
+          "1": {
+            "title": "Automatic masking",
+            "text": "Secrets and personal data are replaced with `***` before a row is written."
+          },
+          "2": {
+            "title": "Built-in patterns",
+            "text": "Passwords, tokens, emails, card numbers and national IDs are masked."
+          },
+          "3": {
+            "title": "Your own patterns",
+            "text": "Add your own patterns with `ScrubPatterns`."
+          },
+          "4": {
+            "title": "A safety net",
+            "text": "Masking is a safety net, not permission."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What is masked",
+            "text": "Exception messages often carry what should never reach a log table: a connection string, a token, a customer's email. Before a row is written, the message, the stack and the route are scanned and these are replaced with `***`.\n\nThe value after `Password=`, `Pwd=` or `\"password\":` is masked. So is a `Bearer` token and anything shaped like a JWT. Email addresses are masked too.\n\n16-digit card numbers (spaces or dashes allowed) are masked when they pass the Luhn check. 10-digit numbers are masked when they pass the Iranian national ID check. Persian digits count too."
+          },
+          "2": {
+            "title": "Why checks",
+            "text": "The checks are there to keep ordinary numbers readable: an order number or a 16-digit id that fails the check stays as it is.\n\nThey are not perfect, and the honest trade is to mask too much rather than too little. About one random 10-digit number in eleven passes the national ID check, so a Unix time such as 1760000000 can be masked. So can a word after `password:` in a sentence."
+          },
+          "3": {
+            "title": "Your own patterns",
+            "text": "Add your own patterns with `ScrubPatterns`. Each one must have a match timeout, because a pattern that runs away would block the writer.\n\nIf any pattern runs out of time, the whole field is stored as `***`, never unmasked."
+          },
+          "4": {
+            "title": "Safety net",
+            "text": "Masking happens before the 500-character cut, so a row never ends up longer than its column.\n\nMasking is a safety net, not permission. Keep secrets out of exception messages in the first place."
+          }
+        },
+        "sample": {
+          "scrubbed": {
+            "title": "What reaches the table",
+            "note": "The email, the password, the card and the national ID are masked; the rest of the sentence is kept."
+          },
+          "left-alone": {
+            "title": "Ordinary numbers stay, with one known exception",
+            "note": "The order number fails the check and stays; the Unix time happens to pass it and is masked."
+          },
+          "custom-pattern": {
+            "title": "Add your own pattern",
+            "note": "Always give the `Regex` a timeout; without one the options are rejected."
+          }
+        }
+      },
+      "retention": {
+        "title": "Retention",
+        "summary": "Old rows are removed every day; keep them longer, forever, or purge by hand.",
+        "points": {
+          "1": {
+            "title": "Daily cleanup",
+            "text": "Rows older than `RetentionDays` days are removed."
+          },
+          "2": {
+            "title": "Small batches",
+            "text": "Deleting happens in batches of 1000 so no long lock is held."
+          },
+          "3": {
+            "title": "Keep everything",
+            "text": "Set `RetentionDays` to 0 to keep everything."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The cleanup job",
+            "text": "A background job removes rows older than `RetentionDays`, 30 by default. It runs one minute after the app starts and then every `PurgeEvery`, which is one day.\n\nIt deletes in batches of 1000 through `PurgeErrorsAsync`, so a large table never holds one long lock. Set `RetentionDays` to 0 to keep everything; the job then does nothing."
+          },
+          "2": {
+            "title": "Failures and the reader",
+            "text": "A failed purge is logged and tried again at the next run. Because the purge uses the normal OS.EFCore path, a database that is down is also reported once to `IErrorSink`. That is safe, because the store, not the purge, is what the writer calls.\n\nThe reader never looks further back than the retention, so a 30-day store answers at most 720 hours."
+          }
+        },
+        "sample": {
+          "purge": {
+            "title": "Purge by hand",
+            "note": "Two rows were older than 30 days; one is left."
+          },
+          "keep-longer": {
+            "title": "Keep three months, purge every six hours",
+            "note": "A shorter `PurgeEvery` keeps each run small on a busy app."
+          },
+          "keep-forever": {
+            "title": "Keep everything",
+            "note": "Only for small apps: the table then grows forever."
+          }
+        }
+      },
+      "options": {
+        "title": "Options",
+        "summary": "Retention, reader limits, the table name and your own masking patterns.",
+        "points": {
+          "1": {
+            "title": "Checked at start",
+            "text": "A wrong value stops the app at startup, not at the first error."
+          },
+          "2": {
+            "title": "Reader limits",
+            "text": "Reader limits keep the admin page fast."
+          },
+          "3": {
+            "title": "Error table",
+            "text": "`Table` lets errors share a database with other tables."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Checking options",
+            "text": "All options are checked when you call `AddOSDiagnosticsData`, so a wrong value stops the app at startup, not at the first error."
+          },
+          "2": {
+            "title": "Reader limits",
+            "text": "The reader limits keep an admin page fast however many errors there are.\n\n`ScanLimit` caps how many rows one issue list reads. `MaxIssues` caps how many issues it returns. `SampleLimit` caps how many occurrences one issue shows."
+          },
+          "3": {
+            "title": "Table name",
+            "text": "`Table` lets the errors share a database with other tables. It must be a plain name: only letters, digits and the character `_` are allowed, and it starts with a letter.\n\nIt is read once, when the model is first built."
+          }
+        },
+        "sample": {
+          "defaults": {
+            "title": "The defaults",
+            "note": "Good for most apps; raise the limits only when the page needs it."
+          },
+          "bad-table": {
+            "title": "A table name that is not a plain name",
+            "note": "Rejected at registration, before anything touches the database."
+          },
+          "busy-app": {
+            "title": "A busier app",
+            "note": "More rows per scan and more samples, in a table of its own name."
+          }
+        },
+        "type": {
+          "DiagnosticsDataOptions": "Retention, reader limits, the table name and extra masking patterns."
+        },
+        "member": {
+          "DiagnosticsDataOptions": {
+            "RetentionDays": "How many days rows are kept. 30 by default; 0 keeps everything.",
+            "PurgeEvery": "How often old rows are removed. One day by default; at least one minute.",
+            "ScanLimit": "At most this many of the newest rows are read for one issue list. 5000 by default.",
+            "MaxIssues": "At most this many issues in a list, and at most this many error types. 100 by default.",
+            "SampleLimit": "How many recent occurrences one issue shows. 20 by default.",
+            "NewHours": "An issue whose first occurrence is newer than this many hours is new. 24 by default.",
+            "Table": "Table name, `Errors` by default. Letters, digits and `_` only, starting with a letter.",
+            "ScrubPatterns": "Your own patterns to mask, added after the built-in ones. Each needs a match timeout."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1126 @@
+{
+  "types": [
+    {
+      "namespace": "OS.EFCore",
+      "key": "AuditAction",
+      "signature": "enum AuditAction",
+      "members": [
+        {
+          "name": "Added",
+          "signatures": [
+            "Added = 1"
+          ]
+        },
+        {
+          "name": "Modified",
+          "signatures": [
+            "Modified = 2"
+          ]
+        },
+        {
+          "name": "Deleted",
+          "signatures": [
+            "Deleted = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "AuditChange",
+      "signature": "sealed record AuditChange",
+      "members": [
+        {
+          "name": "AuditChange",
+          "signatures": [
+            "AuditChange(string Field, string? Old, string? New)"
+          ]
+        },
+        {
+          "name": "Field",
+          "signatures": [
+            "string Field { get; init; }"
+          ]
+        },
+        {
+          "name": "Old",
+          "signatures": [
+            "string? Old { get; init; }"
+          ]
+        },
+        {
+          "name": "New",
+          "signatures": [
+            "string? New { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "AuditEx",
+      "signature": "static class AuditEx",
+      "members": [
+        {
+          "name": "RetentionDays",
+          "signatures": [
+            "const int RetentionDays = 730"
+          ]
+        },
+        {
+          "name": "ApplyAudit",
+          "signatures": [
+            "static ModelBuilder ApplyAudit(this ModelBuilder modelBuilder, string table = \"Audits\", string? schema = null)"
+          ]
+        },
+        {
+          "name": "PurgeAuditsAsync",
+          "signatures": [
+            "static Task<int> PurgeAuditsAsync(this OSDbContext context, int days = 730, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "AuditRecord",
+      "signature": "sealed class AuditRecord",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string? AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "EntityName",
+          "signatures": [
+            "string EntityName { get; set; }"
+          ]
+        },
+        {
+          "name": "EntityKey",
+          "signatures": [
+            "string EntityKey { get; set; }"
+          ]
+        },
+        {
+          "name": "Action",
+          "signatures": [
+            "AuditAction Action { get; set; }"
+          ]
+        },
+        {
+          "name": "ActorId",
+          "signatures": [
+            "string? ActorId { get; set; }"
+          ]
+        },
+        {
+          "name": "ActorName",
+          "signatures": [
+            "string? ActorName { get; set; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; set; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "string? SessionId { get; set; }"
+          ]
+        },
+        {
+          "name": "Changes",
+          "signatures": [
+            "List<AuditChange> Changes { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "DataCodes",
+      "signature": "static class DataCodes",
+      "members": [
+        {
+          "name": "SoftDeleteFilter",
+          "signatures": [
+            "const string SoftDeleteFilter = \"SoftDelete\""
+          ]
+        },
+        {
+          "name": "Duplicate",
+          "signatures": [
+            "const string Duplicate = \"data.duplicate\""
+          ]
+        },
+        {
+          "name": "InUse",
+          "signatures": [
+            "const string InUse = \"data.inUse\""
+          ]
+        },
+        {
+          "name": "MissingRef",
+          "signatures": [
+            "const string MissingRef = \"data.missingRef\""
+          ]
+        },
+        {
+          "name": "Required",
+          "signatures": [
+            "const string Required = \"data.required\""
+          ]
+        },
+        {
+          "name": "TooLong",
+          "signatures": [
+            "const string TooLong = \"data.tooLong\""
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "const string Changed = \"data.changed\""
+          ]
+        },
+        {
+          "name": "Busy",
+          "signatures": [
+            "const string Busy = \"data.busy\""
+          ]
+        },
+        {
+          "name": "Offline",
+          "signatures": [
+            "const string Offline = \"data.offline\""
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "const string Error = \"data.error\""
+          ]
+        },
+        {
+          "name": "Saved",
+          "signatures": [
+            "const string Saved = \"data.saved\""
+          ]
+        },
+        {
+          "name": "Unchanged",
+          "signatures": [
+            "const string Unchanged = \"data.unchanged\""
+          ]
+        },
+        {
+          "name": "Deleted",
+          "signatures": [
+            "const string Deleted = \"data.deleted\""
+          ]
+        },
+        {
+          "name": "NotFound",
+          "signatures": [
+            "const string NotFound = \"data.notFound\""
+          ]
+        },
+        {
+          "name": "BatchDone",
+          "signatures": [
+            "const string BatchDone = \"data.batchDone\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "DbConnectionEntry",
+      "signature": "sealed class DbConnectionEntry",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "required string Name { get; init; }"
+          ]
+        },
+        {
+          "name": "Connection",
+          "signatures": [
+            "required string Connection { get; init; }"
+          ]
+        },
+        {
+          "name": "IsMain",
+          "signatures": [
+            "bool IsMain { get; init; }"
+          ]
+        },
+        {
+          "name": "IsValid",
+          "signatures": [
+            "bool IsValid { get; }"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "DbServerOptions{TBuilder}",
+      "signature": "abstract class DbServerOptions<TBuilder> where TBuilder : DbConnectionStringBuilder",
+      "members": [
+        {
+          "name": "ConnectionString",
+          "signatures": [
+            "string? ConnectionString { get; set; }"
+          ]
+        },
+        {
+          "name": "Encrypt",
+          "signatures": [
+            "bool Encrypt { get; set; }"
+          ]
+        },
+        {
+          "name": "RetryOnFailure",
+          "signatures": [
+            "bool RetryOnFailure { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "EFCoreEx",
+      "signature": "static class EFCoreEx",
+      "members": [
+        {
+          "name": "IgnoreSoftDelete",
+          "signatures": [
+            "static IQueryable<T> IgnoreSoftDelete<T>(this IQueryable<T> query) where T : class"
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "static DbConnectionEntry? Find(this IEnumerable<DbConnectionEntry> entries, string? name = null)"
+          ]
+        },
+        {
+          "name": "AddOSEFCore",
+          "signatures": [
+            "static IServiceCollection AddOSEFCore(this IServiceCollection services, Action<EFCoreOptions>? configure = null)"
+          ]
+        },
+        {
+          "name": "AddOSDbContext",
+          "signatures": [
+            "static IServiceCollection AddOSDbContext<TContext>(this IServiceCollection services, Action<IServiceProvider, DbContextOptionsBuilder> configure, bool pooled = true, int poolSize = 1024) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "Audit",
+          "signatures": [
+            "static EntityTypeBuilder<T> Audit<T>(this EntityTypeBuilder<T> builder) where T : class",
+            "static EntityTypeBuilder Audit(this EntityTypeBuilder builder)"
+          ]
+        },
+        {
+          "name": "Versioned",
+          "signatures": [
+            "static EntityTypeBuilder<T> Versioned<T>(this EntityTypeBuilder<T> builder) where T : class",
+            "static EntityTypeBuilder Versioned(this EntityTypeBuilder builder)"
+          ]
+        },
+        {
+          "name": "KeepText",
+          "signatures": [
+            "static PropertyBuilder<T?> KeepText<T>(this PropertyBuilder<T?> builder)"
+          ]
+        },
+        {
+          "name": "UseOS",
+          "signatures": [
+            "static DbContextOptionsBuilder UseOS(this DbContextOptionsBuilder builder, IServiceProvider services)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "EFCoreOptions",
+      "signature": "sealed class EFCoreOptions",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string? AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "MigrateOnStart",
+          "signatures": [
+            "bool MigrateOnStart { get; set; }"
+          ]
+        },
+        {
+          "name": "HistoryTable",
+          "signatures": [
+            "string? HistoryTable { get; set; }"
+          ]
+        },
+        {
+          "name": "HistorySchema",
+          "signatures": [
+            "string? HistorySchema { get; set; }"
+          ]
+        },
+        {
+          "name": "NormalizeText",
+          "signatures": [
+            "Func<string, string>? NormalizeText { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxPageSize",
+          "signatures": [
+            "int MaxPageSize { get; set; }"
+          ]
+        },
+        {
+          "name": "RetryCount",
+          "signatures": [
+            "int RetryCount { get; set; }"
+          ]
+        },
+        {
+          "name": "RetryDelay",
+          "signatures": [
+            "TimeSpan RetryDelay { get; set; }"
+          ]
+        },
+        {
+          "name": "CommandTimeout",
+          "signatures": [
+            "TimeSpan CommandTimeout { get; set; }"
+          ]
+        },
+        {
+          "name": "UseRelationalNulls",
+          "signatures": [
+            "bool UseRelationalNulls { get; set; }"
+          ]
+        },
+        {
+          "name": "SlowTransactionThreshold",
+          "signatures": [
+            "TimeSpan SlowTransactionThreshold { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "ICreateStamp",
+      "signature": "interface ICreateStamp",
+      "members": [
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateBy",
+          "signatures": [
+            "string? CreateBy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "IDataActor",
+      "signature": "interface IDataActor",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "string? Id { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; }"
+          ]
+        },
+        {
+          "name": "IpAddress",
+          "signatures": [
+            "string? IpAddress { get; }"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "signatures": [
+            "string? SessionId { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "IDbFactory{TContext}",
+      "signature": "interface IDbFactory<TContext> where TContext : OSDbContext",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "TContext Open()"
+          ]
+        },
+        {
+          "name": "OpenAsync",
+          "signatures": [
+            "ValueTask<TContext> OpenAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "IModifyStamp",
+      "signature": "interface IModifyStamp",
+      "members": [
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedBy",
+          "signatures": [
+            "string? ModifiedBy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "IReadOnlyContext",
+      "signature": "interface IReadOnlyContext",
+      "members": []
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "ISoftDelete",
+      "signature": "interface ISoftDelete",
+      "members": [
+        {
+          "name": "IsDeleted",
+          "signatures": [
+            "bool IsDeleted { get; set; }"
+          ]
+        },
+        {
+          "name": "DeletedDate",
+          "signatures": [
+            "DateTimeOffset? DeletedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "DeletedBy",
+          "signatures": [
+            "string? DeletedBy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "IStamped",
+      "signature": "interface IStamped : ICreateStamp, IModifyStamp",
+      "members": []
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "ITracked",
+      "signature": "interface ITracked : IStamped, ISoftDelete",
+      "members": []
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "KeysetPage{T}",
+      "signature": "sealed class KeysetPage<T> : PagingModel<T>",
+      "members": [
+        {
+          "name": "Next",
+          "signatures": [
+            "string? Next { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "NamingEx",
+      "signature": "static class NamingEx",
+      "members": [
+        {
+          "name": "ApplySnakeCaseName",
+          "signatures": [
+            "static ModelBuilder ApplySnakeCaseName(this ModelBuilder modelBuilder)"
+          ]
+        },
+        {
+          "name": "ToSnake",
+          "signatures": [
+            "static string ToSnake(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "NoAuditAttribute",
+      "signature": "sealed class NoAuditAttribute : Attribute",
+      "members": []
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "OSDbContext",
+      "signature": "abstract class OSDbContext : DbContext",
+      "members": [
+        {
+          "name": "BatchDeleteAsync",
+          "signatures": [
+            "Task<OSResult<int>> BatchDeleteAsync<T>(Expression<Func<T, bool>> filter, bool atomicAll = false, CancellationToken token = default) where T : class"
+          ]
+        },
+        {
+          "name": "BatchSoftDeleteAsync",
+          "signatures": [
+            "Task<OSResult<int>> BatchSoftDeleteAsync<T>(Expression<Func<T, bool>> filter, bool atomicAll = false, CancellationToken token = default) where T : class, ISoftDelete"
+          ]
+        },
+        {
+          "name": "BatchUpdateAsync",
+          "signatures": [
+            "Task<OSResult<int>> BatchUpdateAsync<T>(Expression<Func<T, bool>> filter, Action<T> apply, bool atomicAll = false, CancellationToken token = default) where T : class",
+            "Task<OSResult<int>> BatchUpdateAsync<T>(Expression<Func<T, bool>> filter, Action<UpdateSettersBuilder<T>> set, bool atomicAll = false, CancellationToken token = default) where T : class"
+          ]
+        },
+        {
+          "name": "Entity",
+          "signatures": [
+            "DbSet<T> Entity<T>() where T : class"
+          ]
+        },
+        {
+          "name": "ForUpdate",
+          "signatures": [
+            "IQueryable<T> ForUpdate<T>() where T : class"
+          ]
+        },
+        {
+          "name": "Patch",
+          "signatures": [
+            "void Patch<T>(T entity, params Expression<Func<T, object?>>[] properties) where T : class"
+          ]
+        },
+        {
+          "name": "Dispose",
+          "signatures": [
+            "void Dispose()"
+          ]
+        },
+        {
+          "name": "DisposeAsync",
+          "signatures": [
+            "ValueTask DisposeAsync()"
+          ]
+        },
+        {
+          "name": "PageAsync",
+          "signatures": [
+            "Task<PagingModel<T>> PageAsync<T>(IQueryable<T> query, int page, int take, bool count = true, CancellationToken token = default) where T : class"
+          ]
+        },
+        {
+          "name": "PageAfterAsync",
+          "signatures": [
+            "Task<KeysetPage<T>> PageAfterAsync<T, TKey, TId>(IQueryable<T> query, Expression<Func<T, TKey?>> keySelector, Expression<Func<T, TId?>> idSelector, ValueTuple<TKey, TId>? after, int take, CancellationToken token = default) where T : class"
+          ]
+        },
+        {
+          "name": "StreamAsync",
+          "signatures": [
+            "IAsyncEnumerable<T> StreamAsync<T, TKey>(IQueryable<T> query, Expression<Func<T, TKey?>> keySelector, int batch = 5000, IProgress<int>? progress = null, CancellationToken token = default) where T : class"
+          ]
+        },
+        {
+          "name": "Save",
+          "signatures": [
+            "OSResult<SaveCounts> Save()"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<OSResult<SaveCounts>> SaveAsync(CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "TranAsync",
+          "signatures": [
+            "Task<OSResult> TranAsync(Func<CancellationToken, Task<OSResult>> work, TranOptions? options = null, CancellationToken token = default)",
+            "Task<OSResult<T?>> TranAsync<T>(Func<CancellationToken, Task<OSResult<T?>>> work, TranOptions? options = null, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "PageCursor",
+      "signature": "static class PageCursor",
+      "members": [
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "const int MaxLength = 512"
+          ]
+        },
+        {
+          "name": "Encode",
+          "signatures": [
+            "static string Encode<TKey, TId>(TKey? key, TId? id)"
+          ]
+        },
+        {
+          "name": "TryDecode",
+          "signatures": [
+            "static bool TryDecode<TKey, TId>(string? cursor, out TKey? key, out TId? id)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "SaveCounts",
+      "signature": "sealed record SaveCounts",
+      "members": [
+        {
+          "name": "SaveCounts",
+          "signatures": [
+            "SaveCounts(int Added, int Modified, int Deleted)"
+          ]
+        },
+        {
+          "name": "Added",
+          "signatures": [
+            "int Added { get; init; }"
+          ]
+        },
+        {
+          "name": "Modified",
+          "signatures": [
+            "int Modified { get; init; }"
+          ]
+        },
+        {
+          "name": "Deleted",
+          "signatures": [
+            "int Deleted { get; init; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int Total { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "StampedEntity",
+      "signature": "abstract class StampedEntity : IStamped",
+      "members": [
+        {
+          "name": "CreateDate",
+          "signatures": [
+            "DateTimeOffset CreateDate { get; set; }"
+          ]
+        },
+        {
+          "name": "CreateBy",
+          "signatures": [
+            "string? CreateBy { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedBy",
+          "signatures": [
+            "string? ModifiedBy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "TrackedEntity",
+      "signature": "abstract class TrackedEntity : StampedEntity, ITracked",
+      "members": [
+        {
+          "name": "IsDeleted",
+          "signatures": [
+            "bool IsDeleted { get; set; }"
+          ]
+        },
+        {
+          "name": "DeletedDate",
+          "signatures": [
+            "DateTimeOffset? DeletedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "DeletedBy",
+          "signatures": [
+            "string? DeletedBy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore",
+      "key": "TranOptions",
+      "signature": "sealed class TranOptions",
+      "members": [
+        {
+          "name": "Isolation",
+          "signatures": [
+            "IsolationLevel Isolation { get; init; }"
+          ]
+        },
+        {
+          "name": "Timeout",
+          "signatures": [
+            "TimeSpan? Timeout { get; init; }"
+          ]
+        },
+        {
+          "name": "Verify",
+          "signatures": [
+            "Func<CancellationToken, Task<bool>>? Verify { get; init; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; init; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "trail",
+      "code": "using var demo = Demo.Open(user: \"sara\");\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\ndemo.Db.ForUpdate<Customer>().Single().Name = \"Ali Rezaei\";\ndemo.Db.Save();",
+      "topic": "audit",
+      "output": "Added Customer#1 by sara: IsDeleted '' -> 'False', Name '' -> 'Ali'\nModified Customer#1 by sara: Name 'Ali' -> 'Ali Rezaei'"
+    },
+    {
+      "key": "history",
+      "code": "var key = customerId.ToString(CultureInfo.InvariantCulture);\n\nvar history = await db.Entity<AuditRecord>()\n    .Where(a => a.EntityName == nameof(Customer) && a.EntityKey == key)\n    .OrderBy(a => a.Id)\n    .ToListAsync(token);",
+      "topic": "audit"
+    },
+    {
+      "key": "purge",
+      "code": "var removed = await db.PurgeAuditsAsync(days: 365, token: token);",
+      "topic": "audit"
+    },
+    {
+      "key": "table",
+      "code": "modelBuilder.ApplyAudit(table: \"AuditTrail\", schema: \"audit\");",
+      "topic": "audit"
+    },
+    {
+      "key": "soft-delete",
+      "code": "var result = await db.BatchSoftDeleteAsync<Customer>(c => c.Name.StartsWith(\"test-\"), token: token);",
+      "topic": "batches"
+    },
+    {
+      "key": "setters",
+      "code": "var result = await db.BatchUpdateAsync<Invoice>(i => i.Total < 0, s => s.SetProperty(i => i.Total, 0m), token: token);",
+      "topic": "batches"
+    },
+    {
+      "key": "apply",
+      "code": "var result = await db.BatchUpdateAsync<Customer>(c => c.Code == null, c => c.Code = \"new\", token: token);",
+      "topic": "batches"
+    },
+    {
+      "key": "atomic",
+      "code": "var result = await db.BatchDeleteAsync<Invoice>(i => i.Total == 0, atomicAll: true, token: token);",
+      "topic": "batches"
+    },
+    {
+      "key": "conflict",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\nvar sara = demo.Db;\nvar reza = demo.Second();\nsara.ForUpdate<Customer>().Single().Name = \"Ali R.\";\nreza.ForUpdate<Customer>().Single().Name = \"Ali Rezaei\";\n\nvar first = sara.Save();\nvar second = reza.Save();",
+      "topic": "concurrency",
+      "output": "data.saved\nConflict\ndata.changed"
+    },
+    {
+      "key": "retry",
+      "code": "var result = await Rename(db, id, name, token);\n\nif (result.Code == DataCodes.Changed)\n{\n    db.ChangeTracker.Clear();\n    result = await Rename(db, id, name, token);\n}",
+      "topic": "concurrency"
+    },
+    {
+      "key": "edit",
+      "code": "var customer = await db.ForUpdate<Customer>().SingleAsync(c => c.Id == id, token);\ncustomer.Name = name;\n\nvar result = await db.SaveAsync(token);",
+      "topic": "context"
+    },
+    {
+      "key": "patch",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\", Code = \"C-1\" });\ndemo.Db.Save();\nvar stored = demo.Db.Entity<Customer>().Single();\ndemo.Db.ChangeTracker.Clear();\n\nvar fromForm = new Customer { Id = stored.Id, Name = \"Ali Rezaei\", Code = null, Version = stored.Version };\ndemo.Db.Patch(fromForm, c => c.Name);\ndemo.Db.Save();\n\nvar saved = demo.Db.Entity<Customer>().Single();",
+      "topic": "context",
+      "output": "Ali Rezaei\nC-1"
+    },
+    {
+      "key": "read-only",
+      "code": "using var demo = Demo.Open();\nvar options = new DbContextOptionsBuilder<ReportDb>().UseSqlite(\"Data Source=:memory:\").UseOS(demo.Services).Options;\nusing var reports = new ReportDb(options);\n\nreports.Add(new Customer { Name = \"Ali\" });\nreports.Save();",
+      "topic": "context",
+      "output": "InvalidOperationException: ReportDb is read-only and cannot save changes."
+    },
+    {
+      "key": "factory",
+      "code": "await using var db = await factory.OpenAsync(token);\n\nvar customers = await db.Entity<Customer>().ToListAsync(token);",
+      "topic": "context"
+    },
+    {
+      "key": "connections",
+      "code": "DbConnectionEntry[] entries =\n[\n    new() { Name = \"main\", Connection = \"Data Source=shop.db\", IsMain = true },\n    new() { Name = \"reports\", Connection = \"Data Source=reports.db\" }\n];",
+      "topic": "context",
+      "output": "main\nreports\nmain"
+    },
+    {
+      "key": "utc",
+      "code": "var local = new DateTimeOffset(2026, 3, 1, 10, 0, 0, TimeSpan.FromHours(3.5));\nvar stored = local.ToUniversalTime();",
+      "topic": "dates",
+      "output": "2026-03-01T06:30:00.0000000+00:00\nTrue"
+    },
+    {
+      "key": "range",
+      "code": "var invoices = await db.Entity<Invoice>()\n    .Where(i => i.IssuedAt >= from && i.IssuedAt < to)\n    .OrderBy(i => i.IssuedAt)\n    .ToListAsync(token);",
+      "topic": "dates"
+    },
+    {
+      "key": "clock",
+      "code": "services.AddSingleton(clock);\nservices.AddOSEFCore();",
+      "topic": "dates"
+    },
+    {
+      "key": "after-save",
+      "code": "using var demo = Demo.Open(user: \"sara\");\n\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\nvar customer = demo.Db.Entity<Customer>().Single();",
+      "topic": "entities",
+      "output": "sara\n2026-03-01 09:30:00Z\nTrue\nTrue"
+    },
+    {
+      "key": "after-edit",
+      "code": "using var demo = Demo.Open(user: \"sara\");\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\ndemo.Clock.Advance(TimeSpan.FromHours(2));\n\nvar customer = demo.Db.ForUpdate<Customer>().Single();\ncustomer.Name = \"Ali Rezaei\";\ncustomer.CreateBy = \"someone else\";\ndemo.Db.Save();\n\nvar saved = demo.Db.Entity<Customer>().AsNoTracking().Single();",
+      "topic": "entities",
+      "output": "sara\nsara\n2026-03-01 11:30:00Z"
+    },
+    {
+      "key": "remove",
+      "code": "using var demo = Demo.Open(user: \"sara\");\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\ndemo.Db.Remove(demo.Db.ForUpdate<Customer>().Single());\nvar result = demo.Db.Save();\n\nvar hidden = demo.Db.Entity<Customer>().Count();\nvar row = demo.Db.Entity<Customer>().IgnoreSoftDelete().Single();",
+      "topic": "entities",
+      "output": "data.saved\n0\nTrue\nsara"
+    },
+    {
+      "key": "options",
+      "code": "modelBuilder.Entity<Customer>(customer =>\n{\n    customer.Audit();\n    customer.Versioned();\n    customer.Property(c => c.Code).KeepText();\n});",
+      "topic": "entities"
+    },
+    {
+      "key": "normalize",
+      "code": "services.AddOSEFCore(o => o.NormalizeText = text => text.Replace('ي', 'ی').Replace('ك', 'ک'));",
+      "topic": "entities"
+    },
+    {
+      "key": "duplicate",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\ndemo.Db.Add(new Customer { Name = \"Ali\" });\nvar result = demo.Db.Save();",
+      "topic": "errors",
+      "output": "Conflict\ndata.duplicate\n1\nThis value is already used."
+    },
+    {
+      "key": "unchanged",
+      "code": "using var demo = Demo.Open();\n\nvar result = demo.Db.Save();",
+      "topic": "errors",
+      "output": "True\ndata.unchanged\nThere was nothing to save."
+    },
+    {
+      "key": "handle",
+      "code": "result switch\n   {\n       { Succeeded: true } => \"saved\",\n       { Code: DataCodes.Duplicate, Errors: [var field, ..] } => $\"{field.Field} is already used\",\n       { Code: DataCodes.Changed } => \"someone else saved first; reload and try again\",\n       { Status: ResultStatus.Unavailable } => \"the database is busy or offline; try again later\",\n       _ => $\"something went wrong, reference {result.TraceId}\"\n   };",
+      "topic": "errors"
+    },
+    {
+      "key": "codes",
+      "code": "[\n    DataCodes.Duplicate, DataCodes.InUse, DataCodes.MissingRef, DataCodes.Required, DataCodes.TooLong,\n    DataCodes.Changed, DataCodes.Busy, DataCodes.Offline, DataCodes.Error\n];",
+      "topic": "errors",
+      "output": "data.duplicate\ndata.inUse\ndata.missingRef\ndata.required\ndata.tooLong\ndata.changed\ndata.busy\ndata.offline\ndata.error"
+    },
+    {
+      "key": "localize",
+      "code": "services.AddSingleton(localizer);",
+      "topic": "errors"
+    },
+    {
+      "key": "tracking",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\ndemo.Db.Entity<Customer>().Single().Name = \"changed, but not tracked\";\nvar unchanged = demo.Db.Save();\n\ndemo.Db.ForUpdate<Customer>().Single().Name = \"changed and tracked\";\nvar saved = demo.Db.Save();",
+      "topic": "faq",
+      "output": "data.unchanged\ndata.saved"
+    },
+    {
+      "key": "still-there",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\ndemo.Db.Remove(demo.Db.ForUpdate<Customer>().Single());\ndemo.Db.Save();",
+      "topic": "faq",
+      "output": "0\n1"
+    },
+    {
+      "key": "history",
+      "code": "services.AddOSEFCore(options =>\n{\n    options.HistoryTable = \"migrations\";\n    options.HistorySchema = \"ops\";\n    options.MigrateOnStart = false;\n});",
+      "topic": "migrations"
+    },
+    {
+      "key": "naming",
+      "code": "modelBuilder.ApplySnakeCaseName();",
+      "topic": "migrations"
+    },
+    {
+      "key": "snake",
+      "code": "[NamingEx.ToSnake(\"Customer\"), NamingEx.ToSnake(\"InvoiceLine\"), NamingEx.ToSnake(\"OSSettingValue\"), NamingEx.ToSnake(\"CreateDate\")];",
+      "topic": "migrations",
+      "output": "customer\ninvoice_line\nos_setting_value\ncreate_date"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSEFCore(options =>\n{\n    options.AppCode = \"shop\";\n    options.MaxPageSize = 100;\n});\n\nservices.AddOSDbContext<ShopDb>((_, builder) => builder.UseSqlite(connection));"
+    },
+    {
+      "key": "save",
+      "code": "db.Add(new Customer { Name = \"Sara\" });\n\nvar result = await db.SaveAsync(token);"
+    },
+    {
+      "key": "page",
+      "code": "var customers = await db.PageAsync(db.Entity<Customer>().OrderBy(c => c.Name), page, take: 20, token: token);"
+    },
+    {
+      "key": "offset",
+      "code": "var query = db.Entity<Customer>().OrderBy(\"Name\", SortType.Ascending);\n\nvar result = await db.PageAsync(query, page, take: 20, count: true, token);",
+      "topic": "paging"
+    },
+    {
+      "key": "page-numbers",
+      "code": "var counted = new PageInfo(page: 3, take: 10, total: 47);\nvar uncounted = new PageInfo(page: 3, take: 10, shown: 10, hasMore: true);",
+      "topic": "paging",
+      "output": "21-30 of 47, pages 5, more True\n21-30, total unknown, more True"
+    },
+    {
+      "key": "no-count",
+      "code": "var result = await db.PageAsync(db.Entity<Customer>().OrderBy(c => c.Id), page, take: 20, count: false, token);",
+      "topic": "paging"
+    },
+    {
+      "key": "keyset",
+      "code": "(DateTimeOffset, int)? after = PageCursor.TryDecode<DateTimeOffset, int>(cursor, out var date, out var id) ? (date, id) : null;\n\nvar page = await db.PageAfterAsync(db.Entity<Invoice>(), i => i.IssuedAt, i => i.Id, after, take: 50, token);",
+      "topic": "paging"
+    },
+    {
+      "key": "cursor",
+      "code": "var cursor = PageCursor.Encode(new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero), 42);\nvar ok = PageCursor.TryDecode<DateTimeOffset, int>(cursor, out var date, out var id);",
+      "topic": "paging",
+      "output": "True\n2026-03-01\n42\nFalse"
+    },
+    {
+      "key": "stream",
+      "code": "var count = 0;\n\nawait foreach (var invoice in db.StreamAsync(db.Entity<Invoice>(), i => i.Id, batch: 5000, progress, token))\n    count++;",
+      "topic": "paging"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSEFCore(options => options.AppCode = \"shop\");\nservices.AddOSDbContext<ShopDb>((_, builder) => builder.UseSqlite(connectionString));",
+      "topic": "start"
+    },
+    {
+      "key": "first-save",
+      "code": "using var demo = Demo.Open();\n\ndemo.Db.Add(new Customer { Name = \"Ali\" });\nvar result = demo.Db.Save();",
+      "topic": "start",
+      "output": "Ok\ndata.saved\nSaveCounts { Added = 1, Modified = 0, Deleted = 0, Total = 1 }\nSaved: 1 added, 0 changed, 0 deleted."
+    },
+    {
+      "key": "first-error",
+      "code": "using var demo = Demo.Open();\ndemo.Db.Add(new Customer { Name = \"Ali\" });\ndemo.Db.Save();\n\ndemo.Db.Add(new Customer { Name = \"Ali\" });\nvar result = demo.Db.Save();",
+      "topic": "start",
+      "output": "False\nConflict\ndata.duplicate\nTrue"
+    },
+    {
+      "key": "first-page",
+      "code": "var query = db.Entity<Customer>().OrderBy(\"Name\", SortType.Ascending);\n\nvar result = await db.PageAsync(query, page, take: 20, token: token);",
+      "topic": "start"
+    },
+    {
+      "key": "order",
+      "code": "var result = await db.TranAsync(async ct =>\n{\n    var customer = await db.ForUpdate<Customer>().SingleAsync(c => c.Id == customerId, ct);\n\n    if (customer.IsDeleted)\n        return OSResult.Invalid(code: \"customer.closed\");\n\n    db.Add(new Invoice { CustomerId = customerId, Total = total, IssuedAt = DateTimeOffset.UtcNow });\n    return await db.SaveAsync(ct);\n}, token: token);",
+      "topic": "transactions"
+    },
+    {
+      "key": "nested",
+      "code": "var result = await db.TranAsync(async ct =>\n{\n    db.Add(new Customer { Name = \"Ali\" });\n    await db.SaveAsync(ct);\n\n    var invoice = await db.TranAsync(async inner =>\n    {\n        db.Add(new Invoice { CustomerId = 1, Total = 10 });\n        return await db.SaveAsync(inner);\n    }, token: ct);\n\n    return invoice;\n}, token: token);",
+      "topic": "transactions"
+    },
+    {
+      "key": "options",
+      "code": "var options = new TranOptions\n{\n    Name = \"monthly-close\",\n    Isolation = System.Data.IsolationLevel.Serializable,\n    Timeout = TimeSpan.FromSeconds(30),\n    Verify = ct => db.Entity<AuditRecord>().AnyAsync(a => a.EntityKey == requestId.ToString(), ct)\n};\n\nvar result = await db.TranAsync(async ct => await db.SaveAsync(ct), options, token);",
+      "topic": "transactions"
+    },
+    {
+      "key": "after-commit",
+      "code": "var result = await db.TranAsync(async ct => await db.SaveAsync(ct), token: token);\n\nif (result.Succeeded)\n    await sendEmail();",
+      "topic": "transactions"
+    }
+  ]
+}

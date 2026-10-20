@@ -1,0 +1,340 @@
+@layer lorea.parts {
+    .package-page {
+        max-inline-size: 52rem;
+        padding-block-end: clamp(2rem, 4vw, 3rem);
+    }
+
+    .package-page:has(.package-layout) {
+        max-inline-size: 78rem;
+        margin-inline: auto;
+    }
+
+    .package-layout {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .package-main,
+    .package-aside {
+        display: contents;
+    }
+
+    @media (min-width: 64rem) {
+        .package-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+            align-items: start;
+            gap: clamp(2rem, 3vw, 3rem);
+        }
+
+        .package-main,
+        .package-aside {
+            display: block;
+            min-inline-size: 0;
+        }
+
+        .package-aside {
+            position: sticky;
+            inset-block-start: 4.5rem;
+        }
+
+        .topic-layout {
+            grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+        }
+
+        .topic-layout .topic-aside {
+            order: -1;
+            display: flex;
+            flex-direction: column;
+            max-block-size: calc(100dvh - 5.5rem);
+        }
+
+        .topic-aside .topic-nav {
+            min-block-size: 0;
+            overflow-y: auto;
+        }
+
+        .topic-aside .topic-links {
+            flex: none;
+            padding-block-start: 1rem;
+        }
+    }
+
+    .topic-toc {
+        display: none;
+    }
+
+    @media (min-width: 80rem) {
+        .topic-layout {
+            grid-template-columns: 14rem minmax(0, 1fr) 13rem;
+        }
+
+        .topic-toc {
+            display: block;
+            position: sticky;
+            inset-block-start: 4.5rem;
+            padding-block-start: 1.75rem;
+        }
+
+        .topic-toc h2 {
+            margin: 0 0 0.6rem;
+            color: var(--lorea-muted);
+            font-size: 0.8rem;
+            font-weight: 650;
+        }
+    }
+
+    .package-page h2[id] {
+        scroll-margin-block-start: 4.5rem;
+    }
+
+    .package-crumbs {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--lorea-ink);
+        font-size: 0.88rem;
+    }
+
+    .package-crumbs a {
+        color: var(--lorea-link);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .package-crumbs a:hover {
+        text-decoration: underline;
+    }
+
+    .package-head {
+        --os-head-gap: 0.9rem;
+        --os-head-space: 0;
+        --os-head-size: clamp(1.75rem, 3vw, 2.25rem);
+        --os-head-subtitle-measure: 44rem;
+        --os-head-subtitle-size: 1.02rem;
+        --os-head-note-size: 0.85rem;
+        --lorea-field-size: 2.9rem;
+        padding-block: 0.75rem 1.25rem;
+        border-block-end: 1px solid var(--lorea-rule);
+    }
+
+    .package-head .os-head-titles {
+        gap: 0.5rem;
+    }
+
+    .package-head .os-head-title {
+        color: var(--lorea-heading);
+        line-height: 1.25;
+    }
+
+    .package-head :is(.os-head-subtitle, .os-head-label, .os-head-note) {
+        color: var(--lorea-muted);
+        opacity: 1;
+    }
+
+    .package-head .os-head-subtitle {
+        color: var(--lorea-ink);
+        line-height: 1.85;
+        text-wrap: pretty;
+    }
+
+    .package-head .os-head-value,
+    .package-head code {
+        color: var(--lorea-heading);
+    }
+
+    .package-head .os-head-details {
+        align-items: flex-start;
+        gap: 0.75rem 2.5rem;
+    }
+
+    .package-head .os-head-value {
+        display: block;
+        min-block-size: 0;
+    }
+
+    .package-head .os-head-label {
+        display: block;
+        margin-block-end: 0.2rem;
+    }
+
+    .package-section {
+        padding-block: clamp(1.25rem, 2.5vw, 1.75rem) 0;
+    }
+
+    .package-section h2 {
+        margin: 0 0 0.85rem;
+        color: var(--lorea-heading);
+        font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+        font-weight: 650;
+        line-height: 1.4;
+    }
+
+    .package-note {
+        margin: 0.6rem 0 0;
+        color: var(--lorea-muted);
+        font-size: 0.85rem;
+        line-height: 1.8;
+    }
+
+    .install-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.2rem 0.2rem 0.2rem 0.85rem;
+        border: 1px solid var(--lorea-rule);
+        background: var(--lorea-chrome);
+    }
+
+    .install-box code {
+        overflow-x: auto;
+        color: var(--lorea-heading);
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .package-gives {
+        display: grid;
+        gap: 0.5rem;
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        line-height: 1.8;
+    }
+
+    .package-gives li::marker {
+        color: var(--lorea-accent);
+    }
+
+    .sample-title {
+        margin: 1.25rem 0 0.6rem;
+        color: var(--lorea-ink);
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .package-used {
+        display: grid;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .package-used li {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.6rem;
+    }
+
+    .package-used a {
+        color: var(--lorea-link);
+    }
+
+    .package-used a code {
+        color: inherit;
+    }
+
+    .package-used span {
+        color: var(--lorea-muted);
+        font-size: 0.88rem;
+    }
+
+    .package-section > p {
+        max-inline-size: 44rem;
+        margin: 0 0 1rem;
+        color: var(--lorea-muted);
+        line-height: 1.85;
+    }
+
+    .package-section[id] {
+        scroll-margin-block-start: 4.5rem;
+    }
+
+    .package-toc {
+        display: grid;
+        gap: 0.15rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .package-toc a {
+        display: block;
+        padding: 0.3rem 0.6rem;
+        border-inline-start: 2px solid var(--lorea-rule);
+        color: var(--lorea-ink);
+        font-size: 0.95rem;
+        text-decoration: none;
+    }
+
+    .package-toc a:hover {
+        border-color: var(--lorea-accent);
+        background: var(--lorea-hover);
+        color: var(--lorea-heading);
+    }
+
+    .api-types {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .api-types a {
+        padding: 0.1rem 0.45rem;
+        border: 1px solid var(--lorea-rule);
+        color: var(--lorea-link);
+        font-size: 0.82rem;
+        text-decoration: none;
+    }
+
+    .api-types a:hover {
+        border-color: var(--lorea-accent);
+    }
+
+    .api-types code {
+        direction: ltr;
+        unicode-bidi: isolate;
+    }
+
+    .topic-steps {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-block-start: 2rem;
+        padding-block-start: 1.25rem;
+        border-block-start: 1px solid var(--lorea-rule);
+    }
+
+    .topic-step {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.7rem 0.9rem;
+        border: 1px solid var(--lorea-rule);
+        color: var(--lorea-link);
+        text-decoration: none;
+    }
+
+    .topic-step:hover {
+        border-color: var(--lorea-accent);
+        background: var(--lorea-hover);
+    }
+
+    .topic-step span {
+        color: var(--lorea-muted);
+        font-size: 0.78rem;
+    }
+
+    .topic-step-next {
+        grid-column: 2;
+        text-align: end;
+    }
+
+    .topic-links {
+        display: grid;
+        justify-items: start;
+        gap: 0.6rem;
+    }
+}

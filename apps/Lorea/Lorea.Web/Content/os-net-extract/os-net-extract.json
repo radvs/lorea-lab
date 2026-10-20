@@ -1,0 +1,61 @@
+{
+  "slug": "os-net-extract",
+  "name": "OS.Net.Extract",
+  "version": "1.0.0",
+  "group": "net",
+  "uses": [
+    "os-core",
+    "os-io",
+    "os-net",
+    "os-net-http"
+  ],
+  "topics": [
+    {
+      "slug": "providers",
+      "namespaces": [
+        "OS.Net.Extract"
+      ],
+      "types": [
+        "ExtractConfig",
+        "ExtractProvider",
+        "ExtractField",
+        "ExtractFormat"
+      ]
+    },
+    {
+      "slug": "html",
+      "namespaces": [
+        "OS.Net.Extract"
+      ],
+      "types": [
+        "ExtractEx",
+        "ExtractValue",
+        "IExtractDoc",
+        "IExtractEngine"
+      ]
+    },
+    {
+      "slug": "json",
+      "namespaces": [
+        "OS.Net.Extract"
+      ],
+      "types": []
+    },
+    {
+      "slug": "service",
+      "namespaces": [
+        "OS.Net.Extract"
+      ],
+      "types": [
+        "IExtractFactory",
+        "ExtractFactory",
+        "IExtractService",
+        "ExtractService",
+        "ExtractRequest",
+        "ExtractResult",
+        "ExtractState",
+        "ExtractCodes"
+      ]
+    }
+  ]
+}

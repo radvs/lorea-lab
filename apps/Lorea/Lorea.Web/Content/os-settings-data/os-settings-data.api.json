@@ -1,0 +1,280 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Settings.Data",
+      "key": "SettingKeyEntry",
+      "signature": "sealed class SettingKeyEntry",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "SettingAccess Access { get; set; }"
+          ]
+        },
+        {
+          "name": "IsActive",
+          "signatures": [
+            "bool IsActive { get; set; }"
+          ]
+        },
+        {
+          "name": "FirstSeenDate",
+          "signatures": [
+            "DateTimeOffset FirstSeenDate { get; set; }"
+          ]
+        },
+        {
+          "name": "SyncDate",
+          "signatures": [
+            "DateTimeOffset SyncDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings.Data",
+      "key": "SettingValueEntry",
+      "signature": "sealed class SettingValueEntry : StampedEntity",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeKind",
+          "signatures": [
+            "byte ScopeKind { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeId",
+          "signatures": [
+            "int ScopeId { get; set; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "byte[]? Secret { get; set; }"
+          ]
+        },
+        {
+          "name": "SecretDate",
+          "signatures": [
+            "DateTimeOffset? SecretDate { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings.Data",
+      "key": "SettingsDataEx",
+      "signature": "static class SettingsDataEx",
+      "members": [
+        {
+          "name": "AddOSSettingsData",
+          "signatures": [
+            "static IServiceCollection AddOSSettingsData(this IServiceCollection services, Action<SettingsDataOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings.Data",
+      "key": "SettingsDataOptions",
+      "signature": "sealed class SettingsDataOptions",
+      "members": [
+        {
+          "name": "ValuesTable",
+          "signatures": [
+            "string ValuesTable { get; set; }"
+          ]
+        },
+        {
+          "name": "KeysTable",
+          "signatures": [
+            "string KeysTable { get; set; }"
+          ]
+        },
+        {
+          "name": "Schema",
+          "signatures": [
+            "string? Schema { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings.Data",
+      "key": "SettingsDb",
+      "signature": "sealed class SettingsDb : OSDbContext",
+      "members": [
+        {
+          "name": "SettingsDb",
+          "signatures": [
+            "SettingsDb(DbContextOptions options)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "defaults",
+      "code": "var options = new SettingsDataOptions();",
+      "topic": "options",
+      "output": "SettingValues\nSettingKeys\n(none)"
+    },
+    {
+      "key": "bad-table",
+      "code": "try\n{\n    new ServiceCollection().AddOSSettingsData(o => o.ValuesTable = \"settings; drop\");\n    return \"accepted\";\n}\ncatch (OSException error)\n{\n    return error.Message;\n}",
+      "topic": "options",
+      "output": "ValuesTable must start with a letter and use only letters, digits and '_' (at most 128)."
+    },
+    {
+      "key": "same-table",
+      "code": "try\n{\n    new ServiceCollection().AddOSSettingsData(o => o.KeysTable = o.ValuesTable);\n    return \"accepted\";\n}\ncatch (OSException error)\n{\n    return error.Message;\n}",
+      "topic": "options",
+      "output": "ValuesTable and KeysTable must be different tables."
+    },
+    {
+      "key": "own-names",
+      "code": "services.AddOSSettingsData(o =>\n{\n    o.ValuesTable = \"Cfg_Values\";\n    o.KeysTable = \"Cfg_Keys\";\n    o.Schema = \"cfg\";\n});",
+      "topic": "options"
+    },
+    {
+      "key": "quick",
+      "code": "services.AddOSSettings(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<SettingsDb>(o => o.Path = \"data/settings.db\");\nservices.AddOSSettingsData();"
+    },
+    {
+      "key": "encrypted",
+      "code": "services.AddOSSettings(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<SettingsDb>(o =>\n{\n    o.Path = \"data/settings.db\";\n    o.Key = keyFromVault;\n});\nservices.AddOSSettingsData();"
+    },
+    {
+      "key": "update",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var first = await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n    var second = await demo.SaveOneAsync(\"shop.currency\", \"USD\", first.Version);\n\n    return [second.Value, $\"new version: {second.Version != first.Version}\"];\n});",
+      "topic": "saving",
+      "output": "USD\nnew version: True"
+    },
+    {
+      "key": "conflict",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var first = await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n    await demo.SaveOneAsync(\"shop.currency\", \"USD\", first.Version);\n\n    var stale = await demo.Source.SaveAsync(Demo.App, Scope.App, [Demo.Write(\"shop.currency\", \"GBP\", first.Version)]);\n    var rows = await demo.Source.LoadAsync(Demo.App, Scope.App);\n\n    return [stale.Status, stale.Code!, $\"stored: {rows.Single().Value}\"];\n});",
+      "topic": "saving",
+      "output": "Conflict\nsettings.errors.conflict\nstored: USD"
+    },
+    {
+      "key": "missing-version",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n\n    var result = await demo.Source.SaveAsync(Demo.App, Scope.App, [Demo.Write(\"shop.currency\", \"USD\")]);\n\n    return [result.Status, result.Errors!.Single().Field, result.Errors!.Single().Code!];\n});",
+      "topic": "saving",
+      "output": "Invalid\nshop.currency\nsettings.errors.version"
+    },
+    {
+      "key": "reset",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var row = await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n\n    var result = await demo.Source.SaveAsync(Demo.App, Scope.App,\n        [new SettingWrite { Key = \"shop.currency\", Reset = true, Version = row.Version }]);\n    var left = await demo.Source.LoadAsync(Demo.App, Scope.App);\n\n    return [result.Status, $\"rows left: {left.Count}\"];\n});",
+      "topic": "saving",
+      "output": "Ok\nrows left: 0"
+    },
+    {
+      "key": "secret",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    byte[] sealedBytes = [7, 1, 9, 4, 2];\n\n    await demo.Source.SaveAsync(Demo.App, Scope.App, [new SettingWrite { Key = \"shop.api-token\", Secret = sealedBytes }]);\n    var row = (await demo.Source.LoadAsync(Demo.App, Scope.App)).Single();\n\n    return [$\"value: '{row.Value}'\", $\"secret bytes: {string.Join(\",\", row.Secret!)}\"];\n});",
+      "topic": "saving",
+      "output": "value: ''\nsecret bytes: 7,1,9,4,2"
+    },
+    {
+      "key": "batch",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n\n    var result = await demo.Source.SaveAsync(Demo.App, Scope.App,\n        [Demo.Write(\"shop.title\", \"Corner shop\"), Demo.Write(\"shop.currency\", \"USD\", \"00000000000000000000000000000000\")]);\n    var rows = await demo.Source.LoadAsync(Demo.App, Scope.App);\n\n    return [result.Status, $\"rows stored: {string.Join(\", \", rows.Select(r => r.Key))}\"];\n});",
+      "topic": "saving",
+      "output": "Conflict\nrows stored: shop.currency"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSSettings(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<SettingsDb>(o => o.Path = \"data/settings.db\");\nservices.AddOSSettingsData();",
+      "topic": "start"
+    },
+    {
+      "key": "create-table",
+      "code": "await using var scope = services.CreateAsyncScope();\nvar db = scope.ServiceProvider.GetRequiredService<SettingsDb>();\n\nawait db.Database.EnsureCreatedAsync(token);",
+      "topic": "start"
+    },
+    {
+      "key": "round-trip",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.SaveOneAsync(\"shop.title\", \"Corner shop\");\n\n    var rows = await demo.Source.LoadAsync(Demo.App, Scope.App);\n    var row = rows.Single();\n\n    return [row.Key, row.Value, $\"version has {row.Version.Length} characters\", $\"{row.ModifiedDate:yyyy-MM-dd HH:mm}\"];\n});",
+      "topic": "start",
+      "output": "shop.title\nCorner shop\nversion has 32 characters\n2026-03-01 09:30"
+    },
+    {
+      "key": "rows",
+      "code": "Demo.Run(async demo =>\n{\n    await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n    await demo.SaveOneAsync(\"shop.currency\", \"USD\", scope: Demo.Tenant);\n\n    var rows = await demo.UseDbAsync(db => db.Entity<SettingValueEntry>().OrderBy(e => e.ScopeKind).ToListAsync());\n\n    return rows.Select(e => $\"{e.AppCode} scope {e.ScopeKind}:{e.ScopeId} {e.Key} = {e.Value}\").ToArray();\n});",
+      "topic": "storage",
+      "output": "shop scope 0:0 shop.currency = EUR\nshop scope 1:5 shop.currency = USD"
+    },
+    {
+      "key": "stamps",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    var first = await demo.SaveOneAsync(\"shop.currency\", \"EUR\");\n    demo.Clock.Advance(TimeSpan.FromHours(2));\n    await demo.SaveOneAsync(\"shop.currency\", \"USD\", first.Version);\n\n    var entry = await demo.UseDbAsync(db => db.Entity<SettingValueEntry>().SingleAsync());\n\n    return [$\"created {entry.CreateDate:HH:mm}\", $\"modified {entry.ModifiedDate:HH:mm}\"];\n});",
+      "topic": "storage",
+      "output": "created 09:30\nmodified 11:30"
+    },
+    {
+      "key": "keys",
+      "code": "Demo.Run(async demo =>\n{\n    await demo.Source.SyncKeysAsync(Demo.App,\n    [\n        new SettingKeyRow { Key = \"shop.currency\", Kind = \"choice\", Access = SettingAccess.Public },\n        new SettingKeyRow { Key = \"shop.api-token\", Kind = \"text\", Access = SettingAccess.Secret }\n    ]);\n\n    var keys = await demo.UseDbAsync(db => db.Entity<SettingKeyEntry>().OrderBy(e => e.Key).ToListAsync());\n\n    return keys.Select(e => $\"{e.Key} ({e.Kind}, {e.Access}, active {e.IsActive})\").ToArray();\n});",
+      "topic": "storage",
+      "output": "shop.api-token (text, Secret, active True)\nshop.currency (choice, Public, active True)"
+    },
+    {
+      "key": "changes",
+      "code": "Demo.Run(async demo =>\n{\n    await demo.Source.SyncKeysAsync(Demo.App, [Key(\"shop.title\", \"text\"), Key(\"shop.page-size\", \"integer\")]);\n    demo.Clock.Advance(TimeSpan.FromDays(1));\n    await demo.Source.SyncKeysAsync(Demo.App, [Key(\"shop.title\", \"text\"), Key(\"shop.logo\", \"url\")]);\n\n    var keys = await demo.UseDbAsync(db => db.Entity<SettingKeyEntry>().OrderBy(e => e.Key).ToListAsync());\n\n    return keys.Select(e => $\"{e.Key}: active {e.IsActive}, first seen {e.FirstSeenDate:MM-dd}, synced {e.SyncDate:MM-dd}\").ToArray();\n});",
+      "topic": "sync",
+      "output": "shop.logo: active True, first seen 03-02, synced 03-02\nshop.page-size: active False, first seen 03-01, synced 03-02\nshop.title: active True, first seen 03-01, synced 03-02"
+    },
+    {
+      "key": "return",
+      "code": "Demo.Run<string[]>(async demo =>\n{\n    await demo.Source.SyncKeysAsync(Demo.App, [Key(\"shop.logo\", \"url\")]);\n    await demo.Source.SyncKeysAsync(Demo.App, []);\n    var gone = await demo.UseDbAsync(db => db.Entity<SettingKeyEntry>().SingleAsync());\n\n    await demo.Source.SyncKeysAsync(Demo.App, [Key(\"shop.logo\", \"url\")]);\n    var back = await demo.UseDbAsync(db => db.Entity<SettingKeyEntry>().SingleAsync());\n\n    return [$\"after removal: active {gone.IsActive}\", $\"after it returns: active {back.IsActive}\"];\n});",
+      "topic": "sync",
+      "output": "after removal: active False\nafter it returns: active True"
+    },
+    {
+      "key": "apps",
+      "code": "Demo.Run(async demo =>\n{\n    await demo.Source.SyncKeysAsync(\"shop\", [Key(\"shop.title\", \"text\")]);\n    await demo.Source.SyncKeysAsync(\"blog\", []);\n\n    var keys = await demo.UseDbAsync(db => db.Entity<SettingKeyEntry>().ToListAsync());\n\n    return keys.Select(e => $\"{e.AppCode}: {e.Key} active {e.IsActive}\").ToArray();\n});",
+      "topic": "sync",
+      "output": "shop: shop.title active True"
+    }
+  ]
+}

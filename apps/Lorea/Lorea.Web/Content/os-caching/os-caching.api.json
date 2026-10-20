@@ -1,0 +1,98 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Caching",
+      "key": "CacheEx",
+      "signature": "static class CacheEx",
+      "members": [
+        {
+          "name": "GetOrCreateAsync",
+          "signatures": [
+            "static ValueTask<T?> GetOrCreateAsync<T>(this HybridCache cache, string key, Func<CancellationToken, ValueTask<T?>> factory, TimeSpan expiration, IEnumerable<string>? tags = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SetAsync",
+          "signatures": [
+            "static ValueTask SetAsync<T>(this HybridCache cache, string key, T? value, TimeSpan expiration, IEnumerable<string>? tags = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "AddOSCaching",
+          "signatures": [
+            "static IServiceCollection AddOSCaching(this IServiceCollection services, Action<CacheOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Caching",
+      "key": "CacheOptions",
+      "signature": "sealed class CacheOptions",
+      "members": [
+        {
+          "name": "Expiration",
+          "signatures": [
+            "TimeSpan Expiration { get; set; }"
+          ]
+        },
+        {
+          "name": "LocalExpiration",
+          "signatures": [
+            "TimeSpan? LocalExpiration { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxPayloadBytes",
+          "signatures": [
+            "long MaxPayloadBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxKeyLength",
+          "signatures": [
+            "int MaxKeyLength { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "quick",
+      "code": "var rate = await cache.GetOrCreateAsync(\"rates:usd\", loadRate, TimeSpan.FromMinutes(5), token: token);"
+    },
+    {
+      "key": "defaults",
+      "code": "using var provider = new ServiceCollection().AddOSCaching().BuildServiceProvider();\n\nvar options = provider.GetRequiredService<IOptions<HybridCacheOptions>>().Value;",
+      "topic": "setup",
+      "output": "00:10:00\n1048576\n1024"
+    },
+    {
+      "key": "configure",
+      "code": "using var provider = new ServiceCollection()\n    .AddOSCaching(o =>\n    {\n        o.Expiration = TimeSpan.FromHours(1);\n        o.LocalExpiration = TimeSpan.FromMinutes(5);\n        o.MaxPayloadBytes = 256 * 1024;\n    })\n    .BuildServiceProvider();\n\nvar entry = provider.GetRequiredService<IOptions<HybridCacheOptions>>().Value.DefaultEntryOptions;",
+      "topic": "setup",
+      "output": "01:00:00\n00:05:00"
+    },
+    {
+      "key": "get-or-create",
+      "code": "var product = await cache.GetOrCreateAsync($\"catalog:product:{id}\", t => store.LoadAsync(id, t), TimeSpan.FromMinutes(10), token: token);",
+      "topic": "usage"
+    },
+    {
+      "key": "set",
+      "code": "await cache.SetAsync($\"catalog:product:{product.Id}\", product, TimeSpan.FromMinutes(10), token: token);",
+      "topic": "usage"
+    },
+    {
+      "key": "remove",
+      "code": "await store.SaveAsync(product, token);\nawait cache.RemoveAsync($\"catalog:product:{product.Id}\", token);",
+      "topic": "usage"
+    },
+    {
+      "key": "tags",
+      "code": "await cache.GetOrCreateAsync($\"catalog:product:{id}\", t => store.LoadAsync(id, t), TimeSpan.FromMinutes(10), [\"catalog\"], token);\n\nawait cache.RemoveByTagAsync(\"catalog\", token);",
+      "topic": "usage"
+    }
+  ]
+}

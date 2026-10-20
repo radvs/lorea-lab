@@ -1,0 +1,64 @@
+name: Preview
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Publish Blazor WebAssembly
+        run: dotnet publish apps/Lorea/Lorea.Web -c Release -o publish
+
+      - name: Prepare Pages files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f publish/wwwroot/index.html
+          perl -0pi -e 's{<base\s+href="[^"]*"\s*/?>}{<base href="/lorea-lab/" />} or die "no base href\n"' publish/wwwroot/index.html
+          cp publish/wwwroot/index.html publish/wwwroot/404.html
+          routes=$(for dir in apps/Lorea/Lorea.Web/Content/*/; do
+            slug=$(basename "$dir")
+            jq -r '"packages/\(.slug)", (.slug as $s | .topics[] | "packages/\($s)/\(.slug)")' "$dir$slug.json"
+          done)
+          for route in $routes; do
+            mkdir -p "publish/wwwroot/$route"
+            cp publish/wwwroot/index.html "publish/wwwroot/$route/index.html"
+          done
+          touch publish/wwwroot/.nojekyll
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish/wwwroot
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

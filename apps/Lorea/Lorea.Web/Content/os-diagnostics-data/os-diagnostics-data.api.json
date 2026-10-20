@@ -1,0 +1,281 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Diagnostics.Data",
+      "key": "DiagnosticsDataEx",
+      "signature": "static class DiagnosticsDataEx",
+      "members": [
+        {
+          "name": "AddOSDiagnosticsData",
+          "signatures": [
+            "static IServiceCollection AddOSDiagnosticsData(this IServiceCollection services, Action<DiagnosticsDataOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics.Data",
+      "key": "DiagnosticsDataOptions",
+      "signature": "sealed class DiagnosticsDataOptions",
+      "members": [
+        {
+          "name": "RetentionDays",
+          "signatures": [
+            "int RetentionDays { get; set; }"
+          ]
+        },
+        {
+          "name": "PurgeEvery",
+          "signatures": [
+            "TimeSpan PurgeEvery { get; set; }"
+          ]
+        },
+        {
+          "name": "ScanLimit",
+          "signatures": [
+            "int ScanLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxIssues",
+          "signatures": [
+            "int MaxIssues { get; set; }"
+          ]
+        },
+        {
+          "name": "SampleLimit",
+          "signatures": [
+            "int SampleLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "NewHours",
+          "signatures": [
+            "int NewHours { get; set; }"
+          ]
+        },
+        {
+          "name": "Table",
+          "signatures": [
+            "string Table { get; set; }"
+          ]
+        },
+        {
+          "name": "ScrubPatterns",
+          "signatures": [
+            "IList<Regex> ScrubPatterns { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics.Data",
+      "key": "DiagnosticsDb",
+      "signature": "sealed class DiagnosticsDb : OSDbContext",
+      "members": [
+        {
+          "name": "DiagnosticsDb",
+          "signatures": [
+            "DiagnosticsDb(DbContextOptions options)"
+          ]
+        },
+        {
+          "name": "PurgeErrorsAsync",
+          "signatures": [
+            "Task<OSResult<int>> PurgeErrorsAsync(DateTimeOffset before, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Diagnostics.Data",
+      "key": "ErrorEntry",
+      "signature": "sealed class ErrorEntry",
+      "members": [
+        {
+          "name": "Id",
+          "signatures": [
+            "long Id { get; set; }"
+          ]
+        },
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "string TraceId { get; set; }"
+          ]
+        },
+        {
+          "name": "ErrorType",
+          "signatures": [
+            "string ErrorType { get; set; }"
+          ]
+        },
+        {
+          "name": "Fingerprint",
+          "signatures": [
+            "string Fingerprint { get; set; }"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "string? Source { get; set; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; set; }"
+          ]
+        },
+        {
+          "name": "StackTrace",
+          "signatures": [
+            "string? StackTrace { get; set; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "string? Method { get; set; }"
+          ]
+        },
+        {
+          "name": "Route",
+          "signatures": [
+            "string? Route { get; set; }"
+          ]
+        },
+        {
+          "name": "StatusCode",
+          "signatures": [
+            "int StatusCode { get; set; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int? UserId { get; set; }"
+          ]
+        },
+        {
+          "name": "Suppressed",
+          "signatures": [
+            "int Suppressed { get; set; }"
+          ]
+        },
+        {
+          "name": "OccurredAt",
+          "signatures": [
+            "DateTimeOffset OccurredAt { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "issues",
+      "code": "Demo.Run<string[]>(async demo =>\n{\n    await demo.Store.WriteAsync(\n    [\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddDays(-3), user: 1),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddHours(-5), user: 2),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddMinutes(-10), user: 1),\n        Demo.Error(\"ffee001122334455\", Demo.Now.AddHours(-1), \"Payment gateway timed out\")\n    ]);\n\n    var result = await demo.Reader.IssuesAsync(new ErrorFilter { Hours = 24 });\n\n    return [.. result.Data!.Select(i => $\"{i.Fingerprint}: {i.Count} times, {i.Users} users, new: {i.IsNew}, last {i.LastDate:HH:mm}\")];\n});",
+      "topic": "inbox",
+      "output": "a1b2c3d4e5f60718: 2 times, 2 users, new: False, last 09:20\nffee001122334455: 1 times, 0 users, new: True, last 08:30"
+    },
+    {
+      "key": "detail",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.Store.WriteAsync(\n    [\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddHours(-30), trace: \"00-old\"),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddHours(-2), trace: \"00-mid\"),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddMinutes(-5), trace: \"00-new\")\n    ]);\n\n    var result = await demo.Reader.GetIssueAsync(\"a1b2c3d4e5f60718\", null, trace: \"00-old\", withStack: false);\n    var detail = result.Data!;\n\n    return [detail.Message!, detail.StackHidden, detail.Found!, string.Join(\", \", detail.Samples.Select(s => s.TraceId))];\n});",
+      "topic": "inbox",
+      "output": "Order total is negative\nTrue\n00-old\n00-new, 00-mid, 00-old"
+    },
+    {
+      "key": "find-and-summary",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.Store.WriteAsync(\n    [\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddMinutes(-20), trace: \"00-4bf92f3577b34da6\"),\n        Demo.Error(\"ffee001122334455\", Demo.Now.AddMinutes(-5), \"Payment gateway timed out\")\n    ]);\n\n    var found = await demo.Reader.FindAsync(\" 00-4bf92f3577b34da6 \");\n    var summary = await demo.Reader.SummaryAsync(Demo.Now.AddDays(-1));\n    var types = await demo.Reader.TypesAsync();\n\n    return [found.Data!.Fingerprint, $\"{summary.Data!.Count} errors, {summary.Data.Issues} issues, top {summary.Data.TopType}\", types.Data!];\n});",
+      "topic": "inbox",
+      "output": "a1b2c3d4e5f60718\n2 errors, 2 issues, top System.InvalidOperationException\nSystem.InvalidOperationException"
+    },
+    {
+      "key": "admin-page",
+      "code": "var result = await reader.GetIssueAsync(fingerprint, new ErrorFilter { Hours = 72 }, trace, withStack: isAdmin, token);",
+      "topic": "inbox"
+    },
+    {
+      "key": "defaults",
+      "code": "var o = new DiagnosticsDataOptions();",
+      "topic": "options",
+      "output": "RetentionDays = 30, PurgeEvery = 1.00:00:00\nScanLimit = 5000, MaxIssues = 100, SampleLimit = 20, NewHours = 24\nTable = Errors, ScrubPatterns = 0"
+    },
+    {
+      "key": "bad-table",
+      "code": "try\n{\n    new ServiceCollection().AddOSDiagnosticsData(o => o.Table = \"Errors; DROP TABLE Users\");\n    return \"accepted\";\n}\ncatch (OSException ex)\n{\n    return ex.Message;\n}",
+      "topic": "options",
+      "output": "Table must start with a letter and use only letters, digits and '_' (at most 128)."
+    },
+    {
+      "key": "busy-app",
+      "code": "services.AddOSDiagnosticsData(o =>\n{\n    o.ScanLimit = 20000;\n    o.MaxIssues = 200;\n    o.SampleLimit = 50;\n    o.NewHours = 48;\n    o.Table = \"AppErrors\";\n});",
+      "topic": "options"
+    },
+    {
+      "key": "quick",
+      "code": "services.AddOSDiagnostics(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<DiagnosticsDb>(o => o.Path = \"data/errors.db\");\nservices.AddOSDiagnosticsData();"
+    },
+    {
+      "key": "encrypted",
+      "code": "services.AddOSDiagnostics(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<DiagnosticsDb>(o =>\n{\n    o.Path = \"data/errors.db\";\n    o.Key = keyFromVault;\n});\nservices.AddOSDiagnosticsData(o => o.RetentionDays = 14);"
+    },
+    {
+      "key": "scrubbed",
+      "code": "Demo.Run(async demo =>\n{\n    var message = \"Login failed for sara@example.com, Password=hunter2; card 6037-9912-3456-7893, code 0012345679\";\n    await demo.Store.WriteAsync([Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now, message)]);\n\n    var row = await demo.UseDbAsync(db => db.Entity<ErrorEntry>().SingleAsync());\n\n    return row.Message;\n});",
+      "topic": "privacy",
+      "output": "Login failed for ***, Password=***; card ***, code ***"
+    },
+    {
+      "key": "left-alone",
+      "code": "Demo.Run<string?[]>(async demo =>\n{\n    await demo.Store.WriteAsync(\n    [\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now, \"Order 1234567890 failed at line 42\", trace: \"t-1\"),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now, \"Token expired at 1760000000\", trace: \"t-2\")\n    ]);\n\n    var rows = await demo.UseDbAsync(db => db.Entity<ErrorEntry>().OrderBy(e => e.Id).Select(e => e.Message).ToListAsync());\n\n    return [.. rows];\n});",
+      "topic": "privacy",
+      "output": "Order 1234567890 failed at line 42\nToken expired at ***"
+    },
+    {
+      "key": "custom-pattern",
+      "code": "services.AddOSDiagnosticsData(o =>\n    o.ScrubPatterns.Add(new Regex(@\"\\bTENANT-\\d+\\b\", RegexOptions.None, TimeSpan.FromMilliseconds(250))));",
+      "topic": "privacy"
+    },
+    {
+      "key": "purge",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.Store.WriteAsync(\n    [\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddDays(-45)),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddDays(-31)),\n        Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now.AddDays(-2))\n    ]);\n\n    var result = await demo.UseDbAsync(db => db.PurgeErrorsAsync(Demo.Now.AddDays(-30)));\n    var left = await demo.UseDbAsync(db => db.Entity<ErrorEntry>().CountAsync());\n\n    return [result.Code!, result.Data, left];\n});",
+      "topic": "retention",
+      "output": "data.deleted\n2\n1"
+    },
+    {
+      "key": "keep-longer",
+      "code": "services.AddOSDiagnosticsData(o =>\n{\n    o.RetentionDays = 90;\n    o.PurgeEvery = TimeSpan.FromHours(6);\n});",
+      "topic": "retention"
+    },
+    {
+      "key": "keep-forever",
+      "code": "services.AddOSDiagnosticsData(o => o.RetentionDays = 0);",
+      "topic": "retention"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSDiagnostics(o => o.AppCode = \"shop\");\nservices.AddOSSqlite<DiagnosticsDb>(o => o.Path = \"data/errors.db\");\nservices.AddOSDiagnosticsData();",
+      "topic": "start"
+    },
+    {
+      "key": "create-table",
+      "code": "await using var scope = services.CreateAsyncScope();\nvar db = scope.ServiceProvider.GetRequiredService<DiagnosticsDb>();\n\nawait db.Database.EnsureCreatedAsync(token);",
+      "topic": "start"
+    },
+    {
+      "key": "round-trip",
+      "code": "Demo.Run<object[]>(async demo =>\n{\n    await demo.Store.WriteAsync([Demo.Error(\"a1b2c3d4e5f60718\", Demo.Now, user: 7)]);\n\n    var row = await demo.UseDbAsync(db => db.Entity<ErrorEntry>().SingleAsync());\n\n    return [row.Id, row.AppCode, row.Fingerprint, row.ErrorType, $\"{row.Method} {row.Route} {row.StatusCode}\", row.UserId!, $\"{row.OccurredAt:yyyy-MM-dd HH:mm} (offset {row.OccurredAt.Offset})\"];\n});",
+      "topic": "start",
+      "output": "1\nshop\na1b2c3d4e5f60718\nSystem.InvalidOperationException\nPOST /orders 500\n7\n2026-03-01 09:30 (offset 00:00:00)"
+    }
+  ]
+}

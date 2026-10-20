@@ -1,0 +1,971 @@
+{
+  "os-core": {
+    "title": "Foundation",
+    "summary": "The everyday helpers every other package stands on: text, numbers, results, guards, IDs, paging, modules and secrets.",
+    "gives": {
+      "1": "Clean up and convert text, like building a URL slug or reading Persian digits as Latin.",
+      "2": "Return results and errors in one clear shape instead of throwing exceptions everywhere.",
+      "3": "Check inputs, make IDs and page through queries with small, focused helpers."
+    },
+    "sample": {
+      "slug": "Turn a title into a URL slug",
+      "digits": "Read Persian digits as Latin"
+    },
+    "topics": {
+      "text": {
+        "title": "Text",
+        "summary": "Clean, check and convert strings without null checks everywhere.",
+        "points": {
+          "1": {
+            "title": "String chores",
+            "text": "`TextEx` gathers the string chores every app repeats."
+          },
+          "2": {
+            "title": "Null-safe",
+            "text": "Every method accepts null and returns an empty string or false."
+          },
+          "3": {
+            "title": "Chainable",
+            "text": "Nothing throws, so you can chain calls freely."
+          },
+          "4": {
+            "title": "Regex helper",
+            "text": "`RegexEx` builds patterns with a cache and a time limit."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "String chores",
+            "text": "`TextEx` covers trimming, slugs, stripping HTML, casing, joining and safe comparisons."
+          },
+          "2": {
+            "title": "No exceptions",
+            "text": "Every method accepts null. It returns an empty string or false instead of throwing.\n\nSo you can chain calls freely."
+          },
+          "3": {
+            "title": "Regex",
+            "text": "`RegexEx` adds a cached, time-limited way to build patterns.\n\nIt also has a strict email check."
+          }
+        },
+        "sample": {
+          "slug": {
+            "title": "Turn a title into a URL slug",
+            "note": "Accented letters become plain ones, symbols are dropped and spaces become dashes."
+          },
+          "clean": {
+            "title": "Strip HTML and shorten it for a preview",
+            "note": "Each tag becomes a space, so words don't run together. Truncate counts the suffix in the length."
+          },
+          "casing": {
+            "title": "Change the casing and join parts",
+            "note": "Conjoin skips null and empty parts, so no stray separators are left."
+          },
+          "checks": {
+            "title": "Check an email, a yes/no answer and a name",
+            "note": "`ToBoolean` falls back to its default only when it doesn't recognise the answer; \"off\" is a clear no."
+          }
+        },
+        "member": {
+          "TextEx": {
+            "IsNull": "True when the text is null, empty or only spaces. `IsNotNull` is its opposite.",
+            "ToSlug": "Builds a lowercase, URL-friendly slug. Accented letters become plain ones and Persian letters are kept.",
+            "Clean": "Removes symbols and spaces and lowercases the rest, which is handy for building keys.",
+            "CleanTags": "Removes HTML tags and `&nbsp;` and collapses the spaces left behind.",
+            "Truncate": "Cuts the text to a maximum length, suffix included (\"...\" by default).",
+            "ToSingleSpace": "Collapses repeated spaces into one and trims both ends.",
+            "TrimIt": "Trims spaces and the characters =, - and _ from both ends, and can change the case too.",
+            "ToLatinDigits": "Turns Persian and Arabic digits into 0-9 and leaves everything else as it is.",
+            "ToBoolean": "Reads yes/no answers such as true, 1, on or ✓, including common Persian ones; anything else returns the default.",
+            "ToCamelCase": "`ToCamelCase` joins words split by -, _ or spaces; `ToTitleCase` capitalises each word.",
+            "IsContain": "A case-insensitive Contains that returns false for empty input.",
+            "IsEqual": "Case-insensitive equality; empty text never equals anything.",
+            "IsPersian": "True when every letter is in the Arabic script; spaces, digits and punctuation are skipped.",
+            "Escape": "Escape puts a backslash before quotes, backslashes and control characters; Unescape undoes it.",
+            "Conjoin": "Joins values with a separator and skips the empty ones."
+          },
+          "RegexEx": {
+            "IsEmail": "Checks the pattern, then makes sure `MailAddress` reads the address back unchanged.",
+            "Create": "Builds a regex with a 3-second timeout and caches it; returns null for an invalid pattern."
+          }
+        }
+      },
+      "numbers": {
+        "title": "Numbers",
+        "summary": "Read numbers from text safely, round them and check ranges.",
+        "points": {
+          "1": {
+            "title": "No exceptions",
+            "text": "`NumberEx` turns strings and objects into numbers without throwing."
+          },
+          "2": {
+            "title": "Bad input",
+            "text": "Bad input gives 0."
+          },
+          "3": {
+            "title": "Clamped",
+            "text": "A value too large for the target type is clamped instead of overflowing."
+          },
+          "4": {
+            "title": "Digits",
+            "text": "Persian and Arabic digits count as digits when you check text."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Converting",
+            "text": "`NumberEx` turns strings and objects into int, long, decimal or double without exceptions.\n\nBad input gives 0."
+          },
+          "2": {
+            "title": "Too large",
+            "text": "A value too large for the target type is clamped instead of overflowing."
+          },
+          "3": {
+            "title": "Culture and digits",
+            "text": "Parsing always uses the invariant culture.\n\nPersian or Arabic digits count as digits when you check text."
+          }
+        },
+        "sample": {
+          "parse": {
+            "title": "Read numbers from text",
+            "note": "Thousands separators are fine; text that isn't a number gives 0 instead of an exception."
+          },
+          "round": {
+            "title": "Round and convert without overflow",
+            "note": "Halves round away from zero, and a value too big for int stops at `int.MaxValue`."
+          },
+          "checks": {
+            "title": "Check text and ranges",
+            "note": "Persian digits count as digits, and `IsWithin` includes both ends of the range."
+          },
+          "format": {
+            "title": "Percentages and formatted output",
+            "note": "If you don't pass a culture to `ToFormatted`, it uses the current one."
+          }
+        },
+        "member": {
+          "NumberEx": {
+            "ToInt": "Converts text, a double, a long or any object to int. Invalid text gives 0; large values are clamped to int's range.",
+            "ToLong": "The same safe conversion for the other number types.",
+            "ToIntSafe": "Returns your default when the value is null.",
+            "Round": "Rounds halves away from zero, to 2 decimal places by default.",
+            "Truncate": "Drops the digits after the given precision without rounding.",
+            "ToPercent": "Multiplies or divides by 100.",
+            "OrZero": "Turns a null int, long, double or decimal into zero.",
+            "IsNumber": "True when the text holds only digits; Persian and Arabic digits count too.",
+            "IsWithin": "Checks that a value is in a range, both ends included.",
+            "IsEqual": "Compares two doubles or decimals within a small tolerance.",
+            "IsEven": "Checks whether an int is even or odd.",
+            "IsInteger": "True when a double or decimal has no fractional part.",
+            "ToFormatted": "Formats a decimal, with N2 and the current culture by default.",
+            "ToHex": "Writes an int in hexadecimal or binary.",
+            "ToByteSafe": "Reads a byte (hex by default) and returns the default on bad input."
+          }
+        }
+      },
+      "results": {
+        "title": "Results",
+        "summary": "Return success, failure and data in one shape that both your API and your UI understand.",
+        "points": {
+          "1": {
+            "title": "Status and code",
+            "text": "`OSResult` carries a status and an optional code and message."
+          },
+          "2": {
+            "title": "With data",
+            "text": "`OSResult<T>` adds the data."
+          },
+          "3": {
+            "title": "Automatic success",
+            "text": "Succeeded is worked out from the status, never set by hand."
+          },
+          "4": {
+            "title": "HTTP codes",
+            "text": "Each status maps to an HTTP code, and exceptions turn into a matching status."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What it carries",
+            "text": "`OSResult` carries a status, an optional code and message, field errors and a trace ID.\n\n`OSResult<T>` adds the data."
+          },
+          "2": {
+            "title": "Succeeded",
+            "text": "Succeeded is worked out from the status, so you never set it by hand."
+          },
+          "3": {
+            "title": "HTTP and exceptions",
+            "text": "Each status maps to an HTTP code and back.\n\nExceptions turn into a matching status too, so services can return results instead of throwing."
+          }
+        },
+        "sample": {
+          "ok": {
+            "title": "Return data on success",
+            "note": "Succeeded comes from the status, and Data holds the value."
+          },
+          "invalid": {
+            "title": "Report field errors",
+            "note": "Invalid maps to HTTP 400, and each `FieldError` says which field failed and why."
+          },
+          "from-exception": {
+            "title": "Turn an exception into a result",
+            "note": "The status comes from the exception's type and the code from its name."
+          },
+          "json": {
+            "title": "What a result looks like in JSON",
+            "note": "Empty fields are left out, and the status is written in `camelCase`."
+          }
+        },
+        "type": {
+          "FieldError": "One field's error, with an optional code that programs can read."
+        },
+        "member": {
+          "OSResult": {
+            "Ok": "A successful result, with or without data.",
+            "NotFound": "There is one factory per status: Invalid, `NotFound`, Conflict, Unauthorized, Forbidden, Failed, Unavailable and Error.",
+            "Invalid": "An invalid result that lists which fields failed.",
+            "From": "Builds a result from an exception: the status from its type, the code from its name.",
+            "Succeeded": "True for Ok, Info, Warning, Existed and `NotExisted`."
+          },
+          "OSResult{T}": {
+            "From": "Copies a result's status, code, message and errors into a typed result."
+          },
+          "ResultEx": {
+            "ToHttpStatus": "The HTTP status code for a result status, such as 404 for `NotFound`.",
+            "FromHttpStatus": "The result status for an HTTP code; 429 and 503, for example, both become Unavailable.",
+            "ToStatus": "Maps an exception to a status, looking through `OSException` wrappers to the real cause.",
+            "MessageKey": "The translation key for a status, such as `results.notFound`.",
+            "FallbackMessage": "A plain English message to show when no translation is found."
+          }
+        }
+      },
+      "errors": {
+        "title": "Errors and guards",
+        "summary": "Stop bad input early, wrap failures with context and report them in one place.",
+        "points": {
+          "1": {
+            "title": "Argument checks",
+            "text": "Guard checks an argument and hands the value back."
+          },
+          "2": {
+            "title": "Your own error",
+            "text": "`OSException` wraps a lower-level failure with your message and code."
+          },
+          "3": {
+            "title": "Plain data",
+            "text": "An exception turns into plain data for reporting."
+          },
+          "4": {
+            "title": "One sink",
+            "text": "`IErrorSink` is the one place reports are sent."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Guard",
+            "text": "Guard checks an argument and hands the value back, so the check fits on the same line as the assignment.\n\nThe parameter name is filled in for you."
+          },
+          "2": {
+            "title": "Wrapping failures",
+            "text": "`OSException` wraps a lower-level failure with your own message and code.\n\nResults look through it to the real cause."
+          },
+          "3": {
+            "title": "Error reports",
+            "text": "`ErrorDetail` and `ErrorReport` turn an exception into plain data.\n\n`IErrorSink` is the one place those reports are sent."
+          }
+        },
+        "sample": {
+          "check-name": {
+            "title": "Reject empty input",
+            "note": "The parameter name is taken from the argument itself, so you never type it."
+          },
+          "wrap": {
+            "title": "Wrap a failure without losing its cause",
+            "note": "Your message is what people see, while the status and code come from the real cause inside."
+          },
+          "detail": {
+            "title": "Turn an exception into readable details",
+            "note": "Each inner exception is indented under the one that wrapped it."
+          },
+          "sink": {
+            "title": "Send reports where you want them",
+            "note": "Register one sink, and hooks set to Log send their failures to it."
+          }
+        },
+        "type": {
+          "OSException": "An exception with an optional Code. Without a message, it takes the inner exception's message.",
+          "ErrorReport": "One report with a trace ID, error type, source, route, status code and time.",
+          "ExceptionEx": "Helpers for exception chains."
+        },
+        "member": {
+          "Guard": {
+            "NotNull": "Returns the value, or throws `ArgumentNullException` with the parameter name.",
+            "NotEmpty": "Rejects null, blank text or an empty collection."
+          },
+          "ErrorDetail": {
+            "From": "Copies the type, message, `HResult` and stack trace, up to 10 inner exceptions and 8 frames each.",
+            "ToString": "An indented, readable view of the whole chain."
+          },
+          "ExceptionEx": {
+            "Find": "Returns the exception itself or the first inner exception of the given type, or null."
+          },
+          "ErrorReport": {
+            "From": "Builds a report from an exception: the trace ID from the current `Activity` or a fresh ID, the error type, message and stack trace, and the time from `TimeProvider`."
+          },
+          "IErrorSink": {
+            "TryReport": "Where reports go: a log, a database or an outside service."
+          }
+        }
+      },
+      "hooks": {
+        "title": "Hooks",
+        "summary": "Let other parts of the app react to an event without the sender knowing about them.",
+        "points": {
+          "1": {
+            "title": "Any event",
+            "text": "An event is any type you choose."
+          },
+          "2": {
+            "title": "Hooks",
+            "text": "Each `IHook<TEvent>` handles the event."
+          },
+          "3": {
+            "title": "Priority",
+            "text": "The hook with the higher priority runs first."
+          },
+          "4": {
+            "title": "Failure policy",
+            "text": "Each hook decides what happens when it fails."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Events and hooks",
+            "text": "An event is any type you choose. Each `IHook<TEvent>` handles it.\n\n`IHookRunner` calls every hook registered for that event."
+          },
+          "2": {
+            "title": "Order",
+            "text": "Highest priority runs first.\n\nHooks with the same priority keep their registration order."
+          },
+          "3": {
+            "title": "When a hook fails",
+            "text": "Each hook decides what happens when it fails: stop the run, ignore the failure, or report it and carry on.\n\nCancelling the token always stops the run."
+          }
+        },
+        "sample": {
+          "define": {
+            "title": "Write a hook",
+            "note": "A hook is a small class. Priority and `OnFailure` are optional."
+          },
+          "register": {
+            "title": "Register the hooks and run them",
+            "note": "Here hooks is the injected `IHookRunner`. `SendReceipt` runs before `UpdateStock` because its priority is higher."
+          },
+          "failure": {
+            "title": "Report a failure and carry on",
+            "note": "The failure is reported with the source `hook:OrderPlaced/AuditHook`, and the next hook still runs. Without a sink, Log acts like Ignore."
+          }
+        },
+        "type": {
+          "IHook{TEvent}": "One handler: `HandleAsync`, plus Priority (Normal) and `OnFailure` (Throw) when you need them.",
+          "HookPriority": "Named priorities from Highest (200) to Lowest (-200); any other int works too.",
+          "HookFailure": "Throw stops the run, Ignore skips the failure, and Log sends it to `IErrorSink` and carries on."
+        },
+        "member": {
+          "IHookRunner": {
+            "RunAsync": "Runs every hook for the event in priority order."
+          },
+          "HookEx": {
+            "AddOSHooks": "Registers the scoped runner once; calling it again changes nothing.",
+            "AddOSHook": "Registers a hook once (scoped by default), along with the runner."
+          }
+        }
+      },
+      "data": {
+        "title": "Queries and paging",
+        "summary": "Search, sort and page through lists with a few attributes and one page model.",
+        "points": {
+          "1": {
+            "title": "Search and sort",
+            "text": "Mark properties with `[Searchable]` or `[Sortable]`."
+          },
+          "2": {
+            "title": "Any queryable",
+            "text": "`QueryEx` builds search and sort expressions for any `IQueryable`."
+          },
+          "3": {
+            "title": "Paging",
+            "text": "`PageInfo` works out Skip, Take and the page count."
+          },
+          "4": {
+            "title": "Collection helpers",
+            "text": "`LinqEx` adds a few small helpers for everyday collections."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Search and sort",
+            "text": "Mark properties with `[Searchable]` or `[Sortable]`, and `QueryEx` builds the search and sort expressions for any `IQueryable`.\n\nA database provider can turn them into SQL."
+          },
+          "2": {
+            "title": "Paging",
+            "text": "`PageInfo` works out Skip, Take and the page count.\n\nIt also keeps the page number in range."
+          },
+          "3": {
+            "title": "Collections",
+            "text": "`LinqEx` adds a few small helpers for everyday collections."
+          }
+        },
+        "sample": {
+          "page": {
+            "title": "Work out the current page",
+            "note": "Page 99 doesn't exist, so it is pulled back to the last page, 5."
+          },
+          "search": {
+            "title": "Search, sort and page a query",
+            "note": "Search first and count after, so the page count matches what was found."
+          },
+          "keyset": {
+            "title": "Page by key through long lists",
+            "note": "Pass the last ID you showed, and the next 20 rows come back in order."
+          },
+          "linq": {
+            "title": "Everyday collection helpers",
+            "note": "`InsertSorted` keeps the list sorted, so 5 lands between 4 and 9."
+          }
+        },
+        "type": {
+          "QueryModel": "What a list request carries: Page, Take, Term, `SortName` and `SortType` (1, 10 and Descending by default).",
+          "PageInfo": "Page count, Skip, First, Last and HasMore; a page out of range is pulled back into range. Built without a total (only the rows shown and whether more exist), Total and Count are null.",
+          "PagingModel{T}": "One page of items together with its `PageInfo`.",
+          "SelectListModel": "Simple shapes for dropdown options and key/value pairs."
+        },
+        "member": {
+          "QueryEx": {
+            "Search": "Keeps the items whose `[Searchable]` text properties contain the term.",
+            "OrderBy": "Sorts by a `[Sortable]` property, then by the entity key so the order is unique; an unknown name leaves the order as it is.",
+            "Paging": "Applies the Skip and Take of a `PageInfo`."
+          },
+          "PagingEx": {
+            "PageAfter": "Pages by a sorted key instead of Skip, so it stays fast on large tables. With a key and an id, equal keys never skip rows; values are sent as parameters."
+          },
+          "LinqEx": {
+            "HasAny": "Checks for items, using Count when the source already knows it.",
+            "IsIn": "Checks whether a value is one of a few others.",
+            "InsertSorted": "Inserts into a sorted list with a binary search and skips duplicates.",
+            "Loop": "Runs an action on each item; `LoopAsync` awaits each one in turn."
+          }
+        }
+      },
+      "ids": {
+        "title": "IDs and keys",
+        "summary": "Make GUIDs, short codes, random tokens and hashes in one line.",
+        "points": {
+          "1": {
+            "title": "GUIDs",
+            "text": "`GuidEx` makes GUIDs and reads them from text without exceptions."
+          },
+          "2": {
+            "title": "Sequential IDs",
+            "text": "`NewSeqId` gives GUIDs that SQL Server sorts in creation order."
+          },
+          "3": {
+            "title": "Tokens and hashes",
+            "text": "`KeyEx` makes secure random tokens and hashes text."
+          },
+          "4": {
+            "title": "Numeric codes",
+            "text": "`CodeEx` makes numeric codes, such as a one-time login code."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "GUIDs",
+            "text": "`GuidEx` makes new GUIDs, reads them from text without exceptions and shortens them for URLs."
+          },
+          "2": {
+            "title": "Sequential IDs",
+            "text": "`NewSeqId` gives GUIDs that SQL Server sorts in creation order.\n\nThis keeps database indexes tidy."
+          },
+          "3": {
+            "title": "Tokens and hashes",
+            "text": "`KeyEx` makes random tokens with a secure random generator.\n\nIt also hashes text with SHA-1, SHA-256 or SHA-512."
+          },
+          "4": {
+            "title": "Numeric codes",
+            "text": "`CodeEx` makes numeric codes, such as a one-time login code."
+          }
+        },
+        "sample": {
+          "shorten": {
+            "title": "Shorten a GUID for a URL",
+            "note": "`ToBase64` is URL-safe and only 22 characters long, and `FromBase64` turns it back into the same GUID."
+          },
+          "parse": {
+            "title": "Read a GUID from text",
+            "note": "Text that isn't a GUID gives `Guid.Empty`, not an exception."
+          },
+          "keys": {
+            "title": "A login code, a token and a hash",
+            "note": "The code always has exactly the digits you ask for (up to 9). The hash is the same for the same text every time."
+          },
+          "sequential": {
+            "title": "Give a new row a sequential ID",
+            "note": "Use `NewSeqId` for primary keys stored in SQL Server; use `New` everywhere else."
+          }
+        },
+        "type": {
+          "CodeEx": "Random numeric codes of 1 to 9 digits.",
+          "GuidEx": "Create, read, check and shorten GUIDs.",
+          "KeyEx": "Random tokens and hashes."
+        },
+        "member": {
+          "GuidEx": {
+            "New": "A new random GUID. `NewId` and `FlatId` give it as text, with and without dashes.",
+            "NewSeqId": "A GUID that SQL Server sorts in creation order. `SeqId` and `SeqFlatId` give it as text.",
+            "IsNull": "True for `Guid.Empty` or null. `IsNotNull` is its opposite.",
+            "IsValid": "True when the text is a GUID.",
+            "ToGuid": "Reads a GUID from text, or returns your default.",
+            "ToShort": "The first 8 hex characters, for display only, since it isn't unique.",
+            "ToCompact": "The first 16 hex characters.",
+            "ToBase64": "A 22-character, URL-safe form of the GUID.",
+            "FromBase64": "Turns the `ToBase64` form back into a GUID; throws `OSException` for invalid text."
+          },
+          "KeyEx": {
+            "Unique": "16 random hex characters from a secure random generator.",
+            "Stamp": "A random Base64 token built from the given number of bytes (20 by default).",
+            "To256": "The SHA-256 hash as hex, in upper or lower case. Empty input gives an empty string.",
+            "ToSHA1": "SHA-1 hash. Fine for checksums, not for passwords or anything security-related."
+          },
+          "CodeEx": {
+            "Generate": "A random code with exactly this many digits (5 by default, up to `MaxLength`)."
+          }
+        }
+      },
+      "objects": {
+        "title": "Objects and enums",
+        "summary": "Convert loose values, read enum names and descriptions, and create types at runtime.",
+        "points": {
+          "1": {
+            "title": "Unknown values",
+            "text": "`ObjEx` handles values whose type you don't know yet."
+          },
+          "2": {
+            "title": "Convert with To",
+            "text": "It checks for blanks and numbers and converts with `To<T>`."
+          },
+          "3": {
+            "title": "Struct and enum",
+            "text": "`ValueEx` checks a struct against its default, and `EnumEx` reads enums safely."
+          },
+          "4": {
+            "title": "Build by type",
+            "text": "`ReflEx` creates objects by type."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Unknown values",
+            "text": "`ObjEx` handles values whose type you don't know yet, such as a cell from a spreadsheet or a value from a settings table.\n\nIt checks for blanks and numbers and converts them with `To<T>`."
+          },
+          "2": {
+            "title": "Struct and enum",
+            "text": "`ValueEx` checks a struct against its default value.\n\n`EnumEx` reads enums from text safely and returns the name or description you show users."
+          },
+          "3": {
+            "title": "Reflection",
+            "text": "`ReflEx` creates objects by type.\n\nIt also finds a generic interface on a type."
+          }
+        },
+        "sample": {
+          "status": {
+            "title": "An enum with display texts",
+            "note": "`Description()` reads the Description attribute and `GetName()` reads DisplayName or Display(Name)."
+          },
+          "convert": {
+            "title": "Convert a loose value",
+            "note": "Enums are read by name, ignoring case. A null value gives your default; a value that can't be converted throws `OSException`."
+          },
+          "checks": {
+            "title": "Blanks, numbers and defaults",
+            "note": "An empty GUID counts as blank. `OrDefault` swaps a default value such as 0 for your fallback."
+          },
+          "enums": {
+            "title": "Read enums and their display texts",
+            "note": "With a default, an unknown name returns the default instead of throwing."
+          },
+          "create": {
+            "title": "Create a type and find its generic interface",
+            "note": "Constructor errors come back as `OSException` with the original error inside."
+          }
+        },
+        "type": {
+          "ObjEx": "Checks and conversions for values of unknown type.",
+          "ValueEx": "Compare a value with the default of its type.",
+          "EnumEx": "Read enums from text and get their display texts.",
+          "ReflEx": "Create objects by type and inspect generic interfaces."
+        },
+        "member": {
+          "ObjEx": {
+            "IsNull": "True for null or for text that is empty or only spaces.",
+            "IsBlank": "Like `IsNull`, and also true for `DBNull` and `Guid.Empty`.",
+            "IsNumeric": "True for any number type, or text that reads as a number in the invariant culture.",
+            "To": "Converts to T using the invariant culture; enums can come from a name or a number.",
+            "ToBoolean": "Reads yes/no text the same way `TextEx.ToBoolean` does; numbers are true when they aren't zero."
+          },
+          "ValueEx": {
+            "IsDefault": "True when the value equals the default of its type, such as 0, false or `Guid.Empty`.",
+            "OrDefault": "Returns the fallback when the value is its type's default."
+          },
+          "EnumEx": {
+            "ToEnum": "Reads an enum by name, ignoring case. Without a default, an unknown name throws `OSException`.",
+            "TryParse": "Like `Enum.TryParse`, but numbers that aren't defined in the enum are rejected.",
+            "Description": "The Description attribute, or `GetName()` when there is none.",
+            "GetName": "DisplayName, then Display(Name), then the member's own name."
+          },
+          "ReflEx": {
+            "Create": "Creates an instance with the constructor that matches the arguments.",
+            "GetGenericInterface": "Finds the closed form of an open generic interface, such as `IRule<decimal>` for `IRule<>`."
+          }
+        }
+      },
+      "modules": {
+        "title": "Modules",
+        "summary": "Split a large app into modules that register their own services, in dependency order.",
+        "points": {
+          "1": {
+            "title": "Module",
+            "text": "A module is a class that implements `IModule`."
+          },
+          "2": {
+            "title": "Ordering",
+            "text": "`AddOSModules` orders modules so each comes after what it needs."
+          },
+          "3": {
+            "title": "Early stop",
+            "text": "A missing module or a cycle stops the registration."
+          },
+          "4": {
+            "title": "App info",
+            "text": "`AppInfo` reads the running app's name and version."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Defining a module",
+            "text": "A module is a class that implements `IModule`. Its `ModuleInfo` gives a code, a version and the modules it needs.\n\n`Register` adds its services."
+          },
+          "2": {
+            "title": "Registering modules",
+            "text": "`AddOSModules` checks the codes and orders the modules so each one comes after the modules it needs.\n\nIt stops on a missing module or a cycle. Then it keeps the list in `ModuleRegistry` so the app can ask which modules are present."
+          },
+          "3": {
+            "title": "Repeated libraries",
+            "text": "A library that may be added more than once can use `TryRegisterLib` to register its services only the first time."
+          },
+          "4": {
+            "title": "App info",
+            "text": "`AppInfo` reads the running app's name and version."
+          }
+        },
+        "sample": {
+          "define": {
+            "title": "Write a module",
+            "note": "The code is 2 to 16 lowercase letters or digits and starts with a letter."
+          },
+          "order": {
+            "title": "Register modules and read the registry",
+            "note": "`crm` comes first because `billing` needs it, whatever order you pass them in."
+          },
+          "cycle": {
+            "title": "A dependency cycle is caught at startup",
+            "note": "Mistakes stop the app when it starts, not later at runtime."
+          },
+          "lib": {
+            "title": "Register a library only once",
+            "note": "The second call returns false, so the services are not added twice."
+          },
+          "version": {
+            "title": "Show the app's name and version",
+            "note": "The version comes from the entry assembly; anything after a + in it is dropped."
+          }
+        },
+        "type": {
+          "IModule": "One module: its `Info` and a `Register` method that adds its services.",
+          "ModuleInfo": "Code, version and dependencies. `Optional` modules come first only when they are present.",
+          "ModuleRegistry": "The registered modules, in the order they were registered."
+        },
+        "member": {
+          "ModuleEx": {
+            "AddOSModules": "Checks, orders and registers the modules. It can be called only once per app.",
+            "TryRegisterLib": "Returns true the first time a library type is seen, and false after that."
+          },
+          "ModuleRegistry": {
+            "Has": "True when a module with this code is registered.",
+            "Get": "The module's info, or null."
+          },
+          "AppInfo": {
+            "Name": "The product name from the entry assembly.",
+            "Version": "The informational version, or the file version when there is none.",
+            "NameAndVersion": "Name and version together, such as \"Shop v1.2.0\"."
+          }
+        }
+      },
+      "config": {
+        "title": "App configuration",
+        "summary": "Read your app's settings from appsettings, validate them, and stop at startup when a value is wrong.",
+        "points": {
+          "1": {
+            "title": "Base class",
+            "text": "Inherit from `AppConfigBase`; app code, title and culture come ready."
+          },
+          "2": {
+            "title": "Validation",
+            "text": "Limit values with Data Annotations such as `[Range]` or `[Required]`."
+          },
+          "3": {
+            "title": "Plain injection",
+            "text": "Inject your config class directly, no `IOptions` needed."
+          },
+          "4": {
+            "title": "Early failure",
+            "text": "A bad setting stops the app at startup, not halfway through."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Ready-made values",
+            "text": "`AppConfigBase` has three values. `AppCode` is required, up to 50 characters.\n\n`Title` allows up to 200 characters. `Culture` must be a valid culture name.\n\nKeys are written in kebab-case. Use `[ConfigurationKeyName]` on your own properties too, for example `page-size`."
+          },
+          "2": {
+            "title": "Registering",
+            "text": "`AddOSConfig` binds one section to your class and validates it when the host starts.\n\nThe class itself is registered too, so take `ShopConfig` straight in a constructor."
+          },
+          "3": {
+            "title": "Reading early",
+            "text": "Sometimes you need settings before the container exists, such as at the top of `Program.cs`. Use `ReadOSConfig` there.\n\nIf anything is wrong you get one `OSException` listing every problem."
+          }
+        },
+        "sample": {
+          "define": {
+            "title": "The app's configuration class",
+            "note": "Inherit `AppConfigBase` and add only what is yours."
+          },
+          "register": {
+            "title": "Register it in the app",
+            "note": "The `shop` section is read and validated."
+          },
+          "read": {
+            "title": "Read it right away",
+            "note": "A value you leave out keeps its default; `Title` had nothing, so it is null."
+          },
+          "invalid": {
+            "title": "When the configuration is wrong",
+            "note": "All problems come together: `AppCode` is missing and `PageSize` is out of range."
+          }
+        },
+        "type": {
+          "AppConfigBase": "Base class for app configuration with `AppCode`, `Title` and `Culture`.",
+          "ConfigEx": "Registers and reads configuration."
+        },
+        "member": {
+          "AppConfigBase": {
+            "AppCode": "Short id of the app; required, up to 50 characters. Its key is `app-code`.",
+            "Title": "Title of the app, up to 200 characters.",
+            "Culture": "A culture name such as `fa-IR`; an invalid name is a validation error.",
+            "Validate": "Checks `Culture`. Override it for more rules and call `base.Validate` too."
+          },
+          "ConfigEx": {
+            "AddOSConfig": "Binds one section of the settings to `T`, validates it with Data Annotations (when the host starts) and registers `T` itself.",
+            "ReadOSConfig": "Reads that section right now; if it is invalid, throws an `OSException` listing every problem."
+          }
+        }
+      },
+      "scopes": {
+        "title": "Scopes",
+        "summary": "Find the closest value for the current company, branch or user, with the whole app as the fallback.",
+        "points": {
+          "1": {
+            "title": "Scope",
+            "text": "A `Scope` is a kind plus an id, such as branch 42."
+          },
+          "2": {
+            "title": "Rank",
+            "text": "Each kind has a rank; higher means more specific."
+          },
+          "3": {
+            "title": "Scope chain",
+            "text": "A `ScopeChain` puts the most specific scope first and the app last."
+          },
+          "4": {
+            "title": "Reading a setting",
+            "text": "Take the first scope in the chain that has a value."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "What a scope is",
+            "text": "Some settings and data belong to the whole app, and some to one company, one branch or one user.\n\nA `Scope` is a kind plus an id, such as branch 42. You register each kind with a rank; the higher the rank, the more specific the scope."
+          },
+          "2": {
+            "title": "Building the chain",
+            "text": "`IScopeSource` says which scopes the current request is in.\n\n`IScopeResolver` turns them into a `ScopeChain`: the most specific scope first and the app last."
+          },
+          "3": {
+            "title": "Reading a setting",
+            "text": "To read a setting, take the first scope in the chain that has a value."
+          }
+        },
+        "sample": {
+          "kinds": {
+            "title": "Register scope kinds and a source",
+            "note": "A branch has a higher rank than a company, so it is more specific. Kind 0 is reserved for the app."
+          },
+          "fallback": {
+            "title": "Take the closest value",
+            "note": "Branch 42 has no currency of its own, so the company's EUR wins over the app's USD."
+          },
+          "resolve": {
+            "title": "Get the chain for the current request",
+            "note": "Here scopes is the injected `IScopeResolver`. Without any source, the chain only holds the app."
+          }
+        },
+        "type": {
+          "Scope": "A kind and an id. `Scope.App` is the whole app (kind 0).",
+          "ScopeChain": "Scopes ordered from the most specific to the app, at most one of each kind.",
+          "ScopeKind": "A registered kind: number, code, title key and rank.",
+          "ScopeRegistry": "The registered kinds. Two kinds can't share a code or a rank.",
+          "IScopeSource": "Says which scopes the current request is in, such as the user's company.",
+          "IScopeResolver": "Builds the chain from every registered source."
+        },
+        "member": {
+          "ScopeEx": {
+            "AddOSScopeKind": "Registers a kind with its code, title key and rank; the rank must be above 0.",
+            "AddOSScopeSource": "Adds a source. The resolver asks every source and merges what they return."
+          },
+          "ScopeChain": {
+            "Of": "Builds a chain; two different scopes of the same kind throw `OSException`."
+          }
+        }
+      },
+      "secrets": {
+        "title": "Secrets",
+        "summary": "Encrypt API keys and passwords before saving them, and tie each one to where it belongs.",
+        "points": {
+          "1": {
+            "title": "Encryption",
+            "text": "`ISecretBox` encrypts text with AES-GCM."
+          },
+          "2": {
+            "title": "Context",
+            "text": "A secret only opens with the same context."
+          },
+          "3": {
+            "title": "Your keys",
+            "text": "Keys come from your own `ISecretKeyRing`."
+          },
+          "4": {
+            "title": "New keys",
+            "text": "After you add a new key, old secrets still open."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Encryption",
+            "text": "`ISecretBox` encrypts a text with AES-GCM.\n\nIt returns bytes you can store in the database."
+          },
+          "2": {
+            "title": "Context",
+            "text": "The context, such as `shop:7:payment`, is part of the check. The secret only opens with the same context.\n\nSo a value copied to another row or shop won't open."
+          },
+          "3": {
+            "title": "Keys",
+            "text": "Keys come from your own `ISecretKeyRing`, for example from environment variables or a key vault.\n\nThe id of the key used is stored with the secret. So after you add a new key, old secrets still open with the old one."
+          }
+        },
+        "sample": {
+          "ring": {
+            "title": "Give the app its keys",
+            "note": "Each key is 32 random bytes. `CurrentKeyId` is the key new secrets are sealed with."
+          },
+          "seal": {
+            "title": "Seal a secret and open it",
+            "note": "Here the box comes straight from the service collection; in an app you inject `ISecretBox`. A different context gives false."
+          }
+        },
+        "type": {
+          "ISecretBox": "Seals text into bytes and opens it again.",
+          "ISecretKeyRing": "Supplies the encryption keys; you write this for your own key store."
+        },
+        "member": {
+          "ISecretBox": {
+            "Seal": "Encrypts the text with the current key. Throws `OSException` when the key is missing or isn't 32 bytes.",
+            "TryOpen": "Decrypts the bytes; false when the key, the context or the data doesn't match."
+          },
+          "SecretEx": {
+            "AddOSSecrets": "Registers `ISecretBox`. Without a key ring, sealing throws a clear error.",
+            "AddOSSecretKeyRing": "Registers your key ring, replacing any earlier one, together with the box."
+          }
+        }
+      },
+      "reports": {
+        "title": "Reports",
+        "summary": "Simple shapes for dashboard numbers: counts, totals per group and points on a chart.",
+        "points": {
+          "1": {
+            "title": "Same shape",
+            "text": "Every module returns dashboard numbers in the same shape."
+          },
+          "2": {
+            "title": "Counts",
+            "text": "`ReportCountSet` holds named counts."
+          },
+          "3": {
+            "title": "Totals and points",
+            "text": "`ReportGroupAmount` is a group total, and `ReportSeriesPoint` is a chart point."
+          },
+          "4": {
+            "title": "Ranges",
+            "text": "`ReportRange` names common date ranges."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Dashboard models",
+            "text": "These are plain models for the numbers a dashboard shows.\n\nEvery module returns them in the same shape."
+          },
+          "2": {
+            "title": "Counts and totals",
+            "text": "`ReportCountSet` holds named counts, such as orders and returns.\n\n`ReportGroupAmount` is a total for one group, such as sales per category."
+          },
+          "3": {
+            "title": "Points and ranges",
+            "text": "`ReportSeriesPoint` is one point on a chart, such as sales in one month.\n\n`ReportRange` names common date ranges for filters."
+          }
+        },
+        "sample": {
+          "counts": {
+            "title": "Collect counts for a dashboard",
+            "note": "Keys ignore case, and a missing key returns null."
+          },
+          "monthly": {
+            "title": "Sales per month for a chart",
+            "note": "Each month becomes one point."
+          },
+          "by-category": {
+            "title": "Totals per category",
+            "note": "Key is for code and Title is what the user sees."
+          }
+        },
+        "type": {
+          "CountReportModel": "A count with its title.",
+          "ReportCountSet": "Named counts, with keys that ignore case.",
+          "ReportGroupAmount": "A total for one group: Key, Title and Amount.",
+          "ReportSeriesPoint": "One point on a chart: a period and an amount.",
+          "ReportRange": "Common date ranges, such as this week or last year.",
+          "ReportRangeRequest": "A chosen range with its title and dates.",
+          "MonReportRange": "A range given as a number of months."
+        }
+      }
+    }
+  }
+}

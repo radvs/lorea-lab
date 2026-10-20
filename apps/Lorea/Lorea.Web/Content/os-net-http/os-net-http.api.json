@@ -1,0 +1,563 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Net.Http",
+      "key": "AddressRules",
+      "signature": "static class AddressRules",
+      "members": [
+        {
+          "name": "IsPublic",
+          "signatures": [
+            "static bool IsPublic(IPAddress address)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiConfig",
+      "signature": "sealed class ApiConfig",
+      "members": [
+        {
+          "name": "DefaultMaxBytes",
+          "signatures": [
+            "const long DefaultMaxBytes = 10485760"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "BaseUrl",
+          "signatures": [
+            "string? BaseUrl { get; set; }"
+          ]
+        },
+        {
+          "name": "Timeout",
+          "signatures": [
+            "TimeSpan? Timeout { get; set; }"
+          ]
+        },
+        {
+          "name": "Retries",
+          "signatures": [
+            "int Retries { get; set; }"
+          ]
+        },
+        {
+          "name": "PermitLimit",
+          "signatures": [
+            "int? PermitLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "QueueLimit",
+          "signatures": [
+            "int? QueueLimit { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxBytes",
+          "signatures": [
+            "long MaxBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "Safe",
+          "signatures": [
+            "bool Safe { get; set; }"
+          ]
+        },
+        {
+          "name": "Headers",
+          "signatures": [
+            "List<ApiHeader> Headers { get; set; }"
+          ]
+        },
+        {
+          "name": "Extras",
+          "signatures": [
+            "Dictionary<string, string> Extras { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiFetch",
+      "signature": "sealed record ApiFetch",
+      "members": [
+        {
+          "name": "ApiFetch",
+          "signatures": [
+            "ApiFetch(int Status, string Url, string FinalUrl, string MediaType, string Body)"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "int Status { get; init; }"
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "string Url { get; init; }"
+          ]
+        },
+        {
+          "name": "FinalUrl",
+          "signatures": [
+            "string FinalUrl { get; init; }"
+          ]
+        },
+        {
+          "name": "MediaType",
+          "signatures": [
+            "string MediaType { get; init; }"
+          ]
+        },
+        {
+          "name": "Body",
+          "signatures": [
+            "string Body { get; init; }"
+          ]
+        },
+        {
+          "name": "IsOk",
+          "signatures": [
+            "bool IsOk { get; }"
+          ]
+        },
+        {
+          "name": "IsMissing",
+          "signatures": [
+            "bool IsMissing { get; }"
+          ]
+        },
+        {
+          "name": "IsRedirected",
+          "signatures": [
+            "bool IsRedirected { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiHeader",
+      "signature": "sealed class ApiHeader",
+      "members": [
+        {
+          "name": "Type",
+          "signatures": [
+            "ApiHeaderType Type { get; set; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string? Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "User",
+          "signatures": [
+            "string? User { get; set; }"
+          ]
+        },
+        {
+          "name": "Password",
+          "signatures": [
+            "string? Password { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiHeaderType",
+      "signature": "enum ApiHeaderType",
+      "members": [
+        {
+          "name": "Own",
+          "signatures": [
+            "Own = 0"
+          ]
+        },
+        {
+          "name": "Accept",
+          "signatures": [
+            "Accept = 1"
+          ]
+        },
+        {
+          "name": "ContentType",
+          "signatures": [
+            "ContentType = 2"
+          ]
+        },
+        {
+          "name": "UserAgent",
+          "signatures": [
+            "UserAgent = 3"
+          ]
+        },
+        {
+          "name": "BasicAuth",
+          "signatures": [
+            "BasicAuth = 4"
+          ]
+        },
+        {
+          "name": "BearerAuth",
+          "signatures": [
+            "BearerAuth = 5"
+          ]
+        },
+        {
+          "name": "ApiKey",
+          "signatures": [
+            "ApiKey = 6"
+          ]
+        },
+        {
+          "name": "ApiVersion",
+          "signatures": [
+            "ApiVersion = 7"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiRequest",
+      "signature": "sealed record ApiRequest",
+      "members": [
+        {
+          "name": "ApiRequest",
+          "signatures": [
+            "ApiRequest(string Endpoint, HttpMethod? Method = null, object? Body = null)"
+          ]
+        },
+        {
+          "name": "Endpoint",
+          "signatures": [
+            "string Endpoint { get; init; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "HttpMethod? Method { get; init; }"
+          ]
+        },
+        {
+          "name": "Body",
+          "signatures": [
+            "object? Body { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "ApiService",
+      "signature": "sealed class ApiService : IApiService",
+      "members": [
+        {
+          "name": "ApiService",
+          "signatures": [
+            "ApiService(HttpClient http, ApiConfig config)"
+          ]
+        },
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "Task<OSResult<T?>> GetAsync<T>(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetStringAsync",
+          "signatures": [
+            "Task<OSResult<string>> GetStringAsync(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FetchAsync",
+          "signatures": [
+            "Task<OSResult<ApiFetch>> FetchAsync(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SendAsync",
+          "signatures": [
+            "Task<OSResult<ApiFetch>> SendAsync(ApiRequest request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PostAsync",
+          "signatures": [
+            "Task<OSResult> PostAsync(string endpoint, object payload, CancellationToken token = default)",
+            "Task<OSResult<T?>> PostAsync<T>(string endpoint, object payload, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PutAsync",
+          "signatures": [
+            "Task<OSResult> PutAsync(string endpoint, object payload, CancellationToken token = default)",
+            "Task<OSResult<T?>> PutAsync<T>(string endpoint, object payload, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "DeleteAsync",
+          "signatures": [
+            "Task<OSResult> DeleteAsync(string endpoint, CancellationToken token = default)",
+            "Task<OSResult<T?>> DeleteAsync<T>(string endpoint, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "HttpClientEx",
+      "signature": "static class HttpClientEx",
+      "members": [
+        {
+          "name": "AddOSHttp",
+          "signatures": [
+            "static IServiceCollection AddOSHttp(this IServiceCollection services, ApiConfig config)",
+            "static IServiceCollection AddOSHttp(this IServiceCollection services, IEnumerable<ApiConfig> configs)"
+          ]
+        },
+        {
+          "name": "GetConfig",
+          "signatures": [
+            "static ApiConfig GetConfig(this IEnumerable<ApiConfig> configs, string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "HttpCodes",
+      "signature": "static class HttpCodes",
+      "members": [
+        {
+          "name": "Endpoint",
+          "signatures": [
+            "const string Endpoint = \"http.endpoint\""
+          ]
+        },
+        {
+          "name": "Blocked",
+          "signatures": [
+            "const string Blocked = \"http.blocked\""
+          ]
+        },
+        {
+          "name": "Timeout",
+          "signatures": [
+            "const string Timeout = \"http.timeout\""
+          ]
+        },
+        {
+          "name": "Network",
+          "signatures": [
+            "const string Network = \"http.network\""
+          ]
+        },
+        {
+          "name": "TooLarge",
+          "signatures": [
+            "const string TooLarge = \"http.too-large\""
+          ]
+        },
+        {
+          "name": "Format",
+          "signatures": [
+            "const string Format = \"http.format\""
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "const string Empty = \"http.empty\""
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "static string Status(int status)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "IApiService",
+      "signature": "interface IApiService",
+      "members": [
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "Task<OSResult<T?>> GetAsync<T>(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetStringAsync",
+          "signatures": [
+            "Task<OSResult<string>> GetStringAsync(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FetchAsync",
+          "signatures": [
+            "Task<OSResult<ApiFetch>> FetchAsync(string endpoint, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SendAsync",
+          "signatures": [
+            "Task<OSResult<ApiFetch>> SendAsync(ApiRequest request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PostAsync",
+          "signatures": [
+            "Task<OSResult> PostAsync(string endpoint, object payload, CancellationToken token = default)",
+            "Task<OSResult<T?>> PostAsync<T>(string endpoint, object payload, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PutAsync",
+          "signatures": [
+            "Task<OSResult> PutAsync(string endpoint, object payload, CancellationToken token = default)",
+            "Task<OSResult<T?>> PutAsync<T>(string endpoint, object payload, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "DeleteAsync",
+          "signatures": [
+            "Task<OSResult> DeleteAsync(string endpoint, CancellationToken token = default)",
+            "Task<OSResult<T?>> DeleteAsync<T>(string endpoint, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "IOSHttp",
+      "signature": "interface IOSHttp",
+      "members": [
+        {
+          "name": "Create",
+          "signatures": [
+            "IApiService Create(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Http",
+      "key": "OSHttp",
+      "signature": "sealed class OSHttp : IOSHttp",
+      "members": [
+        {
+          "name": "OSHttp",
+          "signatures": [
+            "OSHttp(IHttpClientFactory factory, IEnumerable<ApiConfig> configs)"
+          ]
+        },
+        {
+          "name": "Create",
+          "signatures": [
+            "IApiService Create(string name)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "get",
+      "code": "var api = http.Create(\"shop\");\n\nvar result = await api.GetAsync<Product>(\"products/7\", token);",
+      "topic": "calls"
+    },
+    {
+      "key": "post",
+      "code": "var api = http.Create(\"shop\");\n\nvar result = await api.PostAsync(\"orders\", new Order(7, 2), token);",
+      "topic": "calls"
+    },
+    {
+      "key": "fetch",
+      "code": "var page = await http.Create(\"shop\").FetchAsync(\"products/7\", token);\n\nif (!page.Succeeded)\n    return page.Code!;",
+      "topic": "calls"
+    },
+    {
+      "key": "status",
+      "code": "var missing = ResultEx.FromHttpStatus(404);\nvar busy = ResultEx.FromHttpStatus(429);\nvar rejected = ResultEx.FromHttpStatus(422);\nvar broken = ResultEx.FromHttpStatus(500);",
+      "topic": "calls",
+      "output": "NotFound\nUnavailable\nFailed\nError\nhttp.404"
+    },
+    {
+      "key": "config",
+      "code": "var config = JsonSerializer.Deserialize<ApiConfig>(\"\"\"\n    {\n      \"name\": \"shop\",\n      \"base-url\": \"https://api.example.com\",\n      \"timeout\": \"00:00:20\",\n      \"headers\": [ { \"type\": \"BearerAuth\", \"value\": \"secret-token\" } ]\n    }\n    \"\"\")!;",
+      "topic": "clients",
+      "output": "shop\n00:00:20\n3\nBearerAuth"
+    },
+    {
+      "key": "headers",
+      "code": "services.AddOSHttp(new ApiConfig\n{\n    Name = \"sms\",\n    BaseUrl = \"https://sms.example.com/api\",\n    Headers =\n    [\n        new() { Type = ApiHeaderType.BasicAuth, User = \"account\", Password = \"secret\" },\n        new() { Type = ApiHeaderType.Accept, Value = \"application/json\" },\n        new() { Type = ApiHeaderType.ApiVersion, Value = \"2\" }\n    ]\n});",
+      "topic": "clients"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSHttp(configs);",
+      "topic": "clients"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSHttp(new ApiConfig\n{\n    Name = \"shop\",\n    BaseUrl = \"https://api.example.com\",\n    Timeout = TimeSpan.FromSeconds(10)\n});"
+    },
+    {
+      "key": "call",
+      "code": "var result = await http.Create(\"shop\").GetAsync<Product>(\"products/7\", token);"
+    },
+    {
+      "key": "safe-fetch",
+      "code": "var page = await http.Create(\"preview\").FetchAsync(userLink, token);"
+    },
+    {
+      "key": "configure",
+      "code": "services.AddOSHttp(new ApiConfig\n{\n    Name = \"shop\",\n    BaseUrl = \"https://api.example.com\",\n    Timeout = TimeSpan.FromSeconds(8),\n    Retries = 2,\n    PermitLimit = 20,\n    QueueLimit = 50\n});",
+      "topic": "resilience"
+    },
+    {
+      "key": "no-retries",
+      "code": "services.AddOSHttp(new ApiConfig { Name = \"payments\", BaseUrl = \"https://pay.example.com\", Retries = 0 });",
+      "topic": "resilience"
+    },
+    {
+      "key": "addresses",
+      "code": "var web = AddressRules.IsPublic(IPAddress.Parse(\"8.8.8.8\"));\nvar office = AddressRules.IsPublic(IPAddress.Parse(\"10.0.0.5\"));\nvar metadata = AddressRules.IsPublic(IPAddress.Parse(\"169.254.169.254\"));\nvar loopback = AddressRules.IsPublic(IPAddress.IPv6Loopback);",
+      "topic": "safety",
+      "output": "True\nFalse\nFalse\nFalse"
+    },
+    {
+      "key": "enable",
+      "code": "services.AddOSHttp(new ApiConfig { Name = \"preview\", Safe = true, MaxBytes = 2 * 1024 * 1024 });\n\nvar page = await http.Create(\"preview\").FetchAsync(userLink, token);",
+      "topic": "safety"
+    }
+  ]
+}

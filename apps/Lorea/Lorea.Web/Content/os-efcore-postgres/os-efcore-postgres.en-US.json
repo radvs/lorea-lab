@@ -1,0 +1,122 @@
+{
+  "os-efcore-postgres": {
+    "title": "PostgreSQL",
+    "summary": "PostgreSQL through Npgsql with a safe setup: SSL required, Npgsql's own retries, dates turned to UTC for `timestamptz`, and its error codes turned into clear results.",
+    "gives": {
+      "1": "SSL is required whatever the connection string says, and full certificate checking is one switch away.",
+      "2": "Temporary failures are retried by Npgsql's own strategy, and `TranAsync` stays safe under it.",
+      "3": "Any `DateTimeOffset` is turned to UTC before it is written, so `timestamptz` never rejects a value."
+    },
+    "sample": {
+      "register": "A context on PostgreSQL",
+      "verify": "Check the server certificate too"
+    },
+    "topics": {
+      "connection": {
+        "title": "Connecting safely",
+        "summary": "Give a connection string; SSL, retries and UTC dates are set for you.",
+        "points": {
+          "1": {
+            "title": "Core registration",
+            "text": "`AddOSPostgres` passes your string to `UseNpgsql`; nothing else to set up."
+          },
+          "2": {
+            "title": "SSL by options",
+            "text": "The options decide the SSL mode, not the string."
+          },
+          "3": {
+            "title": "UTC only",
+            "text": "`timestamptz` accepts only UTC, so every date is converted."
+          },
+          "4": {
+            "title": "Core version token",
+            "text": "Concurrent edits use `Version`, not `xmin`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Registering",
+            "text": "`AddOSPostgres` registers your context through the core and passes your connection string to `UseNpgsql`. From EF Core 9 on, Npgsql builds and caches its connection source itself, so there is nothing else to set up."
+          },
+          "2": {
+            "title": "SSL mode",
+            "text": "The options always decide the SSL mode, whatever the string says.\n\n`Require` by default (encrypted), `VerifyFull` when you set `VerifyServerCertificate` (encrypted and the server's certificate and name are checked), and `Prefer` only when you set `Encrypt = false` for development."
+          },
+          "3": {
+            "title": "Retry, dates, names",
+            "text": "With `RetryOnFailure` on, temporary failures are retried by Npgsql's strategy using `RetryCount` and `RetryDelay` from `EFCoreOptions`.\n\nPostgreSQL's `timestamptz` accepts only UTC, so every `DateTimeOffset` is turned to UTC before writing and comes back as UTC.\n\nLower-case snake_case names are the custom on PostgreSQL: call `ApplySnakeCaseName()` in `OnModelCreating`, but only for a new database."
+          },
+          "4": {
+            "title": "Concurrent edits",
+            "text": "Edits by two people are caught by the core `Version` token, not `xmin`, so one model works on every database."
+          }
+        },
+        "sample": {
+          "secure": {
+            "title": "What the connection really uses",
+            "note": "The string asked for no SSL; the options made it `Require`."
+          },
+          "snake-case": {
+            "title": "snake_case names for PostgreSQL",
+            "note": "Call it last in `OnModelCreating`, on a new database only."
+          }
+        },
+        "type": {
+          "PostgresOptions": "The connection string and the security and retry switches.",
+          "PostgresEx": "Registration and setup."
+        },
+        "member": {
+          "PostgresOptions": {
+            "VerifyServerCertificate": "Also checks the server's certificate and host name (`VerifyFull`). Off by default; turn it on when the server has a proper certificate."
+          },
+          "PostgresEx": {
+            "AddOSPostgres": "Registers a context on PostgreSQL. Registers OS.EFCore too when it is not registered yet, so one call is enough; call `AddOSEFCore` as well, before or after, only to change its settings.",
+            "UseOSPostgres": "Applies the PostgreSQL setup to a builder."
+          }
+        }
+      },
+      "errors": {
+        "title": "Errors and what was tested",
+        "summary": "How PostgreSQL errors turn into results, and an honest note on testing.",
+        "points": {
+          "1": {
+            "title": "SQLSTATE codes",
+            "text": "Errors arrive as five-character SQLSTATE codes that map to `data.*`."
+          },
+          "2": {
+            "title": "Client timeout",
+            "text": "A client-side timeout is `data.busy`."
+          },
+          "3": {
+            "title": "No leaks",
+            "text": "Host and database names never reach a result."
+          },
+          "4": {
+            "title": "Honest note",
+            "text": "Only unit tests so far; no real PostgreSQL server yet."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "Recognized codes",
+            "text": "PostgreSQL reports errors with a five-character SQLSTATE code. These are recognized (checked against the PostgreSQL documentation): 23505 gives `data.duplicate` with the constraint, 23502 gives `data.required` with the column, 23503 gives `data.missingRef` (or `data.inUse` when deleting), 22001 gives `data.tooLong`.\n\n40001 (serialization failure), 40P01 (deadlock), 55P03 (lock not available) and 57014 (query canceled) give `data.busy`. 57P01, 57P02, 57P03, 53300 and every code that starts with 08 give `data.offline`."
+          },
+          "2": {
+            "title": "Other errors",
+            "text": "A timeout on the client side is `data.busy`, any other Npgsql connection error is `data.offline`, and anything else is `data.error`.\n\nField and constraint names come from the exception's own fields; host and database names never reach a result."
+          },
+          "3": {
+            "title": "Honest note",
+            "text": "This package has been tested only with unit tests, using real PostgreSQL exceptions built with Npgsql's public constructor.\n\nIt has not yet run against a real PostgreSQL server; do that before you rely on it in production."
+          }
+        },
+        "sample": {
+          "save-item": {
+            "title": "Turn a PostgreSQL result into a message",
+            "note": "A serialization failure that did not clear after retries arrives as `data.busy`."
+          }
+        }
+      }
+    }
+  }
+}

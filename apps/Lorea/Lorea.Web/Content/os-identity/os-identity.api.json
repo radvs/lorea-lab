@@ -1,0 +1,1691 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Identity",
+      "key": "AmbientPrincipalAccessor",
+      "signature": "sealed class AmbientPrincipalAccessor : IPrincipalAccessor",
+      "members": [
+        {
+          "name": "Current",
+          "signatures": [
+            "Principal? Current { get; }"
+          ]
+        },
+        {
+          "name": "Set",
+          "signatures": [
+            "void Set(Principal? principal)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "Backoff",
+      "signature": "static class Backoff",
+      "members": [
+        {
+          "name": "Delay",
+          "signatures": [
+            "static TimeSpan Delay(int failures, int free, TimeSpan first, TimeSpan max)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ChallengeCheck",
+      "signature": "sealed record ChallengeCheck",
+      "members": [
+        {
+          "name": "ChallengeCheck",
+          "signatures": [
+            "ChallengeCheck(ChallengeState State, int UserId = 0, string Kind = \"\", int AttemptsLeft = 0)"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "ChallengeState State { get; init; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int UserId { get; init; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "AttemptsLeft",
+          "signatures": [
+            "int AttemptsLeft { get; init; }"
+          ]
+        },
+        {
+          "name": "IsOk",
+          "signatures": [
+            "bool IsOk { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ChallengeState",
+      "signature": "enum ChallengeState",
+      "members": [
+        {
+          "name": "Ok",
+          "signatures": [
+            "Ok = 1"
+          ]
+        },
+        {
+          "name": "Wrong",
+          "signatures": [
+            "Wrong = 2"
+          ]
+        },
+        {
+          "name": "Expired",
+          "signatures": [
+            "Expired = 3"
+          ]
+        },
+        {
+          "name": "Unknown",
+          "signatures": [
+            "Unknown = 4"
+          ]
+        },
+        {
+          "name": "Exhausted",
+          "signatures": [
+            "Exhausted = 5"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "DelegatePrincipalAccessor",
+      "signature": "sealed class DelegatePrincipalAccessor : IPrincipalAccessor",
+      "members": [
+        {
+          "name": "DelegatePrincipalAccessor",
+          "signatures": [
+            "DelegatePrincipalAccessor(Func<Principal?> source)"
+          ]
+        },
+        {
+          "name": "Current",
+          "signatures": [
+            "Principal? Current { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IIdentityMaintenance",
+      "signature": "interface IIdentityMaintenance",
+      "members": [
+        {
+          "name": "PurgeAsync",
+          "signatures": [
+            "Task<int> PurgeAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IIdentitySync",
+      "signature": "interface IIdentitySync",
+      "members": [
+        {
+          "name": "SyncAsync",
+          "signatures": [
+            "Task<int> SyncAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ILoginChallenges",
+      "signature": "interface ILoginChallenges",
+      "members": [
+        {
+          "name": "CreateAsync",
+          "signatures": [
+            "ValueTask<string> CreateAsync(int userId, string kind, string answer, TimeSpan? life = null, int? attempts = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "VerifyAsync",
+          "signatures": [
+            "ValueTask<ChallengeCheck> VerifyAsync(string id, string answer, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ILoginMethod",
+      "signature": "interface ILoginMethod",
+      "members": [
+        {
+          "name": "Provider",
+          "signatures": [
+            "string Provider { get; }"
+          ]
+        },
+        {
+          "name": "VerifyAsync",
+          "signatures": [
+            "ValueTask<MethodResult> VerifyAsync(LoginRequest request, ILoginSource source, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ILoginSource",
+      "signature": "interface ILoginSource",
+      "members": [
+        {
+          "name": "FindAsync",
+          "signatures": [
+            "ValueTask<LoginSubject?> FindAsync(string identifier, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "FindByIdAsync",
+          "signatures": [
+            "ValueTask<LoginSubject?> FindByIdAsync(int userId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "ValueTask SaveAsync(LoginSubject subject, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPasswordHasher",
+      "signature": "interface IPasswordHasher",
+      "members": [
+        {
+          "name": "Hash",
+          "signatures": [
+            "string Hash(string password)"
+          ]
+        },
+        {
+          "name": "Verify",
+          "signatures": [
+            "bool Verify(string? password, string? stored)"
+          ]
+        },
+        {
+          "name": "NeedsRehash",
+          "signatures": [
+            "bool NeedsRehash(string? stored)"
+          ]
+        },
+        {
+          "name": "FromLegacy",
+          "signatures": [
+            "string FromLegacy(byte[] salt, byte[] hash)"
+          ]
+        },
+        {
+          "name": "NewTemp",
+          "signatures": [
+            "string NewTemp(int length = 0)"
+          ]
+        },
+        {
+          "name": "Burn",
+          "signatures": [
+            "void Burn()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPermCache",
+      "signature": "interface IPermCache",
+      "members": [
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "ValueTask<PermSet> GetAsync(int userId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "InvalidateAsync",
+          "signatures": [
+            "ValueTask InvalidateAsync(int userId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IPermResolver",
+      "signature": "interface IPermResolver",
+      "members": [
+        {
+          "name": "ResolveAsync",
+          "signatures": [
+            "ValueTask<PermSet> ResolveAsync(int userId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ISecLog",
+      "signature": "interface ISecLog",
+      "members": [
+        {
+          "name": "WriteAsync",
+          "signatures": [
+            "Task<bool> WriteAsync(SecLogEntry entry, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "ISessionStore",
+      "signature": "interface ISessionStore",
+      "members": [
+        {
+          "name": "OpenAsync",
+          "signatures": [
+            "Task<OpenedSession> OpenAsync(int userId, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "CheckAsync",
+          "signatures": [
+            "Task<SessionState> CheckAsync(Guid sessionId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "TouchAsync",
+          "signatures": [
+            "Task<SessionState> TouchAsync(Guid sessionId, string sessionKey, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ListAsync",
+          "signatures": [
+            "Task<IReadOnlyList<SessionInfo>> ListAsync(int userId, bool activeOnly = true, int take = 50, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeAsync",
+          "signatures": [
+            "Task<bool> RevokeAsync(Guid sessionId, string reason, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeUserAsync",
+          "signatures": [
+            "Task<int> RevokeUserAsync(int userId, string reason, Guid? keep = null, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "IsFreshClientAsync",
+          "signatures": [
+            "Task<bool> IsFreshClientAsync(int userId, SessionClient client, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PurgeAsync",
+          "signatures": [
+            "Task<int> PurgeAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityEx",
+      "signature": "static class IdentityEx",
+      "members": [
+        {
+          "name": "AddOSIdentity",
+          "signatures": [
+            "static IServiceCollection AddOSIdentity(this IServiceCollection services, Action<IdentityOptions>? setup = null)"
+          ]
+        },
+        {
+          "name": "AddOSPermProvider",
+          "signatures": [
+            "static IServiceCollection AddOSPermProvider<TProvider>(this IServiceCollection services) where TProvider : class, IPermProvider"
+          ]
+        },
+        {
+          "name": "AddOSLoginSource",
+          "signatures": [
+            "static IServiceCollection AddOSLoginSource<TSource>(this IServiceCollection services) where TSource : class, ILoginSource"
+          ]
+        },
+        {
+          "name": "AddOSLoginMethod",
+          "signatures": [
+            "static IServiceCollection AddOSLoginMethod<TMethod>(this IServiceCollection services) where TMethod : class, ILoginMethod"
+          ]
+        },
+        {
+          "name": "AddOSPrincipalAccessor",
+          "signatures": [
+            "static IServiceCollection AddOSPrincipalAccessor<TAccessor>(this IServiceCollection services) where TAccessor : class, IPrincipalAccessor"
+          ]
+        },
+        {
+          "name": "SyncOSIdentityAsync",
+          "signatures": [
+            "static Task<int> SyncOSIdentityAsync(this IServiceProvider services, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityModule",
+      "signature": "sealed class IdentityModule : IModule",
+      "members": [
+        {
+          "name": "IdentityModule",
+          "signatures": [
+            "IdentityModule(Action<IdentityOptions>? setup = null)"
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "ModuleInfo Info { get; }"
+          ]
+        },
+        {
+          "name": "Register",
+          "signatures": [
+            "void Register(IServiceCollection services)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "IdentityOptions",
+      "signature": "sealed class IdentityOptions",
+      "members": [
+        {
+          "name": "App",
+          "signatures": [
+            "AppIdentity App { get; set; }"
+          ]
+        },
+        {
+          "name": "Session",
+          "signatures": [
+            "SessionPolicy Session { get; set; }"
+          ]
+        },
+        {
+          "name": "Lock",
+          "signatures": [
+            "LockPolicy Lock { get; set; }"
+          ]
+        },
+        {
+          "name": "Password",
+          "signatures": [
+            "PasswordPolicy Password { get; set; }"
+          ]
+        },
+        {
+          "name": "PermFresh",
+          "signatures": [
+            "TimeSpan PermFresh { get; set; }"
+          ]
+        },
+        {
+          "name": "SecLogRetentionDays",
+          "signatures": [
+            "int SecLogRetentionDays { get; set; }"
+          ]
+        },
+        {
+          "name": "ChallengeLife",
+          "signatures": [
+            "TimeSpan ChallengeLife { get; set; }"
+          ]
+        },
+        {
+          "name": "ChallengeAttempts",
+          "signatures": [
+            "int ChallengeAttempts { get; set; }"
+          ]
+        },
+        {
+          "name": "Principal",
+          "signatures": [
+            "Func<Principal?>? Principal { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LockGuard",
+      "signature": "sealed class LockGuard",
+      "members": [
+        {
+          "name": "LockGuard",
+          "signatures": [
+            "LockGuard(TimeProvider time, IPasswordHasher hasher, IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "IsLocked",
+          "signatures": [
+            "bool IsLocked(ILockable target)"
+          ]
+        },
+        {
+          "name": "Remaining",
+          "signatures": [
+            "TimeSpan Remaining(ILockable target)"
+          ]
+        },
+        {
+          "name": "RegisterFailure",
+          "signatures": [
+            "TimeSpan RegisterFailure(ILockable target)"
+          ]
+        },
+        {
+          "name": "Clear",
+          "signatures": [
+            "void Clear(ILockable target)"
+          ]
+        },
+        {
+          "name": "Check",
+          "signatures": [
+            "LoginCheck Check(ILogin login, IAccount account, string? password)"
+          ]
+        },
+        {
+          "name": "CheckMissing",
+          "signatures": [
+            "LoginCheck CheckMissing()"
+          ]
+        },
+        {
+          "name": "IsTempSecretExpired",
+          "signatures": [
+            "bool IsTempSecretExpired(ILogin login)"
+          ]
+        },
+        {
+          "name": "SetSecret",
+          "signatures": [
+            "OSResult SetSecret(ILogin login, string password)"
+          ]
+        },
+        {
+          "name": "SetTempSecret",
+          "signatures": [
+            "void SetTempSecret(ILogin login, string password, int hours = 0)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LockPolicy",
+      "signature": "sealed record LockPolicy",
+      "members": [
+        {
+          "name": "Threshold",
+          "signatures": [
+            "int Threshold { get; init; }"
+          ]
+        },
+        {
+          "name": "DecayMinutes",
+          "signatures": [
+            "int DecayMinutes { get; init; }"
+          ]
+        },
+        {
+          "name": "BaseLockMinutes",
+          "signatures": [
+            "int BaseLockMinutes { get; init; }"
+          ]
+        },
+        {
+          "name": "MaxLockMinutes",
+          "signatures": [
+            "int MaxLockMinutes { get; init; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "static LockPolicy Default { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginOutcome",
+      "signature": "sealed record LoginOutcome",
+      "members": [
+        {
+          "name": "LoginOutcome",
+          "signatures": [
+            "LoginOutcome(LoginState State, OpenedSession? Session = null, LoginSubject? Subject = null, TimeSpan LockRemaining = default, TimeSpan? RetryAfter = null, string? ChallengeId = null, string? ChallengeKind = null, int AttemptsLeft = 0)"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "LoginState State { get; init; }"
+          ]
+        },
+        {
+          "name": "Session",
+          "signatures": [
+            "OpenedSession? Session { get; init; }"
+          ]
+        },
+        {
+          "name": "Subject",
+          "signatures": [
+            "LoginSubject? Subject { get; init; }"
+          ]
+        },
+        {
+          "name": "LockRemaining",
+          "signatures": [
+            "TimeSpan LockRemaining { get; init; }"
+          ]
+        },
+        {
+          "name": "RetryAfter",
+          "signatures": [
+            "TimeSpan? RetryAfter { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeId",
+          "signatures": [
+            "string? ChallengeId { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeKind",
+          "signatures": [
+            "string? ChallengeKind { get; init; }"
+          ]
+        },
+        {
+          "name": "AttemptsLeft",
+          "signatures": [
+            "int AttemptsLeft { get; init; }"
+          ]
+        },
+        {
+          "name": "IsOk",
+          "signatures": [
+            "bool IsOk { get; }"
+          ]
+        },
+        {
+          "name": "NeedsChallenge",
+          "signatures": [
+            "bool NeedsChallenge { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginRequest",
+      "signature": "sealed record LoginRequest",
+      "members": [
+        {
+          "name": "LoginRequest",
+          "signatures": [
+            "LoginRequest(string Identifier, string? Secret = null, SessionClient? Client = null, string? Method = null)"
+          ]
+        },
+        {
+          "name": "Identifier",
+          "signatures": [
+            "string Identifier { get; init; }"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "string? Secret { get; init; }"
+          ]
+        },
+        {
+          "name": "Client",
+          "signatures": [
+            "SessionClient? Client { get; init; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "string? Method { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginService",
+      "signature": "sealed class LoginService",
+      "members": [
+        {
+          "name": "LoginService",
+          "signatures": [
+            "LoginService(ILoginSource source, IEnumerable<ILoginMethod> methods, LoginThrottle throttle, ISessionStore sessions, ISecLog log, ILoginChallenges challenges)"
+          ]
+        },
+        {
+          "name": "StartAsync",
+          "signatures": [
+            "Task<LoginOutcome> StartAsync(LoginRequest request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ContinueAsync",
+          "signatures": [
+            "Task<LoginOutcome> ContinueAsync(string challengeId, string answer, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "LogoutAsync",
+          "signatures": [
+            "Task<bool> LogoutAsync(Guid sessionId, int? userId = null, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "LogoutAllAsync",
+          "signatures": [
+            "Task<int> LogoutAllAsync(int userId, Guid? keep = null, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginSubject",
+      "signature": "sealed class LoginSubject",
+      "members": [
+        {
+          "name": "UserId",
+          "signatures": [
+            "required int UserId { get; init; }"
+          ]
+        },
+        {
+          "name": "UserName",
+          "signatures": [
+            "required string UserName { get; init; }"
+          ]
+        },
+        {
+          "name": "Login",
+          "signatures": [
+            "required ILogin Login { get; init; }"
+          ]
+        },
+        {
+          "name": "Account",
+          "signatures": [
+            "required IAccount Account { get; init; }"
+          ]
+        },
+        {
+          "name": "FullName",
+          "signatures": [
+            "string? FullName { get; init; }"
+          ]
+        },
+        {
+          "name": "Uid",
+          "signatures": [
+            "Guid Uid { get; init; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "object? State { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "LoginThrottle",
+      "signature": "sealed class LoginThrottle",
+      "members": [
+        {
+          "name": "LoginThrottle",
+          "signatures": [
+            "LoginThrottle(TimeProvider time, int freeAttempts = 5, TimeSpan? firstLockout = null, TimeSpan? maxLockout = null, int capacity = 10000)"
+          ]
+        },
+        {
+          "name": "KeySize",
+          "signatures": [
+            "const int KeySize = 128"
+          ]
+        },
+        {
+          "name": "RetryAfter",
+          "signatures": [
+            "TimeSpan? RetryAfter(string? name, string? ip)"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "void Failed(string? name, string? ip)"
+          ]
+        },
+        {
+          "name": "Succeeded",
+          "signatures": [
+            "void Succeeded(string? name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "MemoryLoginChallenges",
+      "signature": "sealed class MemoryLoginChallenges : ILoginChallenges",
+      "members": [
+        {
+          "name": "MemoryLoginChallenges",
+          "signatures": [
+            "MemoryLoginChallenges(TimeProvider time, IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "Capacity",
+          "signatures": [
+            "const int Capacity = 10000"
+          ]
+        },
+        {
+          "name": "CreateAsync",
+          "signatures": [
+            "ValueTask<string> CreateAsync(int userId, string kind, string answer, TimeSpan? life = null, int? attempts = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "VerifyAsync",
+          "signatures": [
+            "ValueTask<ChallengeCheck> VerifyAsync(string id, string answer, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "MemorySecLog",
+      "signature": "sealed class MemorySecLog : ISecLog",
+      "members": [
+        {
+          "name": "MemorySecLog",
+          "signatures": [
+            "MemorySecLog(TimeProvider time, IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "Capacity",
+          "signatures": [
+            "const int Capacity = 1000"
+          ]
+        },
+        {
+          "name": "Recent",
+          "signatures": [
+            "IReadOnlyList<SecLogEntry> Recent { get; }"
+          ]
+        },
+        {
+          "name": "WriteAsync",
+          "signatures": [
+            "Task<bool> WriteAsync(SecLogEntry entry, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "MemorySessionStore",
+      "signature": "sealed class MemorySessionStore : ISessionStore",
+      "members": [
+        {
+          "name": "MemorySessionStore",
+          "signatures": [
+            "MemorySessionStore(TimeProvider time, IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "OpenAsync",
+          "signatures": [
+            "Task<OpenedSession> OpenAsync(int userId, SessionClient? client = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "CheckAsync",
+          "signatures": [
+            "Task<SessionState> CheckAsync(Guid sessionId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "TouchAsync",
+          "signatures": [
+            "Task<SessionState> TouchAsync(Guid sessionId, string sessionKey, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "ListAsync",
+          "signatures": [
+            "Task<IReadOnlyList<SessionInfo>> ListAsync(int userId, bool activeOnly = true, int take = 50, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeAsync",
+          "signatures": [
+            "Task<bool> RevokeAsync(Guid sessionId, string reason, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "RevokeUserAsync",
+          "signatures": [
+            "Task<int> RevokeUserAsync(int userId, string reason, Guid? keep = null, int? byUserId = null, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "IsFreshClientAsync",
+          "signatures": [
+            "Task<bool> IsFreshClientAsync(int userId, SessionClient client, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "PurgeAsync",
+          "signatures": [
+            "Task<int> PurgeAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "MethodResult",
+      "signature": "sealed record MethodResult",
+      "members": [
+        {
+          "name": "MethodResult",
+          "signatures": [
+            "MethodResult(LoginState State, LoginSubject? Subject = null, bool NeedsSave = false, TimeSpan LockRemaining = default, string? Reason = null, string? ChallengeKind = null, string? ChallengeAnswer = null)"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "LoginState State { get; init; }"
+          ]
+        },
+        {
+          "name": "Subject",
+          "signatures": [
+            "LoginSubject? Subject { get; init; }"
+          ]
+        },
+        {
+          "name": "NeedsSave",
+          "signatures": [
+            "bool NeedsSave { get; init; }"
+          ]
+        },
+        {
+          "name": "LockRemaining",
+          "signatures": [
+            "TimeSpan LockRemaining { get; init; }"
+          ]
+        },
+        {
+          "name": "Reason",
+          "signatures": [
+            "string? Reason { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeKind",
+          "signatures": [
+            "string? ChallengeKind { get; init; }"
+          ]
+        },
+        {
+          "name": "ChallengeAnswer",
+          "signatures": [
+            "string? ChallengeAnswer { get; init; }"
+          ]
+        },
+        {
+          "name": "Signed",
+          "signatures": [
+            "static MethodResult Signed(LoginSubject subject, bool needsSave = false)"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "static MethodResult Failed(LoginState state, string? reason = null, LoginSubject? subject = null, bool needsSave = false, TimeSpan remaining = default)"
+          ]
+        },
+        {
+          "name": "Challenge",
+          "signatures": [
+            "static MethodResult Challenge(LoginSubject subject, string kind, string answer, bool needsSave = false)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PasswordHash",
+      "signature": "sealed record PasswordHash",
+      "members": [
+        {
+          "name": "PasswordHash",
+          "signatures": [
+            "PasswordHash(string Algo, int Iterations, byte[] Salt, byte[] Hash)"
+          ]
+        },
+        {
+          "name": "Pbkdf2Sha512",
+          "signatures": [
+            "const string Pbkdf2Sha512 = \"pbkdf2-sha512\""
+          ]
+        },
+        {
+          "name": "HmacSha512",
+          "signatures": [
+            "const string HmacSha512 = \"hmac-sha512\""
+          ]
+        },
+        {
+          "name": "Separator",
+          "signatures": [
+            "const char Separator = '$'"
+          ]
+        },
+        {
+          "name": "Algo",
+          "signatures": [
+            "string Algo { get; init; }"
+          ]
+        },
+        {
+          "name": "Iterations",
+          "signatures": [
+            "int Iterations { get; init; }"
+          ]
+        },
+        {
+          "name": "Salt",
+          "signatures": [
+            "byte[] Salt { get; init; }"
+          ]
+        },
+        {
+          "name": "Hash",
+          "signatures": [
+            "byte[] Hash { get; init; }"
+          ]
+        },
+        {
+          "name": "IsLegacy",
+          "signatures": [
+            "bool IsLegacy { get; }"
+          ]
+        },
+        {
+          "name": "ToText",
+          "signatures": [
+            "string ToText()"
+          ]
+        },
+        {
+          "name": "TryParse",
+          "signatures": [
+            "static bool TryParse(string? stored, out PasswordHash hash)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PasswordHasher",
+      "signature": "sealed class PasswordHasher : IPasswordHasher",
+      "members": [
+        {
+          "name": "PasswordHasher",
+          "signatures": [
+            "PasswordHasher(IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "Hash",
+          "signatures": [
+            "string Hash(string password)"
+          ]
+        },
+        {
+          "name": "Verify",
+          "signatures": [
+            "bool Verify(string? password, string? stored)"
+          ]
+        },
+        {
+          "name": "NeedsRehash",
+          "signatures": [
+            "bool NeedsRehash(string? stored)"
+          ]
+        },
+        {
+          "name": "FromLegacy",
+          "signatures": [
+            "string FromLegacy(byte[] salt, byte[] hash)"
+          ]
+        },
+        {
+          "name": "NewTemp",
+          "signatures": [
+            "string NewTemp(int length = 0)"
+          ]
+        },
+        {
+          "name": "Burn",
+          "signatures": [
+            "void Burn()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PasswordMethod",
+      "signature": "sealed class PasswordMethod : ILoginMethod",
+      "members": [
+        {
+          "name": "PasswordMethod",
+          "signatures": [
+            "PasswordMethod(LockGuard guard)"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "string Provider { get; }"
+          ]
+        },
+        {
+          "name": "VerifyAsync",
+          "signatures": [
+            "ValueTask<MethodResult> VerifyAsync(LoginRequest request, ILoginSource source, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PasswordPolicy",
+      "signature": "sealed record PasswordPolicy",
+      "members": [
+        {
+          "name": "TempHours",
+          "signatures": [
+            "int TempHours { get; init; }"
+          ]
+        },
+        {
+          "name": "MinLength",
+          "signatures": [
+            "int MinLength { get; init; }"
+          ]
+        },
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "int MaxLength { get; init; }"
+          ]
+        },
+        {
+          "name": "Iterations",
+          "signatures": [
+            "int Iterations { get; init; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "static PasswordPolicy Default { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermCache",
+      "signature": "sealed class PermCache : IPermCache",
+      "members": [
+        {
+          "name": "PermCache",
+          "signatures": [
+            "PermCache(IdentityOptions options, IPermResolver? resolver = null, HybridCache? cache = null)"
+          ]
+        },
+        {
+          "name": "GetAsync",
+          "signatures": [
+            "ValueTask<PermSet> GetAsync(int userId, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "InvalidateAsync",
+          "signatures": [
+            "ValueTask InvalidateAsync(int userId, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermCatalog",
+      "signature": "sealed class PermCatalog",
+      "members": [
+        {
+          "name": "PermCatalog",
+          "signatures": [
+            "PermCatalog(IEnumerable<IPermProvider> providers, IdentityOptions options)"
+          ]
+        },
+        {
+          "name": "Roots",
+          "signatures": [
+            "IReadOnlyList<PermInfo> Roots { get; }"
+          ]
+        },
+        {
+          "name": "Flat",
+          "signatures": [
+            "IReadOnlyList<PermInfo> Flat { get; }"
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "IReadOnlyList<string> Names { get; }"
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "PermInfo? Find(string? name)"
+          ]
+        },
+        {
+          "name": "ForApp",
+          "signatures": [
+            "IReadOnlyList<PermInfo> ForApp(string? appCode)"
+          ]
+        },
+        {
+          "name": "Expand",
+          "signatures": [
+            "HashSet<string> Expand(string? pattern)",
+            "HashSet<string> Expand(IEnumerable<string>? patterns)"
+          ]
+        },
+        {
+          "name": "Uncovered",
+          "signatures": [
+            "List<string> Uncovered(IPermChecker? checker, IEnumerable<string>? patterns)"
+          ]
+        },
+        {
+          "name": "IsLive",
+          "signatures": [
+            "bool IsLive(string? pattern)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermChecker",
+      "signature": "sealed class PermChecker : IPermChecker",
+      "members": [
+        {
+          "name": "PermChecker",
+          "signatures": [
+            "PermChecker(IPrincipalAccessor accessor)"
+          ]
+        },
+        {
+          "name": "IsRoot",
+          "signatures": [
+            "bool IsRoot { get; }"
+          ]
+        },
+        {
+          "name": "IsGranted",
+          "signatures": [
+            "bool IsGranted(string name)",
+            "bool IsGranted(string name, ScopeChain chain)",
+            "bool IsGranted(PermInfo perm)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermGrantBuilder",
+      "signature": "static class PermGrantBuilder",
+      "members": [
+        {
+          "name": "ToGrants",
+          "signatures": [
+            "static List<PermGrant> ToGrants(this IEnumerable<PermInfo>? perms, AppPerm? appPerm)"
+          ]
+        },
+        {
+          "name": "ToGrant",
+          "signatures": [
+            "static PermGrant? ToGrant(this PermInfo? perm, AppPerm? appPerm)"
+          ]
+        },
+        {
+          "name": "ToRoleGrants",
+          "signatures": [
+            "static List<PermGrant> ToRoleGrants(this IEnumerable<PermInfo>? roots, IEnumerable<string>? patterns, ISet<string>? newNames = null)"
+          ]
+        },
+        {
+          "name": "ToRoleGrant",
+          "signatures": [
+            "static PermGrant? ToRoleGrant(this PermInfo? perm, IReadOnlyList<string> patterns, ISet<string>? newNames = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "PermPattern",
+      "signature": "static class PermPattern",
+      "members": [
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "const int MaxLength = 128"
+          ]
+        },
+        {
+          "name": "Normalize",
+          "signatures": [
+            "static string Normalize(string? pattern)"
+          ]
+        },
+        {
+          "name": "IsValidName",
+          "signatures": [
+            "static bool IsValidName(string? name)"
+          ]
+        },
+        {
+          "name": "IsWildcard",
+          "signatures": [
+            "static bool IsWildcard(string? pattern)"
+          ]
+        },
+        {
+          "name": "Covers",
+          "signatures": [
+            "static bool Covers(string? pattern, string? name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionKeys",
+      "signature": "static class SessionKeys",
+      "members": [
+        {
+          "name": "New",
+          "signatures": [
+            "static string New()"
+          ]
+        },
+        {
+          "name": "Hash",
+          "signatures": [
+            "static string? Hash(string? key)"
+          ]
+        },
+        {
+          "name": "Matches",
+          "signatures": [
+            "static bool Matches(string? key, string? storedHash)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionPolicy",
+      "signature": "sealed record SessionPolicy",
+      "members": [
+        {
+          "name": "AbsoluteDays",
+          "signatures": [
+            "int AbsoluteDays { get; init; }"
+          ]
+        },
+        {
+          "name": "IdleHours",
+          "signatures": [
+            "int IdleHours { get; init; }"
+          ]
+        },
+        {
+          "name": "RetentionDays",
+          "signatures": [
+            "int RetentionDays { get; init; }"
+          ]
+        },
+        {
+          "name": "TouchSeconds",
+          "signatures": [
+            "int TouchSeconds { get; init; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "static SessionPolicy Default { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Identity",
+      "key": "SessionRules",
+      "signature": "static class SessionRules",
+      "members": [
+        {
+          "name": "Check",
+          "signatures": [
+            "static SessionState Check(DateTimeOffset? revokedDate, DateTimeOffset expireDate, DateTimeOffset lastSeenDate, SessionPolicy policy, DateTimeOffset now)"
+          ]
+        },
+        {
+          "name": "ShouldTouch",
+          "signatures": [
+            "static bool ShouldTouch(DateTimeOffset lastSeenDate, SessionPolicy policy, DateTimeOffset now)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "lock-after-five",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar options = Demo.Options();\nvar guard = new LockGuard(clock, new PasswordHasher(options), options);\nvar login = new SampleLogin();\nList<object> lines = [];\n\nfor (var failure = 1; failure <= 7; failure++)\n    lines.Add($\"failure {failure}: locked for {guard.RegisterFailure(login).TotalMinutes} minutes\");",
+      "topic": "lockout",
+      "output": "failure 1: locked for 0 minutes\nfailure 2: locked for 0 minutes\nfailure 3: locked for 0 minutes\nfailure 4: locked for 0 minutes\nfailure 5: locked for 5 minutes\nfailure 6: locked for 10 minutes\nfailure 7: locked for 20 minutes"
+    },
+    {
+      "key": "check-alogin",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar options = Demo.Options();\nvar hasher = new PasswordHasher(options);\nvar guard = new LockGuard(clock, hasher, options);\nvar login = new SampleLogin { Secret = hasher.Hash(\"correct horse battery\") };\n\nvar wrong = guard.Check(login, login, \"wrong password\");\nvar right = guard.Check(login, login, \"correct horse battery\");",
+      "topic": "lockout",
+      "output": "wrong: InvalidCred\nright: Ok\nsave the row: True\nfailures now: 0"
+    },
+    {
+      "key": "lock-expires",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar options = Demo.Options();\nvar guard = new LockGuard(clock, new PasswordHasher(options), options);\nvar login = new SampleLogin();\n\nfor (var i = 0; i < 5; i++)\n    guard.RegisterFailure(login);\n\nvar locked = guard.IsLocked(login);\nclock.Advance(TimeSpan.FromMinutes(6));",
+      "topic": "lockout",
+      "output": "locked: True\nsix minutes later: False"
+    },
+    {
+      "key": "backoff-table",
+      "code": "var first = TimeSpan.FromSeconds(30);\nvar max = TimeSpan.FromMinutes(15);",
+      "topic": "lockout",
+      "output": "4 failures: 00:00:00\n5 failures: 00:00:30\n6 failures: 00:01:00\n7 failures: 00:02:00\n8 failures: 00:04:00\n9 failures: 00:08:00\n10 failures: 00:15:00\n11 failures: 00:15:00"
+    },
+    {
+      "key": "throttle",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar throttle = new LoginThrottle(clock);\n\nfor (var i = 0; i < 5; i++)\n    throttle.Failed(\"radman\", \"10.0.0.1\");",
+      "topic": "lockout",
+      "output": "same name, other address: 00:00:30\nother name, same address: 00:00:30\nunrelated: free"
+    },
+    {
+      "key": "unknown-user",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar options = Demo.Options();\nvar guard = new LockGuard(clock, new PasswordHasher(options), options);",
+      "topic": "lockout",
+      "output": "InvalidCred"
+    },
+    {
+      "key": "own-method",
+      "code": "public sealed class MailCodeMethod(IMailer mailer) : ILoginMethod\n{\n    public string Provider => \"mail-code\";\n\n    public async ValueTask<MethodResult> VerifyAsync(LoginRequest request, ILoginSource source, CancellationToken token = default)\n    {\n        var subject = await source.FindAsync(request.Identifier, token);\n\n        if (subject is null)\n            return MethodResult.Failed(LoginState.InvalidCred, IdentityCodes.SecReason.NoUser);\n\n        var code = RandomNumberGenerator.GetInt32(100_000, 1_000_000).ToString(System.Globalization.CultureInfo.InvariantCulture);\n\n        await mailer.SendAsync(subject.UserName, code);\n\n        return MethodResult.Challenge(subject, IdentityCodes.Challenge.Otp, code);\n    }\n}",
+      "topic": "login"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSIdentity(o => o.App = new AppIdentity { Code = \"shop\" });\nservices.AddOSLoginSource<SampleSource>();\nservices.AddOSLoginMethod<SampleCodeMethod>();",
+      "topic": "login"
+    },
+    {
+      "key": "sign-in",
+      "code": "var rig = LoginDemo.Create();\n\nvar wrong = rig.Service.StartAsync(LoginDemo.Password(\"radman\", \"wrong password\")).GetAwaiter().GetResult();\nvar right = rig.Service.StartAsync(LoginDemo.Password(\"radman\", \"correct horse battery\")).GetAwaiter().GetResult();",
+      "topic": "login",
+      "output": "wrong password: InvalidCred\nright password: Ok\nsession key: 44 characters\nlog: LoginTried Failed, LoginTried Success, SessionOpened Success"
+    },
+    {
+      "key": "throttled",
+      "code": "var rig = LoginDemo.Create();\n\nfor (var i = 0; i < 5; i++)\n    rig.Service.StartAsync(LoginDemo.Password(\"nobody\", \"x\")).GetAwaiter().GetResult();\n\nvar next = rig.Service.StartAsync(LoginDemo.Password(\"nobody\", \"x\")).GetAwaiter().GetResult();\nvar real = rig.Service.StartAsync(LoginDemo.Password(\"radman\", \"correct horse battery\")).GetAwaiter().GetResult();",
+      "topic": "login",
+      "output": "a name that does not exist: Throttled, wait 00:00:30\na real name from the same address: Throttled"
+    },
+    {
+      "key": "second-factor",
+      "code": "var rig = LoginDemo.Create();\n\nvar started = rig.Service.StartAsync(new LoginRequest(\"radman\", null, new SessionClient { IpAddress = \"10.0.0.1\" }, \"code\")).GetAwaiter().GetResult();\nvar wrong = rig.Service.ContinueAsync(started.ChallengeId!, \"000000\").GetAwaiter().GetResult();\nvar right = rig.Service.ContinueAsync(started.ChallengeId!, \"246810\").GetAwaiter().GetResult();\nvar again = rig.Service.ContinueAsync(started.ChallengeId!, \"246810\").GetAwaiter().GetResult();",
+      "topic": "login",
+      "output": "start: ChallengeRequired (otp)\nwrong code: InvalidCred, 4 tries left\nright code: Ok\nsame code again: InvalidCred"
+    },
+    {
+      "key": "logout",
+      "code": "var rig = LoginDemo.Create();\n\nvar first = rig.Service.StartAsync(LoginDemo.Password(\"radman\", \"correct horse battery\")).GetAwaiter().GetResult();\nrig.Service.StartAsync(LoginDemo.Password(\"radman\", \"correct horse battery\")).GetAwaiter().GetResult();\n\nvar one = rig.Service.LogoutAsync(first.Session!.Id, 7).GetAwaiter().GetResult();\nvar rest = rig.Service.LogoutAllAsync(7).GetAwaiter().GetResult();",
+      "topic": "login",
+      "output": "one session closed: True\nthe others closed: 1"
+    },
+    {
+      "key": "quick",
+      "code": "services.AddOSIdentity(o => o.App = new AppIdentity { Code = \"shop\", Title = \"Shop\" });\nservices.AddOSPermProvider<ShopPerms>();"
+    },
+    {
+      "key": "signed-in-user",
+      "code": "services.AddOSIdentity(o =>\n{\n    o.App = new AppIdentity { Code = \"shop\" };\n    o.Principal = currentUser;\n});\nservices.AddOSPermProvider<ShopPerms>();"
+    },
+    {
+      "key": "hash-and-verify",
+      "code": "var hasher = new PasswordHasher(Demo.Options());\nvar stored = hasher.Hash(\"correct horse battery\");",
+      "topic": "passwords",
+      "output": "pbkdf2-sha512\nTrue\nFalse"
+    },
+    {
+      "key": "stored-text",
+      "code": "var hasher = new PasswordHasher(Demo.Options());\nvar parts = hasher.Hash(\"correct horse battery\").Split('$');",
+      "topic": "passwords",
+      "output": "algorithm: pbkdf2-sha512\niterations: 220000\nsalt: 32 bytes\nhash: 64 bytes"
+    },
+    {
+      "key": "upgrade",
+      "code": "var oldOptions = Demo.Options();\noldOptions.Password = new PasswordPolicy { Iterations = 50_000 };\n\nvar stored = new PasswordHasher(oldOptions).Hash(\"correct horse battery\");\nvar current = new PasswordHasher(Demo.Options());",
+      "topic": "passwords",
+      "output": "needs rehash: True\nafter rehash: False"
+    },
+    {
+      "key": "legacy-hash",
+      "code": "var salt = RandomNumberGenerator.GetBytes(16);\nvar hash = HMACSHA512.HashData(salt, Encoding.UTF8.GetBytes(\"old password\"));\n\nvar hasher = new PasswordHasher(Demo.Options());\nvar stored = hasher.FromLegacy(salt, hash);",
+      "topic": "passwords",
+      "output": "True\nTrue"
+    },
+    {
+      "key": "damaged",
+      "code": "var hasher = new PasswordHasher(Demo.Options());",
+      "topic": "passwords",
+      "output": "False\nFalse\nFalse"
+    },
+    {
+      "key": "temporary-password",
+      "code": "var hasher = new PasswordHasher(Demo.Options());\nvar text = hasher.NewTemp();",
+      "topic": "passwords",
+      "output": "length: 10\nhas look-alike letters: False"
+    },
+    {
+      "key": "catalog",
+      "code": "var catalog = Demo.Catalog();",
+      "topic": "perms",
+      "output": "permissions: 5\nparent of shop:orders:view: shop:orders\nshop:orders:edit, shop:orders:view"
+    },
+    {
+      "key": "wildcard-rules",
+      "code": "[\n    PermPattern.Covers(\"shop:*\", \"shop:orders:view\"),\n    PermPattern.Covers(\"shop:orders:*\", \"shop:users:view\"),\n    PermPattern.IsWildcard(\"shop:orders\"),\n    PermPattern.IsValidName(\"shop:orders:view\"),\n    PermPattern.IsValidName(\"Shop Orders\")\n];",
+      "topic": "perms",
+      "output": "True\nFalse\nFalse\nTrue\nFalse"
+    },
+    {
+      "key": "duplicate-name",
+      "code": "try\n{\n    _ = new PermCatalog([new ShopPerms(), new ShopPerms()], Demo.Options());\n    return \"accepted\";\n}\ncatch (OSException error)\n{\n    return error.Message;\n}",
+      "topic": "perms",
+      "output": "Permission 'shop:orders' is declared more than once."
+    },
+    {
+      "key": "scoped-deny",
+      "code": "var registry = new ScopeRegistry([new ScopeKind { Kind = 1, Code = \"store\", Rank = 10 }]);\nvar set = new PermSet();\nset.Add(\"shop:orders:edit\", Scope.App);\nset.Remove(\"shop:orders:edit\", Demo.Store5);\n\nvar inStore = ScopeChain.Of(registry, [Demo.Store5]);\nvar inOther = ScopeChain.Of(registry, [new Scope(1, 6)]);",
+      "topic": "perms",
+      "output": "everywhere: True\nin store 5: False\nin store 6: True"
+    },
+    {
+      "key": "role-tree",
+      "code": "var grants = Demo.Catalog().Roots.ToRoleGrants([\"shop:orders:*\"]);",
+      "topic": "perms",
+      "output": "shop:orders: access True, via shop:orders:*\nshop:users: access False, via -"
+    },
+    {
+      "key": "what-the-caller-lacks",
+      "code": "var caller = new Principal { Id = 1, Perms = new PermSet() };\ncaller.Perms.Add(\"shop:orders:view\", Scope.App);\n\nvar checker = new PermChecker(new DelegatePrincipalAccessor(() => caller));",
+      "topic": "perms",
+      "output": "shop:orders:edit"
+    },
+    {
+      "key": "open-and-touch",
+      "code": "var store = Store(new FakeTimeProvider(Demo.Now));\n\nvar opened = store.OpenAsync(7, new SessionClient { Kind = ClientKind.Web, Name = \"Firefox\" }).GetAwaiter().GetResult();",
+      "topic": "sessions",
+      "output": "key length: 44\nright key: Valid\nwrong key: Unknown"
+    },
+    {
+      "key": "idle",
+      "code": "var clock = new FakeTimeProvider(Demo.Now);\nvar store = Store(clock);\nvar opened = store.OpenAsync(7).GetAwaiter().GetResult();\n\nclock.Advance(TimeSpan.FromHours(5));",
+      "topic": "sessions",
+      "output": "Idle"
+    },
+    {
+      "key": "revoke",
+      "code": "var store = Store(new FakeTimeProvider(Demo.Now));\nvar opened = store.OpenAsync(7).GetAwaiter().GetResult();\n\nvar revoked = store.RevokeAsync(opened.Id, IdentityCodes.SessionReason.AdminRevoked, byUserId: 99).GetAwaiter().GetResult();\nvar info = store.ListAsync(7, activeOnly: false).GetAwaiter().GetResult().Single();",
+      "topic": "sessions",
+      "output": "True\nRevoked\nadmin-revoked\n99"
+    },
+    {
+      "key": "keys-are-hashed",
+      "code": "var key = SessionKeys.New();",
+      "topic": "sessions",
+      "output": "key: 44 characters\nstored hash: 44 characters\nTrue"
+    },
+    {
+      "key": "long-user-agent",
+      "code": "var store = Store(new FakeTimeProvider(Demo.Now));\nvar client = new SessionClient { Kind = ClientKind.Web, Name = new string('a', 600) };\n\nstore.OpenAsync(7, client).GetAwaiter().GetResult();",
+      "topic": "sessions",
+      "output": "stored name length: 128"
+    },
+    {
+      "key": "security-log",
+      "code": "var log = new MemorySecLog(new FakeTimeProvider(Demo.Now), Demo.Options());\n\nlog.WriteAsync(new SecLogEntry { Event = SecEvent.LoginTried, Result = SecResult.Failed, Target = \"radman\" }).GetAwaiter().GetResult();\nlog.WriteAsync(new SecLogEntry { Event = SecEvent.LoginTried, Result = SecResult.Failed, Target = \"my secret password 123\" }).GetAwaiter().GetResult();",
+      "topic": "sessions",
+      "output": "LoginTried Failed: radman\nLoginTried Failed: h:fe4e3f730851"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSIdentity(o =>\n{\n    o.App = new AppIdentity { Code = \"shop\", Title = \"Shop\", Kind = AppKind.WebApi };\n    o.Session = new SessionPolicy { IdleHours = 8 };\n    o.Lock = new LockPolicy { Threshold = 3 };\n});\nservices.AddOSPermProvider<ShopPerms>();",
+      "topic": "start"
+    },
+    {
+      "key": "own-principal-source",
+      "code": "services.AddOSIdentity(o => o.Principal = currentUser);",
+      "topic": "start"
+    },
+    {
+      "key": "sync-at-startup",
+      "code": "services.SyncOSIdentityAsync(token);",
+      "topic": "start"
+    },
+    {
+      "key": "check-apermission",
+      "code": "var user = new Principal { Id = 7, UserName = \"radman\", Perms = new PermSet() };\nuser.Perms.Add(\"shop:orders:view\", Scope.App);\n\nvar checker = new PermChecker(new DelegatePrincipalAccessor(() => user));",
+      "topic": "start",
+      "output": "True\nFalse\nForbidden"
+    },
+    {
+      "key": "bad-options",
+      "code": "try\n{\n    new ServiceCollection().AddOSIdentity(o => o.Lock = new LockPolicy { Threshold = 0 });\n    return \"accepted\";\n}\ncatch (ArgumentOutOfRangeException error)\n{\n    return error.ParamName ?? \"invalid\";\n}",
+      "topic": "start",
+      "output": "Threshold"
+    }
+  ]
+}

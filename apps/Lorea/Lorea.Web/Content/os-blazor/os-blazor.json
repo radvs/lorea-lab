@@ -1,0 +1,198 @@
+{
+  "slug": "os-blazor",
+  "name": "OS.Blazor",
+  "version": "1.0.0",
+  "group": "interface",
+  "uses": [
+    "os-locale"
+  ],
+  "topics": [
+    {
+      "slug": "setup",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "BlazorDI",
+        "BlazorOptions",
+        "OSComponent",
+        "IconOptions",
+        "ThemeOptions",
+        "ApiOptions",
+        "TokenOptions",
+        "ApiClient",
+        "TokenStore"
+      ]
+    },
+    {
+      "slug": "shell",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSApp",
+        "OSShell",
+        "OSHeader",
+        "OSHeaderStart",
+        "OSHeaderCenter",
+        "OSHeaderEnd",
+        "OSSidebar",
+        "OSSidebarHead",
+        "OSSidebarFoot",
+        "OSBody",
+        "OSFooter",
+        "OSTabBar",
+        "OSNav",
+        "OSNavSection",
+        "OSNavLink",
+        "OSPage",
+        "OSPanel",
+        "OSView",
+        "ShellService",
+        "ShellOptions",
+        "SidebarPlacement",
+        "SidebarSide",
+        "DrawerEdge"
+      ]
+    },
+    {
+      "slug": "buttons",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSButton",
+        "OSIconButton",
+        "OSCopyButton",
+        "OSFileButton",
+        "OSFilePicker",
+        "ButtonKind",
+        "ButtonSize"
+      ]
+    },
+    {
+      "slug": "fields",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSTextField",
+        "OSSearchField",
+        "OSSelectField{TValue}",
+        "OSChoiceField{TValue}",
+        "OSSwitch",
+        "OSImageField",
+        "OSDropdown{TValue}",
+        "OSMultiDropdown{TValue}",
+        "OSFieldFrame"
+      ]
+    },
+    {
+      "slug": "display",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSCard",
+        "OSStatCard",
+        "StatTone",
+        "OSChip",
+        "OSStatusChip",
+        "ChipTone",
+        "ChipSize",
+        "OSLabel",
+        "OSMark",
+        "OSIcon",
+        "OSPageHead",
+        "OSHeadItem",
+        "OSCodeBlock",
+        "OSInlineText",
+        "ICodeHighlighter",
+        "CSharpHighlighter"
+      ]
+    },
+    {
+      "slug": "overlays",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSDialog",
+        "OSConfirm",
+        "OSToastHost",
+        "IToastService",
+        "Toast",
+        "OSTooltip",
+        "TooltipSide",
+        "OSMenu",
+        "OSMenuItem",
+        "OSMenuRule"
+      ]
+    },
+    {
+      "slug": "navigation",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSTabs{TValue}",
+        "OSAccordion",
+        "OSAccordionItem",
+        "OSAccordionLeaf",
+        "OSTree{TItem}",
+        "OSTreeNode{TItem}",
+        "OSIconNav",
+        "IconNavItem",
+        "OSPager",
+        "OSToTop"
+      ]
+    },
+    {
+      "slug": "data",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSDataGrid{T}",
+        "OSColumn{T}",
+        "ColumnAlign",
+        "OSGroupBoard{TGroup,TItem}",
+        "OSBoardLine{TItem}",
+        "OSBoardScope{TGroup,TItem}",
+        "OSBoardView",
+        "OSDataState",
+        "DataStateKind",
+        "OSBoundary",
+        "OSDataSet{T}",
+        "OSEditor{TDraft}",
+        "OSLoader",
+        "OSSpinner"
+      ]
+    },
+    {
+      "slug": "jobs",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "OSJobDialog{TPlan,TResult}",
+        "OSJobStatus",
+        "OSJobState",
+        "OSJobTexts",
+        "IJobSource",
+        "HttpJobSource"
+      ]
+    },
+    {
+      "slug": "themes",
+      "namespaces": [
+        "OS.Blazor"
+      ],
+      "types": [
+        "ThemeService",
+        "ThemeMode",
+        "OSThemeToggle"
+      ]
+    }
+  ]
+}

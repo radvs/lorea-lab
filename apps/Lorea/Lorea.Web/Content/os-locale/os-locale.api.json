@@ -1,0 +1,1405 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Locale",
+      "key": "Bank",
+      "signature": "sealed record Bank : NamedItem",
+      "members": [
+        {
+          "name": "Bank",
+          "signatures": [
+            "Bank(string Code, IReadOnlyDictionary<string, string> Names, IReadOnlyList<string> CardPrefixes, string IbanCode)"
+          ]
+        },
+        {
+          "name": "CardPrefixes",
+          "signatures": [
+            "IReadOnlyList<string> CardPrefixes { get; init; }"
+          ]
+        },
+        {
+          "name": "IbanCode",
+          "signatures": [
+            "string IbanCode { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "Bidi",
+      "signature": "static class Bidi",
+      "members": [
+        {
+          "name": "Isolate",
+          "signatures": [
+            "static string Isolate(string? text, bool rightToLeft)"
+          ]
+        },
+        {
+          "name": "Strip",
+          "signatures": [
+            "static string Strip(string? text)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "CultureNames",
+      "signature": "static class CultureNames",
+      "members": [
+        {
+          "name": "Persian",
+          "signatures": [
+            "const string Persian = \"fa-IR\""
+          ]
+        },
+        {
+          "name": "English",
+          "signatures": [
+            "const string English = \"en-US\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "CultureProfile",
+      "signature": "abstract class CultureProfile : ICultureProfile",
+      "members": [
+        {
+          "name": "Culture",
+          "signatures": [
+            "CultureInfo Culture { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "IsRightToLeft",
+          "signatures": [
+            "bool IsRightToLeft { get; }"
+          ]
+        },
+        {
+          "name": "Calendar",
+          "signatures": [
+            "Calendar Calendar { get; }"
+          ]
+        },
+        {
+          "name": "MonthNames",
+          "signatures": [
+            "IReadOnlyList<string> MonthNames { get; }"
+          ]
+        },
+        {
+          "name": "DayNames",
+          "signatures": [
+            "IReadOnlyList<string> DayNames { get; }"
+          ]
+        },
+        {
+          "name": "ToNativeDigits",
+          "signatures": [
+            "string ToNativeDigits(string? input)"
+          ]
+        },
+        {
+          "name": "NormalizeText",
+          "signatures": [
+            "string NormalizeText(string? input)"
+          ]
+        },
+        {
+          "name": "Isolate",
+          "signatures": [
+            "string Isolate(string? text)"
+          ]
+        },
+        {
+          "name": "FormatNumber",
+          "signatures": [
+            "string FormatNumber(decimal value, int decimals = 2)"
+          ]
+        },
+        {
+          "name": "FormatMoney",
+          "signatures": [
+            "string FormatMoney(decimal amount, string? unit = null)"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        },
+        {
+          "name": "TryParseDate",
+          "signatures": [
+            "bool TryParseDate(string? input, out DateOnly date, bool strict = false)"
+          ]
+        },
+        {
+          "name": "FormatDate",
+          "signatures": [
+            "string FormatDate(DateOnly date, DateStyle style = DateStyle.Short)",
+            "string FormatDate(DateOnly date, string format)"
+          ]
+        },
+        {
+          "name": "FormatDateTime",
+          "signatures": [
+            "string FormatDateTime(DateTime value, DateStyle style = DateStyle.Short)",
+            "string FormatDateTime(DateTime value, string format)"
+          ]
+        },
+        {
+          "name": "GetAge",
+          "signatures": [
+            "int GetAge(DateOnly birthDate, TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "StartOfWeek",
+          "signatures": [
+            "DateOnly StartOfWeek(DateOnly date, DayOfWeek firstDay)"
+          ]
+        },
+        {
+          "name": "StartOfMonth",
+          "signatures": [
+            "DateOnly StartOfMonth(DateOnly date)"
+          ]
+        },
+        {
+          "name": "StartOfYear",
+          "signatures": [
+            "DateOnly StartOfYear(DateOnly date)"
+          ]
+        },
+        {
+          "name": "ToWords",
+          "signatures": [
+            "string ToWords(long number)"
+          ]
+        },
+        {
+          "name": "ToOrdinalWords",
+          "signatures": [
+            "string ToOrdinalWords(long number)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "CurrencyUnit",
+      "signature": "sealed record CurrencyUnit : NamedItem",
+      "members": [
+        {
+          "name": "CurrencyUnit",
+          "signatures": [
+            "CurrencyUnit(string Code, IReadOnlyDictionary<string, string> Names, decimal Factor)"
+          ]
+        },
+        {
+          "name": "Factor",
+          "signatures": [
+            "decimal Factor { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "DateStyle",
+      "signature": "enum DateStyle",
+      "members": [
+        {
+          "name": "Short",
+          "signatures": [
+            "Short = 0"
+          ]
+        },
+        {
+          "name": "Long",
+          "signatures": [
+            "Long = 1"
+          ]
+        },
+        {
+          "name": "Full",
+          "signatures": [
+            "Full = 2"
+          ]
+        },
+        {
+          "name": "Compact",
+          "signatures": [
+            "Compact = 3"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "Digits",
+      "signature": "static class Digits",
+      "members": [
+        {
+          "name": "ToLatin",
+          "signatures": [
+            "static string ToLatin(string? input)"
+          ]
+        },
+        {
+          "name": "ToPersian",
+          "signatures": [
+            "static string ToPersian(string? input)"
+          ]
+        },
+        {
+          "name": "ToArabic",
+          "signatures": [
+            "static string ToArabic(string? input)"
+          ]
+        },
+        {
+          "name": "HasNonLatin",
+          "signatures": [
+            "static bool HasNonLatin(string? input)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "Division",
+      "signature": "sealed record Division : NamedItem",
+      "members": [
+        {
+          "name": "Division",
+          "signatures": [
+            "Division(string Code, string? ParentCode, int Level, IReadOnlyDictionary<string, string> Names, string? OfficialCode = null)"
+          ]
+        },
+        {
+          "name": "ParentCode",
+          "signatures": [
+            "string? ParentCode { get; init; }"
+          ]
+        },
+        {
+          "name": "Level",
+          "signatures": [
+            "int Level { get; init; }"
+          ]
+        },
+        {
+          "name": "OfficialCode",
+          "signatures": [
+            "string? OfficialCode { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "EnglishCultureProfile",
+      "signature": "class EnglishCultureProfile : CultureProfile",
+      "members": [
+        {
+          "name": "ToNativeDigits",
+          "signatures": [
+            "string ToNativeDigits(string? input)"
+          ]
+        },
+        {
+          "name": "ToWords",
+          "signatures": [
+            "string ToWords(long number)"
+          ]
+        },
+        {
+          "name": "ToOrdinalWords",
+          "signatures": [
+            "string ToOrdinalWords(long number)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "ICultureProfile",
+      "signature": "interface ICultureProfile",
+      "members": [
+        {
+          "name": "Culture",
+          "signatures": [
+            "CultureInfo Culture { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "IsRightToLeft",
+          "signatures": [
+            "bool IsRightToLeft { get; }"
+          ]
+        },
+        {
+          "name": "Calendar",
+          "signatures": [
+            "Calendar Calendar { get; }"
+          ]
+        },
+        {
+          "name": "MonthNames",
+          "signatures": [
+            "IReadOnlyList<string> MonthNames { get; }"
+          ]
+        },
+        {
+          "name": "DayNames",
+          "signatures": [
+            "IReadOnlyList<string> DayNames { get; }"
+          ]
+        },
+        {
+          "name": "ToNativeDigits",
+          "signatures": [
+            "string ToNativeDigits(string? input)"
+          ]
+        },
+        {
+          "name": "NormalizeText",
+          "signatures": [
+            "string NormalizeText(string? input)"
+          ]
+        },
+        {
+          "name": "Isolate",
+          "signatures": [
+            "string Isolate(string? text)"
+          ]
+        },
+        {
+          "name": "TryParseDate",
+          "signatures": [
+            "bool TryParseDate(string? input, out DateOnly date, bool strict = false)"
+          ]
+        },
+        {
+          "name": "FormatNumber",
+          "signatures": [
+            "string FormatNumber(decimal value, int decimals = 2)"
+          ]
+        },
+        {
+          "name": "FormatMoney",
+          "signatures": [
+            "string FormatMoney(decimal amount, string? unit = null)"
+          ]
+        },
+        {
+          "name": "ToWords",
+          "signatures": [
+            "string ToWords(long number)"
+          ]
+        },
+        {
+          "name": "ToOrdinalWords",
+          "signatures": [
+            "string ToOrdinalWords(long number)"
+          ]
+        },
+        {
+          "name": "FormatDate",
+          "signatures": [
+            "string FormatDate(DateOnly date, DateStyle style = DateStyle.Short)",
+            "string FormatDate(DateOnly date, string format)"
+          ]
+        },
+        {
+          "name": "FormatDateTime",
+          "signatures": [
+            "string FormatDateTime(DateTime value, DateStyle style = DateStyle.Short)",
+            "string FormatDateTime(DateTime value, string format)"
+          ]
+        },
+        {
+          "name": "GetAge",
+          "signatures": [
+            "int GetAge(DateOnly birthDate, TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "StartOfWeek",
+          "signatures": [
+            "DateOnly StartOfWeek(DateOnly date, DayOfWeek firstDay)"
+          ]
+        },
+        {
+          "name": "StartOfMonth",
+          "signatures": [
+            "DateOnly StartOfMonth(DateOnly date)"
+          ]
+        },
+        {
+          "name": "StartOfYear",
+          "signatures": [
+            "DateOnly StartOfYear(DateOnly date)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "ILocaleRegistry",
+      "signature": "interface ILocaleRegistry",
+      "members": [
+        {
+          "name": "DefaultCulture",
+          "signatures": [
+            "ICultureProfile DefaultCulture { get; }"
+          ]
+        },
+        {
+          "name": "Cultures",
+          "signatures": [
+            "IReadOnlyList<ICultureProfile> Cultures { get; }"
+          ]
+        },
+        {
+          "name": "Regions",
+          "signatures": [
+            "IReadOnlyList<IRegionProfile> Regions { get; }"
+          ]
+        },
+        {
+          "name": "GetCulture",
+          "signatures": [
+            "ICultureProfile GetCulture(CultureInfo culture)",
+            "ICultureProfile GetCulture(string? name)"
+          ]
+        },
+        {
+          "name": "TryGetCulture",
+          "signatures": [
+            "bool TryGetCulture(string? name, out ICultureProfile? profile)"
+          ]
+        },
+        {
+          "name": "GetRegion",
+          "signatures": [
+            "IRegionProfile? GetRegion(string? name)"
+          ]
+        },
+        {
+          "name": "Get",
+          "signatures": [
+            "TProfile Get<TProfile>() where TProfile : class"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "IRegionProfile",
+      "signature": "interface IRegionProfile",
+      "members": [
+        {
+          "name": "Region",
+          "signatures": [
+            "RegionInfo Region { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "CurrencyCode",
+          "signatures": [
+            "string CurrencyCode { get; }"
+          ]
+        },
+        {
+          "name": "FirstDayOfWeek",
+          "signatures": [
+            "DayOfWeek FirstDayOfWeek { get; }"
+          ]
+        },
+        {
+          "name": "WeekendDays",
+          "signatures": [
+            "IReadOnlyList<DayOfWeek> WeekendDays { get; }"
+          ]
+        },
+        {
+          "name": "TimeZone",
+          "signatures": [
+            "TimeZoneInfo TimeZone { get; }"
+          ]
+        },
+        {
+          "name": "CurrencyUnits",
+          "signatures": [
+            "IReadOnlyList<CurrencyUnit> CurrencyUnits { get; }"
+          ]
+        },
+        {
+          "name": "CallingCode",
+          "signatures": [
+            "string? CallingCode { get; }"
+          ]
+        },
+        {
+          "name": "TrunkPrefix",
+          "signatures": [
+            "string TrunkPrefix { get; }"
+          ]
+        },
+        {
+          "name": "Banks",
+          "signatures": [
+            "IReadOnlyList<Bank> Banks { get; }"
+          ]
+        },
+        {
+          "name": "IsWeekend",
+          "signatures": [
+            "bool IsWeekend(DayOfWeek day)"
+          ]
+        },
+        {
+          "name": "IsBusinessDay",
+          "signatures": [
+            "bool IsBusinessDay(DayOfWeek day)"
+          ]
+        },
+        {
+          "name": "ToRegionTime",
+          "signatures": [
+            "DateTime ToRegionTime(DateTime value, DateTimeKind? assumeKind = null)"
+          ]
+        },
+        {
+          "name": "GetToday",
+          "signatures": [
+            "DateOnly GetToday(TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "ConvertCurrency",
+          "signatures": [
+            "decimal ConvertCurrency(decimal amount, CurrencyUnit from, CurrencyUnit to)"
+          ]
+        },
+        {
+          "name": "TryNormalizeMobile",
+          "signatures": [
+            "bool TryNormalizeMobile(string? input, out string? e164)"
+          ]
+        },
+        {
+          "name": "TryNormalizeLandline",
+          "signatures": [
+            "bool TryNormalizeLandline(string? input, out string? e164)"
+          ]
+        },
+        {
+          "name": "TryFormatNational",
+          "signatures": [
+            "bool TryFormatNational(string? e164, out string? national)"
+          ]
+        },
+        {
+          "name": "TryNormalizeNationalId",
+          "signatures": [
+            "bool TryNormalizeNationalId(string? input, out string? id)"
+          ]
+        },
+        {
+          "name": "TryNormalizeIban",
+          "signatures": [
+            "bool TryNormalizeIban(string? input, out string? iban)"
+          ]
+        },
+        {
+          "name": "TryNormalizeCard",
+          "signatures": [
+            "bool TryNormalizeCard(string? input, out string? card)"
+          ]
+        },
+        {
+          "name": "TryFindBankByCard",
+          "signatures": [
+            "bool TryFindBankByCard(string? card, out Bank? bank)"
+          ]
+        },
+        {
+          "name": "TryFindBankByIban",
+          "signatures": [
+            "bool TryFindBankByIban(string? iban, out Bank? bank)"
+          ]
+        },
+        {
+          "name": "GetDivisions",
+          "signatures": [
+            "IReadOnlyList<Division> GetDivisions(string? parentCode = null)"
+          ]
+        },
+        {
+          "name": "TryFindDivision",
+          "signatures": [
+            "bool TryFindDivision(string? code, out Division? division)"
+          ]
+        },
+        {
+          "name": "TryFindDivisionByOfficialCode",
+          "signatures": [
+            "bool TryFindDivisionByOfficialCode(string? officialCode, out Division? division)"
+          ]
+        },
+        {
+          "name": "SearchDivisions",
+          "signatures": [
+            "IReadOnlyList<Division> SearchDivisions(string? text, CultureInfo? culture = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "ITemplateFilter",
+      "signature": "interface ITemplateFilter",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Apply",
+          "signatures": [
+            "object? Apply(object? value, IReadOnlyList<string> arguments, TemplateContext context)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "ITemplateRenderer",
+      "signature": "interface ITemplateRenderer",
+      "members": [
+        {
+          "name": "Render",
+          "signatures": [
+            "string Render<TModel>(string template, TModel? model)",
+            "string Render(string template)"
+          ]
+        },
+        {
+          "name": "Localize",
+          "signatures": [
+            "string Localize<TModel>(string key, TModel? model)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "IranRegionProfile",
+      "signature": "class IranRegionProfile : RegionProfile",
+      "members": [
+        {
+          "name": "FirstDayOfWeek",
+          "signatures": [
+            "DayOfWeek FirstDayOfWeek { get; }"
+          ]
+        },
+        {
+          "name": "WeekendDays",
+          "signatures": [
+            "IReadOnlyList<DayOfWeek> WeekendDays { get; }"
+          ]
+        },
+        {
+          "name": "TimeZone",
+          "signatures": [
+            "TimeZoneInfo TimeZone { get; }"
+          ]
+        },
+        {
+          "name": "CallingCode",
+          "signatures": [
+            "string CallingCode { get; }"
+          ]
+        },
+        {
+          "name": "Banks",
+          "signatures": [
+            "IReadOnlyList<Bank> Banks { get; }"
+          ]
+        },
+        {
+          "name": "CurrencyUnits",
+          "signatures": [
+            "IReadOnlyList<CurrencyUnit> CurrencyUnits { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "LocaleEx",
+      "signature": "static class LocaleEx",
+      "members": [
+        {
+          "name": "AddOSLocale",
+          "signatures": [
+            "static IServiceCollection AddOSLocale(this IServiceCollection services, Action<LocaleOptions>? configure = null)",
+            "static IServiceCollection AddOSLocale(this IServiceCollection services, LocaleOptions options)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "LocaleOptions",
+      "signature": "sealed class LocaleOptions",
+      "members": [
+        {
+          "name": "DefaultCulture",
+          "signatures": [
+            "string? DefaultCulture { get; set; }"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "TextLocaleOptions Text { get; }"
+          ]
+        },
+        {
+          "name": "Templates",
+          "signatures": [
+            "TextTemplateOptions Templates { get; }"
+          ]
+        },
+        {
+          "name": "AddCulture",
+          "signatures": [
+            "LocaleOptions AddCulture<TProfile>() where TProfile : ICultureProfile, new()",
+            "LocaleOptions AddCulture(ICultureProfile profile)"
+          ]
+        },
+        {
+          "name": "AddRegion",
+          "signatures": [
+            "LocaleOptions AddRegion<TProfile>() where TProfile : IRegionProfile, new()",
+            "LocaleOptions AddRegion(IRegionProfile profile)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "LocaleRegistry",
+      "signature": "sealed class LocaleRegistry : ILocaleRegistry",
+      "members": [
+        {
+          "name": "DefaultCulture",
+          "signatures": [
+            "ICultureProfile DefaultCulture { get; }"
+          ]
+        },
+        {
+          "name": "Cultures",
+          "signatures": [
+            "IReadOnlyList<ICultureProfile> Cultures { get; }"
+          ]
+        },
+        {
+          "name": "Regions",
+          "signatures": [
+            "IReadOnlyList<IRegionProfile> Regions { get; }"
+          ]
+        },
+        {
+          "name": "GetCulture",
+          "signatures": [
+            "ICultureProfile GetCulture(CultureInfo culture)",
+            "ICultureProfile GetCulture(string? name)"
+          ]
+        },
+        {
+          "name": "TryGetCulture",
+          "signatures": [
+            "bool TryGetCulture(string? name, out ICultureProfile? profile)"
+          ]
+        },
+        {
+          "name": "GetRegion",
+          "signatures": [
+            "IRegionProfile? GetRegion(string? name)"
+          ]
+        },
+        {
+          "name": "Get",
+          "signatures": [
+            "TProfile Get<TProfile>() where TProfile : class"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "Mask",
+      "signature": "static class Mask",
+      "members": [
+        {
+          "name": "Apply",
+          "signatures": [
+            "static string Apply(string? value, int visible = 4)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "NamedItem",
+      "signature": "abstract record NamedItem",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "IReadOnlyDictionary<string, string> Names { get; init; }"
+          ]
+        },
+        {
+          "name": "GetName",
+          "signatures": [
+            "string GetName(CultureInfo? culture = null)"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "PersianCultureProfile",
+      "signature": "class PersianCultureProfile : CultureProfile",
+      "members": [
+        {
+          "name": "Calendar",
+          "signatures": [
+            "Calendar Calendar { get; }"
+          ]
+        },
+        {
+          "name": "MonthNames",
+          "signatures": [
+            "IReadOnlyList<string> MonthNames { get; }"
+          ]
+        },
+        {
+          "name": "DayNames",
+          "signatures": [
+            "IReadOnlyList<string> DayNames { get; }"
+          ]
+        },
+        {
+          "name": "ToNativeDigits",
+          "signatures": [
+            "string ToNativeDigits(string? input)"
+          ]
+        },
+        {
+          "name": "HasPersian",
+          "signatures": [
+            "static bool HasPersian(string? input)"
+          ]
+        },
+        {
+          "name": "NormalizeText",
+          "signatures": [
+            "string NormalizeText(string? input)"
+          ]
+        },
+        {
+          "name": "ToWords",
+          "signatures": [
+            "string ToWords(long number)"
+          ]
+        },
+        {
+          "name": "ToOrdinalWords",
+          "signatures": [
+            "string ToOrdinalWords(long number)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "RegionProfile",
+      "signature": "abstract class RegionProfile : IRegionProfile",
+      "members": [
+        {
+          "name": "Banks",
+          "signatures": [
+            "IReadOnlyList<Bank> Banks { get; }"
+          ]
+        },
+        {
+          "name": "Region",
+          "signatures": [
+            "RegionInfo Region { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "CurrencyCode",
+          "signatures": [
+            "string CurrencyCode { get; }"
+          ]
+        },
+        {
+          "name": "FirstDayOfWeek",
+          "signatures": [
+            "DayOfWeek FirstDayOfWeek { get; }"
+          ]
+        },
+        {
+          "name": "WeekendDays",
+          "signatures": [
+            "IReadOnlyList<DayOfWeek> WeekendDays { get; }"
+          ]
+        },
+        {
+          "name": "CurrencyUnits",
+          "signatures": [
+            "IReadOnlyList<CurrencyUnit> CurrencyUnits { get; }"
+          ]
+        },
+        {
+          "name": "TimeZone",
+          "signatures": [
+            "TimeZoneInfo TimeZone { get; }"
+          ]
+        },
+        {
+          "name": "CallingCode",
+          "signatures": [
+            "string? CallingCode { get; }"
+          ]
+        },
+        {
+          "name": "TrunkPrefix",
+          "signatures": [
+            "string TrunkPrefix { get; }"
+          ]
+        },
+        {
+          "name": "TryFindBankByCard",
+          "signatures": [
+            "bool TryFindBankByCard(string? card, out Bank? bank)"
+          ]
+        },
+        {
+          "name": "TryFindBankByIban",
+          "signatures": [
+            "bool TryFindBankByIban(string? iban, out Bank? bank)"
+          ]
+        },
+        {
+          "name": "TryNormalizeIban",
+          "signatures": [
+            "bool TryNormalizeIban(string? input, out string? iban)"
+          ]
+        },
+        {
+          "name": "TryNormalizeCard",
+          "signatures": [
+            "bool TryNormalizeCard(string? input, out string? card)"
+          ]
+        },
+        {
+          "name": "IsWeekend",
+          "signatures": [
+            "bool IsWeekend(DayOfWeek day)"
+          ]
+        },
+        {
+          "name": "IsBusinessDay",
+          "signatures": [
+            "bool IsBusinessDay(DayOfWeek day)"
+          ]
+        },
+        {
+          "name": "ToRegionTime",
+          "signatures": [
+            "DateTime ToRegionTime(DateTime value, DateTimeKind? assumeKind = null)"
+          ]
+        },
+        {
+          "name": "GetToday",
+          "signatures": [
+            "DateOnly GetToday(TimeProvider? time = null)"
+          ]
+        },
+        {
+          "name": "ConvertCurrency",
+          "signatures": [
+            "decimal ConvertCurrency(decimal amount, CurrencyUnit from, CurrencyUnit to)"
+          ]
+        },
+        {
+          "name": "GetDivisions",
+          "signatures": [
+            "IReadOnlyList<Division> GetDivisions(string? parentCode = null)"
+          ]
+        },
+        {
+          "name": "TryFindDivision",
+          "signatures": [
+            "bool TryFindDivision(string? code, out Division? division)"
+          ]
+        },
+        {
+          "name": "TryFindDivisionByOfficialCode",
+          "signatures": [
+            "bool TryFindDivisionByOfficialCode(string? officialCode, out Division? division)"
+          ]
+        },
+        {
+          "name": "SearchDivisions",
+          "signatures": [
+            "IReadOnlyList<Division> SearchDivisions(string? text, CultureInfo? culture = null)"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        },
+        {
+          "name": "TryNormalizeNationalId",
+          "signatures": [
+            "bool TryNormalizeNationalId(string? input, out string? id)"
+          ]
+        },
+        {
+          "name": "TryNormalizeMobile",
+          "signatures": [
+            "bool TryNormalizeMobile(string? input, out string? e164)"
+          ]
+        },
+        {
+          "name": "TryNormalizeLandline",
+          "signatures": [
+            "bool TryNormalizeLandline(string? input, out string? e164)"
+          ]
+        },
+        {
+          "name": "TryFormatNational",
+          "signatures": [
+            "bool TryFormatNational(string? e164, out string? national)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "TemplateContext",
+      "signature": "sealed record TemplateContext",
+      "members": [
+        {
+          "name": "TemplateContext",
+          "signatures": [
+            "TemplateContext(ICultureProfile Culture, TimeProvider Time)"
+          ]
+        },
+        {
+          "name": "Culture",
+          "signatures": [
+            "ICultureProfile Culture { get; init; }"
+          ]
+        },
+        {
+          "name": "Time",
+          "signatures": [
+            "TimeProvider Time { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "TextLocaleOptions",
+      "signature": "sealed class TextLocaleOptions",
+      "members": [
+        {
+          "name": "FallbackCulture",
+          "signatures": [
+            "string FallbackCulture { get; set; }"
+          ]
+        },
+        {
+          "name": "AddFolder",
+          "signatures": [
+            "TextLocaleOptions AddFolder(string folder)"
+          ]
+        },
+        {
+          "name": "AddEmbedded",
+          "signatures": [
+            "TextLocaleOptions AddEmbedded(Assembly assembly, string folder = \"Texts\")"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "TextLocalizer",
+      "signature": "sealed class TextLocalizer : IStringLocalizer",
+      "members": [
+        {
+          "name": "Item",
+          "signatures": [
+            "LocalizedString this[string name] { get; }",
+            "LocalizedString this[string name, params object[] arguments] { get; }"
+          ]
+        },
+        {
+          "name": "GetAllStrings",
+          "signatures": [
+            "IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "TextLocalizerFactory",
+      "signature": "sealed class TextLocalizerFactory : IStringLocalizerFactory",
+      "members": [
+        {
+          "name": "TextLocalizerFactory",
+          "signatures": [
+            "TextLocalizerFactory(TextLocaleOptions options)"
+          ]
+        },
+        {
+          "name": "Create",
+          "signatures": [
+            "IStringLocalizer Create(Type resourceSource)",
+            "IStringLocalizer Create(string baseName, string location)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Locale",
+      "key": "TextTemplateOptions",
+      "signature": "sealed class TextTemplateOptions",
+      "members": [
+        {
+          "name": "MaxCachedTemplates",
+          "signatures": [
+            "int MaxCachedTemplates { get; set; }"
+          ]
+        },
+        {
+          "name": "AddFilter",
+          "signatures": [
+            "TextTemplateOptions AddFilter<TFilter>() where TFilter : class, ITemplateFilter"
+          ]
+        },
+        {
+          "name": "AddGlobal",
+          "signatures": [
+            "TextTemplateOptions AddGlobal(string name, object value)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "numbers",
+      "code": "var persian = new PersianCultureProfile();\nvar price = persian.FormatNumber(1234567.891m);\nvar debt = persian.FormatMoney(-250000, \"ریال\");\nvar room = persian.ToNativeDigits(\"Room 12\");",
+      "topic": "culture",
+      "output": "۱٬۲۳۴٬۵۶۷٫۸۹\n‎−۲۵۰٬۰۰۰ ریال\nRoom ۱۲"
+    },
+    {
+      "key": "words",
+      "code": "var persian = new PersianCultureProfile();\nvar year = persian.ToWords(1404);\nvar third = persian.ToOrdinalWords(3);\nvar english = new EnglishCultureProfile().ToWords(1404);",
+      "topic": "culture",
+      "output": "یک‌هزار و چهارصد و چهار\nسوم\none thousand four hundred four"
+    },
+    {
+      "key": "dates",
+      "code": "var date = new DateOnly(2024, 10, 12);\nvar persian = new PersianCultureProfile().FormatDate(date, DateStyle.Full);\nvar english = new EnglishCultureProfile().FormatDate(date, DateStyle.Full);\nvar custom = new PersianCultureProfile().FormatDate(date, \"yyyy-MM-dd\");",
+      "topic": "culture",
+      "output": "شنبه ۲۱ مهر ۱۴۰۳\nSaturday, October 12, 2024\n۱۴۰۳-۰۷-۲۱"
+    },
+    {
+      "key": "parse",
+      "code": "var persian = new PersianCultureProfile();\nvar ok = persian.TryParseDate(\"۱۴۰۳/۷/۲۱\", out var date);\nvar strict = persian.TryParseDate(\"۱۴۰۳/۷/۲۱\", out _, strict: true);",
+      "topic": "culture",
+      "output": "True\n10/12/2024\nFalse"
+    },
+    {
+      "key": "normalize",
+      "code": "var name = new PersianCultureProfile().NormalizeText(\"  علي   كريمي \");",
+      "topic": "culture",
+      "output": "علی کریمی"
+    },
+    {
+      "key": "periods",
+      "code": "var persian = new PersianCultureProfile();\nvar date = new DateOnly(2024, 10, 12);\nvar month = persian.FormatDate(persian.StartOfMonth(date), DateStyle.Long);\nvar year = persian.FormatDate(persian.StartOfYear(date), DateStyle.Long);",
+      "topic": "culture",
+      "output": "۱ مهر ۱۴۰۳\n۱ فروردین ۱۴۰۳"
+    },
+    {
+      "key": "words",
+      "code": "var words = new PersianCultureProfile().ToWords(1404);",
+      "output": "یک‌هزار و چهارصد و چهار"
+    },
+    {
+      "key": "date",
+      "code": "var nowruz = new PersianCultureProfile().FormatDate(new DateOnly(2025, 3, 21), DateStyle.Long);",
+      "output": "۱ فروردین ۱۴۰۴"
+    },
+    {
+      "key": "phone",
+      "code": "var iran = new IranRegionProfile();\niran.TryNormalizeMobile(\"۰۹۱۲ ۱۲۳ ۴۵۶۷\", out var mobile);\niran.TryFormatNational(mobile, out var national);",
+      "topic": "region",
+      "output": "+989121234567\n09121234567"
+    },
+    {
+      "key": "national-id",
+      "code": "var iran = new IranRegionProfile();\nvar valid = iran.TryNormalizeNationalId(\"123456789\", out var id);\nvar wrong = iran.TryNormalizeNationalId(\"1111111111\", out _);",
+      "topic": "region",
+      "output": "True\n0123456789\nFalse"
+    },
+    {
+      "key": "week",
+      "code": "var iran = new IranRegionProfile();\nvar first = iran.FirstDayOfWeek;\nvar friday = iran.IsWeekend(DayOfWeek.Friday);\nvar tehran = iran.ToRegionTime(new DateTime(2024, 10, 12, 12, 0, 0, DateTimeKind.Utc));",
+      "topic": "region",
+      "output": "Saturday\nTrue\n10/12/2024 15:30:00"
+    },
+    {
+      "key": "currency",
+      "code": "var iran = new IranRegionProfile();\nvar (rial, toman) = (iran.CurrencyUnits[0], iran.CurrencyUnits[1]);\nvar amount = iran.ConvertCurrency(250000, rial, toman);\nvar name = toman.GetName(CultureInfo.GetCultureInfo(\"fa-IR\"));",
+      "topic": "region",
+      "output": "25000\nتومان"
+    },
+    {
+      "key": "divisions",
+      "code": "var iran = new IranRegionProfile();\nvar persian = CultureInfo.GetCultureInfo(\"fa-IR\");\nvar provinces = iran.GetDivisions().Count;\nvar found = iran.SearchDivisions(\"كرمان\", persian).Where(division => division.Level == 1).Select(division => division.GetName(persian));",
+      "topic": "region",
+      "output": "31\nکرمان, کرمانشاه"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSLocale(options =>\n{\n    options.DefaultCulture = CultureNames.English;\n    options.Text.AddEmbedded(typeof(SetupSamples).Assembly, \"Texts\");\n});",
+      "topic": "setup"
+    },
+    {
+      "key": "lookup",
+      "code": "var registry = new ServiceCollection().AddOSLocale().BuildServiceProvider().GetRequiredService<ILocaleRegistry>();\nvar persian = registry.GetCulture(\"fa\");\nvar typo = registry.TryGetCulture(\"fe-IR\", out _);\nvar iran = registry.Get<IranRegionProfile>();",
+      "topic": "setup",
+      "output": "fa-IR\nFalse\nIR"
+    },
+    {
+      "key": "custom",
+      "code": "public sealed class GermanCultureProfile() : CultureProfile(\"de-DE\");\n\npublic static void AddGerman(IServiceCollection services) =>\n    services.AddOSLocale(options => options\n        .AddCulture<PersianCultureProfile>()\n        .AddCulture<EnglishCultureProfile>()\n        .AddCulture<GermanCultureProfile>());",
+      "topic": "setup"
+    },
+    {
+      "key": "model",
+      "code": "public sealed record Order(string Customer, decimal Total, DateOnly Date);",
+      "topic": "templates"
+    },
+    {
+      "key": "render",
+      "code": "var templates = new ServiceCollection().AddOSLocale().BuildServiceProvider().GetRequiredService<ITemplateRenderer>();\nvar order = new Order(\"Sara\", 1250000m, new DateOnly(2024, 10, 12));\nvar text = templates.Render(\"{Customer|upper}: {Total} ریال، {Date|format(\\\"d MMMM yyyy\\\")}\", order);",
+      "topic": "templates",
+      "output": "SARA: ۱٬۲۵۰٬۰۰۰ ریال، ۲۱ مهر ۱۴۰۳"
+    },
+    {
+      "key": "globals",
+      "code": "var templates = new ServiceCollection()\n    .AddOSLocale(options => options.Templates.AddGlobal(\"Site\", new { Title = \"Lorea\" }))\n    .BuildServiceProvider()\n    .GetRequiredService<ITemplateRenderer>();\nvar text = templates.Render(\"{@Site.Title|upper} {{docs}}\");",
+      "topic": "templates",
+      "output": "LOREA {docs}"
+    },
+    {
+      "key": "filter",
+      "code": "public sealed class MaskFilter : ITemplateFilter\n{\n    public string Name => \"mask\";\n\n    public object? Apply(object? value, IReadOnlyList<string> arguments, TemplateContext context) =>\n        Mask.Apply(value?.ToString());\n}",
+      "topic": "templates"
+    },
+    {
+      "key": "custom",
+      "code": "var templates = new ServiceCollection()\n    .AddOSLocale(options => options.Templates.AddFilter<MaskFilter>())\n    .BuildServiceProvider()\n    .GetRequiredService<ITemplateRenderer>();\nvar text = templates.Render(\"{Card|mask}\", new { Card = \"6037991234567890\" });",
+      "topic": "templates",
+      "output": "••••••••••••7890"
+    },
+    {
+      "key": "localize",
+      "code": "templates.Localize(\"order.summary\", order);",
+      "topic": "templates"
+    },
+    {
+      "key": "convert-digits",
+      "code": "var persian = Digits.ToPersian(\"2025-03-21\");\nvar latin = Digits.ToLatin(\"۱۴۰۴\");\nvar mixed = Digits.HasNonLatin(\"Room ۱۲\");",
+      "topic": "text",
+      "output": "۲۰۲۵-۰۳-۲۱\n1404\nTrue"
+    },
+    {
+      "key": "mask-card",
+      "code": "var card = Mask.Apply(\"6037-9912-3456-7890\");",
+      "topic": "text",
+      "output": "••••-••••-••••-7890"
+    },
+    {
+      "key": "translate",
+      "code": "text[\"menu.help\"];",
+      "topic": "text"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "slug": "os-blazor-settings",
+  "name": "OS.Blazor.Settings",
+  "version": "1.0.0",
+  "group": "interface",
+  "uses": [
+    "os-blazor",
+    "os-settings-abstractions"
+  ],
+  "topics": [
+    {
+      "slug": "start",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": [
+        "SettingsUiEx",
+        "SettingsUiOptions",
+        "SettingClient"
+      ]
+    },
+    {
+      "slug": "board",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": [
+        "OSSettingBoard",
+        "OSSettingSheet",
+        "OSSettingRow",
+        "OSSettingField",
+        "OSSettingAdd",
+        "OSSettingReset",
+        "SettingScopeOption"
+      ]
+    },
+    {
+      "slug": "editing",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": [
+        "SettingDesk"
+      ]
+    },
+    {
+      "slug": "checking",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": [
+        "SettingCheck"
+      ]
+    },
+    {
+      "slug": "texts",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": [
+        "SettingText",
+        "SettingsUiCodes"
+      ]
+    },
+    {
+      "slug": "styling",
+      "namespaces": [
+        "OS.Blazor.Settings"
+      ],
+      "types": []
+    }
+  ]
+}

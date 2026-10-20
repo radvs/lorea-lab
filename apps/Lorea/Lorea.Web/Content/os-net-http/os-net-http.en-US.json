@@ -1,0 +1,298 @@
+{
+  "os-net-http": {
+    "title": "HTTP client",
+    "summary": "Named HTTP clients from plain settings, with headers, retries, timeouts, a concurrency limit and a safe mode for links you don't trust.",
+    "gives": {
+      "1": "Describe an API once, in code or in a config file, and get a ready client with its base address, headers and timeout.",
+      "2": "Get results, not exceptions: every call returns an `OSResult` with a status and a stable code.",
+      "3": "Fetch links from users without letting them reach your own network, and without reading an unlimited body."
+    },
+    "sample": {
+      "register": "Register an API client",
+      "call": "Call a JSON API and get a result",
+      "safe-fetch": "Fetch a link from a user safely"
+    },
+    "topics": {
+      "clients": {
+        "title": "Clients and settings",
+        "summary": "Describe an API with `ApiConfig` and register it with `AddOSHttp`.",
+        "points": {
+          "1": {
+            "title": "Describe an API",
+            "text": "`ApiConfig` holds the name, base address, timeout and headers."
+          },
+          "2": {
+            "title": "Register a client",
+            "text": "`AddOSHttp` validates the settings and registers a named client."
+          },
+          "3": {
+            "title": "Works from JSON",
+            "text": "The same settings work in a config file or JSON with kebab-case names."
+          },
+          "4": {
+            "title": "Ready-made headers",
+            "text": "Each header has a `Type`, such as `BearerAuth` or `ApiKey`."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "ApiConfig fields",
+            "text": "An `ApiConfig` has a `Name`, an optional `BaseUrl`, a `Timeout` and the number of `Retries`.\n\n`PermitLimit` and `QueueLimit` are optional. `MaxBytes` is the body size cap, `Safe` is the safe-mode switch and `Headers` is the list of headers."
+          },
+          "2": {
+            "title": "Registering and names",
+            "text": "`AddOSHttp` validates the config and registers a named client on `IHttpClientFactory`. It also adds the headers and the resilience pipeline. Registering a name twice throws.\n\nThe same names work in a config file or JSON: `name`, `base-url`, `timeout`, `retries`, `permit-limit`, `queue-limit`, `max-bytes`, `safe`, `headers` and `extras`. The `timeout` value is a time span such as `00:00:20`."
+          },
+          "3": {
+            "title": "Header types",
+            "text": "Each header has a `Type`. `Own` uses its `Name` and `Value`.\n\n`Accept`, `UserAgent`, `ApiVersion` and `ApiKey` set well-known headers. `BearerAuth` sends `Value` as a token and `BasicAuth` builds the value from `User` and `Password`.\n\n`ContentType` applies to requests that have a body. A header the request already has is not replaced."
+          }
+        },
+        "sample": {
+          "config": {
+            "title": "Read a client from JSON",
+            "note": "Header types are written by name, and a timeout is a time span, not a number."
+          },
+          "headers": {
+            "title": "Send credentials and fixed headers",
+            "note": "Credentials are added to every request, so they never go into the URL."
+          },
+          "register": {
+            "title": "Register several clients at once",
+            "note": "Each name must be unique."
+          }
+        },
+        "type": {
+          "ApiConfig": "The settings of one API client.",
+          "ApiHeader": "One header, either fixed text or credentials.",
+          "ApiHeaderType": "What a header means, and how its value is sent.",
+          "HttpClientEx": "Registration of clients on the service collection."
+        },
+        "member": {
+          "ApiConfig": {
+            "Name": "The name you pass to `IOSHttp.Create`. Required and unique.",
+            "BaseUrl": "The address that relative endpoints are added to.",
+            "Timeout": "The time one attempt may take. When it is not set, the standard 10 seconds per attempt apply.",
+            "Retries": "How many times a safe request is repeated after a transient failure. 3 by default; 0 turns retries off.",
+            "PermitLimit": "The most requests sent at the same time.",
+            "QueueLimit": "How many more requests may wait when the limit is reached.",
+            "MaxBytes": "The largest response body that is read, 10 MiB by default.",
+            "Safe": "Turns on the safe mode for untrusted links.",
+            "Headers": "The headers added to every request.",
+            "Extras": "Free text values for your own code. The library does not read them."
+          },
+          "ApiHeader": {
+            "Type": "What kind of header this is.",
+            "Name": "The header name, for `Own`, and optionally for `ApiKey`.",
+            "Value": "The header value or token.",
+            "User": "The user name of `BasicAuth`.",
+            "Password": "The password of `BasicAuth`."
+          },
+          "HttpClientEx": {
+            "AddOSHttp": "Registers one client or a list of clients. It throws for a missing or repeated name.",
+            "GetConfig": "Finds a config in a list by name, ignoring case. Throws when it is missing."
+          }
+        }
+      },
+      "calls": {
+        "title": "Making calls",
+        "summary": "Get a client by name and call it; every answer is an `OSResult`.",
+        "points": {
+          "1": {
+            "title": "Get a client",
+            "text": "`IOSHttp.Create(name)` gives an `IApiService` for a registered client."
+          },
+          "2": {
+            "title": "Every answer a result",
+            "text": "A 2xx answer is `Ok`; any other status becomes a failed result with the code `http.<status>`."
+          },
+          "3": {
+            "title": "Known failures",
+            "text": "Network problems, timeouts and big bodies each have their own code."
+          },
+          "4": {
+            "title": "Safe repeats",
+            "text": "A request that is not safe is never sent again."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The methods",
+            "text": "`IOSHttp.Create(name)` gives an `IApiService` for a registered client.\n\n`GetAsync<T>`, `PostAsync`, `PutAsync` and `DeleteAsync` send JSON and read JSON. `GetStringAsync` returns the body text.\n\n`FetchAsync` returns an `ApiFetch` with the status, the final address after redirects, the media type and the body. It does not judge the status."
+          },
+          "2": {
+            "title": "Answers and codes",
+            "text": "A 2xx answer is `Ok`. Any other status becomes a failed result whose code is `http.<status>`. Its status follows `ResultEx.FromHttpStatus`, so 404 is `NotFound` and 429 is `Unavailable`.\n\nNetwork problems give `Unavailable` with `http.network` and a timeout gives `http.timeout`. A body over the limit gives `http.too-large` and a bad endpoint gives `http.endpoint`."
+          },
+          "3": {
+            "title": "Cancelling and repeats",
+            "text": "Cancelling the token still throws, as .NET does.\n\nA request is never retried unless it is safe, so a POST is sent once."
+          }
+        },
+        "sample": {
+          "get": {
+            "title": "Read a JSON answer",
+            "note": "Check Succeeded before using Data. A 404 is a NotFound result, not an exception."
+          },
+          "post": {
+            "title": "Send a JSON body",
+            "note": "The body is serialized as UTF-8 JSON. A POST is never repeated automatically."
+          },
+          "fetch": {
+            "title": "Read a page without judging its status",
+            "note": "Succeeded means the server answered; IsOk tells whether the status was 2xx."
+          },
+          "status": {
+            "title": "See how a status becomes a result",
+            "note": "The result code is http. followed by the number."
+          }
+        },
+        "type": {
+          "IOSHttp": "Creates the service for a registered client by name.",
+          "OSHttp": "The default IOSHttp.",
+          "IApiService": "The calls a client supports.",
+          "ApiService": "The default IApiService, built on one HttpClient and its settings.",
+          "ApiFetch": "A page as it came back: status, addresses, media type and body.",
+          "HttpCodes": "The error codes of this package.",
+          "ApiRequest": "An endpoint, a method (GET by default) and an optional JSON body, for sending one request as a value."
+        },
+        "member": {
+          "IOSHttp": {
+            "Create": "Returns the service for a client name. Throws if the name is not registered."
+          },
+          "IApiService": {
+            "GetAsync": "Sends GET and reads the body as JSON.",
+            "GetStringAsync": "Sends GET and returns the body as text.",
+            "FetchAsync": "Sends GET and returns the whole answer, whatever its status.",
+            "PostAsync": "Sends a JSON body with POST.",
+            "PutAsync": "Sends a JSON body with PUT.",
+            "DeleteAsync": "Sends DELETE.",
+            "SendAsync": "Sends an ApiRequest with any method and returns the whole answer, like FetchAsync."
+          },
+          "ApiFetch": {
+            "Status": "The HTTP status code.",
+            "Url": "The address that was asked for.",
+            "FinalUrl": "The address after redirects.",
+            "MediaType": "The media type of the body, such as text/html.",
+            "Body": "The body as text.",
+            "IsOk": "True for a 2xx status.",
+            "IsMissing": "True for 404.",
+            "IsRedirected": "True when the final address differs from the asked one."
+          },
+          "HttpCodes": {
+            "Endpoint": "The endpoint is empty, not a valid address, or not allowed in safe mode.",
+            "Blocked": "The address points to a private or local network.",
+            "Timeout": "The call took longer than its time limit.",
+            "Network": "The server could not be reached.",
+            "TooLarge": "The body is larger than MaxBytes.",
+            "Format": "The body is not the JSON that was expected.",
+            "Empty": "The body is empty.",
+            "Status": "Builds the code of a status, such as http.404."
+          }
+        }
+      },
+      "safety": {
+        "title": "Safe mode",
+        "summary": "Fetch links you don't trust without opening a way into your own network.",
+        "points": {
+          "1": {
+            "title": "Why safe mode",
+            "text": "Your server fetches a user's link and could end up reading its own network."
+          },
+          "2": {
+            "title": "Public only",
+            "text": "With `Safe = true` it connects only to public addresses."
+          },
+          "3": {
+            "title": "Hard limits",
+            "text": "At most five redirects and a body cap of `MaxBytes`."
+          },
+          "4": {
+            "title": "Ready-made rule",
+            "text": "You can call `AddressRules.IsPublic` yourself."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The risk",
+            "text": "When a user can submit a link, your server fetches it for them.\n\nA link to `http://169.254.169.254/` or `http://10.0.0.5/` would make the server read its own network."
+          },
+          "2": {
+            "title": "What safe mode does",
+            "text": "Set `Safe = true`. The client accepts only plain `http` and `https` links without a login. It resolves the host itself and connects only to public addresses.\n\nSo a name that points to a private address is refused at connection time, even after a redirect."
+          },
+          "3": {
+            "title": "Limits and errors",
+            "text": "It follows at most five redirects, limits the response headers and stops reading a body at `MaxBytes`.\n\nA refused address gives `Forbidden` with `http.blocked`, and an oversized body gives `Failed` with `http.too-large`. `AddressRules.IsPublic` is the rule used, and you can call it yourself."
+          }
+        },
+        "sample": {
+          "addresses": {
+            "title": "Tell public addresses from private ones",
+            "note": "Loopback, private ranges, link-local addresses such as the cloud metadata address, and unique-local IPv6 are all refused."
+          },
+          "enable": {
+            "title": "Fetch a user's link in safe mode",
+            "note": "Branch on the code, not on text. The page is read only up to MaxBytes."
+          }
+        },
+        "type": {
+          "AddressRules": "The rule for which network addresses a safe client may connect to."
+        },
+        "member": {
+          "AddressRules": {
+            "IsPublic": "False for loopback, private, link-local, carrier-grade, multicast and unspecified addresses."
+          }
+        }
+      },
+      "resilience": {
+        "title": "Retries and limits",
+        "summary": "Every client gets Microsoft's standard resilience pipeline, set from the config.",
+        "points": {
+          "1": {
+            "title": "Ready pipeline",
+            "text": "Every client uses `Microsoft.Extensions.Http.Resilience`."
+          },
+          "2": {
+            "title": "Timeout",
+            "text": "`Timeout` sets the time for one attempt."
+          },
+          "3": {
+            "title": "Retries",
+            "text": "`Retries` applies only to safe methods."
+          },
+          "4": {
+            "title": "Concurrency limit",
+            "text": "`PermitLimit` and `QueueLimit` bound the concurrent requests."
+          }
+        },
+        "parts": {
+          "1": {
+            "title": "The pipeline",
+            "text": "Each client uses `Microsoft.Extensions.Http.Resilience`, which replaced the older Polly-based package.\n\nThe pipeline limits concurrent requests and applies a total timeout. It retries transient failures with an exponential delay. It breaks the circuit when a server keeps failing, and it times out each attempt."
+          },
+          "2": {
+            "title": "Timeout and concurrency",
+            "text": "`Timeout` sets the time for one attempt. The total time becomes the attempts times `Timeout` plus 30 seconds.\n\n`PermitLimit` and `QueueLimit` bound the concurrent requests."
+          },
+          "3": {
+            "title": "Retries",
+            "text": "`Retries` sets the number of retries and applies only to safe methods. POST, PUT, PATCH and DELETE are sent once, because repeating them could create a second order or send a second SMS.\n\nSet `Retries = 0` to turn retries off for every method. A failed attempt returns `Unavailable` with the code `http.timeout` or `http.network`."
+          }
+        },
+        "sample": {
+          "configure": {
+            "title": "Set the timeout, retries and concurrency",
+            "note": "At most 20 requests run together and 50 may wait; a failed GET is retried twice."
+          },
+          "no-retries": {
+            "title": "Turn retries off",
+            "note": "Use it for a service that is not idempotent in any way."
+          }
+        },
+        "type": {},
+        "member": {}
+      }
+    }
+  }
+}

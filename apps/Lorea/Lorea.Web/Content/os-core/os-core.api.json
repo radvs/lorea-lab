@@ -1,0 +1,2918 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Collections",
+      "key": "LinqEx",
+      "signature": "static class LinqEx",
+      "members": [
+        {
+          "name": "HasAny",
+          "signatures": [
+            "static bool HasAny<T>(IEnumerable<T>? source)"
+          ]
+        },
+        {
+          "name": "NotAny",
+          "signatures": [
+            "static bool NotAny<T>(IEnumerable<T>? source)"
+          ]
+        },
+        {
+          "name": "IsIn",
+          "signatures": [
+            "static bool IsIn<T>(this T? item, params T?[]? items)",
+            "static bool IsIn<T>(this T? item, IReadOnlyList<T?>? items)"
+          ]
+        },
+        {
+          "name": "NotIn",
+          "signatures": [
+            "static bool NotIn<T>(this T? item, params T?[]? items)",
+            "static bool NotIn<T>(this T? item, IReadOnlyList<T?>? items)"
+          ]
+        },
+        {
+          "name": "InsertSorted",
+          "signatures": [
+            "static List<T> InsertSorted<T>(this List<T>? source, T item) where T : IComparable<T>"
+          ]
+        },
+        {
+          "name": "Loop",
+          "signatures": [
+            "static IEnumerable<T>? Loop<T>(this IEnumerable<T>? source, Action<T>? action)"
+          ]
+        },
+        {
+          "name": "LoopAsync",
+          "signatures": [
+            "static Task LoopAsync<T>(this IEnumerable<T?>? source, Func<T?, CancellationToken, ValueTask> action, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "Let",
+          "signatures": [
+            "static void Let<T>(this T? value, Action<T> action)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Config",
+      "key": "AppConfigBase",
+      "signature": "abstract class AppConfigBase : IValidatableObject",
+      "members": [
+        {
+          "name": "AppCode",
+          "signatures": [
+            "string AppCode { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string? Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Culture",
+          "signatures": [
+            "string? Culture { get; set; }"
+          ]
+        },
+        {
+          "name": "Validate",
+          "signatures": [
+            "IEnumerable<ValidationResult> Validate(ValidationContext validationContext)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Config",
+      "key": "ConfigEx",
+      "signature": "static class ConfigEx",
+      "members": [
+        {
+          "name": "AddOSConfig",
+          "signatures": [
+            "static IServiceCollection AddOSConfig<T>(this IServiceCollection services, IConfiguration configuration, string section) where T : class"
+          ]
+        },
+        {
+          "name": "ReadOSConfig",
+          "signatures": [
+            "static T ReadOSConfig<T>(this IConfiguration configuration, string section) where T : class, new()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Enums",
+      "key": "EnumEx",
+      "signature": "static class EnumEx",
+      "members": [
+        {
+          "name": "ToEnum",
+          "signatures": [
+            "static T ToEnum<T>(this string? value) where T : struct, Enum",
+            "static T ToEnum<T>(this string? value, T def) where T : struct, Enum"
+          ]
+        },
+        {
+          "name": "TryParse",
+          "signatures": [
+            "static bool TryParse<T>(this string? value, out T result) where T : struct, Enum"
+          ]
+        },
+        {
+          "name": "IsDefined",
+          "signatures": [
+            "static bool IsDefined<T>(string? value) where T : struct, Enum"
+          ]
+        },
+        {
+          "name": "GetValues",
+          "signatures": [
+            "static IEnumerable<T> GetValues<T>() where T : struct, Enum"
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "static string[] Names<T>() where T : struct, Enum"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "static string Description(this Enum enum)"
+          ]
+        },
+        {
+          "name": "GetName",
+          "signatures": [
+            "static string GetName(this Enum enum)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "ErrorDetail",
+      "signature": "sealed record ErrorDetail",
+      "members": [
+        {
+          "name": "Type",
+          "signatures": [
+            "required string Type { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "required string Message { get; init; }"
+          ]
+        },
+        {
+          "name": "HResult",
+          "signatures": [
+            "int HResult { get; init; }"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "string? Source { get; init; }"
+          ]
+        },
+        {
+          "name": "Stack",
+          "signatures": [
+            "IReadOnlyList<string> Stack { get; init; }"
+          ]
+        },
+        {
+          "name": "Inner",
+          "signatures": [
+            "ErrorDetail? Inner { get; init; }"
+          ]
+        },
+        {
+          "name": "OccurredAt",
+          "signatures": [
+            "DateTimeOffset OccurredAt { get; init; }"
+          ]
+        },
+        {
+          "name": "From",
+          "signatures": [
+            "static ErrorDetail From(Exception exception)"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "ErrorReport",
+      "signature": "sealed record ErrorReport",
+      "members": [
+        {
+          "name": "TraceId",
+          "signatures": [
+            "required string TraceId { get; init; }"
+          ]
+        },
+        {
+          "name": "ErrorType",
+          "signatures": [
+            "required string ErrorType { get; init; }"
+          ]
+        },
+        {
+          "name": "Source",
+          "signatures": [
+            "string? Source { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; init; }"
+          ]
+        },
+        {
+          "name": "StackTrace",
+          "signatures": [
+            "string? StackTrace { get; init; }"
+          ]
+        },
+        {
+          "name": "Method",
+          "signatures": [
+            "string? Method { get; init; }"
+          ]
+        },
+        {
+          "name": "Route",
+          "signatures": [
+            "string? Route { get; init; }"
+          ]
+        },
+        {
+          "name": "StatusCode",
+          "signatures": [
+            "int StatusCode { get; init; }"
+          ]
+        },
+        {
+          "name": "UserId",
+          "signatures": [
+            "int? UserId { get; init; }"
+          ]
+        },
+        {
+          "name": "OccurredAt",
+          "signatures": [
+            "DateTimeOffset OccurredAt { get; init; }"
+          ]
+        },
+        {
+          "name": "From",
+          "signatures": [
+            "static ErrorReport From(Exception exception, string? source = null, TimeProvider? time = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "ExceptionEx",
+      "signature": "static class ExceptionEx",
+      "members": [
+        {
+          "name": "Find",
+          "signatures": [
+            "static T? Find<T>(this Exception? exception) where T : Exception"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "Guard",
+      "signature": "static class Guard",
+      "members": [
+        {
+          "name": "NotNull",
+          "signatures": [
+            "static T NotNull<T>(T value) where T : class"
+          ]
+        },
+        {
+          "name": "NotEmpty",
+          "signatures": [
+            "static string NotEmpty(string value)",
+            "static TCollection NotEmpty<TCollection>(TCollection value) where TCollection : class, ICollection"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "IErrorSink",
+      "signature": "interface IErrorSink",
+      "members": [
+        {
+          "name": "TryReport",
+          "signatures": [
+            "bool TryReport(ErrorReport report)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Exceptions",
+      "key": "OSException",
+      "signature": "class OSException : Exception",
+      "members": [
+        {
+          "name": "OSException",
+          "signatures": [
+            "OSException(string? message)",
+            "OSException(string? message, Exception? inner)",
+            "OSException(Exception? inner)"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Hooks",
+      "key": "HookEx",
+      "signature": "static class HookEx",
+      "members": [
+        {
+          "name": "AddOSHooks",
+          "signatures": [
+            "static IServiceCollection AddOSHooks(this IServiceCollection services)"
+          ]
+        },
+        {
+          "name": "AddOSHook",
+          "signatures": [
+            "static IServiceCollection AddOSHook<TEvent, THook>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where THook : class, IHook<TEvent>"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Hooks",
+      "key": "HookFailure",
+      "signature": "enum HookFailure",
+      "members": [
+        {
+          "name": "Throw",
+          "signatures": [
+            "Throw = 0"
+          ]
+        },
+        {
+          "name": "Ignore",
+          "signatures": [
+            "Ignore = 1"
+          ]
+        },
+        {
+          "name": "Log",
+          "signatures": [
+            "Log = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Hooks",
+      "key": "HookPriority",
+      "signature": "static class HookPriority",
+      "members": [
+        {
+          "name": "Lowest",
+          "signatures": [
+            "const int Lowest = -200"
+          ]
+        },
+        {
+          "name": "Low",
+          "signatures": [
+            "const int Low = -100"
+          ]
+        },
+        {
+          "name": "Normal",
+          "signatures": [
+            "const int Normal = 0"
+          ]
+        },
+        {
+          "name": "High",
+          "signatures": [
+            "const int High = 100"
+          ]
+        },
+        {
+          "name": "Highest",
+          "signatures": [
+            "const int Highest = 200"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Hooks",
+      "key": "IHookRunner",
+      "signature": "interface IHookRunner",
+      "members": [
+        {
+          "name": "RunAsync",
+          "signatures": [
+            "ValueTask RunAsync<TEvent>(TEvent? e, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Hooks",
+      "key": "IHook{TEvent}",
+      "signature": "interface IHook<in TEvent>",
+      "members": [
+        {
+          "name": "Priority",
+          "signatures": [
+            "int Priority { get; }"
+          ]
+        },
+        {
+          "name": "OnFailure",
+          "signatures": [
+            "HookFailure OnFailure { get; }"
+          ]
+        },
+        {
+          "name": "HandleAsync",
+          "signatures": [
+            "ValueTask HandleAsync(TEvent? e, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Ids",
+      "key": "CodeEx",
+      "signature": "static class CodeEx",
+      "members": [
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "const int MaxLength = 9"
+          ]
+        },
+        {
+          "name": "Generate",
+          "signatures": [
+            "static int Generate(int length = 5)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Ids",
+      "key": "GuidEx",
+      "signature": "static class GuidEx",
+      "members": [
+        {
+          "name": "New",
+          "signatures": [
+            "static Guid New { get; }"
+          ]
+        },
+        {
+          "name": "NewId",
+          "signatures": [
+            "static string NewId { get; }"
+          ]
+        },
+        {
+          "name": "FlatId",
+          "signatures": [
+            "static string FlatId { get; }"
+          ]
+        },
+        {
+          "name": "NewSeqId",
+          "signatures": [
+            "static Guid NewSeqId { get; }"
+          ]
+        },
+        {
+          "name": "SeqId",
+          "signatures": [
+            "static string SeqId { get; }"
+          ]
+        },
+        {
+          "name": "SeqFlatId",
+          "signatures": [
+            "static string SeqFlatId { get; }"
+          ]
+        },
+        {
+          "name": "IsNull",
+          "signatures": [
+            "static bool IsNull(this Guid input)",
+            "static bool IsNull(this Guid? input)"
+          ]
+        },
+        {
+          "name": "IsNotNull",
+          "signatures": [
+            "static bool IsNotNull(this Guid input)",
+            "static bool IsNotNull(this Guid? input)"
+          ]
+        },
+        {
+          "name": "IsValid",
+          "signatures": [
+            "static bool IsValid(this string? value)"
+          ]
+        },
+        {
+          "name": "ToGuid",
+          "signatures": [
+            "static Guid ToGuid(this string? value, Guid def = default)"
+          ]
+        },
+        {
+          "name": "TryParse",
+          "signatures": [
+            "static bool TryParse(this string? value, out Guid result)"
+          ]
+        },
+        {
+          "name": "ToShort",
+          "signatures": [
+            "static string ToShort(this Guid input)"
+          ]
+        },
+        {
+          "name": "ToCompact",
+          "signatures": [
+            "static string ToCompact(this Guid input)"
+          ]
+        },
+        {
+          "name": "ToText",
+          "signatures": [
+            "static string ToText(this Guid id, string? format = null)",
+            "static string ToText(this Guid? id, string? format = null)"
+          ]
+        },
+        {
+          "name": "ToBase64",
+          "signatures": [
+            "static string ToBase64(this Guid guid)"
+          ]
+        },
+        {
+          "name": "FromBase64",
+          "signatures": [
+            "static Guid FromBase64(this string value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Ids",
+      "key": "KeyEx",
+      "signature": "static class KeyEx",
+      "members": [
+        {
+          "name": "Unique",
+          "signatures": [
+            "static string Unique { get; }"
+          ]
+        },
+        {
+          "name": "Unique64",
+          "signatures": [
+            "static string Unique64 { get; }"
+          ]
+        },
+        {
+          "name": "UniqueHex",
+          "signatures": [
+            "static string UniqueHex { get; }"
+          ]
+        },
+        {
+          "name": "UniqueShort",
+          "signatures": [
+            "static string UniqueShort { get; }"
+          ]
+        },
+        {
+          "name": "Stamp",
+          "signatures": [
+            "static string Stamp(int length = 20)"
+          ]
+        },
+        {
+          "name": "ToSHA1",
+          "signatures": [
+            "static string ToSHA1(this string? input, TextStyle style)",
+            "static string ToSHA1(this byte[]? input, TextStyle style)"
+          ]
+        },
+        {
+          "name": "To256",
+          "signatures": [
+            "static string To256(this string? input, TextStyle style)",
+            "static string To256(this byte[]? input, TextStyle style)"
+          ]
+        },
+        {
+          "name": "To512",
+          "signatures": [
+            "static string To512(this string? input, TextStyle style)",
+            "static string To512(this byte[]? input, TextStyle style)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Models",
+      "key": "KeyValueModel",
+      "signature": "sealed class KeyValueModel : KeyValueModel<string, string>",
+      "members": [
+        {
+          "name": "KeyValueModel",
+          "signatures": [
+            "KeyValueModel(string key, string value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Models",
+      "key": "KeyValueModel{TKey,TValue}",
+      "signature": "class KeyValueModel<TKey, TValue>",
+      "members": [
+        {
+          "name": "KeyValueModel",
+          "signatures": [
+            "KeyValueModel(TKey? key, TValue? value)"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "TKey? Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "TValue? Value { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Models",
+      "key": "SelectGroupModel",
+      "signature": "class SelectGroupModel",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "string Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Selected",
+          "signatures": [
+            "bool Selected { get; set; }"
+          ]
+        },
+        {
+          "name": "Children",
+          "signatures": [
+            "List<SelectListModel> Children { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Models",
+      "key": "SelectListModel",
+      "signature": "sealed class SelectListModel : SelectListModel<string, string>",
+      "members": [
+        {
+          "name": "SelectListModel",
+          "signatures": [
+            "SelectListModel(string text, string value, bool selected)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Models",
+      "key": "SelectListModel{TText,TValue}",
+      "signature": "class SelectListModel<TText, TValue>",
+      "members": [
+        {
+          "name": "SelectListModel",
+          "signatures": [
+            "SelectListModel(TText? text, TValue? value, bool selected)"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "TText? Text { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "TValue? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Selected",
+          "signatures": [
+            "bool Selected { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Modules",
+      "key": "IModule",
+      "signature": "interface IModule",
+      "members": [
+        {
+          "name": "Info",
+          "signatures": [
+            "ModuleInfo Info { get; }"
+          ]
+        },
+        {
+          "name": "Register",
+          "signatures": [
+            "void Register(IServiceCollection services)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Modules",
+      "key": "ModuleEx",
+      "signature": "static class ModuleEx",
+      "members": [
+        {
+          "name": "AddOSModules",
+          "signatures": [
+            "static IServiceCollection AddOSModules(this IServiceCollection services, params IModule[] modules)"
+          ]
+        },
+        {
+          "name": "TryRegisterLib",
+          "signatures": [
+            "static bool TryRegisterLib(this IServiceCollection services, Type libType)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Modules",
+      "key": "ModuleInfo",
+      "signature": "sealed class ModuleInfo",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "required string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "required Version Version { get; init; }"
+          ]
+        },
+        {
+          "name": "Schema",
+          "signatures": [
+            "string? Schema { get; init; }"
+          ]
+        },
+        {
+          "name": "IsPaid",
+          "signatures": [
+            "bool IsPaid { get; init; }"
+          ]
+        },
+        {
+          "name": "Requires",
+          "signatures": [
+            "IReadOnlyList<string> Requires { get; init; }"
+          ]
+        },
+        {
+          "name": "Optional",
+          "signatures": [
+            "IReadOnlyList<string> Optional { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Modules",
+      "key": "ModuleRegistry",
+      "signature": "sealed class ModuleRegistry",
+      "members": [
+        {
+          "name": "Modules",
+          "signatures": [
+            "IReadOnlyList<ModuleInfo> Modules { get; }"
+          ]
+        },
+        {
+          "name": "Has",
+          "signatures": [
+            "bool Has(string? code)"
+          ]
+        },
+        {
+          "name": "Get",
+          "signatures": [
+            "ModuleInfo? Get(string? code)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Numbers",
+      "key": "DigitGroup",
+      "signature": "enum DigitGroup",
+      "members": [
+        {
+          "name": "Ones",
+          "signatures": [
+            "Ones = 0"
+          ]
+        },
+        {
+          "name": "Teens",
+          "signatures": [
+            "Teens = 1"
+          ]
+        },
+        {
+          "name": "Tens",
+          "signatures": [
+            "Tens = 2"
+          ]
+        },
+        {
+          "name": "Hundreds",
+          "signatures": [
+            "Hundreds = 3"
+          ]
+        },
+        {
+          "name": "Thousands",
+          "signatures": [
+            "Thousands = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Numbers",
+      "key": "DigitName",
+      "signature": "class DigitName",
+      "members": [
+        {
+          "name": "Group",
+          "signatures": [
+            "DigitGroup Group { get; set; }"
+          ]
+        },
+        {
+          "name": "Names",
+          "signatures": [
+            "IList<string> Names { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Numbers",
+      "key": "NumberEx",
+      "signature": "static class NumberEx",
+      "members": [
+        {
+          "name": "ToInt",
+          "signatures": [
+            "static int ToInt(this long input)",
+            "static int ToInt(this double input)",
+            "static int ToInt(this double? input)",
+            "static int ToInt(this int? input)",
+            "static int ToInt(this string? input)",
+            "static int ToInt(this string input, int fromBase)",
+            "static int ToInt(this object? input)"
+          ]
+        },
+        {
+          "name": "ToIntSafe",
+          "signatures": [
+            "static int ToIntSafe(this object? input, int defaultValue = 0)"
+          ]
+        },
+        {
+          "name": "ToLong",
+          "signatures": [
+            "static long ToLong(this string? input)",
+            "static long ToLong(this long? input)",
+            "static long ToLong(this object? input)"
+          ]
+        },
+        {
+          "name": "ToDecimal",
+          "signatures": [
+            "static decimal ToDecimal(this string? input)",
+            "static decimal ToDecimal(this object? input)"
+          ]
+        },
+        {
+          "name": "ToCurrency",
+          "signatures": [
+            "static decimal ToCurrency(this string? input)"
+          ]
+        },
+        {
+          "name": "ToDecimalSafe",
+          "signatures": [
+            "static decimal ToDecimalSafe(this object? input, decimal defaultValue = 0m)"
+          ]
+        },
+        {
+          "name": "ToDouble",
+          "signatures": [
+            "static double ToDouble(this string? input)",
+            "static double ToDouble(this object? input)"
+          ]
+        },
+        {
+          "name": "ToDoubleSafe",
+          "signatures": [
+            "static double ToDoubleSafe(this object? input, double defaultValue = 0)"
+          ]
+        },
+        {
+          "name": "ToFloat",
+          "signatures": [
+            "static float ToFloat(this double input)",
+            "static float ToFloat(this string? input)",
+            "static float ToFloat(this object? input)"
+          ]
+        },
+        {
+          "name": "ToByte",
+          "signatures": [
+            "static byte ToByte(this string input, int fromBase = 16)"
+          ]
+        },
+        {
+          "name": "ToByteSafe",
+          "signatures": [
+            "static byte ToByteSafe(this string? input, int fromBase = 16, byte def = 0)"
+          ]
+        },
+        {
+          "name": "ToHex",
+          "signatures": [
+            "static string ToHex(this int value)"
+          ]
+        },
+        {
+          "name": "ToBinary",
+          "signatures": [
+            "static string ToBinary(this int value)"
+          ]
+        },
+        {
+          "name": "ToFormatted",
+          "signatures": [
+            "static string ToFormatted(this decimal value, string format = \"N2\", IFormatProvider? provider = null)"
+          ]
+        },
+        {
+          "name": "IsNumber",
+          "signatures": [
+            "static bool IsNumber(this string? input)"
+          ]
+        },
+        {
+          "name": "IsNotNumber",
+          "signatures": [
+            "static bool IsNotNumber(this string? input)"
+          ]
+        },
+        {
+          "name": "IsAsciiDigits",
+          "signatures": [
+            "static bool IsAsciiDigits(string? value)"
+          ]
+        },
+        {
+          "name": "CountDigits",
+          "signatures": [
+            "static int CountDigits(string text, int start)"
+          ]
+        },
+        {
+          "name": "IsPositive",
+          "signatures": [
+            "static bool IsPositive(this int value)",
+            "static bool IsPositive(this long value)",
+            "static bool IsPositive(this double value)",
+            "static bool IsPositive(this decimal value)"
+          ]
+        },
+        {
+          "name": "IsZero",
+          "signatures": [
+            "static bool IsZero(double input)"
+          ]
+        },
+        {
+          "name": "IsEven",
+          "signatures": [
+            "static bool IsEven(this int value)"
+          ]
+        },
+        {
+          "name": "IsOdd",
+          "signatures": [
+            "static bool IsOdd(this int value)"
+          ]
+        },
+        {
+          "name": "IsInteger",
+          "signatures": [
+            "static bool IsInteger(this double value)",
+            "static bool IsInteger(this decimal value)"
+          ]
+        },
+        {
+          "name": "IsWithin",
+          "signatures": [
+            "static bool IsWithin(this int value, int minimum, int maximum)",
+            "static bool IsWithin(this long value, long minimum, long maximum)",
+            "static bool IsWithin(this double value, double minimum, double maximum)",
+            "static bool IsWithin(this decimal value, decimal minimum, decimal maximum)"
+          ]
+        },
+        {
+          "name": "IsEqual",
+          "signatures": [
+            "static bool IsEqual(this double value1, double value2, double tolerance = 0.0001)",
+            "static bool IsEqual(this decimal value1, decimal value2, decimal tolerance = 0.0001m)"
+          ]
+        },
+        {
+          "name": "Round",
+          "signatures": [
+            "static double Round(this double value, int decimals = 2)",
+            "static decimal Round(this decimal value, int decimals = 2)"
+          ]
+        },
+        {
+          "name": "Truncate",
+          "signatures": [
+            "static double Truncate(double value, int precision)"
+          ]
+        },
+        {
+          "name": "ToPercent",
+          "signatures": [
+            "static double ToPercent(this double value)"
+          ]
+        },
+        {
+          "name": "FromPercent",
+          "signatures": [
+            "static double FromPercent(this double value)"
+          ]
+        },
+        {
+          "name": "OrZero",
+          "signatures": [
+            "static int OrZero(this int? value)",
+            "static long OrZero(this long? value)",
+            "static double OrZero(this double? value)",
+            "static decimal OrZero(this decimal? value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Objects",
+      "key": "ObjEx",
+      "signature": "static class ObjEx",
+      "members": [
+        {
+          "name": "IsNull",
+          "signatures": [
+            "static bool IsNull(object? input)"
+          ]
+        },
+        {
+          "name": "IsNotNull",
+          "signatures": [
+            "static bool IsNotNull(object? input)"
+          ]
+        },
+        {
+          "name": "IsBlank",
+          "signatures": [
+            "static bool IsBlank(object? input)"
+          ]
+        },
+        {
+          "name": "IsNumeric",
+          "signatures": [
+            "static bool IsNumeric(object? input)"
+          ]
+        },
+        {
+          "name": "To",
+          "signatures": [
+            "static T? To<T>(this object? input, T? def = null)"
+          ]
+        },
+        {
+          "name": "ToBoolean",
+          "signatures": [
+            "static bool ToBoolean(object? input)"
+          ]
+        },
+        {
+          "name": "ToText",
+          "signatures": [
+            "static string ToText(object? input)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Objects",
+      "key": "ValueEx",
+      "signature": "static class ValueEx",
+      "members": [
+        {
+          "name": "IsDefault",
+          "signatures": [
+            "static bool IsDefault<T>(this T value) where T : struct",
+            "static bool IsDefault<T>(this T? value) where T : struct",
+            "static bool IsDefault(this object? value)"
+          ]
+        },
+        {
+          "name": "NotDefault",
+          "signatures": [
+            "static bool NotDefault<T>(this T value) where T : struct",
+            "static bool NotDefault<T>(this T? value) where T : struct",
+            "static bool NotDefault(this object? value)"
+          ]
+        },
+        {
+          "name": "OrDefault",
+          "signatures": [
+            "static T OrDefault<T>(this T value, T alt) where T : struct"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Paging",
+      "key": "PageInfo",
+      "signature": "class PageInfo",
+      "members": [
+        {
+          "name": "PageInfo",
+          "signatures": [
+            "PageInfo(int page, int take, int total)",
+            "PageInfo(int page, int take, int shown, bool hasMore)"
+          ]
+        },
+        {
+          "name": "Page",
+          "signatures": [
+            "int Page { get; }"
+          ]
+        },
+        {
+          "name": "Take",
+          "signatures": [
+            "int Take { get; }"
+          ]
+        },
+        {
+          "name": "Total",
+          "signatures": [
+            "int? Total { get; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int? Count { get; }"
+          ]
+        },
+        {
+          "name": "HasMore",
+          "signatures": [
+            "bool HasMore { get; }"
+          ]
+        },
+        {
+          "name": "Skip",
+          "signatures": [
+            "int Skip { get; }"
+          ]
+        },
+        {
+          "name": "First",
+          "signatures": [
+            "int First { get; }"
+          ]
+        },
+        {
+          "name": "Last",
+          "signatures": [
+            "int Last { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Paging",
+      "key": "PageItemType",
+      "signature": "enum PageItemType",
+      "members": [
+        {
+          "name": "First",
+          "signatures": [
+            "First = 0"
+          ]
+        },
+        {
+          "name": "Previous",
+          "signatures": [
+            "Previous = 1"
+          ]
+        },
+        {
+          "name": "Number",
+          "signatures": [
+            "Number = 2"
+          ]
+        },
+        {
+          "name": "Ellipsis",
+          "signatures": [
+            "Ellipsis = 3"
+          ]
+        },
+        {
+          "name": "Next",
+          "signatures": [
+            "Next = 4"
+          ]
+        },
+        {
+          "name": "Last",
+          "signatures": [
+            "Last = 5"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Paging",
+      "key": "PagingEx",
+      "signature": "static class PagingEx",
+      "members": [
+        {
+          "name": "PageAfter",
+          "signatures": [
+            "static IQueryable<T?> PageAfter<T, TKey>(this IQueryable<T?> query, Expression<Func<T?, TKey?>> keySelector, TKey? after, int take)",
+            "static IQueryable<T?> PageAfter<T, TKey, TId>(this IQueryable<T?> query, Expression<Func<T?, TKey?>> keySelector, Expression<Func<T?, TId?>> idSelector, ValueTuple<TKey, TId>? after, int take)"
+          ]
+        },
+        {
+          "name": "PageBefore",
+          "signatures": [
+            "static IQueryable<T?> PageBefore<T, TKey>(this IQueryable<T?> query, Expression<Func<T?, TKey?>> keySelector, TKey? before, int take)",
+            "static IQueryable<T?> PageBefore<T, TKey, TId>(this IQueryable<T?> query, Expression<Func<T?, TKey?>> keySelector, Expression<Func<T?, TId?>> idSelector, ValueTuple<TKey, TId>? before, int take)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Paging",
+      "key": "PagingModel{T}",
+      "signature": "class PagingModel<T>",
+      "members": [
+        {
+          "name": "Page",
+          "signatures": [
+            "PageInfo Page { get; set; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "List<T?> Items { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "FilterableAttribute",
+      "signature": "sealed class FilterableAttribute : Attribute",
+      "members": []
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "QueryEx",
+      "signature": "static class QueryEx",
+      "members": [
+        {
+          "name": "Search",
+          "signatures": [
+            "static IQueryable<T?> Search<T>(this IQueryable<T?> source, string? term)"
+          ]
+        },
+        {
+          "name": "OrderBy",
+          "signatures": [
+            "static IQueryable<T?> OrderBy<T>(this IQueryable<T?> source, string? sortName, SortType? type)"
+          ]
+        },
+        {
+          "name": "Paging",
+          "signatures": [
+            "static IQueryable<T?> Paging<T>(this IQueryable<T?> source, PageInfo page)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "QueryModel",
+      "signature": "class QueryModel",
+      "members": [
+        {
+          "name": "QueryModel",
+          "signatures": [
+            "QueryModel()",
+            "QueryModel(int page, int take, string? term = null, string? filter = null, string? sortName = null, SortType sortType = SortType.Descending)"
+          ]
+        },
+        {
+          "name": "Page",
+          "signatures": [
+            "int Page { get; set; }"
+          ]
+        },
+        {
+          "name": "Take",
+          "signatures": [
+            "int Take { get; set; }"
+          ]
+        },
+        {
+          "name": "Term",
+          "signatures": [
+            "string Term { get; set; }"
+          ]
+        },
+        {
+          "name": "Filter",
+          "signatures": [
+            "string Filter { get; set; }"
+          ]
+        },
+        {
+          "name": "SortName",
+          "signatures": [
+            "string SortName { get; set; }"
+          ]
+        },
+        {
+          "name": "SortType",
+          "signatures": [
+            "SortType SortType { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "SearchableAttribute",
+      "signature": "sealed class SearchableAttribute : Attribute",
+      "members": []
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "SortType",
+      "signature": "enum SortType",
+      "members": [
+        {
+          "name": "None",
+          "signatures": [
+            "None = 0"
+          ]
+        },
+        {
+          "name": "Ascending",
+          "signatures": [
+            "Ascending = 1"
+          ]
+        },
+        {
+          "name": "Descending",
+          "signatures": [
+            "Descending = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Queries",
+      "key": "SortableAttribute",
+      "signature": "sealed class SortableAttribute : Attribute",
+      "members": []
+    },
+    {
+      "namespace": "OS.Reflection",
+      "key": "ReflEx",
+      "signature": "static class ReflEx",
+      "members": [
+        {
+          "name": "Create",
+          "signatures": [
+            "static T? Create<T>(params object?[] args)",
+            "static object Create(Type type, params object?[] args)"
+          ]
+        },
+        {
+          "name": "GetGenericInterface",
+          "signatures": [
+            "static Type? GetGenericInterface(Type type, Type openInterface)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "CountReportModel",
+      "signature": "class CountReportModel",
+      "members": [
+        {
+          "name": "CountReportModel",
+          "signatures": [
+            "CountReportModel(int count, string title)"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; }"
+          ]
+        },
+        {
+          "name": "Count",
+          "signatures": [
+            "int Count { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "MonReportRange",
+      "signature": "class MonReportRange",
+      "members": [
+        {
+          "name": "Months",
+          "signatures": [
+            "int Months { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "ReportCountSet",
+      "signature": "class ReportCountSet",
+      "members": [
+        {
+          "name": "Counts",
+          "signatures": [
+            "IReadOnlyDictionary<string, CountReportModel> Counts { get; }"
+          ]
+        },
+        {
+          "name": "Set",
+          "signatures": [
+            "void Set(string key, CountReportModel? count)"
+          ]
+        },
+        {
+          "name": "Get",
+          "signatures": [
+            "CountReportModel? Get(string key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "ReportGroupAmount",
+      "signature": "class ReportGroupAmount",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Amount",
+          "signatures": [
+            "decimal Amount { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "ReportRange",
+      "signature": "enum ReportRange",
+      "members": [
+        {
+          "name": "CurrentWeek",
+          "signatures": [
+            "CurrentWeek = 0"
+          ]
+        },
+        {
+          "name": "LastWeek",
+          "signatures": [
+            "LastWeek = 1"
+          ]
+        },
+        {
+          "name": "CurrentMonth",
+          "signatures": [
+            "CurrentMonth = 2"
+          ]
+        },
+        {
+          "name": "LastMonth",
+          "signatures": [
+            "LastMonth = 3"
+          ]
+        },
+        {
+          "name": "TwoMonthsAgo",
+          "signatures": [
+            "TwoMonthsAgo = 4"
+          ]
+        },
+        {
+          "name": "ThreeMonthsAgo",
+          "signatures": [
+            "ThreeMonthsAgo = 5"
+          ]
+        },
+        {
+          "name": "CurrentYear",
+          "signatures": [
+            "CurrentYear = 6"
+          ]
+        },
+        {
+          "name": "LastYear",
+          "signatures": [
+            "LastYear = 7"
+          ]
+        },
+        {
+          "name": "TwoYearsAgo",
+          "signatures": [
+            "TwoYearsAgo = 8"
+          ]
+        },
+        {
+          "name": "ThreeYearsAgo",
+          "signatures": [
+            "ThreeYearsAgo = 9"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "ReportRangeRequest",
+      "signature": "class ReportRangeRequest",
+      "members": [
+        {
+          "name": "Type",
+          "signatures": [
+            "ReportRange Type { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Dates",
+          "signatures": [
+            "List<DateTime> Dates { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Reports",
+      "key": "ReportSeriesPoint",
+      "signature": "class ReportSeriesPoint",
+      "members": [
+        {
+          "name": "Period",
+          "signatures": [
+            "string Period { get; set; }"
+          ]
+        },
+        {
+          "name": "Amount",
+          "signatures": [
+            "decimal Amount { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Results",
+      "key": "FieldError",
+      "signature": "sealed record FieldError",
+      "members": [
+        {
+          "name": "FieldError",
+          "signatures": [
+            "FieldError(string Field, string Message, string? Code = null)"
+          ]
+        },
+        {
+          "name": "Field",
+          "signatures": [
+            "string Field { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string Message { get; init; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Results",
+      "key": "OSResult",
+      "signature": "record OSResult",
+      "members": [
+        {
+          "name": "Status",
+          "signatures": [
+            "ResultStatus Status { get; init; }"
+          ]
+        },
+        {
+          "name": "Succeeded",
+          "signatures": [
+            "bool Succeeded { get; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; init; }"
+          ]
+        },
+        {
+          "name": "Message",
+          "signatures": [
+            "string? Message { get; init; }"
+          ]
+        },
+        {
+          "name": "TraceId",
+          "signatures": [
+            "string? TraceId { get; init; }"
+          ]
+        },
+        {
+          "name": "Errors",
+          "signatures": [
+            "IReadOnlyList<FieldError>? Errors { get; init; }"
+          ]
+        },
+        {
+          "name": "Ok",
+          "signatures": [
+            "static OSResult Ok(string? message = null)"
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "static OSResult Info(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Warning",
+          "signatures": [
+            "static OSResult Warning(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Existed",
+          "signatures": [
+            "static OSResult Existed(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "NotExisted",
+          "signatures": [
+            "static OSResult NotExisted(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Invalid",
+          "signatures": [
+            "static OSResult Invalid(string? message = null, string? code = null)",
+            "static OSResult Invalid(IReadOnlyList<FieldError> errors, string? message = null)"
+          ]
+        },
+        {
+          "name": "NotFound",
+          "signatures": [
+            "static OSResult NotFound(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Conflict",
+          "signatures": [
+            "static OSResult Conflict(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Unauthorized",
+          "signatures": [
+            "static OSResult Unauthorized(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Forbidden",
+          "signatures": [
+            "static OSResult Forbidden(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "static OSResult Failed(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Unavailable",
+          "signatures": [
+            "static OSResult Unavailable(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "static OSResult Error(string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "Of",
+          "signatures": [
+            "static OSResult Of(ResultStatus status, string? message = null, string? code = null)"
+          ]
+        },
+        {
+          "name": "From",
+          "signatures": [
+            "static OSResult From(Exception exception, string? message = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Results",
+      "key": "OSResult{T}",
+      "signature": "sealed record OSResult<T> : OSResult",
+      "members": [
+        {
+          "name": "Data",
+          "signatures": [
+            "T? Data { get; init; }"
+          ]
+        },
+        {
+          "name": "Ok",
+          "signatures": [
+            "static OSResult<T?> Ok(T? data, string? message = null)"
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "static OSResult<T?> Info(T? data, string? message = null)"
+          ]
+        },
+        {
+          "name": "Warning",
+          "signatures": [
+            "static OSResult<T?> Warning(T? data, string? message = null)"
+          ]
+        },
+        {
+          "name": "Existed",
+          "signatures": [
+            "static OSResult<T?> Existed(T? data, string? message = null)"
+          ]
+        },
+        {
+          "name": "From",
+          "signatures": [
+            "static OSResult<T?> From(OSResult result)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Results",
+      "key": "ResultEx",
+      "signature": "static class ResultEx",
+      "members": [
+        {
+          "name": "IsSuccess",
+          "signatures": [
+            "static bool IsSuccess(this ResultStatus status)"
+          ]
+        },
+        {
+          "name": "ToStatus",
+          "signatures": [
+            "static ResultStatus ToStatus(this Exception exception)"
+          ]
+        },
+        {
+          "name": "ToCode",
+          "signatures": [
+            "static string? ToCode(this Exception exception)"
+          ]
+        },
+        {
+          "name": "ToHttpStatus",
+          "signatures": [
+            "static int ToHttpStatus(this ResultStatus status)"
+          ]
+        },
+        {
+          "name": "FromHttpStatus",
+          "signatures": [
+            "static ResultStatus FromHttpStatus(int httpStatus)"
+          ]
+        },
+        {
+          "name": "MessageKey",
+          "signatures": [
+            "static string MessageKey(this ResultStatus status)"
+          ]
+        },
+        {
+          "name": "FallbackMessage",
+          "signatures": [
+            "static string FallbackMessage(this ResultStatus status)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Results",
+      "key": "ResultStatus",
+      "signature": "enum ResultStatus",
+      "members": [
+        {
+          "name": "Ok",
+          "signatures": [
+            "Ok = 0"
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "Info = 1"
+          ]
+        },
+        {
+          "name": "Warning",
+          "signatures": [
+            "Warning = 2"
+          ]
+        },
+        {
+          "name": "Existed",
+          "signatures": [
+            "Existed = 3"
+          ]
+        },
+        {
+          "name": "NotExisted",
+          "signatures": [
+            "NotExisted = 4"
+          ]
+        },
+        {
+          "name": "Invalid",
+          "signatures": [
+            "Invalid = 10"
+          ]
+        },
+        {
+          "name": "NotFound",
+          "signatures": [
+            "NotFound = 11"
+          ]
+        },
+        {
+          "name": "Conflict",
+          "signatures": [
+            "Conflict = 12"
+          ]
+        },
+        {
+          "name": "Unauthorized",
+          "signatures": [
+            "Unauthorized = 13"
+          ]
+        },
+        {
+          "name": "Forbidden",
+          "signatures": [
+            "Forbidden = 14"
+          ]
+        },
+        {
+          "name": "Failed",
+          "signatures": [
+            "Failed = 15"
+          ]
+        },
+        {
+          "name": "Unavailable",
+          "signatures": [
+            "Unavailable = 16"
+          ]
+        },
+        {
+          "name": "Error",
+          "signatures": [
+            "Error = 17"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Runtime",
+      "key": "AppInfo",
+      "signature": "static class AppInfo",
+      "members": [
+        {
+          "name": "ExePath",
+          "signatures": [
+            "static string? ExePath { get; }"
+          ]
+        },
+        {
+          "name": "ModuleName",
+          "signatures": [
+            "static string? ModuleName { get; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "static string? Name { get; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "static string? Version { get; }"
+          ]
+        },
+        {
+          "name": "VersionWithPrefix",
+          "signatures": [
+            "static string VersionWithPrefix { get; }"
+          ]
+        },
+        {
+          "name": "NameAndVersion",
+          "signatures": [
+            "static string NameAndVersion { get; }"
+          ]
+        },
+        {
+          "name": "FileVersion",
+          "signatures": [
+            "static FileVersionInfo? FileVersion { get; }"
+          ]
+        },
+        {
+          "name": "GetVersion",
+          "signatures": [
+            "static Version? GetVersion()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "IScopeResolver",
+      "signature": "interface IScopeResolver",
+      "members": [
+        {
+          "name": "ResolveAsync",
+          "signatures": [
+            "ValueTask<ScopeChain> ResolveAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "IScopeSource",
+      "signature": "interface IScopeSource",
+      "members": [
+        {
+          "name": "CurrentAsync",
+          "signatures": [
+            "ValueTask<IReadOnlyList<Scope>> CurrentAsync(CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "Scope",
+      "signature": "struct Scope : IEquatable<Scope>",
+      "members": [
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope(byte kind, int id)"
+          ]
+        },
+        {
+          "name": "AppKind",
+          "signatures": [
+            "const byte AppKind = 0"
+          ]
+        },
+        {
+          "name": "App",
+          "signatures": [
+            "static readonly Scope App"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "byte Kind { get; }"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; }"
+          ]
+        },
+        {
+          "name": "IsApp",
+          "signatures": [
+            "bool IsApp { get; }"
+          ]
+        },
+        {
+          "name": "Equals",
+          "signatures": [
+            "bool Equals(Scope other)",
+            "bool Equals(object? obj)"
+          ]
+        },
+        {
+          "name": "GetHashCode",
+          "signatures": [
+            "int GetHashCode()"
+          ]
+        },
+        {
+          "name": "ToString",
+          "signatures": [
+            "string ToString()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "ScopeChain",
+      "signature": "sealed class ScopeChain",
+      "members": [
+        {
+          "name": "AppOnly",
+          "signatures": [
+            "static readonly ScopeChain AppOnly"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<Scope> Items { get; }"
+          ]
+        },
+        {
+          "name": "Of",
+          "signatures": [
+            "static ScopeChain Of(ScopeRegistry registry, IEnumerable<Scope>? scopes)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "ScopeEx",
+      "signature": "static class ScopeEx",
+      "members": [
+        {
+          "name": "AddOSScopes",
+          "signatures": [
+            "static IServiceCollection AddOSScopes(this IServiceCollection services)"
+          ]
+        },
+        {
+          "name": "AddOSScopeKind",
+          "signatures": [
+            "static IServiceCollection AddOSScopeKind(this IServiceCollection services, byte kind, string code, string? titleKey, int rank)"
+          ]
+        },
+        {
+          "name": "AddOSScopeSource",
+          "signatures": [
+            "static IServiceCollection AddOSScopeSource<TSource>(this IServiceCollection services) where TSource : class, IScopeSource"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "ScopeKind",
+      "signature": "sealed class ScopeKind",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "required byte Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "required string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "TitleKey",
+          "signatures": [
+            "string? TitleKey { get; init; }"
+          ]
+        },
+        {
+          "name": "Rank",
+          "signatures": [
+            "int Rank { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Scopes",
+      "key": "ScopeRegistry",
+      "signature": "sealed class ScopeRegistry",
+      "members": [
+        {
+          "name": "ScopeRegistry",
+          "signatures": [
+            "ScopeRegistry(IEnumerable<ScopeKind?>? kinds)"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "IReadOnlyList<ScopeKind> Items { get; }"
+          ]
+        },
+        {
+          "name": "TryGet",
+          "signatures": [
+            "bool TryGet(byte kind, out ScopeKind? info)"
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "ScopeKind Find(byte kind)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Secrets",
+      "key": "ISecretBox",
+      "signature": "interface ISecretBox",
+      "members": [
+        {
+          "name": "Seal",
+          "signatures": [
+            "byte[] Seal(string plain, string? context)"
+          ]
+        },
+        {
+          "name": "TryOpen",
+          "signatures": [
+            "bool TryOpen(byte[]? envelope, string? context, out string? plain)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Secrets",
+      "key": "ISecretKeyRing",
+      "signature": "interface ISecretKeyRing",
+      "members": [
+        {
+          "name": "CurrentKeyId",
+          "signatures": [
+            "string CurrentKeyId { get; }"
+          ]
+        },
+        {
+          "name": "TryGetKey",
+          "signatures": [
+            "bool TryGetKey(string keyId, out byte[]? key)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Secrets",
+      "key": "SecretEx",
+      "signature": "static class SecretEx",
+      "members": [
+        {
+          "name": "AddOSSecrets",
+          "signatures": [
+            "static IServiceCollection AddOSSecrets(this IServiceCollection services)"
+          ]
+        },
+        {
+          "name": "AddOSSecretKeyRing",
+          "signatures": [
+            "static IServiceCollection AddOSSecretKeyRing<TRing>(this IServiceCollection services) where TRing : class, ISecretKeyRing"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Text",
+      "key": "RegexEx",
+      "signature": "static class RegexEx",
+      "members": [
+        {
+          "name": "Email",
+          "signatures": [
+            "const string Email = \"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$\""
+          ]
+        },
+        {
+          "name": "MatchEmail",
+          "signatures": [
+            "static readonly Regex MatchEmail"
+          ]
+        },
+        {
+          "name": "IsNull",
+          "signatures": [
+            "static bool IsNull(Regex? input)"
+          ]
+        },
+        {
+          "name": "IsNotNull",
+          "signatures": [
+            "static bool IsNotNull(Regex? input)"
+          ]
+        },
+        {
+          "name": "Create",
+          "signatures": [
+            "static Regex? Create(string? source)",
+            "static Regex? Create(string? source, TimeSpan timeout)"
+          ]
+        },
+        {
+          "name": "GetMatch",
+          "signatures": [
+            "static Match GetMatch(this Regex? regex, string? source)"
+          ]
+        },
+        {
+          "name": "IsEmail",
+          "signatures": [
+            "static bool IsEmail(string? email)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Text",
+      "key": "TextEx",
+      "signature": "static class TextEx",
+      "members": [
+        {
+          "name": "TrimIt",
+          "signatures": [
+            "static string TrimIt(this string? input, TextStyle style = TextStyle.None)"
+          ]
+        },
+        {
+          "name": "LowerTrim",
+          "signatures": [
+            "static string LowerTrim(this string? input)"
+          ]
+        },
+        {
+          "name": "ToSingleSpace",
+          "signatures": [
+            "static string ToSingleSpace(this string? input)"
+          ]
+        },
+        {
+          "name": "Clean",
+          "signatures": [
+            "static string Clean(string? input)",
+            "static string Clean(string? input, string? separator, TextStyle style)"
+          ]
+        },
+        {
+          "name": "Remove",
+          "signatures": [
+            "static string Remove(string? text, params string[]? values)"
+          ]
+        },
+        {
+          "name": "CleanTags",
+          "signatures": [
+            "static string CleanTags(string? input)"
+          ]
+        },
+        {
+          "name": "ToSlug",
+          "signatures": [
+            "static string ToSlug(this string? input)"
+          ]
+        },
+        {
+          "name": "FixName",
+          "signatures": [
+            "static string FixName(this string? name, TextStyle style = TextStyle.Lower)"
+          ]
+        },
+        {
+          "name": "Truncate",
+          "signatures": [
+            "static string Truncate(this string? input, int maxLength, string? suffix = \"...\")"
+          ]
+        },
+        {
+          "name": "ToBoolean",
+          "signatures": [
+            "static bool ToBoolean(this string? input, bool def = false)"
+          ]
+        },
+        {
+          "name": "ToLatinDigits",
+          "signatures": [
+            "static string ToLatinDigits(string? input)"
+          ]
+        },
+        {
+          "name": "ToUTF16",
+          "signatures": [
+            "static string ToUTF16(this string input, int fromBase = 16)"
+          ]
+        },
+        {
+          "name": "ToChar",
+          "signatures": [
+            "static char ToChar(this string input, int fromBase = 16)"
+          ]
+        },
+        {
+          "name": "ToTitleCase",
+          "signatures": [
+            "static string ToTitleCase(this string? input)"
+          ]
+        },
+        {
+          "name": "ToCamelCase",
+          "signatures": [
+            "static string ToCamelCase(this string? input)"
+          ]
+        },
+        {
+          "name": "IsNull",
+          "signatures": [
+            "static bool IsNull(string? input)",
+            "static bool IsNull(string[]? input)"
+          ]
+        },
+        {
+          "name": "IsNotNull",
+          "signatures": [
+            "static bool IsNotNull(string? input)",
+            "static bool IsNotNull(string[]? input)"
+          ]
+        },
+        {
+          "name": "ToNull",
+          "signatures": [
+            "static string? ToNull(this string? input)"
+          ]
+        },
+        {
+          "name": "IsEmpty",
+          "signatures": [
+            "static bool IsEmpty(string? input)"
+          ]
+        },
+        {
+          "name": "IsNotEmpty",
+          "signatures": [
+            "static bool IsNotEmpty(string? input)"
+          ]
+        },
+        {
+          "name": "IsPersian",
+          "signatures": [
+            "static bool IsPersian(string? text)"
+          ]
+        },
+        {
+          "name": "IsContain",
+          "signatures": [
+            "static bool IsContain(this string? source, string? value, StringComparison comp = StringComparison.OrdinalIgnoreCase)",
+            "static bool IsContain(this string? source, params string[]? values)",
+            "static bool IsContain(this IEnumerable<string?>? source, string? value, StringComparison comp = StringComparison.OrdinalIgnoreCase)",
+            "static bool IsContain(this Span<char> span, string? value, StringComparison comp = StringComparison.OrdinalIgnoreCase)"
+          ]
+        },
+        {
+          "name": "IsEqual",
+          "signatures": [
+            "static bool IsEqual(this string? source, string? value, StringComparison comp = StringComparison.OrdinalIgnoreCase)",
+            "static bool IsEqual(this string? source, IEnumerable<string?>? values, StringComparison comp = StringComparison.OrdinalIgnoreCase)"
+          ]
+        },
+        {
+          "name": "IsInRange",
+          "signatures": [
+            "static bool IsInRange(this char c, char min, char max)"
+          ]
+        },
+        {
+          "name": "Escape",
+          "signatures": [
+            "static string Escape(string? input)"
+          ]
+        },
+        {
+          "name": "Unescape",
+          "signatures": [
+            "static string Unescape(string? input)"
+          ]
+        },
+        {
+          "name": "Conjoin",
+          "signatures": [
+            "static string Conjoin(string? separator, params string?[]? values)",
+            "static string Conjoin(this IEnumerable<long>? values, string? separator = null)",
+            "static string Conjoin(this IEnumerable<string?>? values, string? separator = null)",
+            "static string Conjoin(this IEnumerable<object?>? values, string? separator = null)"
+          ]
+        },
+        {
+          "name": "ToKebab",
+          "signatures": [
+            "static string ToKebab(this string? input)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Text",
+      "key": "TextStyle",
+      "signature": "enum TextStyle",
+      "members": [
+        {
+          "name": "None",
+          "signatures": [
+            "None = 0"
+          ]
+        },
+        {
+          "name": "Upper",
+          "signatures": [
+            "Upper = 1"
+          ]
+        },
+        {
+          "name": "Lower",
+          "signatures": [
+            "Lower = 2"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "define",
+      "code": "public sealed class ShopConfig : AppConfigBase\n{\n    [ConfigurationKeyName(\"page-size\"), Range(1, 100)]\n    public int PageSize { get; set; } = 20;\n}",
+      "topic": "config"
+    },
+    {
+      "key": "register",
+      "code": "public static void Register(IServiceCollection services, IConfiguration configuration) =>\n    services.AddOSConfig<ShopConfig>(configuration, \"shop\");",
+      "topic": "config"
+    },
+    {
+      "key": "read",
+      "code": "var configuration = Build((\"shop:app-code\", \"shop\"), (\"shop:page-size\", \"50\"));\n\nvar config = configuration.ReadOSConfig<ShopConfig>(\"shop\");",
+      "topic": "config",
+      "output": "shop\n50\nnull"
+    },
+    {
+      "key": "invalid",
+      "code": "var configuration = Build((\"shop:page-size\", \"500\"));\n\ntry\n{\n    configuration.ReadOSConfig<ShopConfig>(\"shop\");\n    return \"valid\";\n}\ncatch (OSException ex)\n{\n    return ex.Message;\n}",
+      "topic": "config",
+      "output": "Configuration section 'shop' is not valid: The field PageSize must be between 1 and 100.; The AppCode field is required."
+    },
+    {
+      "key": "page",
+      "code": "var page = new PageInfo(page: 3, take: 10, total: 47);\n\nvar shown = (page.First, page.Last);\nvar skip = page.Skip;\nvar count = page.Count ?? 0;\nvar last = new PageInfo(99, 10, 47).Page;",
+      "topic": "data",
+      "output": "(21, 30)\n20\n5\n5"
+    },
+    {
+      "key": "search",
+      "code": "public static List<Product> Search(IQueryable<Product> products, QueryModel query)\n{\n    var found = products.Search(query.Term);\n    var page = new PageInfo(query.Page, query.Take, found.Count());\n    return found.OrderBy(query.SortName, query.SortType).Paging(page).ToList();\n}\n\npublic sealed class Product\n{\n    [Searchable] public string Name { get; set; } = \"\";\n    [Sortable] public decimal Price { get; set; }\n}",
+      "topic": "data"
+    },
+    {
+      "key": "keyset",
+      "code": "var next = orders.PageAfter(order => order.Id, lastId, take: 20);",
+      "topic": "data"
+    },
+    {
+      "key": "linq",
+      "code": "var open = 3.IsIn(1, 2, 3);\nint[] none = [];\nvar any = LinqEx.HasAny(none);\nList<int> list = [1, 4, 9];\nvar sorted = list.InsertSorted(5);",
+      "topic": "data",
+      "output": "True\nFalse\n1, 4, 5, 9"
+    },
+    {
+      "key": "check-name",
+      "code": "var name = \"  \";\nGuard.NotEmpty(name);",
+      "topic": "errors",
+      "output": "ArgumentException: The value cannot be an empty string or composed entirely of whitespace. (Parameter 'name')"
+    },
+    {
+      "key": "wrap",
+      "code": "var error = new OSException(\"Payment failed.\", new TimeoutException(\"The bank did not answer.\"));\n\nvar message = error.Message;\nvar status = error.ToStatus();\nvar code = error.ToCode();",
+      "topic": "errors",
+      "output": "Payment failed.\nUnavailable\nTimeoutException"
+    },
+    {
+      "key": "detail",
+      "code": "var error = new OSException(\"Saving failed.\", new InvalidOperationException(\"The file is locked.\"));\nvar detail = ErrorDetail.From(error).ToString();",
+      "topic": "errors",
+      "output": "Main: OSException: Saving failed. [HResult: 0x80131500]\n  Inner: InvalidOperationException: The file is locked. [HResult: 0x80131509]"
+    },
+    {
+      "key": "sink",
+      "code": "public sealed class ConsoleSink : IErrorSink\n{\n    public bool TryReport(ErrorReport report)\n    {\n        Console.WriteLine($\"{report.TraceId} {report.ErrorType}: {report.Message}\");\n        return true;\n    }\n}\n\npublic static void AddSink(IServiceCollection services) =>\n    services.AddSingleton<IErrorSink, ConsoleSink>();",
+      "topic": "errors"
+    },
+    {
+      "key": "define",
+      "code": "public sealed record OrderPlaced(int OrderId);\n\npublic sealed class SendReceipt(IEmailSender email) : IHook<OrderPlaced>\n{\n    public int Priority => HookPriority.High;\n\n    public async ValueTask HandleAsync(OrderPlaced e, CancellationToken token = default) =>\n        await email.SendReceiptAsync(e.OrderId, token);\n}",
+      "topic": "hooks"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSHook<OrderPlaced, SendReceipt>();\nservices.AddOSHook<OrderPlaced, UpdateStock>();\n\nawait hooks.RunAsync(new OrderPlaced(1001), token);",
+      "topic": "hooks"
+    },
+    {
+      "key": "failure",
+      "code": "public sealed class AuditHook : IHook<OrderPlaced>\n{\n    public HookFailure OnFailure => HookFailure.Log;\n\n    public ValueTask HandleAsync(OrderPlaced e, CancellationToken token = default) =>\n        throw new InvalidOperationException(\"The audit store is offline.\");\n}",
+      "topic": "hooks"
+    },
+    {
+      "key": "shorten",
+      "code": "var id = Guid.Parse(\"3f2b8c1e-9d4a-4e7b-a0c5-1b2d3e4f5a6b\");\n\nvar shortId = id.ToShort();\nvar compact = id.ToCompact();\nvar url = id.ToBase64();\nvar same = url.FromBase64() == id;",
+      "topic": "ids",
+      "output": "3f2b8c1e\n3f2b8c1e9d4a4e7b\nHowrP0qde06gxRstPk9aaw\nTrue"
+    },
+    {
+      "key": "parse",
+      "code": "var id = \"not-a-guid\".ToGuid();\n\nvar empty = id.IsNull();\nvar valid = \"3f2b8c1e-9d4a-4e7b-a0c5-1b2d3e4f5a6b\".IsValid();",
+      "topic": "ids",
+      "output": "True\nTrue"
+    },
+    {
+      "key": "keys",
+      "code": "var code = CodeEx.Generate(6);\nvar token = KeyEx.Stamp();\n\nvar hash = \"hello\".To256(TextStyle.Lower);",
+      "topic": "ids",
+      "output": "6\n28\n2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    },
+    {
+      "key": "sequential",
+      "code": "public sealed class Order\n{\n    public Guid Id { get; init; } = GuidEx.NewSeqId;\n}",
+      "topic": "ids"
+    },
+    {
+      "key": "define",
+      "code": "public sealed class BillingModule : IModule\n{\n    public ModuleInfo Info { get; } = new() { Code = \"billing\", Version = new(1, 2, 0), Requires = [\"crm\"] };\n\n    public void Register(IServiceCollection services) => services.AddScoped<InvoiceService>();\n}",
+      "topic": "modules"
+    },
+    {
+      "key": "order",
+      "code": "var services = new ServiceCollection().AddOSModules(new BillingModule(), new CrmModule());\nvar registry = services.BuildServiceProvider().GetRequiredService<ModuleRegistry>();\n\nvar order = registry.Modules.Select(module => module.Code);\nvar has = registry.Has(\"billing\");\nvar version = registry.Get(\"billing\")?.Version;",
+      "topic": "modules",
+      "output": "crm, billing\nTrue\n1.2.0"
+    },
+    {
+      "key": "cycle",
+      "code": "var services = new ServiceCollection().AddOSModules(new Module(\"orders\", \"stock\"), new Module(\"stock\", \"orders\"));",
+      "topic": "modules",
+      "output": "OSException: Module dependency cycle: orders -> stock -> orders."
+    },
+    {
+      "key": "lib",
+      "code": "public static IServiceCollection AddReports(this IServiceCollection services)\n{\n    if (!services.TryRegisterLib(typeof(ReportsLib)))\n        return services;\n\n    services.AddScoped<InvoiceService>();\n    return services;\n}\n\nprivate sealed class ReportsLib;",
+      "topic": "modules"
+    },
+    {
+      "key": "version",
+      "code": "public static string Footer() => $\"{AppInfo.Name} {AppInfo.VersionWithPrefix}\";",
+      "topic": "modules"
+    },
+    {
+      "key": "parse",
+      "code": "var count = \"1,250\".ToInt();\nvar empty = \"abc\".ToInt();\nvar price = \"19.90\".ToDecimal();",
+      "topic": "numbers",
+      "output": "1250\n0\n19.90"
+    },
+    {
+      "key": "round",
+      "code": "var total = 2.675m.Round();\nvar near = 12.6.ToInt();\nvar safe = long.MaxValue.ToInt();",
+      "topic": "numbers",
+      "output": "2.68\n13\n2147483647"
+    },
+    {
+      "key": "checks",
+      "code": "var digits = \"۱۴۰۴\".IsNumber();\nvar mixed = \"12a\".IsNumber();\nvar inRange = 15.IsWithin(1, 10);",
+      "topic": "numbers",
+      "output": "True\nFalse\nFalse"
+    },
+    {
+      "key": "format",
+      "code": "var rate = 0.125.ToPercent();\nvar amount = 1234.5m.ToFormatted(\"N2\", CultureInfo.InvariantCulture);",
+      "topic": "numbers",
+      "output": "12.5\n1,234.50"
+    },
+    {
+      "key": "status",
+      "code": "public enum OrderStatus\n{\n    [Description(\"Waiting for payment\")] Pending,\n    [Display(Name = \"On the way\")] Shipped,\n    Delivered\n}",
+      "topic": "objects"
+    },
+    {
+      "key": "convert",
+      "code": "object amount = \"42\";\n\nvar number = amount.To<int>();\nvar status = \"shipped\".To<OrderStatus>();\nvar fallback = ((object?)null).To(10);",
+      "topic": "objects",
+      "output": "42\nShipped\n10"
+    },
+    {
+      "key": "checks",
+      "code": "var blank = ObjEx.IsBlank(Guid.Empty);\nvar numeric = ObjEx.IsNumeric(\"1,250.5\");\nvar on = ObjEx.ToBoolean(1);\n\nvar port = 0.OrDefault(8080);",
+      "topic": "objects",
+      "output": "True\nTrue\nTrue\n8080"
+    },
+    {
+      "key": "enums",
+      "code": "var status = \"delivered\".ToEnum<OrderStatus>();\nvar unknown = \"lost\".ToEnum(OrderStatus.Pending);\nvar description = OrderStatus.Pending.Description();\nvar name = OrderStatus.Shipped.GetName();\n\nvar names = EnumEx.Names<OrderStatus>();",
+      "topic": "objects",
+      "output": "Delivered\nPending\nWaiting for payment\nOn the way\nPending, Shipped, Delivered"
+    },
+    {
+      "key": "create",
+      "code": "var rule = ReflEx.Create<PriceRule>(100m);\nvar allows = rule.Allows(80m);\n\nvar model = ReflEx.GetGenericInterface(typeof(PriceRule), typeof(IRule<>))?.GenericTypeArguments[0].Name;",
+      "topic": "objects",
+      "output": "True\nDecimal"
+    },
+    {
+      "key": "slug",
+      "code": "var slug = TextEx.ToSlug(\"Hello, World!\");",
+      "output": "hello-world"
+    },
+    {
+      "key": "digits",
+      "code": "var year = TextEx.ToLatinDigits(\"۱۴۰۴\");",
+      "output": "1404"
+    },
+    {
+      "key": "counts",
+      "code": "var counts = new ReportCountSet();\ncounts.Set(\"orders\", new CountReportModel(128, \"Orders\"));\ncounts.Set(\"returns\", new CountReportModel(6, \"Returns\"));\n\nvar orders = counts.Get(\"ORDERS\")?.Count;\nvar refunds = counts.Get(\"refunds\");",
+      "topic": "reports",
+      "output": "128\nnull\n2"
+    },
+    {
+      "key": "monthly",
+      "code": "[\n    .. sales.GroupBy(sale => sale.Date.ToString(\"yyyy-MM\", CultureInfo.InvariantCulture))\n        .Select(month => new ReportSeriesPoint { Period = month.Key, Amount = month.Sum(sale => sale.Total) })\n];",
+      "topic": "reports"
+    },
+    {
+      "key": "by-category",
+      "code": "[\n    .. sales.GroupBy(sale => sale.Category)\n        .Select(group => new ReportGroupAmount { Key = group.Key, Title = group.Key, Amount = group.Sum(sale => sale.Total) })\n];",
+      "topic": "reports"
+    },
+    {
+      "key": "ok",
+      "code": "var result = OSResult<int>.Ok(42, \"Saved.\");\n\nvar ok = result.Succeeded;\nvar id = result.Data;",
+      "topic": "results",
+      "output": "True\n42"
+    },
+    {
+      "key": "invalid",
+      "code": "var result = OSResult.Invalid([new FieldError(\"email\", \"Email is required.\")]);\n\nvar status = result.Status;\nvar http = status.ToHttpStatus();\nvar field = result.Errors![0].Field;",
+      "topic": "results",
+      "output": "Invalid\n400\nemail"
+    },
+    {
+      "key": "from-exception",
+      "code": "var result = OSResult.From(new TimeoutException());\n\nvar status = result.Status;\nvar code = result.Code;\nvar http = status.ToHttpStatus();",
+      "topic": "results",
+      "output": "Unavailable\nTimeoutException\n503"
+    },
+    {
+      "key": "json",
+      "code": "var json = JsonSerializer.Serialize(OSResult<string>.Ok(\"ready\"));",
+      "topic": "results",
+      "output": "{\"status\":\"ok\",\"succeeded\":true,\"data\":\"ready\"}"
+    },
+    {
+      "key": "kinds",
+      "code": "public sealed class UserScopes : IScopeSource\n{\n    public ValueTask<IReadOnlyList<Scope>> CurrentAsync(CancellationToken token = default) =>\n        ValueTask.FromResult<IReadOnlyList<Scope>>([new Scope(Company, 7), new Scope(Branch, 42)]);\n}\n\npublic static void Register(IServiceCollection services)\n{\n    services.AddOSScopeKind(Company, \"company\", \"scopes.company\", rank: 10);\n    services.AddOSScopeKind(Branch, \"branch\", \"scopes.branch\", rank: 20);\n    services.AddOSScopeSource<UserScopes>();\n}",
+      "topic": "scopes"
+    },
+    {
+      "key": "fallback",
+      "code": "var chain = ScopeChain.Of(Kinds, [new Scope(Company, 7), new Scope(Branch, 42)]);\nDictionary<Scope, string> currency = new() { [Scope.App] = \"USD\", [new Scope(Company, 7)] = \"EUR\" };\n\nvar value = chain.Items.Select(currency.GetValueOrDefault).First(found => found is not null);",
+      "topic": "scopes",
+      "output": "2:42 > 1:7 > 0:0\nEUR"
+    },
+    {
+      "key": "resolve",
+      "code": "var chain = await scopes.ResolveAsync(token);",
+      "topic": "scopes"
+    },
+    {
+      "key": "ring",
+      "code": "public sealed class EnvironmentKeyRing : ISecretKeyRing\n{\n    public string CurrentKeyId => \"2026-10\";\n\n    public bool TryGetKey(string keyId, [NotNullWhen(true)] out byte[]? key)\n    {\n        var text = Environment.GetEnvironmentVariable($\"SECRET_KEY_{keyId}\");\n        key = text is null ? null : System.Convert.FromBase64String(text);\n        return key is not null;\n    }\n}\n\npublic static void Register(IServiceCollection services) => services.AddOSSecretKeyRing<EnvironmentKeyRing>();",
+      "topic": "secrets"
+    },
+    {
+      "key": "seal",
+      "code": "var box = new ServiceCollection().AddOSSecretKeyRing<DemoKeyRing>().BuildServiceProvider().GetRequiredService<ISecretBox>();\nvar envelope = box.Seal(\"sk_live_123\", context: \"shop:7:payment\");\n\nvar opened = box.TryOpen(envelope, \"shop:7:payment\", out var plain);\nvar elsewhere = box.TryOpen(envelope, \"shop:8:payment\", out _);",
+      "topic": "secrets",
+      "output": "True\nsk_live_123\nFalse"
+    },
+    {
+      "key": "slug",
+      "code": "var slug = TextEx.ToSlug(\"Crème Brûlée: 10 Easy Steps!\");",
+      "topic": "text",
+      "output": "creme-brulee-10-easy-steps"
+    },
+    {
+      "key": "clean",
+      "code": "var text = TextEx.CleanTags(\"<p>Hello&nbsp;<b>world</b></p>\");\nvar preview = text.Truncate(8);",
+      "topic": "text",
+      "output": "Hello world\nHello..."
+    },
+    {
+      "key": "casing",
+      "code": "var name = \"first_name\".ToCamelCase();\nvar title = \"hello world\".ToTitleCase();\nvar line = TextEx.Conjoin(\", \", \"Street 12\", null, \"Berlin\");",
+      "topic": "text",
+      "output": "firstName\nHello World\nStreet 12, Berlin"
+    },
+    {
+      "key": "checks",
+      "code": "var email = RegexEx.IsEmail(\"dev@example.com\");\nvar answer = \"off\".ToBoolean(def: true);\nvar same = \"Admin\".IsEqual(\"ADMIN\");",
+      "topic": "text",
+      "output": "True\nFalse\nTrue"
+    }
+  ]
+}

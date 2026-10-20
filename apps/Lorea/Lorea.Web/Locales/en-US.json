@@ -1,0 +1,125 @@
+{
+  "layout": {
+    "brand": "Lorea",
+    "toTop": "Back to top",
+    "skipToMain": "Skip to main content",
+    "brandLabel": "Lorea home",
+    "languageLabel": "Page language",
+    "themeLight": "Switch to light theme",
+    "themeDark": "Switch to dark theme",
+    "dismiss": "Dismiss"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "text": "This page hit an unexpected error. Try again, or open another page.",
+    "retry": "Try again"
+  },
+  "home": {
+    "title": "Lorea | OriginStack Documentation",
+    "heading": "Everything your app needs on day one, in one place.",
+    "description": "OriginStack is a growing set of .NET packages for the things almost every app needs. Pick one and see real code next to its real output.",
+    "browse": "See the packages"
+  },
+  "map": {
+    "title": "How the packages fit together",
+    "note": "Nothing is picked yet. Pick a package: a solid line is a direct dependency, a dashed line goes through another package.",
+    "label": "Map of the OriginStack packages",
+    "viewLabel": "How to show the packages",
+    "view": {
+      "wires": "Wiring",
+      "groups": "Groups"
+    },
+    "search": "Find a package",
+    "searchClear": "Clear the search",
+    "expand": "Show add-ons",
+    "collapse": "Hide add-ons",
+    "clear": "Clear the pick",
+    "legendIdle": "Grey line: nothing is picked",
+    "legendDirect": "A direct dependency of the picked package",
+    "legendIndirect": "A dependency through another package",
+    "legendLevel": "A level is the distance from the base",
+    "base": "Base",
+    "level": "Level {0}",
+    "family": "{0} add-on packages",
+    "familyNote": "These packages add to {0}. Pick one to show it on the map.",
+    "members": "Packages:",
+    "count": "{0} packages",
+    "groupOther": "Other",
+    "typesNone": "Its types are listed once the package is documented.",
+    "empty": "No package matches that search.",
+    "pick": "Pick a package to see what it relies on and what builds on it.",
+    "relies": "Relies on:",
+    "reliesNone": "Nothing else. It stands on its own.",
+    "builtOn": "Built on it:",
+    "builtOnNone": "Nothing builds on it yet.",
+    "open": "Open the package"
+  },
+  "code": {
+    "copy": "Copy code",
+    "copyCommand": "Copy command",
+    "copied": "Copied",
+    "output": "Output"
+  },
+  "path": {
+    "label": "Dependency path",
+    "self": "This package",
+    "direct": "Used directly",
+    "indirect": "Comes along through another package"
+  },
+  "package": {
+    "pageTitle": "{Name} · Lorea",
+    "crumbsLabel": "Breadcrumb",
+    "packages": "Packages",
+    "name": "Package",
+    "installNote": "It isn't on NuGet yet. For now, reference the project from the OriginStack repository.",
+    "path": "What it relies on",
+    "missingTitle": "We couldn't find that package.",
+    "missingText": "It may go by another name. The full list is on the home page.",
+    "back": "Back to the packages",
+    "sections": {
+      "overview": "Overview",
+      "install": "Install and setup",
+      "quickStart": "Quick start",
+      "guides": "Guides",
+      "api": "API reference"
+    },
+    "onPage": "On this page",
+    "quickStartNone": "This package has no quick start yet.",
+    "guidesNone": "This package has no guides yet.",
+    "apiNote": "Every type links to the guide that covers it.",
+    "apiNone": "The list of types appears once the package is built."
+  },
+  "topic": {
+    "list": "Topics in this package",
+    "namespaces": "Namespace",
+    "about": "What it does",
+    "samples": "Examples",
+    "glance": "At a glance",
+    "details": "Full explanation",
+    "api": "API at a glance",
+    "columnMember": "Member",
+    "columnText": "What it does",
+    "obsolete": "Obsolete:",
+    "back": "Back to the package",
+    "missingTitle": "We couldn't find that topic.",
+    "missingText": "It may have moved. Each package page lists its topics.",
+    "previous": "Previous",
+    "next": "Next",
+    "stepsLabel": "Move between guides",
+    "apiLink": "See the API reference"
+  },
+  "notFound": {
+    "title": "Page not found · Lorea",
+    "heading": "This route isn't in the index.",
+    "description": "Check the address or go back to the packages.",
+    "return": "Back to the packages",
+    "packages": "All packages"
+  },
+  "related": {
+    "reliesOn": "Relies on",
+    "reliesNone": "Nothing else. It stands on its own.",
+    "builtOn": "Built on it",
+    "builtOnNone": "Nothing builds on it yet; it sits at the top.",
+    "similar": "Similar packages"
+  }
+}

@@ -1,0 +1,13 @@
+<nav class="lorea-lang" aria-label="@Text["layout.languageLabel"]">
+    @foreach (var culture in Locale.Cultures.Where(culture => culture.Name != Current.Name))
+    {
+        var language = culture.Culture.TwoLetterISOLanguageName;
+        <button type="button"
+                class="language-option"
+                lang="@language"
+                aria-pressed="false"
+                @onclick="() => CultureChanged.InvokeAsync(culture)">
+            @culture.Culture.Parent.NativeName
+        </button>
+    }
+</nav>

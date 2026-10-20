@@ -1,0 +1,105 @@
+{
+  "slug": "os-identity-abstractions",
+  "name": "OS.Identity.Abstractions",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core"
+  ],
+  "topics": [
+    {
+      "slug": "principal",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "Principal",
+        "IPrincipalAccessor",
+        "PermSet",
+        "ScopedPerms"
+      ]
+    },
+    {
+      "slug": "perms",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "PermInfo",
+        "PermGrant",
+        "PermOverride",
+        "AppPerm",
+        "PermState",
+        "PermAccess",
+        "PermChange",
+        "PermTarget",
+        "IPermProvider",
+        "IPermChecker"
+      ]
+    },
+    {
+      "slug": "roles",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "RoleInfo",
+        "RoleDetail",
+        "RoleUpsert",
+        "RoleStatus"
+      ]
+    },
+    {
+      "slug": "accounts",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "IUser",
+        "IAccount",
+        "ILogin",
+        "ILockable",
+        "UserStatus",
+        "LoginStatus",
+        "Gender",
+        "LoginState",
+        "LoginCheck",
+        "AppIdentity",
+        "AppKind",
+        "AppStatus"
+      ]
+    },
+    {
+      "slug": "sessions",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "SessionInfo",
+        "SessionClient",
+        "SessionMeta",
+        "ClientKind",
+        "SessionState",
+        "OpenedSession",
+        "SecEvent",
+        "SecResult",
+        "SecLogEntry"
+      ]
+    },
+    {
+      "slug": "codes",
+      "namespaces": [
+        "OS.Identity"
+      ],
+      "types": [
+        "IdentityCodes",
+        "IdentityCodes.Size",
+        "IdentityCodes.Limit",
+        "IdentityCodes.SecReason",
+        "IdentityCodes.SessionReason",
+        "IdentityCodes.Challenge",
+        "IdentityCodes.Error"
+      ]
+    }
+  ]
+}

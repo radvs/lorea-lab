@@ -1,0 +1,80 @@
+{
+  "slug": "os-settings",
+  "name": "OS.Settings",
+  "version": "1.0.0",
+  "group": "infra",
+  "uses": [
+    "os-core",
+    "os-io",
+    "os-caching",
+    "os-settings-abstractions"
+  ],
+  "topics": [
+    {
+      "slug": "setup",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "SettingEx",
+        "SettingOptions"
+      ]
+    },
+    {
+      "slug": "catalog",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "ISettingProvider",
+        "SettingSection",
+        "SettingInfo",
+        "SettingCatalog",
+        "SettingKindRegistry"
+      ]
+    },
+    {
+      "slug": "reading",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "ISettingReader",
+        "SettingDraft"
+      ]
+    },
+    {
+      "slug": "store",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "ISettingStore",
+        "ISettingGate",
+        "ISettingSectionValidator",
+        "ISettingProbe"
+      ]
+    },
+    {
+      "slug": "sources",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": [
+        "ISettingSource",
+        "ISettingSync",
+        "JsonSettingSource",
+        "SettingRow",
+        "SettingWrite",
+        "SettingKeyRow"
+      ]
+    },
+    {
+      "slug": "environment",
+      "namespaces": [
+        "OS.Settings"
+      ],
+      "types": []
+    }
+  ]
+}

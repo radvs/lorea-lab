@@ -1,0 +1,20 @@
+<section class="package-section" aria-labelledby="relies-title">
+    <h2 id="relies-title">@Text["related.reliesOn"]</h2>
+    <PackageLinks Items="Relies" Empty="@Text["related.reliesNone"]" />
+</section>
+
+@if (BuiltOn.Count > 0)
+{
+    <section class="package-section" aria-labelledby="built-title">
+        <h2 id="built-title">@Text["related.builtOn"]</h2>
+        <PackageLinks Items="BuiltOn" />
+    </section>
+}
+
+@if (Similar.Count > 0)
+{
+    <section class="package-section" aria-labelledby="similar-title">
+        <h2 id="similar-title">@Text["related.similar"]</h2>
+        <PackageLinks Items="Similar" />
+    </section>
+}

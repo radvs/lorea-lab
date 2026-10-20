@@ -1,0 +1,1480 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingAdd",
+      "signature": "class OSSettingAdd : OSViewBase",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Heads",
+          "signatures": [
+            "IReadOnlyList<SettingSectionHead> Heads { get; set; }"
+          ]
+        },
+        {
+          "name": "Scopes",
+          "signatures": [
+            "IReadOnlyList<SettingScopeOption> Scopes { get; set; }"
+          ]
+        },
+        {
+          "name": "Picked",
+          "signatures": [
+            "SettingScopeOption? Picked { get; set; }"
+          ]
+        },
+        {
+          "name": "Go",
+          "signatures": [
+            "EventCallback<(SettingScopeOption, string)> Go { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingBoard",
+      "signature": "class OSSettingBoard : OSViewBase",
+      "members": [
+        {
+          "name": "Scopes",
+          "signatures": [
+            "IReadOnlyList<SettingScopeOption> Scopes { get; set; }"
+          ]
+        },
+        {
+          "name": "Preview",
+          "signatures": [
+            "RenderFragment<SettingDesk>? Preview { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingField",
+      "signature": "class OSSettingField : OSViewBase",
+      "members": [
+        {
+          "name": "Desk",
+          "signatures": [
+            "SettingDesk Desk { get; set; }"
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Editing",
+          "signatures": [
+            "bool Editing { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeName",
+          "signatures": [
+            "string? ScopeName { get; set; }"
+          ]
+        },
+        {
+          "name": "Changed",
+          "signatures": [
+            "EventCallback Changed { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingReset",
+      "signature": "class OSSettingReset : OSViewBase",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Model",
+          "signatures": [
+            "SettingSectionModel? Model { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeName",
+          "signatures": [
+            "string? ScopeName { get; set; }"
+          ]
+        },
+        {
+          "name": "Done",
+          "signatures": [
+            "EventCallback<SettingSectionModel> Done { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingRow",
+      "signature": "class OSSettingRow : OSViewBase",
+      "members": [
+        {
+          "name": "Head",
+          "signatures": [
+            "SettingSectionHead Head { get; set; }"
+          ]
+        },
+        {
+          "name": "Model",
+          "signatures": [
+            "SettingSectionModel? Model { get; set; }"
+          ]
+        },
+        {
+          "name": "Hits",
+          "signatures": [
+            "int? Hits { get; set; }"
+          ]
+        },
+        {
+          "name": "OnView",
+          "signatures": [
+            "EventCallback OnView { get; set; }"
+          ]
+        },
+        {
+          "name": "OnEdit",
+          "signatures": [
+            "EventCallback OnEdit { get; set; }"
+          ]
+        },
+        {
+          "name": "OnReset",
+          "signatures": [
+            "EventCallback OnReset { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "OSSettingSheet",
+      "signature": "class OSSettingSheet : OSViewBase",
+      "members": [
+        {
+          "name": "Open",
+          "signatures": [
+            "bool Open { get; set; }"
+          ]
+        },
+        {
+          "name": "OpenChanged",
+          "signatures": [
+            "EventCallback<bool> OpenChanged { get; set; }"
+          ]
+        },
+        {
+          "name": "Section",
+          "signatures": [
+            "string Section { get; set; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; set; }"
+          ]
+        },
+        {
+          "name": "ScopeName",
+          "signatures": [
+            "string? ScopeName { get; set; }"
+          ]
+        },
+        {
+          "name": "Editing",
+          "signatures": [
+            "bool Editing { get; set; }"
+          ]
+        },
+        {
+          "name": "Preview",
+          "signatures": [
+            "RenderFragment<SettingDesk>? Preview { get; set; }"
+          ]
+        },
+        {
+          "name": "Saved",
+          "signatures": [
+            "EventCallback<SettingSectionModel> Saved { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingCheck",
+      "signature": "static class SettingCheck",
+      "members": [
+        {
+          "name": "Check",
+          "signatures": [
+            "static string? Check(SettingItemModel item, string? raw)"
+          ]
+        },
+        {
+          "name": "Latin",
+          "signatures": [
+            "static string Latin(string? raw)"
+          ]
+        },
+        {
+          "name": "IsNumeric",
+          "signatures": [
+            "static bool IsNumeric(string kind)"
+          ]
+        },
+        {
+          "name": "Split",
+          "signatures": [
+            "static List<string> Split(string? value)"
+          ]
+        },
+        {
+          "name": "Join",
+          "signatures": [
+            "static string Join(IEnumerable<string> items)"
+          ]
+        },
+        {
+          "name": "TryDuration",
+          "signatures": [
+            "static bool TryDuration(string? text, out TimeSpan span)"
+          ]
+        },
+        {
+          "name": "Duration",
+          "signatures": [
+            "static string Duration(decimal seconds)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingClient",
+      "signature": "sealed class SettingClient",
+      "members": [
+        {
+          "name": "SettingClient",
+          "signatures": [
+            "SettingClient(ApiClient api, SettingsUiOptions options)"
+          ]
+        },
+        {
+          "name": "GetSectionsAsync",
+          "signatures": [
+            "Task<ApiResult<List<SettingSectionHead>>> GetSectionsAsync(Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "GetSectionAsync",
+          "signatures": [
+            "Task<ApiResult<SettingSectionModel>> GetSectionAsync(string section, Scope scope, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SaveAsync",
+          "signatures": [
+            "Task<ApiResult<SettingSectionModel>> SaveAsync(SettingSaveModel request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "IsConflict",
+          "signatures": [
+            "static bool IsConflict(ApiResult result)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingDesk",
+      "signature": "sealed class SettingDesk",
+      "members": [
+        {
+          "name": "SettingDesk",
+          "signatures": [
+            "SettingDesk(SettingSectionModel section)"
+          ]
+        },
+        {
+          "name": "Section",
+          "signatures": [
+            "SettingSectionModel Section { get; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; }"
+          ]
+        },
+        {
+          "name": "IsApp",
+          "signatures": [
+            "bool IsApp { get; }"
+          ]
+        },
+        {
+          "name": "DirtyCount",
+          "signatures": [
+            "int DirtyCount { get; }"
+          ]
+        },
+        {
+          "name": "HasDirty",
+          "signatures": [
+            "bool HasDirty { get; }"
+          ]
+        },
+        {
+          "name": "FaultCount",
+          "signatures": [
+            "int FaultCount { get; }"
+          ]
+        },
+        {
+          "name": "HasConflict",
+          "signatures": [
+            "bool HasConflict { get; }"
+          ]
+        },
+        {
+          "name": "OwnCount",
+          "signatures": [
+            "int OwnCount { get; }"
+          ]
+        },
+        {
+          "name": "Item",
+          "signatures": [
+            "SettingItemModel? Item(string key)"
+          ]
+        },
+        {
+          "name": "Has",
+          "signatures": [
+            "bool Has(string key)"
+          ]
+        },
+        {
+          "name": "IsOutOfScope",
+          "signatures": [
+            "bool IsOutOfScope(SettingItemModel item)"
+          ]
+        },
+        {
+          "name": "IsDraft",
+          "signatures": [
+            "bool IsDraft(string key)"
+          ]
+        },
+        {
+          "name": "IsReset",
+          "signatures": [
+            "bool IsReset(string key)"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string? Value(string key)"
+          ]
+        },
+        {
+          "name": "ResetValue",
+          "signatures": [
+            "string? ResetValue(SettingItemModel item)"
+          ]
+        },
+        {
+          "name": "Effective",
+          "signatures": [
+            "string Effective(string key)"
+          ]
+        },
+        {
+          "name": "Number",
+          "signatures": [
+            "long Number(string key, long fallback = 0)"
+          ]
+        },
+        {
+          "name": "List",
+          "signatures": [
+            "List<string> List(string key)"
+          ]
+        },
+        {
+          "name": "IsFilled",
+          "signatures": [
+            "bool IsFilled(string key)"
+          ]
+        },
+        {
+          "name": "IsDirty",
+          "signatures": [
+            "bool IsDirty(string key)"
+          ]
+        },
+        {
+          "name": "FaultOf",
+          "signatures": [
+            "string? FaultOf(string key)"
+          ]
+        },
+        {
+          "name": "ServerErrorOf",
+          "signatures": [
+            "string? ServerErrorOf(string key)"
+          ]
+        },
+        {
+          "name": "ConflictOf",
+          "signatures": [
+            "string? ConflictOf(string key)"
+          ]
+        },
+        {
+          "name": "Set",
+          "signatures": [
+            "void Set(string key, string? value)"
+          ]
+        },
+        {
+          "name": "Own",
+          "signatures": [
+            "void Own(string key)"
+          ]
+        },
+        {
+          "name": "Reset",
+          "signatures": [
+            "void Reset(string key)"
+          ]
+        },
+        {
+          "name": "Undo",
+          "signatures": [
+            "void Undo(string key)"
+          ]
+        },
+        {
+          "name": "Clear",
+          "signatures": [
+            "void Clear()"
+          ]
+        },
+        {
+          "name": "Fail",
+          "signatures": [
+            "void Fail(string key, string message)"
+          ]
+        },
+        {
+          "name": "KeepMine",
+          "signatures": [
+            "void KeepMine(string key)"
+          ]
+        },
+        {
+          "name": "Load",
+          "signatures": [
+            "void Load(SettingSectionModel fresh)"
+          ]
+        },
+        {
+          "name": "Rebase",
+          "signatures": [
+            "void Rebase(SettingSectionModel fresh)"
+          ]
+        },
+        {
+          "name": "ToSave",
+          "signatures": [
+            "SettingSaveModel ToSave()"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingScopeOption",
+      "signature": "sealed class SettingScopeOption",
+      "members": [
+        {
+          "name": "Kind",
+          "signatures": [
+            "byte Kind { get; set; }"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "int Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingText",
+      "signature": "sealed class SettingText",
+      "members": [
+        {
+          "name": "SettingText",
+          "signatures": [
+            "SettingText(IStringLocalizer locale, ILocaleRegistry locales)"
+          ]
+        },
+        {
+          "name": "Units",
+          "signatures": [
+            "static readonly IReadOnlyList<(int, string)> Units"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title(string key)"
+          ]
+        },
+        {
+          "name": "Hint",
+          "signatures": [
+            "string? Hint(string key)"
+          ]
+        },
+        {
+          "name": "Unit",
+          "signatures": [
+            "string? Unit(string key)"
+          ]
+        },
+        {
+          "name": "Format",
+          "signatures": [
+            "string Format(SettingItemModel item, string? value)"
+          ]
+        },
+        {
+          "name": "Amount",
+          "signatures": [
+            "string Amount(string key, string value)"
+          ]
+        },
+        {
+          "name": "Duration",
+          "signatures": [
+            "string Duration(string value)"
+          ]
+        },
+        {
+          "name": "Option",
+          "signatures": [
+            "string Option(string key, string option)"
+          ]
+        },
+        {
+          "name": "Bytes",
+          "signatures": [
+            "string Bytes(long value)"
+          ]
+        },
+        {
+          "name": "Readable",
+          "signatures": [
+            "static string Readable(string? url)"
+          ]
+        },
+        {
+          "name": "Host",
+          "signatures": [
+            "static string Host(string? url)"
+          ]
+        },
+        {
+          "name": "BestUnit",
+          "signatures": [
+            "static (int, string) BestUnit(int seconds)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingsUiCodes",
+      "signature": "static class SettingsUiCodes",
+      "members": [
+        {
+          "name": "Root",
+          "signatures": [
+            "const string Root = \"settings\""
+          ]
+        },
+        {
+          "name": "True",
+          "signatures": [
+            "const string True = \"true\""
+          ]
+        },
+        {
+          "name": "False",
+          "signatures": [
+            "const string False = \"false\""
+          ]
+        },
+        {
+          "name": "StepSpan",
+          "signatures": [
+            "const int StepSpan = 40"
+          ]
+        },
+        {
+          "name": "SlideSpan",
+          "signatures": [
+            "const int SlideSpan = 5000"
+          ]
+        },
+        {
+          "name": "SegmentLimit",
+          "signatures": [
+            "const int SegmentLimit = 4"
+          ]
+        },
+        {
+          "name": "ItemPrefix",
+          "signatures": [
+            "const string ItemPrefix = \"settings.items.\""
+          ]
+        },
+        {
+          "name": "ScopeKindPrefix",
+          "signatures": [
+            "const string ScopeKindPrefix = \"settings.board.scope-kinds.\""
+          ]
+        },
+        {
+          "name": "TitleOf",
+          "signatures": [
+            "static string TitleOf(string key)"
+          ]
+        },
+        {
+          "name": "HintOf",
+          "signatures": [
+            "static string HintOf(string key)"
+          ]
+        },
+        {
+          "name": "UnitOf",
+          "signatures": [
+            "static string UnitOf(string key)"
+          ]
+        },
+        {
+          "name": "OptionOf",
+          "signatures": [
+            "static string OptionOf(string key, string option)"
+          ]
+        },
+        {
+          "name": "ScopeKindOf",
+          "signatures": [
+            "static string ScopeKindOf(byte kind)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingsUiCodes.Icon",
+      "signature": "static class SettingsUiCodes.Icon",
+      "members": [
+        {
+          "name": "View",
+          "signatures": [
+            "const string View = \"os:eye\""
+          ]
+        },
+        {
+          "name": "Edit",
+          "signatures": [
+            "const string Edit = \"os:edit\""
+          ]
+        },
+        {
+          "name": "Reset",
+          "signatures": [
+            "const string Reset = \"os:history\""
+          ]
+        },
+        {
+          "name": "Add",
+          "signatures": [
+            "const string Add = \"os:plus\""
+          ]
+        },
+        {
+          "name": "Lock",
+          "signatures": [
+            "const string Lock = \"os:lock\""
+          ]
+        },
+        {
+          "name": "Environment",
+          "signatures": [
+            "const string Environment = \"os:monitor\""
+          ]
+        },
+        {
+          "name": "Alert",
+          "signatures": [
+            "const string Alert = \"os:alert\""
+          ]
+        },
+        {
+          "name": "Info",
+          "signatures": [
+            "const string Info = \"os:info\""
+          ]
+        },
+        {
+          "name": "Section",
+          "signatures": [
+            "const string Section = \"os:settings\""
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "const string Empty = \"os:settings\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingsUiCodes.Text",
+      "signature": "static class SettingsUiCodes.Text",
+      "members": [
+        {
+          "name": "ScopeApp",
+          "signatures": [
+            "const string ScopeApp = \"settings.board.scope-app\""
+          ]
+        },
+        {
+          "name": "ScopeLabel",
+          "signatures": [
+            "const string ScopeLabel = \"settings.board.scope-label\""
+          ]
+        },
+        {
+          "name": "ScopeNote",
+          "signatures": [
+            "const string ScopeNote = \"settings.board.scope-note\""
+          ]
+        },
+        {
+          "name": "Find",
+          "signatures": [
+            "const string Find = \"settings.board.find\""
+          ]
+        },
+        {
+          "name": "View",
+          "signatures": [
+            "const string View = \"settings.board.view\""
+          ]
+        },
+        {
+          "name": "Edit",
+          "signatures": [
+            "const string Edit = \"settings.board.edit\""
+          ]
+        },
+        {
+          "name": "Reset",
+          "signatures": [
+            "const string Reset = \"settings.board.reset\""
+          ]
+        },
+        {
+          "name": "Close",
+          "signatures": [
+            "const string Close = \"settings.board.close\""
+          ]
+        },
+        {
+          "name": "Cancel",
+          "signatures": [
+            "const string Cancel = \"settings.board.cancel\""
+          ]
+        },
+        {
+          "name": "SaveCount",
+          "signatures": [
+            "const string SaveCount = \"settings.board.save-count\""
+          ]
+        },
+        {
+          "name": "Saving",
+          "signatures": [
+            "const string Saving = \"settings.board.saving\""
+          ]
+        },
+        {
+          "name": "Saved",
+          "signatures": [
+            "const string Saved = \"settings.board.saved\""
+          ]
+        },
+        {
+          "name": "NoChange",
+          "signatures": [
+            "const string NoChange = \"settings.board.no-change\""
+          ]
+        },
+        {
+          "name": "Unsaved",
+          "signatures": [
+            "const string Unsaved = \"settings.board.unsaved\""
+          ]
+        },
+        {
+          "name": "ChangedOf",
+          "signatures": [
+            "const string ChangedOf = \"settings.board.changed-of\""
+          ]
+        },
+        {
+          "name": "AllDefault",
+          "signatures": [
+            "const string AllDefault = \"settings.board.all-default\""
+          ]
+        },
+        {
+          "name": "OwnCount",
+          "signatures": [
+            "const string OwnCount = \"settings.board.own-count\""
+          ]
+        },
+        {
+          "name": "AllInherit",
+          "signatures": [
+            "const string AllInherit = \"settings.board.all-inherit\""
+          ]
+        },
+        {
+          "name": "InvalidCount",
+          "signatures": [
+            "const string InvalidCount = \"settings.board.invalid-count\""
+          ]
+        },
+        {
+          "name": "SecretMissing",
+          "signatures": [
+            "const string SecretMissing = \"settings.board.secret-missing\""
+          ]
+        },
+        {
+          "name": "ViewOnly",
+          "signatures": [
+            "const string ViewOnly = \"settings.board.view-only\""
+          ]
+        },
+        {
+          "name": "SheetScope",
+          "signatures": [
+            "const string SheetScope = \"settings.board.sheet-scope\""
+          ]
+        },
+        {
+          "name": "OriginDefault",
+          "signatures": [
+            "const string OriginDefault = \"settings.board.origin-default\""
+          ]
+        },
+        {
+          "name": "OriginOwn",
+          "signatures": [
+            "const string OriginOwn = \"settings.board.origin-own\""
+          ]
+        },
+        {
+          "name": "OriginOwnScope",
+          "signatures": [
+            "const string OriginOwnScope = \"settings.board.origin-own-scope\""
+          ]
+        },
+        {
+          "name": "OriginApp",
+          "signatures": [
+            "const string OriginApp = \"settings.board.origin-app\""
+          ]
+        },
+        {
+          "name": "OriginEnvironment",
+          "signatures": [
+            "const string OriginEnvironment = \"settings.board.origin-environment\""
+          ]
+        },
+        {
+          "name": "OriginSystem",
+          "signatures": [
+            "const string OriginSystem = \"settings.board.origin-system\""
+          ]
+        },
+        {
+          "name": "OriginInvalid",
+          "signatures": [
+            "const string OriginInvalid = \"settings.board.origin-invalid\""
+          ]
+        },
+        {
+          "name": "OriginMissing",
+          "signatures": [
+            "const string OriginMissing = \"settings.board.origin-missing\""
+          ]
+        },
+        {
+          "name": "OriginReset",
+          "signatures": [
+            "const string OriginReset = \"settings.board.origin-reset\""
+          ]
+        },
+        {
+          "name": "Public",
+          "signatures": [
+            "const string Public = \"settings.board.public\""
+          ]
+        },
+        {
+          "name": "EnvironmentLock",
+          "signatures": [
+            "const string EnvironmentLock = \"settings.board.environment-lock\""
+          ]
+        },
+        {
+          "name": "SystemLock",
+          "signatures": [
+            "const string SystemLock = \"settings.board.system-lock\""
+          ]
+        },
+        {
+          "name": "ScopeLock",
+          "signatures": [
+            "const string ScopeLock = \"settings.board.scope-lock\""
+          ]
+        },
+        {
+          "name": "InvalidStored",
+          "signatures": [
+            "const string InvalidStored = \"settings.board.invalid-stored\""
+          ]
+        },
+        {
+          "name": "ToDefault",
+          "signatures": [
+            "const string ToDefault = \"settings.board.to-default\""
+          ]
+        },
+        {
+          "name": "ToApp",
+          "signatures": [
+            "const string ToApp = \"settings.board.to-app\""
+          ]
+        },
+        {
+          "name": "OwnFor",
+          "signatures": [
+            "const string OwnFor = \"settings.board.own-for\""
+          ]
+        },
+        {
+          "name": "Undo",
+          "signatures": [
+            "const string Undo = \"settings.board.undo\""
+          ]
+        },
+        {
+          "name": "Change",
+          "signatures": [
+            "const string Change = \"settings.board.change\""
+          ]
+        },
+        {
+          "name": "SecretSet",
+          "signatures": [
+            "const string SecretSet = \"settings.board.secret-set\""
+          ]
+        },
+        {
+          "name": "SecretNew",
+          "signatures": [
+            "const string SecretNew = \"settings.board.secret-new\""
+          ]
+        },
+        {
+          "name": "SecretReplace",
+          "signatures": [
+            "const string SecretReplace = \"settings.board.secret-replace\""
+          ]
+        },
+        {
+          "name": "SecretHint",
+          "signatures": [
+            "const string SecretHint = \"settings.board.secret-hint\""
+          ]
+        },
+        {
+          "name": "On",
+          "signatures": [
+            "const string On = \"settings.board.on\""
+          ]
+        },
+        {
+          "name": "Off",
+          "signatures": [
+            "const string Off = \"settings.board.off\""
+          ]
+        },
+        {
+          "name": "EmptyValue",
+          "signatures": [
+            "const string EmptyValue = \"settings.board.empty-value\""
+          ]
+        },
+        {
+          "name": "AppValue",
+          "signatures": [
+            "const string AppValue = \"settings.board.app-value\""
+          ]
+        },
+        {
+          "name": "TagAdd",
+          "signatures": [
+            "const string TagAdd = \"settings.board.tag-add\""
+          ]
+        },
+        {
+          "name": "TagRemove",
+          "signatures": [
+            "const string TagRemove = \"settings.board.tag-remove\""
+          ]
+        },
+        {
+          "name": "Allowed",
+          "signatures": [
+            "const string Allowed = \"settings.board.allowed\""
+          ]
+        },
+        {
+          "name": "DefaultIs",
+          "signatures": [
+            "const string DefaultIs = \"settings.board.default-is\""
+          ]
+        },
+        {
+          "name": "ModuleKind",
+          "signatures": [
+            "const string ModuleKind = \"settings.board.module-kind\""
+          ]
+        },
+        {
+          "name": "AppOnly",
+          "signatures": [
+            "const string AppOnly = \"settings.board.app-only\""
+          ]
+        },
+        {
+          "name": "Less",
+          "signatures": [
+            "const string Less = \"settings.board.less\""
+          ]
+        },
+        {
+          "name": "More",
+          "signatures": [
+            "const string More = \"settings.board.more\""
+          ]
+        },
+        {
+          "name": "Unit",
+          "signatures": [
+            "const string Unit = \"settings.board.unit\""
+          ]
+        },
+        {
+          "name": "Seconds",
+          "signatures": [
+            "const string Seconds = \"settings.board.units.seconds\""
+          ]
+        },
+        {
+          "name": "Minutes",
+          "signatures": [
+            "const string Minutes = \"settings.board.units.minutes\""
+          ]
+        },
+        {
+          "name": "Hours",
+          "signatures": [
+            "const string Hours = \"settings.board.units.hours\""
+          ]
+        },
+        {
+          "name": "Days",
+          "signatures": [
+            "const string Days = \"settings.board.units.days\""
+          ]
+        },
+        {
+          "name": "ConflictRow",
+          "signatures": [
+            "const string ConflictRow = \"settings.board.conflict-row\""
+          ]
+        },
+        {
+          "name": "KeepMine",
+          "signatures": [
+            "const string KeepMine = \"settings.board.keep-mine\""
+          ]
+        },
+        {
+          "name": "TakeTheirs",
+          "signatures": [
+            "const string TakeTheirs = \"settings.board.take-theirs\""
+          ]
+        },
+        {
+          "name": "LeaveAsk",
+          "signatures": [
+            "const string LeaveAsk = \"settings.board.leave-ask\""
+          ]
+        },
+        {
+          "name": "Stay",
+          "signatures": [
+            "const string Stay = \"settings.board.stay\""
+          ]
+        },
+        {
+          "name": "Discard",
+          "signatures": [
+            "const string Discard = \"settings.board.discard\""
+          ]
+        },
+        {
+          "name": "Empty",
+          "signatures": [
+            "const string Empty = \"settings.board.empty\""
+          ]
+        },
+        {
+          "name": "NoHit",
+          "signatures": [
+            "const string NoHit = \"settings.board.no-hit\""
+          ]
+        },
+        {
+          "name": "Hits",
+          "signatures": [
+            "const string Hits = \"settings.board.hits\""
+          ]
+        },
+        {
+          "name": "AddTitle",
+          "signatures": [
+            "const string AddTitle = \"settings.board.add-title\""
+          ]
+        },
+        {
+          "name": "AddHint",
+          "signatures": [
+            "const string AddHint = \"settings.board.add-hint\""
+          ]
+        },
+        {
+          "name": "AddSection",
+          "signatures": [
+            "const string AddSection = \"settings.board.add-section\""
+          ]
+        },
+        {
+          "name": "AddGo",
+          "signatures": [
+            "const string AddGo = \"settings.board.add-go\""
+          ]
+        },
+        {
+          "name": "PickOne",
+          "signatures": [
+            "const string PickOne = \"settings.board.pick-one\""
+          ]
+        },
+        {
+          "name": "ResetTitle",
+          "signatures": [
+            "const string ResetTitle = \"settings.board.reset-title\""
+          ]
+        },
+        {
+          "name": "ResetApp",
+          "signatures": [
+            "const string ResetApp = \"settings.board.reset-app\""
+          ]
+        },
+        {
+          "name": "ResetScope",
+          "signatures": [
+            "const string ResetScope = \"settings.board.reset-scope\""
+          ]
+        },
+        {
+          "name": "ResetGo",
+          "signatures": [
+            "const string ResetGo = \"settings.board.reset-go\""
+          ]
+        },
+        {
+          "name": "ResetDone",
+          "signatures": [
+            "const string ResetDone = \"settings.board.reset-done\""
+          ]
+        },
+        {
+          "name": "ResetSecret",
+          "signatures": [
+            "const string ResetSecret = \"settings.board.reset-secret\""
+          ]
+        },
+        {
+          "name": "ResetPublic",
+          "signatures": [
+            "const string ResetPublic = \"settings.board.reset-public\""
+          ]
+        },
+        {
+          "name": "ResetOnly",
+          "signatures": [
+            "const string ResetOnly = \"settings.board.reset-only\""
+          ]
+        },
+        {
+          "name": "ResetAck",
+          "signatures": [
+            "const string ResetAck = \"settings.board.reset-ack\""
+          ]
+        },
+        {
+          "name": "Arrow",
+          "signatures": [
+            "const string Arrow = \"settings.board.arrow\""
+          ]
+        },
+        {
+          "name": "Kilobytes",
+          "signatures": [
+            "const string Kilobytes = \"settings.board.kilobytes\""
+          ]
+        },
+        {
+          "name": "Megabytes",
+          "signatures": [
+            "const string Megabytes = \"settings.board.megabytes\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingsUiEx",
+      "signature": "static class SettingsUiEx",
+      "members": [
+        {
+          "name": "AddOSBlazorSettings",
+          "signatures": [
+            "static IServiceCollection AddOSBlazorSettings(this IServiceCollection services, Action<SettingsUiOptions>? configure = null)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "SettingsUiOptions",
+      "signature": "sealed class SettingsUiOptions",
+      "members": [
+        {
+          "name": "Root",
+          "signatures": [
+            "string Root { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Blazor.Settings",
+      "key": "_Imports",
+      "signature": "class _Imports",
+      "members": []
+    }
+  ],
+  "samples": [
+    {
+      "key": "faults",
+      "code": "[\n    $\"port 'abc': {SettingCheck.Check(Item(SettingCodes.Kind.Integer), \"abc\")}\",\n    $\"port 99999 of 1-65535: {SettingCheck.Check(Item(SettingCodes.Kind.Integer, new SettingRules { Min = 1, Max = 65535 }), \"99999\")}\",\n    $\"address 'ftp://x': {SettingCheck.Check(Item(SettingCodes.Kind.Url), \"ftp://x\")}\",\n    $\"path '/a/../b': {SettingCheck.Check(Item(SettingCodes.Kind.Path), \"/a/../b\")}\",\n    $\"port 587: {SettingCheck.Check(Item(SettingCodes.Kind.Integer), \"587\") ?? \"valid\"}\"\n];",
+      "topic": "checking",
+      "output": "port 'abc': settings.errors.integer\nport 99999 of 1-65535: settings.errors.range\naddress 'ftp://x': settings.errors.url\npath '/a/../b': settings.errors.path\nport 587: valid"
+    },
+    {
+      "key": "persian-digits",
+      "code": "[\n    $\"latin: {SettingCheck.Latin(\"۱۲٫۵\")}\",\n    $\"valid port: {SettingCheck.Check(Item(SettingCodes.Kind.Integer), \"۵۸۷\") ?? \"valid\"}\",\n    $\"text stays: {SettingCheck.Check(Item(SettingCodes.Kind.Text), \"۵۸۷\") ?? \"valid\"}\"\n];",
+      "topic": "checking",
+      "output": "latin: 12.5\nvalid port: valid\ntext stays: valid"
+    },
+    {
+      "key": "durations",
+      "code": "[\n    $\"seconds to text: {SettingCheck.Duration(5400)}\",\n    $\"text to span: {(SettingCheck.TryDuration(\"01:30:00\", out var span) ? span.ToString() : \"invalid\")}\",\n    $\"bare number: {SettingCheck.Check(Item(SettingCodes.Kind.Duration), \"90\")}\"\n];",
+      "topic": "checking",
+      "output": "seconds to text: 01:30:00\ntext to span: 01:30:00\nbare number: settings.errors.duration"
+    },
+    {
+      "key": "draft",
+      "code": "var desk = new SettingDesk(Mail(Scope.App));\n\ndesk.Set(\"mail.port\", \"587\");\ndesk.Set(\"mail.host\", \"smtp.example.com\");\n\nvar save = desk.ToSave();",
+      "topic": "editing",
+      "output": "dirty: 1\nsaved key: mail.port\nsaved value: 587"
+    },
+    {
+      "key": "fault",
+      "code": "var desk = new SettingDesk(Mail(Scope.App));\n\ndesk.Set(\"mail.port\", \"abc\");",
+      "topic": "editing",
+      "output": "faults: 1\nerror key: settings.errors.integer"
+    },
+    {
+      "key": "reset",
+      "code": "var app = new SettingDesk(Mail(Scope.App));\nvar shop = new SettingDesk(Mail(new Scope(1, 5)));\n\napp.Reset(\"mail.host\");\nshop.Reset(\"mail.host\");",
+      "topic": "editing",
+      "output": "app shows: localhost\nscope shows: null (follows the app)\nreset sent: True"
+    },
+    {
+      "key": "conflict",
+      "code": "var desk = new SettingDesk(Mail(Scope.App));\n\ndesk.Set(\"mail.host\", \"mine.example.com\");\ndesk.Rebase(Mail(Scope.App, host: \"theirs.example.com\"));",
+      "topic": "editing",
+      "output": "conflict: True\ntheirs: theirs.example.com\nstill mine: mine.example.com"
+    },
+    {
+      "key": "quick-start",
+      "code": "services.AddOSBlazorSettings();"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSBlazorSettings();",
+      "topic": "start"
+    },
+    {
+      "key": "own-route",
+      "code": "services.AddOSBlazorSettings(options => options.Root = \"api/admin/settings\");",
+      "topic": "start"
+    },
+    {
+      "key": "texts-after-blazor",
+      "code": "services.AddOSBlazor(options =>\n    options.Locale.Text.AddEmbedded(typeof(SettingsUiOptions).Assembly));\n\nservices.AddOSBlazorSettings();",
+      "topic": "start"
+    },
+    {
+      "key": "routes",
+      "code": "Demo.Run(async demo =>\n{\n    await demo.Client.GetSectionsAsync(Scope.App);\n    await demo.Client.GetSectionAsync(\"mail\", new Scope(1, 5));\n    await demo.Client.SaveAsync(new SettingSaveModel { Section = \"mail\", Scope = new Scope(1, 5) });\n\n    return demo.Calls.Cast<object>().ToArray();\n});",
+      "topic": "start",
+      "output": "GET /settings/sections?kind=0&id=0\nGET /settings/sections/mail?kind=1&id=5\nPOST /settings/sections/mail"
+    },
+    {
+      "key": "values",
+      "code": "Demo.Run(demo =>\n{\n    var text = demo.Text;\n\n    var timeout = new SettingItemModel { Key = \"mail.timeout\", Kind = SettingCodes.Kind.Duration };\n    var enabled = new SettingItemModel { Key = \"mail.enabled\", Kind = SettingCodes.Kind.Boolean };\n    var secret = new SettingItemModel { Key = \"mail.password\", Kind = SettingCodes.Kind.Text, Access = SettingAccess.Secret, HasSecret = true };\n\n    object[] values =\n    [\n        $\"duration: {text.Format(timeout, \"02:00:00\")}\",\n        $\"boolean: {text.Format(enabled, \"true\")}\",\n        $\"secret: {text.Format(secret, \"ignored\")}\",\n        $\"no value: {text.Format(enabled, null)}\",\n        $\"size: {text.Bytes(3_500_000)}\"\n    ];\n\n    return Task.FromResult(values);\n});",
+      "topic": "texts",
+      "output": "duration: 2 hours\nboolean: On\nsecret: ••••••••\nno value: Whole-app value\nsize: 3.3 MB"
+    },
+    {
+      "key": "own-keys",
+      "code": "services.AddOSBlazor(options =>\n{\n    options.Locale.Text.AddEmbedded(typeof(SettingsUiOptions).Assembly);\n    options.Locale.Text.AddEmbedded(typeof(TextsSamples).Assembly);\n});\n\nservices.AddOSBlazorSettings();",
+      "topic": "texts"
+    },
+    {
+      "key": "page",
+      "code": "<OSSettingBoard />",
+      "topic": "board",
+      "language": "Razor"
+    },
+    {
+      "key": "scopes",
+      "code": "<OSSettingBoard Scopes=\"_shops\" />\n\n@code {\n    private readonly List<SettingScopeOption> _shops =\n    [\n        new() { Kind = 1, Id = 5, Name = \"Corner shop\" },\n        new() { Kind = 1, Id = 6, Name = \"Harbor shop\" }\n    ];\n}",
+      "topic": "board",
+      "language": "Razor"
+    },
+    {
+      "key": "preview",
+      "code": "<OSSettingBoard>\n    <Preview Context=\"desk\">\n        <p>Mail goes through @desk.Effective(\"mail.host\"):@desk.Number(\"mail.port\")</p>\n    </Preview>\n</OSSettingBoard>",
+      "topic": "board",
+      "language": "Razor"
+    },
+    {
+      "key": "include",
+      "code": "<link rel=\"stylesheet\" href=\"_content/OS.Blazor.Settings/os-settings.css\" />",
+      "topic": "styling",
+      "language": "Razor"
+    },
+    {
+      "key": "tokens",
+      "code": "<style>\n    .os-set-board {\n        --os-set-accent: #0e7c66;\n        --os-set-gap: 1rem;\n    }\n</style>",
+      "topic": "styling",
+      "language": "Razor"
+    }
+  ]
+}

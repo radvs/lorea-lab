@@ -1,0 +1,922 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Settings",
+      "key": "BooleanSettingKind",
+      "signature": "sealed class BooleanSettingKind : SettingKind<bool>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "bool Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(bool value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ChoiceSettingKind",
+      "signature": "sealed class ChoiceSettingKind : SettingKind<string>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "string Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(string value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "DecimalSettingKind",
+      "signature": "sealed class DecimalSettingKind : SettingKind<decimal>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "decimal Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(decimal value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "DurationSettingKind",
+      "signature": "sealed class DurationSettingKind : SettingKind<TimeSpan>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "TimeSpan Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(TimeSpan value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingKind",
+      "signature": "interface ISettingKind",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "ValueType",
+          "signatures": [
+            "Type ValueType { get; }"
+          ]
+        },
+        {
+          "name": "TryNormalize",
+          "signatures": [
+            "bool TryNormalize(string? raw, SettingRules? rules, out string value, out string errorKey)"
+          ]
+        },
+        {
+          "name": "ReadObject",
+          "signatures": [
+            "object ReadObject(string normalized)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ISettingKind{T}",
+      "signature": "interface ISettingKind<T> : ISettingKind",
+      "members": [
+        {
+          "name": "Read",
+          "signatures": [
+            "T? Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(T? value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "IntegerSettingKind",
+      "signature": "sealed class IntegerSettingKind : SettingKind<long>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "long Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(long value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "ListSettingKind",
+      "signature": "sealed class ListSettingKind : SettingKind<IReadOnlyList<string>>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "IReadOnlyList<string> Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(IReadOnlyList<string> value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "PathSettingKind",
+      "signature": "sealed class PathSettingKind : SettingKind<string>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "string Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(string value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingAccess",
+      "signature": "enum SettingAccess",
+      "members": [
+        {
+          "name": "Public",
+          "signatures": [
+            "Public = 1"
+          ]
+        },
+        {
+          "name": "Internal",
+          "signatures": [
+            "Internal = 2"
+          ]
+        },
+        {
+          "name": "Secret",
+          "signatures": [
+            "Secret = 3"
+          ]
+        },
+        {
+          "name": "System",
+          "signatures": [
+            "System = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingChange",
+      "signature": "sealed class SettingChange",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; set; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string? Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Reset",
+          "signatures": [
+            "bool Reset { get; set; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "string? Version { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingCodes",
+      "signature": "static class SettingCodes",
+      "members": [
+        {
+          "name": "GroupSeparator",
+          "signatures": [
+            "const char GroupSeparator = '.'"
+          ]
+        },
+        {
+          "name": "KeySize",
+          "signatures": [
+            "const int KeySize = 128"
+          ]
+        },
+        {
+          "name": "AppCodeSize",
+          "signatures": [
+            "const int AppCodeSize = 24"
+          ]
+        },
+        {
+          "name": "MaxTextLength",
+          "signatures": [
+            "const int MaxTextLength = 4000"
+          ]
+        },
+        {
+          "name": "MaxListItems",
+          "signatures": [
+            "const int MaxListItems = 256"
+          ]
+        },
+        {
+          "name": "ListSeparator",
+          "signatures": [
+            "const string ListSeparator = \",\""
+          ]
+        },
+        {
+          "name": "EnvironmentSection",
+          "signatures": [
+            "const string EnvironmentSection = \"OSSettings\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingCodes.Error",
+      "signature": "static class SettingCodes.Error",
+      "members": [
+        {
+          "name": "Invalid",
+          "signatures": [
+            "const string Invalid = \"settings.errors.invalid\""
+          ]
+        },
+        {
+          "name": "SectionMissing",
+          "signatures": [
+            "const string SectionMissing = \"settings.errors.section-missing\""
+          ]
+        },
+        {
+          "name": "Forbidden",
+          "signatures": [
+            "const string Forbidden = \"settings.errors.forbidden\""
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "const string Scope = \"settings.errors.scope\""
+          ]
+        },
+        {
+          "name": "Key",
+          "signatures": [
+            "const string Key = \"settings.errors.key\""
+          ]
+        },
+        {
+          "name": "Duplicate",
+          "signatures": [
+            "const string Duplicate = \"settings.errors.duplicate-change\""
+          ]
+        },
+        {
+          "name": "System",
+          "signatures": [
+            "const string System = \"settings.errors.system\""
+          ]
+        },
+        {
+          "name": "Environment",
+          "signatures": [
+            "const string Environment = \"settings.errors.environment\""
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "const string Version = \"settings.errors.version\""
+          ]
+        },
+        {
+          "name": "Conflict",
+          "signatures": [
+            "const string Conflict = \"settings.errors.conflict\""
+          ]
+        },
+        {
+          "name": "Required",
+          "signatures": [
+            "const string Required = \"settings.errors.required\""
+          ]
+        },
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "const string MaxLength = \"settings.errors.max-length\""
+          ]
+        },
+        {
+          "name": "Range",
+          "signatures": [
+            "const string Range = \"settings.errors.range\""
+          ]
+        },
+        {
+          "name": "Integer",
+          "signatures": [
+            "const string Integer = \"settings.errors.integer\""
+          ]
+        },
+        {
+          "name": "Decimal",
+          "signatures": [
+            "const string Decimal = \"settings.errors.decimal\""
+          ]
+        },
+        {
+          "name": "Boolean",
+          "signatures": [
+            "const string Boolean = \"settings.errors.boolean\""
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "const string Url = \"settings.errors.url\""
+          ]
+        },
+        {
+          "name": "Path",
+          "signatures": [
+            "const string Path = \"settings.errors.path\""
+          ]
+        },
+        {
+          "name": "Duration",
+          "signatures": [
+            "const string Duration = \"settings.errors.duration\""
+          ]
+        },
+        {
+          "name": "Choice",
+          "signatures": [
+            "const string Choice = \"settings.errors.choice\""
+          ]
+        },
+        {
+          "name": "ListItem",
+          "signatures": [
+            "const string ListItem = \"settings.errors.list-item\""
+          ]
+        },
+        {
+          "name": "ListCount",
+          "signatures": [
+            "const string ListCount = \"settings.errors.list-count\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingCodes.Kind",
+      "signature": "static class SettingCodes.Kind",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "const string Text = \"text\""
+          ]
+        },
+        {
+          "name": "Integer",
+          "signatures": [
+            "const string Integer = \"integer\""
+          ]
+        },
+        {
+          "name": "Decimal",
+          "signatures": [
+            "const string Decimal = \"decimal\""
+          ]
+        },
+        {
+          "name": "Boolean",
+          "signatures": [
+            "const string Boolean = \"boolean\""
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "const string Url = \"url\""
+          ]
+        },
+        {
+          "name": "Path",
+          "signatures": [
+            "const string Path = \"path\""
+          ]
+        },
+        {
+          "name": "Duration",
+          "signatures": [
+            "const string Duration = \"duration\""
+          ]
+        },
+        {
+          "name": "Choice",
+          "signatures": [
+            "const string Choice = \"choice\""
+          ]
+        },
+        {
+          "name": "List",
+          "signatures": [
+            "const string List = \"list\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingItemModel",
+      "signature": "sealed class SettingItemModel",
+      "members": [
+        {
+          "name": "Key",
+          "signatures": [
+            "string Key { get; init; }"
+          ]
+        },
+        {
+          "name": "Kind",
+          "signatures": [
+            "string Kind { get; init; }"
+          ]
+        },
+        {
+          "name": "Access",
+          "signatures": [
+            "SettingAccess Access { get; init; }"
+          ]
+        },
+        {
+          "name": "Rules",
+          "signatures": [
+            "SettingRules Rules { get; init; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; set; }"
+          ]
+        },
+        {
+          "name": "Default",
+          "signatures": [
+            "string Default { get; init; }"
+          ]
+        },
+        {
+          "name": "HasSecret",
+          "signatures": [
+            "bool HasSecret { get; set; }"
+          ]
+        },
+        {
+          "name": "Origin",
+          "signatures": [
+            "SettingOrigin Origin { get; set; }"
+          ]
+        },
+        {
+          "name": "InheritedFrom",
+          "signatures": [
+            "Scope? InheritedFrom { get; set; }"
+          ]
+        },
+        {
+          "name": "IsInvalid",
+          "signatures": [
+            "bool IsInvalid { get; set; }"
+          ]
+        },
+        {
+          "name": "CanEdit",
+          "signatures": [
+            "bool CanEdit { get; set; }"
+          ]
+        },
+        {
+          "name": "Version",
+          "signatures": [
+            "string Version { get; set; }"
+          ]
+        },
+        {
+          "name": "ModifiedDate",
+          "signatures": [
+            "DateTimeOffset? ModifiedDate { get; set; }"
+          ]
+        },
+        {
+          "name": "ViewOrder",
+          "signatures": [
+            "int ViewOrder { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingKind{T}",
+      "signature": "abstract class SettingKind<T> : ISettingKind<T>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "ValueType",
+          "signatures": [
+            "Type ValueType { get; }"
+          ]
+        },
+        {
+          "name": "TryNormalize",
+          "signatures": [
+            "bool TryNormalize(string? raw, SettingRules? rules, out string value, out string errorKey)"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "T? Read(string normalized)"
+          ]
+        },
+        {
+          "name": "ReadObject",
+          "signatures": [
+            "object ReadObject(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(T? value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingOrigin",
+      "signature": "enum SettingOrigin",
+      "members": [
+        {
+          "name": "Default",
+          "signatures": [
+            "Default = 1"
+          ]
+        },
+        {
+          "name": "Inherited",
+          "signatures": [
+            "Inherited = 2"
+          ]
+        },
+        {
+          "name": "Own",
+          "signatures": [
+            "Own = 3"
+          ]
+        },
+        {
+          "name": "Environment",
+          "signatures": [
+            "Environment = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingRules",
+      "signature": "sealed class SettingRules",
+      "members": [
+        {
+          "name": "None",
+          "signatures": [
+            "static readonly SettingRules None"
+          ]
+        },
+        {
+          "name": "Min",
+          "signatures": [
+            "decimal? Min { get; init; }"
+          ]
+        },
+        {
+          "name": "Max",
+          "signatures": [
+            "decimal? Max { get; init; }"
+          ]
+        },
+        {
+          "name": "MaxLength",
+          "signatures": [
+            "int? MaxLength { get; init; }"
+          ]
+        },
+        {
+          "name": "Options",
+          "signatures": [
+            "IReadOnlyList<string> Options { get; init; }"
+          ]
+        },
+        {
+          "name": "InRange",
+          "signatures": [
+            "bool InRange(decimal value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingSaveModel",
+      "signature": "sealed class SettingSaveModel",
+      "members": [
+        {
+          "name": "Section",
+          "signatures": [
+            "string Section { get; set; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; set; }"
+          ]
+        },
+        {
+          "name": "Changes",
+          "signatures": [
+            "List<SettingChange> Changes { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingSectionHead",
+      "signature": "sealed class SettingSectionHead",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "TitleKey",
+          "signatures": [
+            "string TitleKey { get; init; }"
+          ]
+        },
+        {
+          "name": "DescriptionKey",
+          "signatures": [
+            "string? DescriptionKey { get; init; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; init; }"
+          ]
+        },
+        {
+          "name": "CanEdit",
+          "signatures": [
+            "bool CanEdit { get; init; }"
+          ]
+        },
+        {
+          "name": "ScopeKinds",
+          "signatures": [
+            "List<byte> ScopeKinds { get; init; }"
+          ]
+        },
+        {
+          "name": "ViewOrder",
+          "signatures": [
+            "int ViewOrder { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "SettingSectionModel",
+      "signature": "sealed class SettingSectionModel",
+      "members": [
+        {
+          "name": "Code",
+          "signatures": [
+            "string Code { get; init; }"
+          ]
+        },
+        {
+          "name": "TitleKey",
+          "signatures": [
+            "string TitleKey { get; init; }"
+          ]
+        },
+        {
+          "name": "DescriptionKey",
+          "signatures": [
+            "string? DescriptionKey { get; init; }"
+          ]
+        },
+        {
+          "name": "Icon",
+          "signatures": [
+            "string? Icon { get; init; }"
+          ]
+        },
+        {
+          "name": "Scope",
+          "signatures": [
+            "Scope Scope { get; init; }"
+          ]
+        },
+        {
+          "name": "CanEdit",
+          "signatures": [
+            "bool CanEdit { get; init; }"
+          ]
+        },
+        {
+          "name": "Items",
+          "signatures": [
+            "List<SettingItemModel> Items { get; init; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "TextSettingKind",
+      "signature": "sealed class TextSettingKind : SettingKind<string>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "string Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(string value)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Settings",
+      "key": "UrlSettingKind",
+      "signature": "sealed class UrlSettingKind : SettingKind<string>",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Read",
+          "signatures": [
+            "string Read(string normalized)"
+          ]
+        },
+        {
+          "name": "Write",
+          "signatures": [
+            "string Write(string value)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": []
+}

@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+
+<div class="lorea" lang="@_culture.Culture.TwoLetterISOLanguageName" dir="@(_culture.IsRightToLeft ? "rtl" : "ltr")">
+    <a class="lorea-skip-link" href="#main-content">@Text["layout.skipToMain"]</a>
+    <header class="lorea-header">
+        <a href="@Navigation.BaseUri" class="lorea-brand" aria-label="@Text["layout.brandLabel"]">
+            <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                <path d="M16 11V48H53" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="16" cy="48" r="9" style="fill:var(--lorea-accent,#0078D4)" />
+            </svg>
+            <span>@Text["layout.brand"]</span>
+        </a>
+        <div class="header-tools">
+            <OSThemeToggle LightLabel="@Text["layout.themeLight"]" DarkLabel="@Text["layout.themeDark"]" TooltipSide="TooltipSide.Bottom" />
+            <LangSwitch Current="_culture" CultureChanged="ChangeCulture" />
+        </div>
+    </header>
+
+    <main id="main-content" class="lorea-main" tabindex="-1">
+        <OSBoundary Title="@Text["error.title"]" Text="@Text["error.text"]" RetryLabel="@Text["error.retry"]">
+            <CascadingValue Value="_culture">
+                @Body
+            </CascadingValue>
+        </OSBoundary>
+    </main>
+
+    <OSToTop Label="@Text["layout.toTop"]" />
+    <OSConnectionWatch />
+    <OSToastHost DismissLabel="@Text["layout.dismiss"]" />
+</div>

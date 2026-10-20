@@ -1,0 +1,62 @@
+{
+  "types": [
+    {
+      "namespace": "OS.EFCore.Postgres",
+      "key": "PostgresEx",
+      "signature": "static class PostgresEx",
+      "members": [
+        {
+          "name": "AddOSPostgres",
+          "signatures": [
+            "static IServiceCollection AddOSPostgres<TContext>(this IServiceCollection services, Action<PostgresOptions> configure, bool pooled = true) where TContext : OSDbContext"
+          ]
+        },
+        {
+          "name": "UseOSPostgres",
+          "signatures": [
+            "static DbContextOptionsBuilder UseOSPostgres(this DbContextOptionsBuilder builder, PostgresOptions options, EFCoreOptions core)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.EFCore.Postgres",
+      "key": "PostgresOptions",
+      "signature": "sealed class PostgresOptions : DbServerOptions<NpgsqlConnectionStringBuilder>",
+      "members": [
+        {
+          "name": "VerifyServerCertificate",
+          "signatures": [
+            "bool VerifyServerCertificate { get; set; }"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "secure",
+      "code": "var services = new ServiceCollection();\nservices.AddOSPostgres<Shop>(o => o.ConnectionString = \"Host=db;Database=shop;Username=app;SSL Mode=Disable\", pooled: false);\n\nusing var provider = services.BuildServiceProvider();\nusing var scope = provider.CreateScope();\nvar used = new NpgsqlConnectionStringBuilder(scope.ServiceProvider.GetRequiredService<Shop>().Database.GetConnectionString());",
+      "topic": "connection",
+      "output": "SSL Mode = Require"
+    },
+    {
+      "key": "snake-case",
+      "code": "modelBuilder.Entity<Item>();\nmodelBuilder.ApplySnakeCaseName();",
+      "topic": "connection"
+    },
+    {
+      "key": "save-item",
+      "code": "db.Add(item);\nvar result = await db.SaveAsync(token);",
+      "topic": "errors"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSPostgres<Shop>(o => o.ConnectionString = connectionString);"
+    },
+    {
+      "key": "verify",
+      "code": "services.AddOSPostgres<Shop>(o =>\n{\n    o.ConnectionString = connectionString;\n    o.VerifyServerCertificate = true;\n});"
+    }
+  ]
+}

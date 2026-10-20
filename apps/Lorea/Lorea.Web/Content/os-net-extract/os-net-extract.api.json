@@ -1,0 +1,807 @@
+{
+  "types": [
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractCodes",
+      "signature": "static class ExtractCodes",
+      "members": [
+        {
+          "name": "ProviderRequired",
+          "signatures": [
+            "const string ProviderRequired = \"extract.provider.required\""
+          ]
+        },
+        {
+          "name": "ProviderNotFound",
+          "signatures": [
+            "const string ProviderNotFound = \"extract.provider.not-found\""
+          ]
+        },
+        {
+          "name": "HostRequired",
+          "signatures": [
+            "const string HostRequired = \"extract.host.required\""
+          ]
+        },
+        {
+          "name": "UrlRequired",
+          "signatures": [
+            "const string UrlRequired = \"extract.url.required\""
+          ]
+        },
+        {
+          "name": "HtmlEmpty",
+          "signatures": [
+            "const string HtmlEmpty = \"extract.html.empty\""
+          ]
+        },
+        {
+          "name": "Unreachable",
+          "signatures": [
+            "const string Unreachable = \"extract.unreachable\""
+          ]
+        },
+        {
+          "name": "Refused",
+          "signatures": [
+            "const string Refused = \"extract.refused\""
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "const string Status = \"extract.status\""
+          ]
+        },
+        {
+          "name": "NoFields",
+          "signatures": [
+            "const string NoFields = \"extract.no-fields\""
+          ]
+        },
+        {
+          "name": "NoRequests",
+          "signatures": [
+            "const string NoRequests = \"extract.no-requests\""
+          ]
+        },
+        {
+          "name": "NoSelectors",
+          "signatures": [
+            "const string NoSelectors = \"extract.no-selectors\""
+          ]
+        },
+        {
+          "name": "NoPaths",
+          "signatures": [
+            "const string NoPaths = \"extract.no-paths\""
+          ]
+        },
+        {
+          "name": "Miss",
+          "signatures": [
+            "const string Miss = \"extract.miss\""
+          ]
+        },
+        {
+          "name": "JsonInvalid",
+          "signatures": [
+            "const string JsonInvalid = \"extract.json.invalid\""
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractConfig",
+      "signature": "sealed class ExtractConfig",
+      "members": [
+        {
+          "name": "Section",
+          "signatures": [
+            "const string Section = \"os-extract\""
+          ]
+        },
+        {
+          "name": "Probe",
+          "signatures": [
+            "const string Probe = \"os-extract-probe\""
+          ]
+        },
+        {
+          "name": "UserAgent",
+          "signatures": [
+            "string UserAgent { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxBytes",
+          "signatures": [
+            "long MaxBytes { get; set; }"
+          ]
+        },
+        {
+          "name": "Providers",
+          "signatures": [
+            "List<ExtractProvider> Providers { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractEx",
+      "signature": "static class ExtractEx",
+      "members": [
+        {
+          "name": "Read",
+          "signatures": [
+            "static OSResult<ExtractValue> Read(IExtractDoc document, ExtractField field, string? baseUrl = null)"
+          ]
+        },
+        {
+          "name": "ReadAll",
+          "signatures": [
+            "static Dictionary<string, string> ReadAll(IExtractDoc document, IEnumerable<ExtractField>? fields, string? baseUrl = null)"
+          ]
+        },
+        {
+          "name": "AddOSExtract",
+          "signatures": [
+            "static IServiceCollection AddOSExtract(this IServiceCollection services, ExtractConfig config)",
+            "static IServiceCollection AddOSExtract(this IServiceCollection services, IConfiguration configuration)"
+          ]
+        },
+        {
+          "name": "Text",
+          "signatures": [
+            "static OSResult<ExtractValue> Text(IExtractDoc document, string selector)"
+          ]
+        },
+        {
+          "name": "Attribute",
+          "signatures": [
+            "static OSResult<ExtractValue> Attribute(IExtractDoc document, string selector, string attribute)"
+          ]
+        },
+        {
+          "name": "TextWithFallback",
+          "signatures": [
+            "static OSResult<ExtractValue> TextWithFallback(IExtractDoc document, params string[] selectors)"
+          ]
+        },
+        {
+          "name": "AttributeWithFallback",
+          "signatures": [
+            "static OSResult<ExtractValue> AttributeWithFallback(IExtractDoc document, string attribute, params string[] selectors)"
+          ]
+        },
+        {
+          "name": "Texts",
+          "signatures": [
+            "static OSResult<IReadOnlyList<string>> Texts(IExtractDoc document, string selector)"
+          ]
+        },
+        {
+          "name": "FromJson",
+          "signatures": [
+            "static OSResult<T?> FromJson<T>(string json)"
+          ]
+        },
+        {
+          "name": "ReadJson",
+          "signatures": [
+            "static OSResult<ExtractValue> ReadJson(JsonElement root, ExtractField field)"
+          ]
+        },
+        {
+          "name": "FromScriptTag",
+          "signatures": [
+            "static OSResult<string> FromScriptTag(IExtractDoc document, string contentType = \"application/json\")"
+          ]
+        },
+        {
+          "name": "FromHeader",
+          "signatures": [
+            "static OSResult<string> FromHeader(IReadOnlyDictionary<string, string> headers, string headerName)"
+          ]
+        },
+        {
+          "name": "Navigate",
+          "signatures": [
+            "static OSResult<JsonElement> Navigate(JsonElement root, string path)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractFactory",
+      "signature": "sealed class ExtractFactory : IExtractFactory",
+      "members": [
+        {
+          "name": "ExtractFactory",
+          "signatures": [
+            "ExtractFactory(IOSHttp http, IExtractEngine engine, ExtractConfig config)"
+          ]
+        },
+        {
+          "name": "Providers",
+          "signatures": [
+            "IReadOnlyCollection<ExtractProvider> Providers { get; }"
+          ]
+        },
+        {
+          "name": "GetProvider",
+          "signatures": [
+            "OSResult<ExtractProvider> GetProvider(string provider)"
+          ]
+        },
+        {
+          "name": "GetProviderByHost",
+          "signatures": [
+            "OSResult<ExtractProvider> GetProviderByHost(string host)"
+          ]
+        },
+        {
+          "name": "GetService",
+          "signatures": [
+            "OSResult<IExtractService> GetService(string provider)",
+            "OSResult<IExtractService> GetService(ExtractProvider provider)"
+          ]
+        },
+        {
+          "name": "GetServiceByHost",
+          "signatures": [
+            "OSResult<IExtractService> GetServiceByHost(string host)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractField",
+      "signature": "sealed class ExtractField",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Attribute",
+          "signatures": [
+            "string? Attribute { get; set; }"
+          ]
+        },
+        {
+          "name": "Attributes",
+          "signatures": [
+            "List<string> Attributes { get; set; }"
+          ]
+        },
+        {
+          "name": "Selectors",
+          "signatures": [
+            "List<string> Selectors { get; set; }"
+          ]
+        },
+        {
+          "name": "Paths",
+          "signatures": [
+            "List<string> Paths { get; set; }"
+          ]
+        },
+        {
+          "name": "Script",
+          "signatures": [
+            "string? Script { get; set; }"
+          ]
+        },
+        {
+          "name": "Index",
+          "signatures": [
+            "int Index { get; set; }"
+          ]
+        },
+        {
+          "name": "Absolute",
+          "signatures": [
+            "bool Absolute { get; set; }"
+          ]
+        },
+        {
+          "name": "AllAttributes",
+          "signatures": [
+            "IReadOnlyList<string> AllAttributes { get; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractFormat",
+      "signature": "enum ExtractFormat",
+      "members": [
+        {
+          "name": "Html",
+          "signatures": [
+            "Html = 0"
+          ]
+        },
+        {
+          "name": "Json",
+          "signatures": [
+            "Json = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractProvider",
+      "signature": "class ExtractProvider",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; set; }"
+          ]
+        },
+        {
+          "name": "Title",
+          "signatures": [
+            "string Title { get; set; }"
+          ]
+        },
+        {
+          "name": "Description",
+          "signatures": [
+            "string Description { get; set; }"
+          ]
+        },
+        {
+          "name": "Host",
+          "signatures": [
+            "string Host { get; set; }"
+          ]
+        },
+        {
+          "name": "BaseUrl",
+          "signatures": [
+            "string BaseUrl { get; set; }"
+          ]
+        },
+        {
+          "name": "Format",
+          "signatures": [
+            "ExtractFormat Format { get; set; }"
+          ]
+        },
+        {
+          "name": "Timeout",
+          "signatures": [
+            "int Timeout { get; set; }"
+          ]
+        },
+        {
+          "name": "MaxParallel",
+          "signatures": [
+            "int MaxParallel { get; set; }"
+          ]
+        },
+        {
+          "name": "Priority",
+          "signatures": [
+            "int Priority { get; set; }"
+          ]
+        },
+        {
+          "name": "Fields",
+          "signatures": [
+            "List<ExtractField> Fields { get; set; }"
+          ]
+        },
+        {
+          "name": "IsHealthy",
+          "signatures": [
+            "bool IsHealthy { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractRequest",
+      "signature": "class ExtractRequest",
+      "members": [
+        {
+          "name": "Provider",
+          "signatures": [
+            "string Provider { get; set; }"
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "string Url { get; set; }"
+          ]
+        },
+        {
+          "name": "Html",
+          "signatures": [
+            "string Html { get; set; }"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractResult",
+      "signature": "class ExtractResult",
+      "members": [
+        {
+          "name": "ExtractResult",
+          "signatures": [
+            "ExtractResult()",
+            "ExtractResult(string? id, string? provider)"
+          ]
+        },
+        {
+          "name": "Id",
+          "signatures": [
+            "string? Id { get; set; }"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "string? Provider { get; set; }"
+          ]
+        },
+        {
+          "name": "Url",
+          "signatures": [
+            "string Url { get; set; }"
+          ]
+        },
+        {
+          "name": "Fields",
+          "signatures": [
+            "Dictionary<string, string> Fields { get; set; }"
+          ]
+        },
+        {
+          "name": "State",
+          "signatures": [
+            "ExtractState State { get; set; }"
+          ]
+        },
+        {
+          "name": "Status",
+          "signatures": [
+            "int Status { get; set; }"
+          ]
+        },
+        {
+          "name": "FinalUrl",
+          "signatures": [
+            "string FinalUrl { get; set; }"
+          ]
+        },
+        {
+          "name": "Code",
+          "signatures": [
+            "string? Code { get; set; }"
+          ]
+        },
+        {
+          "name": "IsRedirected",
+          "signatures": [
+            "bool IsRedirected { get; }"
+          ]
+        },
+        {
+          "name": "Field",
+          "signatures": [
+            "string Field(string name)"
+          ]
+        },
+        {
+          "name": "Has",
+          "signatures": [
+            "bool Has(string name)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractService",
+      "signature": "sealed class ExtractService : IExtractService",
+      "members": [
+        {
+          "name": "ExtractService",
+          "signatures": [
+            "ExtractService(IOSHttp http, IExtractEngine engine, ExtractProvider provider)"
+          ]
+        },
+        {
+          "name": "Provider",
+          "signatures": [
+            "ExtractProvider Provider { get; }"
+          ]
+        },
+        {
+          "name": "SendAsync",
+          "signatures": [
+            "Task<OSResult<ExtractResult>> SendAsync(ExtractRequest request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SendBulkAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<ExtractResult>>> SendBulkAsync(IReadOnlyList<ExtractRequest> requests, CancellationToken token = default)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractState",
+      "signature": "enum ExtractState",
+      "members": [
+        {
+          "name": "Pending",
+          "signatures": [
+            "Pending = 0"
+          ]
+        },
+        {
+          "name": "Fetched",
+          "signatures": [
+            "Fetched = 1"
+          ]
+        },
+        {
+          "name": "Missing",
+          "signatures": [
+            "Missing = 2"
+          ]
+        },
+        {
+          "name": "Refused",
+          "signatures": [
+            "Refused = 3"
+          ]
+        },
+        {
+          "name": "Unreachable",
+          "signatures": [
+            "Unreachable = 4"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "ExtractValue",
+      "signature": "sealed record ExtractValue",
+      "members": [
+        {
+          "name": "Found",
+          "signatures": [
+            "bool Found { get; init; }"
+          ]
+        },
+        {
+          "name": "Value",
+          "signatures": [
+            "string Value { get; init; }"
+          ]
+        },
+        {
+          "name": "Selector",
+          "signatures": [
+            "string Selector { get; init; }"
+          ]
+        },
+        {
+          "name": "Hit",
+          "signatures": [
+            "static ExtractValue Hit(string value, string selector)"
+          ]
+        },
+        {
+          "name": "Miss",
+          "signatures": [
+            "static ExtractValue Miss(string selector)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "IExtractDoc",
+      "signature": "interface IExtractDoc : IDisposable",
+      "members": [
+        {
+          "name": "Text",
+          "signatures": [
+            "ExtractValue Text(string selector)",
+            "ExtractValue Text(string selector, int index)"
+          ]
+        },
+        {
+          "name": "Attr",
+          "signatures": [
+            "ExtractValue Attr(string selector, string attribute)",
+            "ExtractValue Attr(string selector, string attribute, int index)"
+          ]
+        },
+        {
+          "name": "Texts",
+          "signatures": [
+            "IReadOnlyList<string> Texts(string selector)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "IExtractEngine",
+      "signature": "interface IExtractEngine",
+      "members": [
+        {
+          "name": "Name",
+          "signatures": [
+            "string Name { get; }"
+          ]
+        },
+        {
+          "name": "Parse",
+          "signatures": [
+            "OSResult<IExtractDoc> Parse(string html)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "IExtractFactory",
+      "signature": "interface IExtractFactory",
+      "members": [
+        {
+          "name": "Providers",
+          "signatures": [
+            "IReadOnlyCollection<ExtractProvider> Providers { get; }"
+          ]
+        },
+        {
+          "name": "GetProvider",
+          "signatures": [
+            "OSResult<ExtractProvider> GetProvider(string provider)"
+          ]
+        },
+        {
+          "name": "GetProviderByHost",
+          "signatures": [
+            "OSResult<ExtractProvider> GetProviderByHost(string host)"
+          ]
+        },
+        {
+          "name": "GetService",
+          "signatures": [
+            "OSResult<IExtractService> GetService(string provider)",
+            "OSResult<IExtractService> GetService(ExtractProvider provider)"
+          ]
+        },
+        {
+          "name": "GetServiceByHost",
+          "signatures": [
+            "OSResult<IExtractService> GetServiceByHost(string host)"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "OS.Net.Extract",
+      "key": "IExtractService",
+      "signature": "interface IExtractService",
+      "members": [
+        {
+          "name": "Provider",
+          "signatures": [
+            "ExtractProvider Provider { get; }"
+          ]
+        },
+        {
+          "name": "SendAsync",
+          "signatures": [
+            "Task<OSResult<ExtractResult>> SendAsync(ExtractRequest request, CancellationToken token = default)"
+          ]
+        },
+        {
+          "name": "SendBulkAsync",
+          "signatures": [
+            "Task<OSResult<IReadOnlyList<ExtractResult>>> SendBulkAsync(IReadOnlyList<ExtractRequest> requests, CancellationToken token = default)"
+          ]
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "key": "read",
+      "code": "using var provider = new ServiceCollection().AddOSExtract(new ExtractConfig()).BuildServiceProvider();\nusing var doc = Open(provider);\n\nvar title = ExtractEx.Read(doc, new ExtractField { Name = \"title\", Selectors = [\"h1\"] });\nvar link = ExtractEx.Read(doc, new ExtractField { Name = \"link\", Selectors = [\"a.buy\"], Attribute = \"href\", Absolute = true }, \"https://shop.example/items/\");",
+      "topic": "html",
+      "output": "Blue pen\nhttps://shop.example/cart/7"
+    },
+    {
+      "key": "fallback",
+      "code": "using var provider = new ServiceCollection().AddOSExtract(new ExtractConfig()).BuildServiceProvider();\nusing var doc = Open(provider);\n\nvar field = new ExtractField { Name = \"title\", Selectors = [\"h1.product\", \"h2\", \"h1\"] };\nvar value = ExtractEx.Read(doc, field).Data!;",
+      "topic": "html",
+      "output": "Blue pen\nh1"
+    },
+    {
+      "key": "texts",
+      "code": "using var provider = new ServiceCollection().AddOSExtract(new ExtractConfig()).BuildServiceProvider();\nusing var doc = Open(provider);\n\nvar all = ExtractEx.Texts(doc, \"li\").Data!;\nvar second = ExtractEx.Read(doc, new ExtractField { Name = \"size\", Selectors = [\"li\"], Index = 1 });",
+      "topic": "html",
+      "output": "fine, 0.5 mm, blue\n0.5 mm"
+    },
+    {
+      "key": "miss",
+      "code": "using var provider = new ServiceCollection().AddOSExtract(new ExtractConfig()).BuildServiceProvider();\nusing var doc = Open(provider);\n\nvar result = ExtractEx.Read(doc, new ExtractField { Name = \"price\", Selectors = [\".price\"] });",
+      "topic": "html",
+      "output": "False\nNotFound\nextract.miss"
+    },
+    {
+      "key": "path",
+      "code": "using var json = JsonDocument.Parse(\"\"\"{\"data\":{\"items\":[{\"price\":10},{\"price\":20,\"name\":\"Pen\"}]}}\"\"\");\n\nvar price = ExtractEx.ReadJson(json.RootElement, new ExtractField { Name = \"price\", Paths = [\"data.items[1].price\"] });\nvar fallback = ExtractEx.ReadJson(json.RootElement, new ExtractField { Name = \"name\", Paths = [\"data.title\", \"data.items[1].name\"] });",
+      "topic": "json",
+      "output": "20\nPen\ndata.items[1].name"
+    },
+    {
+      "key": "script-tag",
+      "code": "using var provider = new ServiceCollection().AddOSExtract(new ExtractConfig()).BuildServiceProvider();\nusing var doc = provider.GetRequiredService<IExtractEngine>().Parse(\"\"\"\n    <html><head><script type=\"application/ld+json\">{\"name\":\"Blue pen\",\"offers\":{\"price\":\"12.5\"}}</script></head></html>\n    \"\"\").Data!;\n\nvar script = ExtractEx.FromScriptTag(doc, \"application/ld+json\").Data!;\nusing var json = JsonDocument.Parse(script);\n\nvar price = ExtractEx.ReadJson(json.RootElement, new ExtractField { Name = \"price\", Paths = [\"offers.price\"] });",
+      "topic": "json",
+      "output": "12.5"
+    },
+    {
+      "key": "quick",
+      "code": "var service = factory.GetServiceByHost(new Uri(link).Host).Data!;\n\nvar result = await service.SendAsync(new ExtractRequest { Url = link }, token);"
+    },
+    {
+      "key": "config",
+      "code": "var config = JsonSerializer.Deserialize<ExtractConfig>(\"\"\"\n    {\n      \"user-agent\": \"MyApp/1.0\",\n      \"providers\": [\n        {\n          \"name\": \"shop\",\n          \"host\": \"shop.example\",\n          \"format\": \"Html\",\n          \"fields\": [\n            { \"name\": \"title\", \"selectors\": [ \"h1.product\", \"h1\" ] },\n            { \"name\": \"image\", \"selectors\": [ \"meta[property='og:image']\" ], \"attribute\": \"content\", \"absolute\": true }\n          ]\n        }\n      ]\n    }\n    \"\"\")!;\n\nvar provider = config.Providers[0];",
+      "topic": "providers",
+      "output": "shop\nHtml\n2\nh1.product"
+    },
+    {
+      "key": "register",
+      "code": "services.AddOSExtract(configuration);",
+      "topic": "providers"
+    },
+    {
+      "key": "merge",
+      "code": "services.AddOSExtract(shops);\nservices.AddOSExtract(news);",
+      "topic": "providers"
+    },
+    {
+      "key": "send",
+      "code": "var service = factory.GetService(\"shop\").Data!;\n\nvar result = await service.SendAsync(new ExtractRequest { Provider = \"shop\", Url = link }, token);\n\nvar page = result.Data!;",
+      "topic": "service"
+    },
+    {
+      "key": "bulk",
+      "code": "var service = factory.GetService(\"shop\").Data!;\n\nvar requests = links.Select(link => new ExtractRequest { Provider = \"shop\", Url = link }).ToList();\nvar results = await service.SendBulkAsync(requests, token);",
+      "topic": "service"
+    },
+    {
+      "key": "by-host",
+      "code": "var service = factory.GetServiceByHost(new Uri(link).Host).Data!;\n\nvar result = await service.SendAsync(new ExtractRequest { Url = link, Html = html }, token);",
+      "topic": "service"
+    }
+  ]
+}

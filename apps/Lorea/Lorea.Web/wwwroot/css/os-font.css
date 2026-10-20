@@ -1,0 +1,47 @@
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-ulight.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-reg.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-med.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: irs-fn;
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../fonts/woff2/irs-fn-black.woff2') format('woff2');
+}
