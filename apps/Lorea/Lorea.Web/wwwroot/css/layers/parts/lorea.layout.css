@@ -468,13 +468,6 @@
         }
     }
 
-    /* From here the side column carries the related packages itself. */
-    @media (min-width: 78rem) {
-        .doc-related {
-            display: none;
-        }
-    }
-
     .steps {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -833,98 +826,6 @@
         font-weight: 600;
     }
 
-    /* --- Side column blocks ----------------------------------------------- */
-
-    .aside-block {
-        margin-block-start: 1.25rem;
-        padding-block-start: 1rem;
-        border-block-start: 1px solid var(--lorea-rule);
-    }
-
-    .aside-title {
-        margin: 0 0 0.45rem;
-        color: var(--lorea-muted);
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-    }
-
-    .aside-list {
-        display: grid;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .aside-list a {
-        display: flex;
-        align-items: center;
-        min-block-size: 1.95rem;
-        padding-block: 0.2rem;
-        color: var(--lorea-ink);
-        font-size: 0.84rem;
-        line-height: 1.5;
-        text-decoration: none;
-    }
-
-    .aside-list a:hover {
-        color: var(--lorea-link);
-    }
-
-    .aside-facts {
-        display: grid;
-        gap: 0.35rem;
-        margin: 0;
-    }
-
-    .aside-facts div {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.75rem;
-    }
-
-    .aside-facts dt {
-        color: var(--lorea-muted);
-        font-size: 0.8rem;
-    }
-
-    .aside-facts dd {
-        margin: 0;
-        color: var(--lorea-heading);
-        font-size: 0.8rem;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .doc-aside .related {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 0.9rem;
-    }
-
-    .doc-aside .related-group h2 {
-        margin-block-end: 0.25rem;
-        font-size: 0.64rem;
-    }
-
-    .doc-aside .link-list a {
-        display: grid;
-        gap: 0;
-        min-block-size: 1.95rem;
-        padding-block: 0.3rem;
-    }
-
-    .doc-aside .link-list code,
-    .doc-aside .link-list span {
-        font-size: 0.78rem;
-    }
-
-    .doc-aside .related-none {
-        font-size: 0.78rem;
-        line-height: 1.6;
-    }
-
     /* --- Not found -------------------------------------------------------- */
 
     .not-found-page {
@@ -1001,7 +902,6 @@
     .lorea[lang="fa"] :is(
         .index-group-title,
         .page-toc h2,
-        .aside-title,
         .related-group h2,
         .step-kicker,
         .page-head .os-head-label,

@@ -36,10 +36,6 @@ public partial class Package
 
     private string GuidesCount => Number(Entry?.Topics.Count ?? 0);
 
-    private int DependsCount => Entry?.Uses.Count ?? 0;
-
-    private int UsedByCount => Entry is null ? 0 : LibraryCatalog.UsedBy(Entry.Slug).Count;
-
     private string Number(int value) => Profile.ToNativeDigits(value.ToString(CultureInfo.InvariantCulture));
 
     private static string TypeName(ApiType type) => type.Key.Replace('{', '<').Replace('}', '>');
