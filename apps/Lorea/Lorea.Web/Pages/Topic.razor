@@ -44,6 +44,8 @@ else
                     </Details>
                 </OSPageHead>
 
+                <PageTocStrip Sections="SectionLinks" />
+
                 <MobileDocNav Entry="Entry" Current="Current" Sections="SectionLinks" />
 
                 <DocSection Id="glance" Index="1" Title="@Text["topic.glance"]">
@@ -195,10 +197,6 @@ else
                     <a class="return-link" href="@PackageUrl">@Text["topic.back"]</a>
                 </div>
             </article>
-
-            <DocAside Sections="SectionLinks">
-                <a class="aside-link" href="@PackageUrl">@Text["topic.back"]</a>
-            </DocAside>
         </div>
     </div>
 }

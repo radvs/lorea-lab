@@ -2,7 +2,6 @@
     .lorea {
         --lorea-head-h: 3.5rem;
         --lorea-rail-w: 13.75rem;
-        --lorea-aside-w: 12.5rem;
         --lorea-gutter: clamp(1.5rem, 3vw, 2.75rem);
         --lorea-pad: clamp(1rem, 3vw, 1.5rem);
         display: flex;
@@ -182,8 +181,7 @@
         gap: var(--lorea-gutter);
     }
 
-    .doc-rail,
-    .doc-aside {
+    .doc-rail {
         display: none;
     }
 
@@ -199,20 +197,15 @@
         .doc-rail {
             display: block;
         }
-    }
 
-    @media (min-width: 78rem) {
-        .doc-grid {
-            grid-template-columns: var(--lorea-rail-w) minmax(0, 1fr) var(--lorea-aside-w);
-        }
-
-        .doc-aside {
-            display: block;
+        /* One reading column beside the rail; the page index is a band inside it. */
+        .doc-main {
+            max-inline-size: 50rem;
+            margin-inline: auto;
         }
     }
 
-    .rail-sticky,
-    .aside-sticky {
+    .rail-sticky {
         position: sticky;
         inset-block-start: calc(var(--lorea-head-h) + 1.25rem);
         max-block-size: calc(100dvh - var(--lorea-head-h) - 2.75rem);
@@ -784,10 +777,26 @@
         color: var(--lorea-heading);
     }
 
-    /* --- Table of contents ------------------------------------------------ */
+    /* --- Page index band -------------------------------------------------- */
 
-    .page-toc h2 {
-        margin: 0 0 0.55rem;
+    .page-index {
+        display: none;
+    }
+
+    @media (min-width: 64rem) {
+        .page-index {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.35rem 1.25rem;
+            margin-block: 0.25rem 0;
+            padding-block: 0.7rem;
+            border-block: 1px solid var(--lorea-rule);
+        }
+    }
+
+    .page-index-label {
+        margin: 0;
         color: var(--lorea-muted);
         font-size: 0.7rem;
         font-weight: 700;
@@ -795,33 +804,33 @@
         text-transform: uppercase;
     }
 
-    .page-toc ul {
-        display: grid;
-        gap: 0.05rem;
+    .page-index ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem 1rem;
         margin: 0;
         padding: 0;
         list-style: none;
     }
 
-    .page-toc a {
-        display: flex;
+    .page-index a {
+        display: inline-flex;
         align-items: center;
-        min-block-size: 2rem;
-        padding: 0.25rem 0.55rem;
-        border-inline-start: 2px solid transparent;
+        min-block-size: 1.9rem;
+        border-block-end: 2px solid transparent;
         color: var(--lorea-ink);
         font-size: 0.85rem;
         text-decoration: none;
-        transition: color 120ms linear, background-color 120ms linear;
+        transition: color 120ms linear, border-color 120ms linear;
     }
 
-    .page-toc a:hover {
+    .page-index a:hover {
         color: var(--lorea-heading);
-        background: var(--lorea-hover);
+        border-block-end-color: var(--lorea-rule-dark);
     }
 
-    .page-toc a.is-current {
-        border-inline-start-color: var(--lorea-accent);
+    .page-index a.is-current {
+        border-block-end-color: var(--lorea-accent);
         color: var(--lorea-heading);
         font-weight: 600;
     }
@@ -901,7 +910,7 @@
 
     .lorea[lang="fa"] :is(
         .index-group-title,
-        .page-toc h2,
+        .page-index-label,
         .related-group h2,
         .step-kicker,
         .page-head .os-head-label,

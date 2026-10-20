@@ -50,6 +50,8 @@ else
                     </Details>
                 </OSPageHead>
 
+                <PageTocStrip Sections="SectionLinks" />
+
                 <MobileDocNav Entry="Entry" Sections="SectionLinks" />
 
                 <DocSection Id="overview" Index="1" Title="@Text["package.sections.overview"]">
@@ -161,10 +163,6 @@ else
                     <a class="return-link" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
                 </div>
             </article>
-
-            <DocAside Sections="SectionLinks">
-                <a class="aside-link" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
-            </DocAside>
         </div>
     </div>
 }

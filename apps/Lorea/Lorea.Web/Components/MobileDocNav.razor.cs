@@ -8,7 +8,7 @@ public partial class MobileDocNav
 
     [Parameter, EditorRequired] public LibraryEntry Entry { get; set; } = default!;
     [Parameter] public LibraryTopic? Current { get; set; }
-    [Parameter, EditorRequired] public IReadOnlyList<DocAside.SectionLink> Sections { get; set; } = [];
+    [Parameter, EditorRequired] public IReadOnlyList<PageSection> Sections { get; set; } = [];
 
     private string PackageUrl => $"{Navigation.BaseUri}packages/{Entry.Slug}";
     private string PageUrl => Navigation.Uri.Split('#')[0];

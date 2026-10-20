@@ -25,8 +25,8 @@ public partial class Package
     private IReadOnlyList<PageCrumbs.Crumb> Crumbs { get; set; } = [];
     private IReadOnlyList<PageCrumbs.Crumb> MissingCrumbs { get; set; } = [];
 
-    private IReadOnlyList<DocAside.SectionLink> SectionLinks =>
-        [.. Sections.Select(section => new DocAside.SectionLink(section.Id, Text[section.Key]))];
+    private IReadOnlyList<PageSection> SectionLinks =>
+        [.. Sections.Select(section => new PageSection(section.Id, Text[section.Key]))];
 
     private string InstallCommand => $"dotnet add package {Entry?.Name}";
 

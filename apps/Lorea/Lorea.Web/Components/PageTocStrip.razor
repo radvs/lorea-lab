@@ -1,0 +1,13 @@
+@*
+    The page's own index as a narrow band under the page head. The links follow the reading position.
+*@
+
+<nav class="page-index" aria-labelledby="page-index-title">
+    <p id="page-index-title" class="page-index-label">@Text["package.onPage"]</p>
+    <ul>
+        @foreach (var section in Sections)
+        {
+            <li><a href="@($"{PageUrl}#{section.Id}")" data-toc="@section.Id">@section.Label</a></li>
+        }
+    </ul>
+</nav>

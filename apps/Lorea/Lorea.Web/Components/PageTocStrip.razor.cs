@@ -1,13 +1,12 @@
 namespace Lorea.Web.Components;
 
-public partial class DocAside : IAsyncDisposable
+public partial class PageTocStrip : IAsyncDisposable
 {
-    [Inject] private IStringLocalizer<DocAside> Text { get; set; } = default!;
+    [Inject] private IStringLocalizer<PageTocStrip> Text { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
     [Inject] private IJSRuntime Js { get; set; } = default!;
 
-    [Parameter, EditorRequired] public IReadOnlyList<SectionLink> Sections { get; set; } = [];
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter, EditorRequired] public IReadOnlyList<PageSection> Sections { get; set; } = [];
 
     private IJSObjectReference? _module;
 
@@ -37,6 +36,4 @@ public partial class DocAside : IAsyncDisposable
             // The browser page is already gone; nothing left to detach.
         }
     }
-
-    public sealed record SectionLink(string Id, string Label);
 }
