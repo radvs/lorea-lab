@@ -164,6 +164,41 @@ else
 
             <DocAside Sections="SectionLinks">
                 <a class="aside-link" href="@($"{Navigation.BaseUri}#packages")">@Text["nav.allPackages"]</a>
+
+                <section class="aside-block">
+                    <p class="aside-title">@Text["topic.list"]</p>
+                    <ul class="aside-list">
+                        @foreach (var topic in Entry.Topics)
+                        {
+                            <li>
+                                <a href="@($"{Navigation.BaseUri}{Entry.TopicRoute(topic)}")">@Text[Entry.TopicKey(topic, "title")]</a>
+                            </li>
+                        }
+                    </ul>
+                </section>
+
+                <section class="aside-block">
+                    <p class="aside-title">@Text["package.name"]</p>
+                    <dl class="aside-facts">
+                        <div>
+                            <dt>@Text["package.version"]</dt>
+                            <dd>@Entry.Version</dd>
+                        </div>
+                        <div>
+                            <dt>@Text["package.dependsOn"]</dt>
+                            <dd>@Number(DependsCount)</dd>
+                        </div>
+                        <div>
+                            <dt>@Text["package.usedBy"]</dt>
+                            <dd>@Number(UsedByCount)</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="aside-block">
+                    <p class="aside-title">@Text["related.title"]</p>
+                    <RelatedPackages Entry="Entry" />
+                </section>
             </DocAside>
         </div>
     </div>

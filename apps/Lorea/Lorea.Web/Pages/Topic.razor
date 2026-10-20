@@ -198,6 +198,11 @@ else
 
             <DocAside Sections="SectionLinks">
                 <a class="aside-link" href="@PackageUrl">@Text["topic.back"]</a>
+
+                <section class="aside-block">
+                    <p class="aside-title">@Text["related.title"]</p>
+                    <RelatedPackages Entry="Entry" />
+                </section>
             </DocAside>
         </div>
     </div>
