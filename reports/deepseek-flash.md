@@ -97,6 +97,7 @@ Results:
 - `975d39a` — Rebuild the documentation UI around one page structure
 - `f7b0671` — Fix language consistency, contrast and small screen details
 - `4ab4796` — Line the 404 marker up with the page head
+- `b06aea2` — Tighten two Persian sentences
 - The report file was added after those; its hash is the commit that carries this file (`git log`).
 
 ## Not done, uncertain, or not verified
