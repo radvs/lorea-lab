@@ -6,8 +6,84 @@
     /* --- Opening ---------------------------------------------------------- */
 
     .home-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        gap: 2rem;
         padding-block: clamp(1.5rem, 5vw, 3rem) clamp(2rem, 5vw, 3.5rem);
         border-block-end: 1px solid var(--lorea-rule-dark);
+    }
+
+    .home-intro-main {
+        max-inline-size: 46rem;
+    }
+
+    @media (min-width: 64rem) {
+        .home-intro {
+            grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+            gap: clamp(1.5rem, 3vw, 3rem);
+        }
+    }
+
+    /* The group index fills the other half of the opening band and jumps into the catalog. */
+    .home-groups {
+        display: none;
+    }
+
+    @media (min-width: 64rem) {
+        .home-groups {
+            display: block;
+            padding-block-start: 0.15rem;
+        }
+    }
+
+    .home-groups h2 {
+        margin: 0 0 0.5rem;
+        color: var(--lorea-muted);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+    }
+
+    .home-groups ul {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .home-groups a {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        min-block-size: 2.4rem;
+        padding-block: 0.5rem;
+        border-block-start: 1px solid var(--lorea-rule);
+        color: var(--lorea-ink);
+        font-size: 0.88rem;
+        text-decoration: none;
+    }
+
+    .home-groups li:last-child a {
+        border-block-end: 1px solid var(--lorea-rule);
+    }
+
+    .home-groups a:hover {
+        color: var(--lorea-link);
+    }
+
+    .home-groups-name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .home-groups-count {
+        color: var(--lorea-muted);
+        font-family: var(--lorea-code-font);
+        font-size: 0.72rem;
+        font-variant-numeric: tabular-nums;
     }
 
     .eyebrow {

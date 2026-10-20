@@ -36,6 +36,7 @@
     "mapLink": "How the packages fit together",
     "catalog": "All packages",
     "catalogNote": "One row per package. The short line says what it does.",
+    "groups": "Groups",
     "search": "Find a package",
     "searchClear": "Clear the search",
     "count": "{0} packages",

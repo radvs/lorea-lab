@@ -1,7 +1,7 @@
 @layer lorea.parts {
     .lorea {
         --lorea-head-h: 3.5rem;
-        --lorea-rail-w: 13rem;
+        --lorea-rail-w: 13.75rem;
         --lorea-aside-w: 14rem;
         --lorea-gutter: clamp(1.5rem, 3vw, 2.75rem);
         --lorea-pad: clamp(1rem, 3vw, 1.5rem);
@@ -216,6 +216,7 @@
         position: sticky;
         inset-block-start: calc(var(--lorea-head-h) + 1.25rem);
         max-block-size: calc(100dvh - var(--lorea-head-h) - 2.75rem);
+        overflow-x: hidden;
         overflow-y: auto;
         overscroll-behavior: contain;
         padding-block-end: 0.75rem;
@@ -649,14 +650,20 @@
         display: flex;
         flex-direction: column;
         gap: 0.9rem;
+        min-inline-size: 0;
     }
 
     .index-filter {
         position: sticky;
         inset-block-start: 0;
         z-index: 1;
+        min-inline-size: 0;
         padding-block-end: 0.35rem;
         background: var(--lorea-bg);
+    }
+
+    .index-filter .os-field-box {
+        min-inline-size: 0;
     }
 
     .index-group-title {
@@ -689,7 +696,7 @@
         flex-direction: column;
         gap: 0.05rem;
         min-block-size: 2.35rem;
-        padding: 0.35rem 0.55rem;
+        padding: 0.35rem 0.5rem;
         border-inline-start: 2px solid transparent;
         color: var(--lorea-ink);
         text-decoration: none;
@@ -716,8 +723,9 @@
     .index-name {
         color: var(--lorea-heading);
         font-family: var(--lorea-code-font);
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
+        overflow-wrap: anywhere;
         unicode-bidi: isolate;
     }
 
@@ -823,6 +831,7 @@
     .not-found-page {
         max-inline-size: 54rem;
         min-block-size: min(52vh, 30rem);
+        margin-inline: auto;
         padding-block: clamp(2.5rem, 8vw, 5rem) clamp(1.5rem, 4vw, 2.5rem);
     }
 

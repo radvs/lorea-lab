@@ -4,62 +4,79 @@
 
 <div class="page">
     <div class="home">
-    <section class="home-intro">
-        <p class="eyebrow">@Text["home.eyebrow"]</p>
-        <h1 class="home-title">@Text["home.heading"]</h1>
-        <p class="home-deck">@Text["home.description"]</p>
-        <div class="home-actions">
-            <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
-            <a class="home-link" href="#map">@Text["home.mapLink"]</a>
-        </div>
-    </section>
-
-    <section id="packages" class="catalog" aria-labelledby="catalog-title">
-        <header class="catalog-head">
-            <div>
-                <h2 id="catalog-title">@Text["home.catalog"]</h2>
-                <p class="catalog-note">@Text["home.catalogNote"]</p>
+        <section class="home-intro">
+            <div class="home-intro-main">
+                <p class="eyebrow">@Text["home.eyebrow"]</p>
+                <h1 class="home-title">@Text["home.heading"]</h1>
+                <p class="home-deck">@Text["home.description"]</p>
+                <div class="home-actions">
+                    <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
+                    <a class="home-link" href="#map">@Text["home.mapLink"]</a>
+                </div>
             </div>
-            <div class="catalog-find">
-                <OSSearchField Value="@_query"
-                               ValueChanged="Filter"
-                               Placeholder="@Text["home.search"]"
-                               ClearLabel="@Text["home.searchClear"]"
-                               aria-label="@Text["home.search"]" />
-                <p class="catalog-count" aria-live="polite">@Count</p>
-            </div>
-        </header>
 
-        @if (Groups.Count == 0)
-        {
-            <p class="catalog-empty">@Text["home.empty"]</p>
-        }
-        else
-        {
-            @foreach (var group in Groups)
+            <nav class="home-groups" aria-labelledby="home-groups-title">
+                <h2 id="home-groups-title">@Text["home.groups"]</h2>
+                <ul>
+                    @foreach (var group in AllGroups)
+                    {
+                        <li>
+                            <a href="@($"#group-{Anchor(group.Id)}")">
+                                <span class="home-groups-name">@Text.GroupName(group.Id)</span>
+                                <span class="home-groups-count">@Number(group.Entries.Count)</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </section>
+
+        <section id="packages" class="catalog" aria-labelledby="catalog-title">
+            <header class="catalog-head">
+                <div>
+                    <h2 id="catalog-title">@Text["home.catalog"]</h2>
+                    <p class="catalog-note">@Text["home.catalogNote"]</p>
+                </div>
+                <div class="catalog-find">
+                    <OSSearchField Value="@_query"
+                                   ValueChanged="Filter"
+                                   Placeholder="@Text["home.search"]"
+                                   ClearLabel="@Text["home.searchClear"]"
+                                   aria-label="@Text["home.search"]" />
+                    <p class="catalog-count" aria-live="polite">@Count</p>
+                </div>
+            </header>
+
+            @if (Groups.Count == 0)
             {
-                <section class="catalog-group" aria-label="@Text.GroupName(group.Id)">
-                    <h3>@Text.GroupName(group.Id)</h3>
-                    <ul class="catalog-list">
-                        @foreach (var entry in group.Entries)
-                        {
-                            <li>
-                                <a class="catalog-row" href="@PackageUrl(entry)">
-                                    <span class="catalog-row-head">
-                                        <code class="catalog-name">@entry.Name</code>
-                                        <span class="catalog-title">@Text[entry.TextKey("title")]</span>
-                                    </span>
-                                    <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
-                                    <span class="catalog-meta">@Guides(entry)</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </section>
+                <p class="catalog-empty">@Text["home.empty"]</p>
             }
-        }
-    </section>
+            else
+            {
+                @foreach (var group in Groups)
+                {
+                    <section id="@($"group-{Anchor(group.Id)}")" class="catalog-group" aria-label="@Text.GroupName(group.Id)">
+                        <h3>@Text.GroupName(group.Id)</h3>
+                        <ul class="catalog-list">
+                            @foreach (var entry in group.Entries)
+                            {
+                                <li>
+                                    <a class="catalog-row" href="@PackageUrl(entry)">
+                                        <span class="catalog-row-head">
+                                            <code class="catalog-name">@entry.Name</code>
+                                            <span class="catalog-title">@Text[entry.TextKey("title")]</span>
+                                        </span>
+                                        <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
+                                        <span class="catalog-meta">@Guides(entry)</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+            }
+        </section>
 
-    <StackMap />
+        <StackMap />
     </div>
 </div>
