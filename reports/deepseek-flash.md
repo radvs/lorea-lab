@@ -22,15 +22,16 @@ Changed files: `Layout/MainLayout.razor`, `Layout/MainLayout.razor.cs`, `_Import
 - A searchable catalog of every package (24 today), grouped exactly as the map groups them: monospace package name, title, one-line summary and guide count. Filtering is live and the count updates; there is an empty state.
 - `StackMap` simplified to one view: search, "show/hide add-ons", fit-to-width / actual-size, clear, a technical-drawing background of row hairlines and level labels, direct/indirect wires, and a selection panel with depends-on / built-on chips and an "open the package" action. Nothing is selected at first.
 - The map defaults to fitted on wide screens and to its actual size on narrow screens, where it scrolls inside its own frame and a hint says so; it never scrolls the page sideways.
+- The other half of the opening band is a group index (name and package count per group) that jumps to the matching catalog group, so the wide layout carries navigation instead of blank space. It is hidden on phones.
 
-Changed files: `Pages/Home.razor`, `Pages/Home.razor.cs`, `Components/StackMap.razor`, `Components/StackMap.razor.cs`, `Components/Map/SvgText.cs`, `wwwroot/css/layers/parts/lorea.home.css`, `wwwroot/css/layers/parts/lorea.map.css`.
+Changed files: `Pages/Home.razor`, `Pages/Home.razor.cs`, `Components/StackMap.razor`, `Components/StackMap.razor.cs`, `Components/Map/SvgText.cs`, `wwwroot/css/layers/parts/lorea.home.css`, `wwwroot/css/layers/parts/lorea.map.css`, `wwwroot/css/layers/parts/lorea.layout.css`, `Locales/en-US.json`, `Locales/fa-IR.json`.
 
 ### 3. Package page
 
 - One fixed structure in both languages, always present, same order and names: Overview → Install and setup → Quick start → Guides → API reference. Each section is numbered and has an empty state when the data has nothing.
 - A spec-sheet head: package title, deck, and Package / Group / Guides values on a hairline row.
 - Overview as a short list; the install command with copy; the dependency path; samples; a guides index with numbers; API types grouped by guide and linked to it.
-- The side index lists every package by group with a filter (names and titles), marks the current package, and scrolls inside itself. Related packages (Relies on / Built on it / Similar packages) close the page, and "All packages" is one click from the aside and the page end.
+- The side index lists every package by group with a filter (names and titles), marks the current package, and scrolls inside itself without a sideways scrollbar; long package names fit on one line. Related packages (Relies on / Built on it / Similar packages) close the page, and "All packages" is one click from the aside and the page end.
 
 Changed files: `Pages/Package.razor`, `Pages/Package.razor.cs`, `Components/PackageIndex.razor(.cs)`, `Components/DocSection.razor(.cs)`, `Components/DocAside.razor(.cs)`, `Components/MobileDocNav.razor(.cs)`, `Components/RelatedPackages.razor`, `Components/PackageLinks.razor`, `wwwroot/css/layers/parts/lorea.package.css`, `wwwroot/css/layers/parts/lorea.path.css`.
 
@@ -44,7 +45,7 @@ Changed files: `Pages/Topic.razor`, `Pages/Topic.razor.cs`, `Components/TopicInd
 
 ### 5. Not found and missing pages
 
-- One 404 page: breadcrumbs, the heading, a back action and the full package list. A missing package or topic uses the same page head, a short message, back links and the package list, so those routes are not dead ends.
+- One 404 page: breadcrumbs, the heading, a back action and the full package list, centred in the page column so wide screens do not leave the content stranded on one side. A missing package or topic uses the same page head, a short message, back links and the package list, so those routes are not dead ends.
 
 Changed files: `Pages/NotFound.razor`, `Pages/NotFound.razor.cs`, plus the missing branches in `Pages/Package.razor` and `Pages/Topic.razor`.
 
@@ -77,20 +78,22 @@ Local: `dotnet build apps/Lorea/Lorea.Web` (succeeded) and `dotnet run --project
 | `/packages/nope` (missing package) | fa-IR, en-US | light, dark | 1280×900, 390×844 |
 | `/packages/os-core/nope` (missing topic) | fa-IR, en-US | light, dark | 1280×900, 390×844 |
 
+Also spot-checked at 1920×1025 in fa-IR dark after the wide-screen feedback: home (group index and catalog alignment), `/packages/os-web-identity` (rail fit, no sideways scrollbar, long names on one line) and a missing topic (centred block).
+
 Method: full-page and viewport screenshots for the main states; DOM measurements (`getBoundingClientRect`, `scrollWidth`/`clientWidth`, grid `computedStyle`) for widths, sticky panels and scroll; scripted interaction checks; `axe-core` with the `wcag2a`, `wcag2aa` and `wcag21aa` rule sets on 48 states (home, package, topic, missing package, 404 and missing topic × 2 languages × 2 themes × 2 widths).
 
 Results:
 
 - `axe-core`: **0 violations in 48 of 48 states** (after the contrast fixes).
-- Home: 24 rows; filter "blazor" → 2 rows and "2 packages"; clearing restores 24.
+- Home: 24 rows; filter "blazor" → 2 rows and "2 packages"; clearing restores 24. The group index lists all 6 groups; clicking one lands its catalog group 72 px from the top.
 - Map: selecting `OS.Core` fills the selection panel, and the diagram has 29 direct and 22 indirect wire paths; the fit toggle switches `data-fit` both ways; fit is on by default at 1280 and off at 390 with the swipe hint visible.
-- Package rail: filtering "efcore" leaves the 5 EFCore packages; an unmatched query shows the empty message; clearing restores 24. The rail is 800 px tall at 900 px viewport, scrolls inside itself, and its last item is fully visible after scrolling it.
+- Package rail: filtering "efcore" leaves the 5 EFCore packages; an unmatched query shows the empty message; clearing restores 24. The rail is 800 px tall at 900 px viewport, scrolls inside itself, its last item is fully visible after scrolling it, and `scrollWidth === clientWidth` at 1920 (no sideways scrollbar) with the longest name on one line.
 - Previous/next and the table of contents: a TOC link lands the section 72 px from the top (clear of the sticky header) and the TOC marks it `aria-current="location"`; the TOC follows scrolling.
 - Language: switching on a topic page changes `html lang`/`dir`, the h1, the guide rail, the TOC labels and the related labels; switching back restores Persian.
 - Theme: the toggle changes `data-theme` without a reload.
 - Phones: `scrollWidth === clientWidth` on home, package, topic, 404 and missing pages; header brand/nav/language/theme buttons, map buttons, phone nav links, guide chips and fold summaries are 40 px or taller; the phone nav sits directly under the page head and the related folds are there.
 - Language separation: no Arabic-script characters outside code/pre and LTR-isolated text on any English page; sampled English UI strings do not appear on Persian pages.
-- GitHub Actions: Preview run #4 (`975d39a`) and run #5 (`f7b0671`) both completed successfully. The deployed home and a deep topic link load with no failed asset requests, 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the deployed 404 renders in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
+- GitHub Actions: every push in this work ran the Preview workflow; the runs for `975d39a`, `f7b0671`, `20e7c87`, `9109246`, `90872c7` and `182a542` completed successfully. The deployed site was loaded afterwards with no failed asset requests: 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the 404 in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
 
 ## Commits
 
@@ -98,6 +101,7 @@ Results:
 - `f7b0671` — Fix language consistency, contrast and small screen details
 - `4ab4796` — Line the 404 marker up with the page head
 - `b06aea2` — Tighten two Persian sentences
+- `182a542` — Use the wide screen instead of leaving it empty (group index in the opening band, centred error pages, rail fit)
 - The report file was added after those; its hash is the commit that carries this file (`git log`).
 
 ## Not done, uncertain, or not verified
