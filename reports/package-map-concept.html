@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>پیش‌نمایش مفهومی نقشهٔ وابستگی‌ها</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #1b1b1b;
+      --panel: #202020;
+      --panel-raised: #242424;
+      --rule: #383838;
+      --rule-strong: #4a4a4a;
+      --text: #e8e8e8;
+      --muted: #a0a0a0;
+      --accent: #48a9ee;
+      --accent-soft: #173247;
+      --code: Consolas, "Cascadia Code", "Courier New", monospace;
+      --sans: "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.65 var(--sans);
+    }
+
+    .page {
+      width: min(100% - 40px, 1120px);
+      margin-inline: auto;
+    }
+
+    .masthead {
+      height: 58px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      flex: none;
+    }
+
+    main { padding-block: 34px 48px; }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.35;
+      letter-spacing: -.025em;
+    }
+
+    .intro {
+      margin: 8px 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search {
+      width: min(100%, 330px);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-inline: 12px;
+      border: 1px solid var(--rule-strong);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .search-icon {
+      width: 13px;
+      height: 13px;
+      border: 1.5px solid currentColor;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .search-icon::after {
+      content: "";
+      position: absolute;
+      width: 5px;
+      border-top: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      inset-inline-start: -4px;
+      bottom: -2px;
+    }
+
+    .filters { display: flex; gap: 6px; }
+
+    .filter {
+      min-height: 34px;
+      padding: 5px 11px;
+      border: 1px solid var(--rule-strong);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 11px;
+    }
+
+    .filter.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #c7e8ff;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(260px, .85fr);
+      border: 1px solid var(--rule);
+      background: var(--panel);
+    }
+
+    .graph {
+      min-width: 0;
+      padding: 18px 18px 20px;
+      border-inline-start: 1px solid var(--rule);
+    }
+
+    .graph-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .graph-head strong { font-size: 12px; }
+
+    .graph-head span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .graph-area {
+      position: relative;
+      min-height: 310px;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      background-color: #1c1c1c;
+      background-image: radial-gradient(#3b3b3b .7px, transparent .7px);
+      background-size: 18px 18px;
+    }
+
+    .level {
+      position: absolute;
+      top: 12px;
+      z-index: 2;
+      color: #888;
+      font-size: 10px;
+    }
+
+    .level.base { right: 5%; }
+    .level.direct { right: 41%; }
+    .level.selected { left: 5%; }
+
+    .wires {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .wire {
+      fill: none;
+      stroke: #4a4a4a;
+      stroke-width: 1.5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .wire.direct { stroke: var(--accent); stroke-width: 2; }
+    .wire.indirect { stroke: #7a9ab1; stroke-dasharray: 5 5; }
+
+    .node {
+      position: absolute;
+      z-index: 1;
+      width: 154px;
+      min-height: 51px;
+      display: grid;
+      align-content: center;
+      gap: 1px;
+      padding: 6px 9px;
+      border: 1px solid var(--rule-strong);
+      background: #222;
+      text-align: center;
+    }
+
+    .node code {
+      color: var(--text);
+      font: 600 11px/1.4 var(--code);
+      direction: ltr;
+    }
+
+    .node small {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .node.core { right: 3%; top: 74px; }
+    .node.locale { right: 3%; top: 150px; }
+    .node.cache { right: 3%; top: 226px; }
+    .node.identity-abstractions { right: 38%; top: 74px; }
+    .node.web-api { right: 38%; top: 150px; }
+    .node.identity { right: 38%; top: 226px; }
+
+    .node.selected {
+      width: 166px;
+      left: 3%;
+      top: 150px;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .node.selected code { color: #d1edff; }
+
+    .graph-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .key {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .line {
+      width: 20px;
+      border-top: 2px solid var(--accent);
+    }
+
+    .line.dashed {
+      border-color: #7a9ab1;
+      border-top-style: dashed;
+    }
+
+    .details { padding: 20px; }
+
+    .detail-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 13px;
+      color: #a9dfff;
+      font-size: 10px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .details h2 {
+      margin: 0;
+      font: 700 18px/1.4 var(--code);
+      direction: ltr;
+      text-align: right;
+    }
+
+    .details .name {
+      margin: 2px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary {
+      margin: 0 0 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+      color: #c5c5c5;
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .relation + .relation { margin-top: 18px; }
+
+    .relation h3 {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .chip {
+      padding: 4px 7px;
+      border: 1px solid var(--rule-strong);
+      background: var(--panel-raised);
+      color: #d5d5d5;
+      font: 10px/1.4 var(--code);
+      direction: ltr;
+    }
+
+    .chip.direct {
+      border-color: #376888;
+      color: #b9e3ff;
+    }
+
+    .note {
+      margin: 20px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+      color: #888;
+      font-size: 10px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      padding-block: 14px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .footer b { color: var(--text); }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 28px, 540px); }
+      main { padding-block: 24px 32px; }
+      .workspace { grid-template-columns: 1fr; }
+      .graph {
+        border-inline-start: 0;
+        border-bottom: 1px solid var(--rule);
+        padding: 14px;
+      }
+      .graph-area { min-height: 286px; }
+      .node { width: 124px; }
+      .node.selected { width: 140px; }
+      .node.identity-abstractions,
+      .node.web-api,
+      .node.identity { right: 36%; }
+      .node.selected { left: 2%; }
+      .details { padding: 18px; }
+      .toolbar { align-items: flex-start; }
+      .search { width: 100%; }
+      .footer { gap: 12px; }
+    }
+
+    @media (max-width: 420px) {
+      .page { width: min(100% - 22px, 380px); }
+      .graph { padding: 10px; }
+      .graph-area { min-height: 270px; }
+      .node { width: 105px; min-height: 46px; padding: 5px; }
+      .node code { font-size: 9px; }
+      .node small { font-size: 9px; }
+      .node.identity-abstractions,
+      .node.web-api,
+      .node.identity { right: 35%; }
+      .node.selected { width: 112px; left: 1%; }
+      .level { font-size: 9px; }
+      .footer { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead page">
+    <span>پیش‌نمایش مفهومی</span>
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M16 11V48H53" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="16" cy="48" r="9" fill="var(--accent)"></circle>
+      </svg>
+      <span>لورا</span>
+    </div>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow">کاوش وابستگی‌ها</p>
+    <h1>هر پکیج به چه چیزی تکیه دارد؟</h1>
+    <p class="intro">یک پکیج را انتخاب کن؛ فقط وابستگی‌های مرتبط را دنبال کن.</p>
+
+    <div class="toolbar">
+      <div class="search"><span class="search-icon" aria-hidden="true"></span><span>جست‌وجوی پکیج‌ها</span></div>
+      <div class="filters" aria-label="فیلتر رابطه">
+        <span class="filter active">وابستگی مستقیم</span>
+        <span class="filter">همهٔ لایه‌ها</span>
+      </div>
+    </div>
+
+    <section class="workspace" aria-label="نقشهٔ وابستگی OS.Web.Identity">
+      <div class="graph">
+        <div class="graph-head">
+          <strong>مسیر وابستگی</strong>
+          <span>۶ پکیج مرتبط</span>
+        </div>
+
+        <div class="graph-area" dir="ltr">
+          <span class="level base">پایه</span>
+          <span class="level direct">وابستگی مستقیم</span>
+          <span class="level selected">انتخاب</span>
+
+          <svg class="wires" viewBox="0 0 700 310" preserveAspectRatio="none" aria-hidden="true">
+            <path class="wire indirect" d="M610 100 H470 V175 H350" />
+            <path class="wire indirect" d="M610 175 H350" />
+            <path class="wire indirect" d="M610 251 H470 V175 H350" />
+            <path class="wire indirect" d="M610 100 H480 V251 H350" />
+            <path class="wire direct" d="M350 175 H235 V175 H155" />
+            <path class="wire direct" d="M350 251 H235 V175 H155" />
+          </svg>
+
+          <div class="node core"><code>OS.Core</code><small>هستهٔ مرکزی</small></div>
+          <div class="node locale"><code>OS.Locale</code><small>فرهنگ و منطقه</small></div>
+          <div class="node cache"><code>OS.Caching</code><small>کش</small></div>
+          <div class="node identity-abstractions"><code>OS.Identity.Abstractions</code><small>مدل‌های هویت</small></div>
+          <div class="node web-api"><code>OS.Web.API</code><small>میزبان API</small></div>
+          <div class="node identity"><code>OS.Identity</code><small>هویت</small></div>
+          <div class="node selected"><code>OS.Web.Identity</code><small>هویت برای وب</small></div>
+        </div>
+
+        <div class="graph-foot">
+          <span class="key"><i class="line"></i>وابستگی مستقیم</span>
+          <span class="key"><i class="line dashed"></i>وابستگی باواسطه</span>
+        </div>
+      </div>
+
+      <aside class="details">
+        <div class="detail-top"><i class="dot"></i><span>پکیج انتخاب‌شده</span></div>
+        <h2>OS.Web.Identity</h2>
+        <p class="name">هویت برای وب</p>
+        <p class="summary">هویت وب روی API؛ middleware، مجوزها و مسیر ورود آماده.</p>
+
+        <div class="relation">
+          <h3>مستقیماً به این‌ها وابسته است</h3>
+          <div class="chips">
+            <span class="chip direct">OS.Identity</span>
+            <span class="chip direct">OS.Web.API</span>
+          </div>
+        </div>
+
+        <div class="relation">
+          <h3>از طریق آن‌ها به این پایه‌ها می‌رسد</h3>
+          <div class="chips">
+            <span class="chip">OS.Identity.Abstractions</span>
+            <span class="chip">OS.Caching</span>
+            <span class="chip">OS.Core</span>
+            <span class="chip">OS.Locale</span>
+          </div>
+        </div>
+
+        <p class="note">روی یک پکیج دیگر بزن تا مسیر وابستگی‌اش را ببینی.</p>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer page">
+    <span><b>لورا</b> · راهنمای پکیج‌های OriginStack</span>
+    <span>نمای مفهومی</span>
+  </footer>
+</body>
+</html>
