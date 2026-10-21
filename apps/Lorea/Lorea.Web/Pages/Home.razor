@@ -9,74 +9,100 @@
                 <p class="eyebrow">@Text["home.eyebrow"]</p>
                 <h1 class="home-title">@Text["home.heading"]</h1>
                 <p class="home-deck">@Text["home.description"]</p>
-                <div class="home-actions">
-                    <OSButton Kind="ButtonKind.Key" Href="#packages">@Text["home.browse"]</OSButton>
-                    <a class="home-link" href="#map">@Text["home.mapLink"]</a>
-                </div>
             </div>
-
-            <nav class="home-groups" aria-labelledby="home-groups-title">
-                <h2 id="home-groups-title">@Text["home.groups"]</h2>
-                <ul>
-                    @foreach (var group in AllGroups)
-                    {
-                        <li>
-                            <a href="@($"#group-{Anchor(group.Id)}")">
-                                <span class="home-groups-name">@Text.GroupName(group.Id)</span>
-                                <span class="home-groups-count">@Number(group.Entries.Count)</span>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </nav>
         </section>
 
-        <StackMap />
-
-        <section id="packages" class="catalog" aria-labelledby="catalog-title">
-            <header class="catalog-head">
-                <div>
-                    <h2 id="catalog-title">@Text["home.catalog"]</h2>
-                    <p class="catalog-note">@Text["home.catalogNote"]</p>
-                </div>
-                <div class="catalog-find">
-                    <OSSearchField Value="@_query"
-                                   ValueChanged="Filter"
-                                   Placeholder="@Text["home.search"]"
+        <section class="home-explorer" data-view="@InitialView" aria-labelledby="explorer-title">
+            <header class="explorer-head">
+                <h2 id="explorer-title" class="visually-hidden">@Text["home.explore"]</h2>
+                <div class="home-search" role="search">
+                    <OSSearchField Class="home-search-input"
+                                   Value="@_query"
+                                   ValueChanged="Search"
+                                   Placeholder="@Text["home.searchPlaceholder"]"
                                    ClearLabel="@Text["home.searchClear"]"
-                                   aria-label="@Text["home.search"]" />
-                    <p class="catalog-count" aria-live="polite">@Count</p>
+                                   aria-label="@Text["home.searchLabel"]"
+                                   aria-controls="home-search-results"
+                                   aria-expanded="@HasSearch" />
+                    @if (HasSearch)
+                    {
+                        <div id="home-search-results" class="home-search-results" role="region" aria-live="polite" aria-label="@Text["home.searchResults"]">
+                            @if (SearchGroups.Any())
+                            {
+                                @foreach (var group in SearchGroups)
+                                {
+                                    <section class="home-search-group" aria-label="@Text[$"home.search{group.Key}"]">
+                                        <h3>@Text[$"home.search{group.Key}"]</h3>
+                                        <ul>
+                                            @foreach (var result in group)
+                                            {
+                                                <li>
+                                                    <a href="@result.Url">
+                                                        <span class="home-search-title">@result.Title</span>
+                                                        <span class="home-search-detail">@result.Detail</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </section>
+                                }
+                            }
+                            else
+                            {
+                                <p class="home-search-empty">@Text["home.searchEmpty"]</p>
+                            }
+                        </div>
+                    }
                 </div>
+                <nav class="explorer-view" aria-label="@Text["home.viewLabel"]">
+                    <a class="explorer-mode" href="#map" aria-current="@(InitialView == "map" ? "location" : null)">
+                        <span class="explorer-mode-icon" aria-hidden="true"><OSIcon Name="os:tree" Size="17" /></span>
+                        <span>@Text["home.mapView"]</span>
+                    </a>
+                    <a class="explorer-mode" href="#packages" aria-current="@(InitialView == "packages" ? "location" : null)">
+                        <span class="explorer-mode-icon" aria-hidden="true"><OSIcon Name="os:list" Size="17" /></span>
+                        <span>@Text["home.listView"]</span>
+                    </a>
+                </nav>
             </header>
 
-            @if (Groups.Count == 0)
-            {
-                <p class="catalog-empty">@Text["home.empty"]</p>
-            }
-            else
-            {
-                @foreach (var group in Groups)
+            <section id="packages" class="catalog explorer-panel" aria-labelledby="catalog-title">
+                <h3 id="catalog-title" class="visually-hidden">@Text["home.catalog"]</h3>
+                <p class="catalog-count">@Count</p>
+
+                @if (Groups.Count == 0)
                 {
-                    <section id="@($"group-{Anchor(group.Id)}")" class="catalog-group" aria-label="@Text.GroupName(group.Id)">
-                        <h3>@Text.GroupName(group.Id)</h3>
-                        <ul class="catalog-list">
-                            @foreach (var entry in group.Entries)
-                            {
-                                <li>
-                                    <a class="catalog-row" href="@PackageUrl(entry)">
-                                        <span class="catalog-row-head">
-                                            <code class="catalog-name">@entry.Name</code>
-                                            <span class="catalog-title">@Text[entry.TextKey("title")]</span>
-                                        </span>
-                                        <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
-                                        <span class="catalog-meta">@Guides(entry)</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </section>
+                    <p class="catalog-empty">@Text["home.empty"]</p>
                 }
-            }
+                else
+                {
+                    @foreach (var group in Groups)
+                    {
+                        <section id="@($"group-{Anchor(group.Id)}")" class="catalog-group" aria-label="@Text.GroupName(group.Id)">
+                            <h4>@Text.GroupName(group.Id)</h4>
+                            <ul class="catalog-list">
+                                @foreach (var entry in group.Entries)
+                                {
+                                    <li>
+                                        <a class="catalog-row" href="@PackageUrl(entry)">
+                                            <span class="catalog-row-head">
+                                                <code class="catalog-name">@entry.Name</code>
+                                                <span class="catalog-title">@Text[entry.TextKey("title")]</span>
+                                            </span>
+                                            <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
+                                            <span class="catalog-meta">@Guides(entry)</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </section>
+                    }
+                }
+            </section>
+
+            <div id="map" class="explorer-panel">
+                <StackMap />
+            </div>
         </section>
     </div>
 </div>

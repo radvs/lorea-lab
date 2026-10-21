@@ -901,8 +901,7 @@
         .home-title,
         .page-head .os-head-title,
         .doc-h2,
-        .not-found-page h1,
-        .catalog-head h2
+        .not-found-page h1
     ) {
         letter-spacing: normal;
         line-height: 1.45;

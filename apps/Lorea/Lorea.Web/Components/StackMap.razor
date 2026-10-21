@@ -1,20 +1,10 @@
 @using Lorea.Web.Components.Map
 
-<section id="map" class="stack-map" aria-labelledby="map-title">
-    <div class="map-head">
-        <h2 id="map-title">@Text["map.title"]</h2>
-        <p>@Text["map.note"]</p>
-    </div>
+<section class="stack-map" aria-labelledby="map-title">
+    <h3 id="map-title" class="visually-hidden">@Text["map.title"]</h3>
 
     <div class="map-frame">
         <div class="map-bar">
-            <OSSearchField Class="map-search"
-                           Value="@_query"
-                           ValueChanged="Search"
-                           Placeholder="@Text["map.search"]"
-                           ClearLabel="@Text["map.searchClear"]"
-                           aria-label="@Text["map.search"]" />
-
             <div class="map-tools">
                 @if (CanToggleAddOns)
                 {
@@ -30,13 +20,9 @@
             </div>
         </div>
 
-        @if (Searching && !Graph.Nodes.Any(Matches))
-        {
-            <p class="map-empty">@Text["map.empty"]</p>
-        }
-        else
-        {
+        @{
             var focus = FocusOf(_hover ?? Active?.Id);
+        }
             <div class="map-canvas" data-fit="@(_fit ? "true" : "false")">
                 <svg class="map-svg"
                      viewBox="0 0 @F(Layout.Width) @F(Layout.Height)"
@@ -85,7 +71,6 @@
                     }
                 </svg>
             </div>
-        }
 
         <p class="map-swipe">@Text["map.swipe"]</p>
 

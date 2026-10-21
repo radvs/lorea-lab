@@ -23,7 +23,6 @@ public partial class StackMap : IAsyncDisposable
     private string _built = string.Empty;
     private string? _selected;
     private string? _hover;
-    private string _query = string.Empty;
     private bool _reveal;
     private bool _fit = true;
     private bool _fitResolved;
@@ -40,8 +39,6 @@ public partial class StackMap : IAsyncDisposable
     private MapNode? Active => _graph.Find(_selected);
 
     private bool CanToggleAddOns => _graph.HasFolded || _open.Count > 0;
-
-    private bool Searching => _query.Length > 0;
 
     protected override void OnParametersSet() => Rebuild();
 
@@ -111,24 +108,16 @@ public partial class StackMap : IAsyncDisposable
     private List<MapNode> NodesOf(IEnumerable<string> ids) =>
         [.. ids.Select(_graph.Find).OfType<MapNode>().OrderBy(node => node.Name, StringComparer.Ordinal)];
 
-    private bool Matches(MapNode node) =>
-        Searching && (Matches(node.Name, TitleOf(node), _query) || node.Members.Any(member => Matches(member.Name, Text[member.TextKey("title")], _query)));
-
-    private static bool Matches(string name, string title, string query) =>
-        name.Contains(query, StringComparison.OrdinalIgnoreCase) || title.Contains(query, StringComparison.OrdinalIgnoreCase);
-
     private MapFocus FocusOf(string? id) =>
         _graph.Find(id) is null ? new MapFocus(null, EmptySet, EmptySet) : new MapFocus(id, _graph.Down(id!), _graph.Up(id!));
 
     private string NodeClass(MapNode node, MapFocus focus)
     {
         var related = focus.Id is not null && (node.Id == focus.Id || focus.Down.Contains(node.Id) || focus.Up.Contains(node.Id));
-        var hit = Matches(node);
-        var off = focus.Id is null ? Searching && !hit : !related;
+        var off = focus.Id is not null && !related;
         return TextEx.Conjoin(" ", "map-node",
             node.Id == Active?.Id ? "is-selected" : null,
             related && node.Id != Active?.Id ? "is-on" : null,
-            hit ? "is-hit" : null,
             off ? "is-off" : null);
     }
 
@@ -140,10 +129,8 @@ public partial class StackMap : IAsyncDisposable
         return TextEx.Conjoin(" ", "map-wire",
             on ? "is-on" : null,
             on && !direct ? "is-indirect" : null,
-            focus.Id is null ? (Searching ? "is-off" : null) : (on ? null : "is-off"));
+            focus.Id is not null && !on ? "is-off" : null);
     }
-
-    private void Search(string? value) => _query = value?.Trim() ?? string.Empty;
 
     private void Pick(string id)
     {
