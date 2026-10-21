@@ -8,6 +8,7 @@ public partial class Home : IAsyncDisposable
     [CascadingParameter] public ICultureProfile Profile { get; set; } = default!;
 
     private string _query = string.Empty;
+    private string? _openGroupId;
     private IJSObjectReference? _module;
     private IReadOnlyList<HomeSearchResult> _searchIndex = [];
 
@@ -24,11 +25,11 @@ public partial class Home : IAsyncDisposable
 
     private bool HasSearch => !string.IsNullOrWhiteSpace(_query);
 
-    private string Count => Text.Count("home.countOne", "home.count", LibraryCatalog.Entries.Count, Profile);
-
     private void Search(string? value) => _query = value ?? string.Empty;
 
     private string Guides(LibraryEntry entry) => Text.Count("home.guidesCountOne", "home.guidesCount", entry.Topics.Count, Profile);
+
+    private string Digits(int value) => Profile.ToNativeDigits(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
     private static string Anchor(string group) => group.Length == 0 ? "other" : group;
 
@@ -38,8 +39,11 @@ public partial class Home : IAsyncDisposable
 
     private string? Localized(string key) => Text[key] is { ResourceNotFound: false } value ? value.Value : null;
 
-    protected override void OnInitialized() =>
+    protected override void OnInitialized()
+    {
         _searchIndex = HomeSearchIndex.Build(LibraryCatalog.Entries, Localized, PackageUrl, TopicUrl);
+        _openGroupId = Groups.Count > 0 ? $"group-{Anchor(Groups[0].Id)}" : null;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

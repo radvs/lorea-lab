@@ -27,8 +27,9 @@
                     @if (HasSearch)
                     {
                         <div id="home-search-results" class="home-search-results" role="region" aria-live="polite" aria-label="@Text["home.searchResults"]">
-                            @if (SearchGroups.Any())
-                            {
+                            <OSDataState Class="home-search-empty"
+                                         Empty="@(!SearchGroups.Any())"
+                                         EmptyText="@Text["home.searchEmpty"]">
                                 @foreach (var group in SearchGroups)
                                 {
                                     <section class="home-search-group" aria-label="@Text[$"home.search{group.Key}"]">
@@ -46,11 +47,7 @@
                                         </ul>
                                     </section>
                                 }
-                            }
-                            else
-                            {
-                                <p class="home-search-empty">@Text["home.searchEmpty"]</p>
-                            }
+                            </OSDataState>
                         </div>
                     }
                 </div>
@@ -68,36 +65,51 @@
 
             <section id="packages" class="catalog explorer-panel" aria-labelledby="catalog-title">
                 <h3 id="catalog-title" class="visually-hidden">@Text["home.catalog"]</h3>
-                <p class="catalog-count">@Count</p>
 
-                @if (Groups.Count == 0)
-                {
-                    <p class="catalog-empty">@Text["home.empty"]</p>
-                }
-                else
-                {
-                    @foreach (var group in Groups)
-                    {
-                        <section id="@($"group-{Anchor(group.Id)}")" class="catalog-group" aria-label="@Text.GroupName(group.Id)">
-                            <h4>@Text.GroupName(group.Id)</h4>
-                            <ul class="catalog-list">
-                                @foreach (var entry in group.Entries)
-                                {
-                                    <li>
-                                        <a class="catalog-row" href="@PackageUrl(entry)">
-                                            <span class="catalog-row-head">
-                                                <code class="catalog-name">@entry.Name</code>
-                                                <span class="catalog-title">@Text[entry.TextKey("title")]</span>
-                                            </span>
-                                            <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
-                                            <span class="catalog-meta">@Guides(entry)</span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </section>
-                    }
-                }
+                <OSDataState Class="catalog-empty"
+                             Empty="@(Groups.Count == 0)"
+                             EmptyText="@Text["home.empty"]">
+                    <OSAccordion Class="catalog-groups"
+                                 Multiple="false"
+                                 @bind-OpenId="_openGroupId">
+                        @foreach (var group in Groups)
+                        {
+                            <OSAccordionItem Id="@($"group-{Anchor(group.Id)}")"
+                                             Title="@Text.GroupName(group.Id)"
+                                             TitleLevel="4">
+                                <Badge>
+                                    <OSChip Icon="os:package"
+                                            Text="@Digits(group.Entries.Count)"
+                                            Size="ChipSize.Small" />
+                                    <span class="visually-hidden">@Text.Count("home.countOne", "home.count", group.Entries.Count, Profile)</span>
+                                </Badge>
+                                <ChildContent>
+                                    <ul class="catalog-list">
+                                        @foreach (var entry in group.Entries)
+                                        {
+                                            <li>
+                                                <OSCard Class="catalog-card" Flush="true">
+                                                    <a class="catalog-row" href="@PackageUrl(entry)">
+                                                        <span class="catalog-row-head">
+                                                            <span class="catalog-title">@Text[entry.TextKey("title")]</span>
+                                                            <bdi class="catalog-name" dir="ltr">(@entry.Name)</bdi>
+                                                        </span>
+                                                        <span class="catalog-summary"><OSInlineText Text="@Text[entry.TextKey("summary")]" /></span>
+                                                        <span class="catalog-meta">
+                                                            <OSIcon Name="os:bookmark" Size="14" aria-hidden="true" />
+                                                            <span aria-hidden="true">@Digits(entry.Topics.Count)</span>
+                                                            <span class="visually-hidden">@Guides(entry)</span>
+                                                        </span>
+                                                    </a>
+                                                </OSCard>
+                                            </li>
+                                        }
+                                    </ul>
+                                </ChildContent>
+                            </OSAccordionItem>
+                        }
+                    </OSAccordion>
+                </OSDataState>
             </section>
 
             <div id="map" class="explorer-panel">

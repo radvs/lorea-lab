@@ -32,11 +32,25 @@
 
     <footer class="site-foot">
         <div class="site-foot-inner">
-            <p class="site-foot-note">@Text["layout.footNote"]</p>
+            <div class="site-foot-brand">
+                <a href="@Navigation.BaseUri" class="site-foot-home" aria-label="@Text["layout.brandLabel"]">
+                    <svg class="site-foot-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                        <path d="M16 11V48H53" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="16" cy="48" r="9" style="fill:var(--lorea-accent,#0078D4)" />
+                    </svg>
+                    <span>@Text["layout.brand"]</span>
+                </a>
+                <p class="site-foot-note">@Text["layout.footNote"]</p>
+            </div>
             <nav class="site-foot-nav" aria-label="@Text["layout.footNav"]">
-                <a href="@Navigation.BaseUri">@Text["layout.brand"]</a>
-                <a href="@($"{Navigation.BaseUri}#packages")">@Text["nav.packages"]</a>
-                <a href="@($"{Navigation.BaseUri}#map")">@Text["nav.map"]</a>
+                <a href="@($"{Navigation.BaseUri}#packages")">
+                    <OSIcon Name="os:list" Size="16" aria-hidden="true" />
+                    <span>@Text["nav.packages"]</span>
+                </a>
+                <a href="@($"{Navigation.BaseUri}#map")">
+                    <OSIcon Name="os:tree" Size="16" aria-hidden="true" />
+                    <span>@Text["nav.map"]</span>
+                </a>
             </nav>
         </div>
     </footer>
