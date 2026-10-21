@@ -403,11 +403,20 @@
 
     @media (max-width: 47.99rem) {
         .explorer-head {
-            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .explorer-view {
+            inline-size: 100%;
+        }
+
+        .explorer-mode {
+            flex: 1;
+            min-block-size: 2.75rem;
         }
 
         .home-search {
-            grid-column: 1 / -1;
+            grid-column: 1;
             grid-row: 2;
         }
 
