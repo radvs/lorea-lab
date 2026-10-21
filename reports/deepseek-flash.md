@@ -19,6 +19,7 @@ Changed files: `Layout/MainLayout.razor`, `Layout/MainLayout.razor.cs`, `_Import
 ### 2. Home page
 
 - An editorial opening: an eyebrow with an accent rule, a large balanced title, a two-sentence deck, the primary "See the packages" action and a text link to the map.
+- The dependency map follows the opening band and comes before the catalog, so the interactive overview is in the first screen; the catalog is the next band.
 - A searchable catalog of every package (24 today), grouped exactly as the map groups them: monospace package name, title, one-line summary and guide count. Filtering is live and the count updates; there is an empty state.
 - `StackMap` simplified to one view: search, "show/hide add-ons", fit-to-width / actual-size, clear, a technical-drawing background of row hairlines and level labels, direct/indirect wires, and a selection panel with depends-on / built-on chips and an "open the package" action. Nothing is selected at first.
 - The map defaults to fitted on wide screens and to its actual size on narrow screens, where it scrolls inside its own frame and a hint says so; it never scrolls the page sideways.
@@ -94,7 +95,7 @@ Results:
 - Theme: the toggle changes `data-theme` without a reload.
 - Phones: `scrollWidth === clientWidth` on home, package, topic, 404 and missing pages; header brand/nav/language/theme buttons, map buttons, phone nav links, guide chips and fold summaries are 40 px or taller; the phone nav sits directly under the page head and the related folds are there.
 - Language separation: no Arabic-script characters outside code/pre and LTR-isolated text on any English page; sampled English UI strings do not appear on Persian pages.
-- GitHub Actions: every push in this work ran the Preview workflow; the runs for `975d39a`, `f7b0671`, `20e7c87`, `9109246`, `90872c7`, `182a542`, `9dcaf02`, `103bbee`, `0b71f4f` and `8e7fb88` completed successfully. The deployed site was loaded afterwards with no failed asset requests: 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the 404 in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
+- GitHub Actions: every push in this work ran the Preview workflow; the runs for `975d39a`, `f7b0671`, `20e7c87`, `9109246`, `90872c7`, `182a542`, `9dcaf02`, `103bbee`, `0b71f4f`, `8e7fb88` and `70ce872` completed successfully. The deployed site was loaded afterwards with no failed asset requests: 24 catalog rows, correct RTL/LTR direction, no horizontal scroll, and the 404 in Persian. `/not-found` itself returns HTTP 404 from Pages (the `404.html` fallback), which is expected.
 
 ## Commits
 
@@ -107,6 +108,7 @@ Results:
 - `103bbee` — Revert the side-column fill
 - `0b71f4f` — Keep the side column short and a little narrower
 - `8e7fb88` — Replace the third column with an index band under the page head
+- `70ce872` — Lead the home page with the dependency map
 - The report file was added after those; its hash is the commit that carries this file (`git log`).
 
 ## Not done, uncertain, or not verified
