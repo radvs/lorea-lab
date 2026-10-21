@@ -14,14 +14,9 @@
                 <span class="brand-note">@Text["layout.tagline"]</span>
             </a>
 
-            <nav class="site-nav" aria-label="@Text["layout.siteNav"]">
-                <a href="@($"{Navigation.BaseUri}#packages")">@Text["nav.packages"]</a>
-                <a href="@($"{Navigation.BaseUri}#map")">@Text["nav.map"]</a>
-            </nav>
-
             <div class="header-tools">
-                <OSThemeToggle LightLabel="@Text["layout.themeLight"]" DarkLabel="@Text["layout.themeDark"]" TooltipSide="TooltipSide.Bottom" />
                 <LangSwitch Current="_culture" CultureChanged="ChangeCulture" />
+                <OSThemeToggle LightLabel="@Text["layout.themeLight"]" DarkLabel="@Text["layout.themeDark"]" TooltipSide="TooltipSide.Bottom" />
             </div>
         </div>
     </header>

@@ -27,19 +27,44 @@
     }
 
     .site-head-inner {
-        display: flex;
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         align-items: center;
-        gap: clamp(0.75rem, 2vw, 1.5rem);
+        direction: ltr;
         block-size: var(--lorea-head-h);
     }
 
     .site-brand {
         display: inline-flex;
+        grid-column: 2;
+        grid-row: 1;
         align-items: center;
+        justify-self: center;
         gap: 0.5rem;
         flex: none;
         color: var(--lorea-heading);
         text-decoration: none;
+    }
+
+    .header-tools {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .header-tools > * {
+        pointer-events: auto;
+    }
+
+    .lorea[dir="rtl"] .site-brand,
+    .lorea[dir="rtl"] .header-tools {
+        direction: rtl;
     }
 
     .brand-mark {
@@ -65,36 +90,6 @@
 
     .site-brand:hover .brand-name {
         color: var(--lorea-link);
-    }
-
-    .site-nav {
-        display: flex;
-        align-items: center;
-        gap: 0.15rem;
-    }
-
-    .site-nav a {
-        display: inline-flex;
-        align-items: center;
-        min-block-size: 2.4rem;
-        padding-inline: 0.55rem;
-        border-block-end: 2px solid transparent;
-        color: var(--lorea-muted);
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .site-nav a:hover {
-        color: var(--lorea-heading);
-        border-block-end-color: var(--lorea-rule-dark);
-    }
-
-    .header-tools {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-inline-start: auto;
     }
 
     .lorea-lang {
@@ -928,19 +923,6 @@
 
         .site-brand {
             min-block-size: 2.5rem;
-        }
-
-        .site-nav {
-            gap: 0;
-        }
-
-        .site-nav a {
-            min-block-size: 2.5rem;
-            padding-inline: 0.45rem;
-        }
-
-        .header-tools {
-            gap: 0;
         }
 
         .language-option {

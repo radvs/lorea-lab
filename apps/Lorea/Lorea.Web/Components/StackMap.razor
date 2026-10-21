@@ -8,14 +8,29 @@
             <div class="map-tools">
                 @if (CanToggleAddOns)
                 {
-                    <OSButton Kind="ButtonKind.Ghost" Size="ButtonSize.Small" OnClick="ToggleAddOns">@Text[Graph.HasFolded ? "map.expand" : "map.collapse"]</OSButton>
+                    <OSTooltip Text="@Text[Graph.HasFolded ? "map.expand" : "map.collapse"]" Side="TooltipSide.Top">
+                        <OSIconButton Class="map-tool"
+                                      Icon="@(Graph.HasFolded ? "arrow-down" : "arrow-up")"
+                                      Label="@Text[Graph.HasFolded ? "map.expand" : "map.collapse"]"
+                                      OnClick="ToggleAddOns" />
+                    </OSTooltip>
                 }
 
-                <OSButton Kind="ButtonKind.Ghost" Size="ButtonSize.Small" OnClick="ToggleFit">@Text[_fit ? "map.actual" : "map.fit"]</OSButton>
+                <OSTooltip Text="@Text[_fit ? "map.actual" : "map.fit"]" Side="TooltipSide.Top">
+                    <OSIconButton Class="map-tool"
+                                  Icon="@(_fit ? "minimize" : "maximize")"
+                                  Label="@Text[_fit ? "map.actual" : "map.fit"]"
+                                  OnClick="ToggleFit" />
+                </OSTooltip>
 
                 @if (_selected is not null)
                 {
-                    <OSButton Kind="ButtonKind.Ghost" Size="ButtonSize.Small" OnClick="Clear">@Text["map.clear"]</OSButton>
+                    <OSTooltip Text="@Text["map.clear"]" Side="TooltipSide.Top">
+                        <OSIconButton Class="map-tool"
+                                      Icon="close"
+                                      Label="@Text["map.clear"]"
+                                      OnClick="Clear" />
+                    </OSTooltip>
                 }
             </div>
         </div>

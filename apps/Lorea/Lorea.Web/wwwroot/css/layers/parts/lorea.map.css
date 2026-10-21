@@ -32,17 +32,21 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.5rem 1rem;
-        padding: 0.5rem 0.75rem;
+        min-block-size: 2.25rem;
+        gap: 0.25rem 0.75rem;
+        padding: 0.15rem 0;
         border-block-end: 1px solid var(--lorea-rule);
-        background: var(--lorea-chrome);
     }
 
     .map-tools {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.25rem;
+        gap: 0.15rem;
         margin-inline-start: auto;
+    }
+
+    .map-tools .map-tool {
+        --os-icon-btn-size: 2rem;
     }
 
     .map-canvas {
@@ -260,8 +264,8 @@
             margin-inline-start: 0;
         }
 
-        .map-tools .os-btn {
-            min-block-size: 2.5rem;
+        .map-tools .map-tool {
+            --os-icon-btn-size: 2.5rem;
         }
 
         .map-legend-note {

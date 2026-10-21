@@ -1,13 +1,12 @@
 <nav class="lorea-lang" aria-label="@Text["layout.languageLabel"]">
     @foreach (var culture in Locale.Cultures.Where(culture => culture.Name != Current.Name))
     {
-        var language = culture.Culture.TwoLetterISOLanguageName;
-        <button type="button"
-                class="language-option"
-                lang="@language"
-                aria-pressed="false"
-                @onclick="() => CultureChanged.InvokeAsync(culture)">
-            @culture.Culture.Parent.NativeName
-        </button>
+        <OSTooltip Text="@culture.Culture.Parent.NativeName" Side="TooltipSide.Bottom">
+            <OSIconButton Class="language-option"
+                          Icon="world"
+                          IconSize="20"
+                          Label="@culture.Culture.Parent.NativeName"
+                          OnClick="() => CultureChanged.InvokeAsync(culture)" />
+        </OSTooltip>
     }
 </nav>

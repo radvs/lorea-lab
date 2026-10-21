@@ -50,7 +50,6 @@ export function watchHomeViews() {
             history.pushState(null, "", target.hash);
         }
         setView(view);
-        document.getElementById(view)?.scrollIntoView({ block: "start" });
     }
 
     function onHistoryChange() {
